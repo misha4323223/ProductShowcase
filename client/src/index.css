@@ -1,0 +1,870 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* LIGHT MODE */
+:root {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+
+  /* Automatic computation of border around primary / danger buttons */
+  --opaque-button-border-intensity: -8; /* In terms of percentages */
+
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --elevate-1: rgba(0,0,0, .03);
+  --elevate-2: rgba(0,0,0, .08);
+
+  --background: 0 0% 99%;
+
+  --foreground: 0 0% 15%;
+
+  --border: 30 15% 90%;
+
+  --card: 0 0% 100%;
+
+  --card-foreground: 0 0% 15%;
+
+  --card-border: 30 10% 94%;
+
+  --sidebar: 30 40% 97%;
+
+  --sidebar-foreground: 0 0% 15%;
+
+  --sidebar-border: 30 20% 92%;
+
+  --sidebar-primary: 340 75% 55%;
+
+  --sidebar-primary-foreground: 0 0% 100%;
+
+  --sidebar-accent: 30 25% 93%;
+
+  --sidebar-accent-foreground: 0 0% 15%;
+
+  --sidebar-ring: 340 75% 55%;
+
+  --popover: 0 0% 98%;
+
+  --popover-foreground: 0 0% 15%;
+
+  --popover-border: 30 12% 93%;
+
+  --primary: 340 75% 55%;
+
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 30 15% 94%;
+
+  --secondary-foreground: 0 0% 15%;
+
+  --muted: 30 18% 95%;
+
+  --muted-foreground: 0 0% 45%;
+
+  --accent: 150 40% 50%;
+
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 55%;
+
+  --destructive-foreground: 0 0% 100%;
+
+  --input: 30 20% 80%;
+  --ring: 340 75% 55%;
+  --chart-1: 340 75% 50%;
+  --chart-2: 25 85% 60%;
+  --chart-3: 150 40% 45%;
+  --chart-4: 280 65% 55%;
+  --chart-5: 200 75% 50%;
+
+  --font-sans: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
+  --font-serif: 'Bangers', cursive;
+  --font-mono: Menlo, Monaco, 'Courier New', monospace;
+  --radius: .5rem; /* 8px */
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.08);
+  --shadow-sm: 0px 2px 4px 0px hsl(0 0% 0% / 0.06), 0px 1px 2px -1px hsl(0 0% 0% / 0.04);
+  --shadow: 0px 4px 6px -1px hsl(0 0% 0% / 0.08), 0px 2px 4px -1px hsl(0 0% 0% / 0.05);
+  --shadow-md: 0px 6px 10px -1px hsl(0 0% 0% / 0.08), 0px 2px 4px -1px hsl(0 0% 0% / 0.04);
+  --shadow-lg: 0px 12px 16px -4px hsl(0 0% 0% / 0.08), 0px 4px 6px -2px hsl(0 0% 0% / 0.03);
+  --shadow-xl: 0px 20px 24px -4px hsl(0 0% 0% / 0.08), 0px 8px 10px -4px hsl(0 0% 0% / 0.04);
+  --shadow-2xl: 0px 24px 48px -12px hsl(0 0% 0% / 0.18);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+
+  /* Automatically computed borders - intensity can be controlled by the user by the --opaque-button-border-intensity setting */
+
+  /* Fallback for older browsers */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+.dark {
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .05);
+
+  --opaque-button-border-intensity: 9;  /* In terms of percentages */
+
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --elevate-1: rgba(255,255,255, .04);
+  --elevate-2: rgba(255,255,255, .09);
+
+  --background: 0 0% 8%;
+
+  --foreground: 0 0% 95%;
+
+  --border: 0 0% 20%;
+
+  --card: 0 0% 11%;
+
+  --card-foreground: 0 0% 95%;
+
+  --card-border: 0 0% 16%;
+
+  --sidebar: 340 10% 12%;
+
+  --sidebar-foreground: 0 0% 95%;
+
+  --sidebar-border: 340 8% 18%;
+
+  --sidebar-primary: 340 70% 60%;
+
+  --sidebar-primary-foreground: 0 0% 100%;
+
+  --sidebar-accent: 340 12% 16%;
+
+  --sidebar-accent-foreground: 0 0% 95%;
+
+  --sidebar-ring: 340 70% 60%;
+
+  --popover: 0 0% 10%;
+
+  --popover-foreground: 0 0% 95%;
+
+  --popover-border: 0 0% 15%;
+
+  --primary: 340 70% 60%;
+
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 5% 18%;
+
+  --secondary-foreground: 0 0% 95%;
+
+  --muted: 340 8% 15%;
+
+  --muted-foreground: 0 0% 65%;
+
+  --accent: 150 35% 55%;
+
+  --accent-foreground: 0 0% 10%;
+
+  --destructive: 0 78% 60%;
+
+  --destructive-foreground: 0 0% 100%;
+
+  --input: 0 0% 30%;
+  --ring: 340 70% 60%;
+  --chart-1: 340 70% 65%;
+  --chart-2: 25 75% 65%;
+  --chart-3: 150 35% 60%;
+  --chart-4: 280 60% 65%;
+  --chart-5: 200 70% 60%;
+
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.30);
+  --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.40);
+  --shadow-sm: 0px 2px 4px 0px hsl(0 0% 0% / 0.30), 0px 1px 2px -1px hsl(0 0% 0% / 0.20);
+  --shadow: 0px 4px 6px -1px hsl(0 0% 0% / 0.40), 0px 2px 4px -1px hsl(0 0% 0% / 0.30);
+  --shadow-md: 0px 6px 10px -1px hsl(0 0% 0% / 0.40), 0px 2px 4px -1px hsl(0 0% 0% / 0.25);
+  --shadow-lg: 0px 12px 16px -4px hsl(0 0% 0% / 0.40), 0px 4px 6px -2px hsl(0 0% 0% / 0.20);
+  --shadow-xl: 0px 20px 24px -4px hsl(0 0% 0% / 0.45), 0px 8px 10px -4px hsl(0 0% 0% / 0.25);
+  --shadow-2xl: 0px 24px 48px -12px hsl(0 0% 0% / 0.50);
+
+  /* Fallback for older browsers */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/**
+ * Using the elevate system.
+ * Automatic contrast adjustment.
+ *
+ * <element className="hover-elevate" />
+ * <element className="active-elevate-2" />
+ *
+ * // Using the tailwind utility when a data attribute is "on"
+ * <element className="toggle-elevate data-[state=on]:toggle-elevated" />
+ * // Or manually controlling the toggle state
+ * <element className="toggle-elevate toggle-elevated" />
+ *
+ * Elevation systems have to handle many states.
+ * - not-hovered, vs. hovered vs. active  (three mutually exclusive states)
+ * - toggled or not
+ * - focused or not (this is not handled with these utilities)
+ *
+ * Even without handling focused or not, this is six possible combinations that
+ * need to be distinguished from eachother visually.
+ */
+@layer utilities {
+
+  /* Hide ugly search cancel button in Chrome until we can style it properly */
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+
+  /* Placeholder styling for contentEditable div */
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    pointer-events: none;
+  }
+
+  /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch so consumers of
+   * buttons/badges can remove the automatic brightness adjustment on interactions
+   * and program their own. */
+  .no-default-hover-elevate {}
+
+  .no-default-active-elevate {}
+
+
+  /**
+   * Toggleable backgrounds go behind the content. Hoverable/active goes on top.
+   * This way they can stack/compound. Both will overlap the parent's borders!
+   * So borders will be automatically adjusted both on toggle, and hover/active,
+   * and they will be compounded.
+   */
+  .toggle-elevate::before,
+  .toggle-elevate-2::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  .toggle-elevate.toggle-elevated::before {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.toggle-elevate::before {
+    inset: -1px;
+  }
+
+  /* Does not work on elements with overflow:hidden! */
+  .hover-elevate:not(.no-default-hover-elevate),
+  .active-elevate:not(.no-default-active-elevate),
+  .hover-elevate-2:not(.no-default-hover-elevate),
+  .active-elevate-2:not(.no-default-active-elevate) {
+    position: relative;
+    z-index: 0;
+  }
+
+  .hover-elevate:not(.no-default-hover-elevate)::after,
+  .active-elevate:not(.no-default-active-elevate)::after,
+  .hover-elevate-2:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:not(.no-default-active-elevate)::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    border-radius: inherit;
+    z-index: 999;
+  }
+
+  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-1);
+  }
+
+  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
+    inset: -1px;
+  }
+
+  /* Cute animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+
+  @keyframes bounce-soft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 2s ease-in-out infinite;
+  }
+
+  .animate-bounce-soft {
+    animation: bounce-soft 0.5s ease;
+  }
+
+  .animate-sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+
+  /* Wavy divider */
+  .wavy-divider {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wavy-divider::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='hsl(var(--background))'/%3E%3C/svg%3E") no-repeat;
+    background-size: cover;
+  }
+
+  /* Candy pattern background */
+  .candy-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(244, 114, 182, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(251, 207, 232, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(167, 243, 208, 0.03) 0%, transparent 50%);
+  }
+
+  /* Sprinkles effect */
+  .sprinkles::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(45deg, transparent 48%, hsl(var(--primary) / 0.05) 49%, hsl(var(--primary) / 0.05) 51%, transparent 52%),
+      linear-gradient(-45deg, transparent 48%, hsl(var(--accent) / 0.04) 49%, hsl(var(--accent) / 0.04) 51%, transparent 52%);
+    background-size: 20px 20px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .sprinkles:hover::before {
+    opacity: 1;
+  }
+
+  /* Glossy button effect */
+  .glossy::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  /* Sugar sparkle */
+  @keyframes sugar-sparkle {
+    0%, 100% { 
+      box-shadow: 
+        0 0 5px rgba(244, 114, 182, 0.3),
+        0 0 10px rgba(251, 207, 232, 0.2);
+    }
+    50% { 
+      box-shadow: 
+        0 0 10px rgba(244, 114, 182, 0.5),
+        0 0 20px rgba(251, 207, 232, 0.4),
+        0 0 30px rgba(167, 243, 208, 0.3);
+    }
+  }
+
+  .sugar-glow {
+    animation: sugar-sparkle 3s ease-in-out infinite;
+  }
+
+  /* Drip effect */
+  @keyframes drip {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  .drip-animation {
+    animation: drip 0.6s ease-out forwards;
+  }
+
+  /* Pulse glow */
+  @keyframes pulse-glow {
+    0%, 100% { 
+      filter: drop-shadow(0 0 2px rgba(244, 114, 182, 0.4));
+    }
+    50% { 
+      filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.8));
+    }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Pastel dots pattern */
+  .pastel-dots {
+    background-image: 
+      radial-gradient(circle, rgba(244, 114, 182, 0.15) 1px, transparent 1px),
+      radial-gradient(circle, rgba(167, 243, 208, 0.15) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+  }
+
+  /* Candy stripe */
+  .candy-stripe {
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(244, 114, 182, 0.03) 10px,
+      rgba(244, 114, 182, 0.03) 20px
+    );
+  }
+
+  /* Text shadow candy effect */
+  .text-candy {
+    text-shadow: 
+      2px 2px 0px rgba(244, 114, 182, 0.3),
+      4px 4px 0px rgba(251, 207, 232, 0.2),
+      6px 6px 0px rgba(167, 243, 208, 0.1);
+  }
+
+  /* Frosting effect */
+  .frosting {
+    position: relative;
+    overflow: visible;
+  }
+
+  .frosting::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(to right, 
+      hsl(var(--primary) / 0.3) 0%, 
+      hsl(var(--accent) / 0.3) 50%, 
+      hsl(var(--primary) / 0.3) 100%);
+    border-radius: 9999px;
+    filter: blur(2px);
+  }
+
+  /* ========== NEW CANDY EFFECTS ========== */
+  
+  /* Gummy/Jelly Button Effect - 3D мармеладный эффект */
+  .gummy-button {
+    position: relative;
+    border: none;
+    box-shadow: 
+      0 6px 0 -2px rgba(0,0,0,0.15),
+      0 8px 12px -2px rgba(0,0,0,0.2),
+      inset 0 2px 4px rgba(255,255,255,0.4),
+      inset 0 -2px 4px rgba(0,0,0,0.1);
+    transition: all 0.15s ease;
+  }
+
+  .gummy-button:active {
+    transform: translateY(4px);
+    box-shadow: 
+      0 2px 0 -1px rgba(0,0,0,0.15),
+      0 2px 4px -1px rgba(0,0,0,0.2),
+      inset 0 2px 4px rgba(255,255,255,0.4),
+      inset 0 -2px 4px rgba(0,0,0,0.1);
+  }
+
+  .gummy-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  /* Lollipop Swirl - закрученный леденец */
+  @keyframes lollipop-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .lollipop-swirl {
+    background: conic-gradient(
+      from 0deg,
+      #ff1493 0deg 45deg,
+      #ff69b4 45deg 90deg,
+      #ff1493 90deg 135deg,
+      #ff69b4 135deg 180deg,
+      #ff1493 180deg 225deg,
+      #ff69b4 225deg 270deg,
+      #ff1493 270deg 315deg,
+      #ff69b4 315deg 360deg
+    );
+    animation: lollipop-spin 20s linear infinite;
+  }
+
+  .lollipop-swirl-badge {
+    background: conic-gradient(
+      from 0deg,
+      #ff1493 0deg 60deg,
+      #ffd700 60deg 120deg,
+      #ff1493 120deg 180deg,
+      #ffd700 180deg 240deg,
+      #ff1493 240deg 300deg,
+      #ffd700 300deg 360deg
+    );
+  }
+
+  /* Candy Wrapper Effect - конфетная обертка */
+  .candy-wrapper {
+    position: relative;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 240, 245, 0.95) 25%,
+      rgba(255, 228, 225, 0.9) 50%,
+      rgba(255, 240, 245, 0.95) 75%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+    background-size: 200% 200%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .candy-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 192, 203, 0.1) 2px,
+      rgba(255, 192, 203, 0.1) 4px
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Twisted Wrapper Edges - защипы на конфете */
+  .candy-twist::before,
+  .candy-twist::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 80%;
+    background: inherit;
+    transform: translateY(-50%) skewY(10deg);
+    opacity: 0.7;
+  }
+
+  .candy-twist::before {
+    left: -10px;
+    border-radius: 50% 0 0 50%;
+  }
+
+  .candy-twist::after {
+    right: -10px;
+    border-radius: 0 50% 50% 0;
+  }
+
+  /* Donut Shape - форма пончика */
+  .donut-shape {
+    position: relative;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+    box-shadow: 
+      inset 0 0 10px rgba(139, 69, 19, 0.3),
+      0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  .donut-shape::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.8) 0%, rgba(101, 67, 33, 0.9) 100%);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .donut-shape::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+    border-radius: 50% 50% 0 0;
+  }
+
+  /* Sprinkles on Donut */
+  .donut-sprinkles {
+    position: relative;
+    overflow: visible;
+  }
+
+  .donut-sprinkles::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: 
+      radial-gradient(circle at 20% 30%, #ff1493 2px, transparent 2px),
+      radial-gradient(circle at 80% 40%, #00ff00 2px, transparent 2px),
+      radial-gradient(circle at 40% 70%, #ffff00 2px, transparent 2px),
+      radial-gradient(circle at 70% 20%, #ff6347 2px, transparent 2px),
+      radial-gradient(circle at 30% 50%, #4169e1 2px, transparent 2px),
+      radial-gradient(circle at 60% 80%, #ff69b4 2px, transparent 2px),
+      radial-gradient(circle at 90% 60%, #32cd32 2px, transparent 2px);
+    background-size: 100% 100%;
+    pointer-events: none;
+  }
+
+  /* Caramel Drip Effect - капли карамели */
+  .caramel-drip {
+    position: relative;
+  }
+
+  .caramel-drip::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 10%;
+    width: 80%;
+    height: 12px;
+    background: linear-gradient(to bottom, 
+      rgba(218, 165, 32, 0.8),
+      rgba(184, 134, 11, 0.6)
+    );
+    border-radius: 0 0 50% 50%;
+    filter: blur(1px);
+  }
+
+  /* Sticky Header Effect - липкий карамельный хедер */
+  .sticky-candy {
+    backdrop-filter: blur(12px) saturate(180%);
+    background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 240, 245, 0.92)
+    );
+    box-shadow: 
+      0 4px 12px rgba(0,0,0,0.08),
+      inset 0 -1px 0 rgba(255, 182, 193, 0.3);
+  }
+
+  .dark .sticky-candy {
+    background: linear-gradient(to bottom,
+      rgba(20, 20, 20, 0.95),
+      rgba(30, 20, 25, 0.92)
+    );
+    box-shadow: 
+      0 4px 12px rgba(0,0,0,0.3),
+      inset 0 -1px 0 rgba(139, 69, 19, 0.3);
+  }
+
+  /* Sugar Crystals Effect - кристаллы сахара */
+  .sugar-crystals {
+    position: relative;
+  }
+
+  .sugar-crystals::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.8) 1px, transparent 1px),
+      radial-gradient(circle at 30% 60%, rgba(255,255,255,0.6) 1px, transparent 1px),
+      radial-gradient(circle at 70% 30%, rgba(255,255,255,0.7) 1px, transparent 1px),
+      radial-gradient(circle at 90% 70%, rgba(255,255,255,0.5) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 1px, transparent 1px),
+      radial-gradient(circle at 20% 80%, rgba(255,255,255,0.6) 1px, transparent 1px);
+    background-size: 50px 50px, 80px 80px, 60px 60px, 70px 70px, 90px 90px, 55px 55px;
+    pointer-events: none;
+    border-radius: inherit;
+    animation: sparkle-drift 10s linear infinite;
+  }
+
+  @keyframes sparkle-drift {
+    from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+    to { background-position: 50px 50px, -80px -80px, 60px -60px, -70px 70px, 90px -90px, -55px 55px; }
+  }
+
+  /* Candy Cane Stripes - полоски леденца */
+  .candy-cane-stripe {
+    background: repeating-linear-gradient(
+      -45deg,
+      #ff1493,
+      #ff1493 10px,
+      #ffffff 10px,
+      #ffffff 20px
+    );
+  }
+
+  /* Floating Animations for Decorations */
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  @keyframes float-medium {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-15px) translateX(5px); }
+    75% { transform: translateY(15px) translateX(-5px); }
+  }
+
+  @keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  .animate-float-medium {
+    animation: float-medium 8s ease-in-out infinite;
+  }
+
+  .animate-rotate-slow {
+    animation: rotate-slow 20s linear infinite;
+  }
+
+  /* Metallic Candy Wrapper - металлическая обертка */
+  .metallic-wrapper {
+    background: linear-gradient(
+      135deg,
+      #ffd700 0%,
+      #ffed4e 20%,
+      #ffd700 40%,
+      #ffb347 60%,
+      #ffd700 80%,
+      #ffed4e 100%
+    );
+    background-size: 200% 200%;
+    animation: shimmer 3s ease-in-out infinite;
+    box-shadow: 
+      inset 0 2px 4px rgba(255,255,255,0.6),
+      inset 0 -2px 4px rgba(139, 69, 19, 0.3),
+      0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Jelly Wobble - желейное покачивание */
+  @keyframes jelly-wobble {
+    0%, 100% { transform: scale(1, 1); }
+    25% { transform: scale(0.95, 1.05); }
+    50% { transform: scale(1.05, 0.95); }
+    75% { transform: scale(0.98, 1.02); }
+  }
+
+  .jelly-wobble:hover {
+    animation: jelly-wobble 0.6s ease-in-out;
+  }
+
+  /* Squish Animation - сжатие мармеладки */
+  @keyframes squish {
+    0%, 100% { transform: scale(1, 1); }
+    50% { transform: scale(0.9, 1.1); }
+  }
+
+  .squish-active:active {
+    animation: squish 0.3s ease-in-out;
+  }
+}
