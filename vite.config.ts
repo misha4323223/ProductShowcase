@@ -27,16 +27,26 @@ export default defineConfig({
     },
   },
   root: path.resolve(import.meta.dirname, "client"),
+<<<<<<< HEAD
   base: '/',
+=======
+>>>>>>> 370eca2 (Initial commit)
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
+<<<<<<< HEAD
   publicDir: path.resolve(import.meta.dirname, "client/public"),
+=======
+>>>>>>> 370eca2 (Initial commit)
   server: {
     fs: {
       strict: true,
       deny: ["**/.*"],
     },
   },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 370eca2 (Initial commit)

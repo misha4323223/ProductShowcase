@@ -2,6 +2,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { SiTelegram, SiInstagram, SiVk } from "react-icons/si";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+<<<<<<< HEAD
 import { useState } from "react";
 import { Link } from "wouter";
 import LegalDialog from "@/components/LegalDialog";
@@ -12,6 +13,11 @@ export default function Footer() {
 
   return (
     <>
+=======
+
+export default function Footer() {
+  return (
+>>>>>>> 370eca2 (Initial commit)
     <footer className="bg-gradient-to-b from-pink-50/30 to-sidebar border-t border-pink-200/30 relative overflow-hidden">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 left-0 w-64 h-64 bg-pink-300/30 rounded-full blur-3xl" />
@@ -91,6 +97,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <p data-testid="text-copyright">© 2025 Sweet Delights. Все права защищены.</p>
+<<<<<<< HEAD
             <div className="flex flex-wrap justify-center gap-6">
               <Link href="/faq" className="hover:text-foreground transition-colors" data-testid="link-faq">
                 Частые вопросы
@@ -124,5 +131,19 @@ export default function Footer() {
       <LegalDialog isOpen={termsOpen} onClose={() => setTermsOpen(false)} type="terms" />
     </footer>
     </>
+=======
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-foreground transition-colors" data-testid="link-privacy">
+                Политика конфиденциальности
+              </a>
+              <a href="#" className="hover:text-foreground transition-colors" data-testid="link-terms">
+                Условия использования
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+>>>>>>> 370eca2 (Initial commit)
   );
 }

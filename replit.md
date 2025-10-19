@@ -2,7 +2,11 @@
 
 ## Overview
 
+<<<<<<< HEAD
 Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a static React TypeScript application deployed on GitHub Pages with Firebase backend (Firestore, Authentication, Cloud Functions), it provides a modern shopping experience with product browsing, cart management, automated stock notifications, and responsive design.
+=======
+Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a full-stack TypeScript application using React and Express, it provides a modern shopping experience with product browsing, cart management, and responsive design.
+>>>>>>> 370eca2 (Initial commit)
 
 ## User Preferences
 
@@ -25,6 +29,7 @@ Preferred communication style: Simple, everyday language.
 - Custom animations and effects (candy-wrapper, lollipop-swirl, sugar-crystals, etc.)
 - Light/dark mode support with HSL color variables
 - Responsive breakpoints for mobile-first design
+<<<<<<< HEAD
 - **iOS Safari Compatibility** (October 2025): Touch event handlers for mobile menu, disabled mouse-move parallax on touch devices, WebKit-specific CSS fixes for tap highlights and sticky positioning
 
 **Key Components**:
@@ -36,6 +41,17 @@ Preferred communication style: Simple, everyday language.
 - `BenefitsBar`: Feature highlights (shipping, returns, etc.)
 - `Footer`: Contact info, newsletter signup, social links, legal document links (modal + full pages)
 - `LegalDialog`: Modal component for quick preview of legal documents (Privacy/Terms)
+=======
+
+**Key Components**:
+- `Header`: Sticky navigation with cart, search, and mobile menu
+- `HeroSlider`: Auto-rotating image carousel for promotions
+- `ProductCard`: Animated product display with add-to-cart
+- `ShoppingCart`: Side-panel cart with quantity management
+- `CategoryCard`: Visual category navigation
+- `BenefitsBar`: Feature highlights (shipping, returns, etc.)
+- `Footer`: Contact info, newsletter signup, social links
+>>>>>>> 370eca2 (Initial commit)
 
 ### Backend Architecture
 
@@ -137,6 +153,7 @@ Configured in both TypeScript and Vite:
 - **express-session**: Session middleware (ready for implementation)
 - **connect-pg-simple**: PostgreSQL session store (ready for implementation)
 
+<<<<<<< HEAD
 ### Database Migration Status (October 2025)
 
 **✅ Migrated to Yandex Cloud YDB:**
@@ -249,3 +266,10 @@ Configured in both TypeScript and Vite:
 - Firebase project ID: sweetweb-3543f
 - GitHub repository: misha4323223/ProductShowcase
 - Deployment instructions: See `DEPLOY_INSTRUCTIONS.md`
+=======
+### Notes
+- Product data currently mocked in `client/src/lib/products.ts`
+- Image assets stored in `attached_assets/generated_images/`
+- Database connection requires `DATABASE_URL` environment variable
+- Application designed for Russian language market (content in Russian)
+>>>>>>> 370eca2 (Initial commit)

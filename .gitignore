@@ -1,5 +1,6 @@
 node_modules
 dist
+<<<<<<< HEAD
 .env
 client/.env
 .DS_Store
@@ -12,3 +13,9 @@ client/.env.local
 client/.env.productionattached_assets/Pasted--type-service-account-*.txt
 attached_assets/Pasted--type-service-account-*.txt
 attached_assets/Pasted--type-service-account-*.txt
+=======
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+>>>>>>> 370eca2 (Initial commit)

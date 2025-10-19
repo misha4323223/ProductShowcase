@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+<<<<<<< HEAD
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,10 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { subscribeToStockNotification } from "@/services/yandex-stock-notifications";
+=======
+import { ShoppingCart, Sparkles } from "lucide-react";
+import { useState } from "react";
+>>>>>>> 370eca2 (Initial commit)
 
 interface ProductCardProps {
   id: string;
@@ -17,7 +22,10 @@ interface ProductCardProps {
   price: number;
   salePrice?: number;
   image: string;
+<<<<<<< HEAD
   stock?: number;
+=======
+>>>>>>> 370eca2 (Initial commit)
   onAddToCart: (id: string) => void;
   onClick: (id: string) => void;
 }
@@ -27,12 +35,17 @@ export default function ProductCard({
   name, 
   price, 
   salePrice, 
+<<<<<<< HEAD
   image,
   stock,
+=======
+  image, 
+>>>>>>> 370eca2 (Initial commit)
   onAddToCart,
   onClick 
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+<<<<<<< HEAD
   const [showNotifyDialog, setShowNotifyDialog] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState("");
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -71,11 +84,19 @@ export default function ProductCard({
       return;
     }
     
+=======
+  const hasDiscount = salePrice && salePrice < price;
+  const discount = hasDiscount ? Math.round(((price - salePrice) / price) * 100) : 0;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+>>>>>>> 370eca2 (Initial commit)
     setIsAdding(true);
     onAddToCart(id);
     setTimeout(() => setIsAdding(false), 500);
   };
 
+<<<<<<< HEAD
   const handleToggleWishlist = async (e: React.MouseEvent) => {
     e.stopPropagation();
     
@@ -170,6 +191,11 @@ export default function ProductCard({
           <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
         </Button>
         <div className="w-full h-full overflow-hidden rounded-t-3xl">
+=======
+  return (
+    <Card className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100" data-testid={`card-product-${id}`}>
+      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-t-3xl sugar-crystals" onClick={() => onClick(id)}>
+>>>>>>> 370eca2 (Initial commit)
         {image ? (
           <img
             src={image}
@@ -181,7 +207,10 @@ export default function ProductCard({
             <ShoppingCart className="h-16 w-16" />
           </div>
         )}
+<<<<<<< HEAD
         
+=======
+>>>>>>> 370eca2 (Initial commit)
         {hasDiscount && (
           <div className="absolute top-3 right-3 w-16 h-16 lollipop-swirl-badge rounded-full flex items-center justify-center shadow-2xl shadow-red-500/50 animate-rotate-slow border-4 border-white" data-testid={`badge-discount-${id}`}>
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent"></div>
@@ -193,12 +222,16 @@ export default function ProductCard({
             <Sparkles className="h-12 w-12 text-white animate-sparkle drop-shadow-2xl" />
           </div>
         )}
+<<<<<<< HEAD
         </div>
+=======
+>>>>>>> 370eca2 (Initial commit)
       </div>
       <div className="p-4 space-y-3 bg-gradient-to-b from-white via-pink-50/20 to-white relative caramel-drip">
         <h3 className="font-medium text-sm line-clamp-2 min-h-[2.5rem] text-foreground" data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
+<<<<<<< HEAD
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             {hasDiscount ? (
@@ -289,5 +322,33 @@ export default function ProductCard({
       </DialogContent>
     </Dialog>
     </>
+=======
+        <div className="flex items-center gap-2">
+          {hasDiscount ? (
+            <>
+              <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid={`text-sale-price-${id}`}>
+                {salePrice}₽
+              </span>
+              <span className="text-sm text-muted-foreground line-through" data-testid={`text-original-price-${id}`}>
+                {price}₽
+              </span>
+            </>
+          ) : (
+            <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid={`text-price-${id}`}>
+              {price}₽
+            </span>
+          )}
+        </div>
+        <Button 
+          className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6" 
+          onClick={handleAddToCart}
+          data-testid={`button-add-to-cart-${id}`}
+        >
+          <ShoppingCart className="h-4 w-4 mr-2" />
+          В корзину
+        </Button>
+      </div>
+    </Card>
+>>>>>>> 370eca2 (Initial commit)
   );
 }

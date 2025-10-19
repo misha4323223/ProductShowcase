@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import { Switch, Route, Router as WouterRouter } from "wouter";
+=======
+import { Switch, Route } from "wouter";
+>>>>>>> 370eca2 (Initial commit)
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+<<<<<<< HEAD
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { CartProvider } from "@/contexts/CartContext";
@@ -53,12 +58,24 @@ function Router() {
         <Route component={NotFound} />
       </Switch>
     </WouterRouter>
+=======
+import Home from "@/pages/Home";
+import NotFound from "@/pages/not-found";
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route component={NotFound} />
+    </Switch>
+>>>>>>> 370eca2 (Initial commit)
   );
 }
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+<<<<<<< HEAD
       <AuthProvider>
         <AdminAuthProvider>
           <CartProvider>
@@ -71,6 +88,12 @@ function App() {
           </CartProvider>
         </AdminAuthProvider>
       </AuthProvider>
+=======
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+      </TooltipProvider>
+>>>>>>> 370eca2 (Initial commit)
     </QueryClientProvider>
   );
 }
