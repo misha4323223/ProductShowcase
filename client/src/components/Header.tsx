@@ -1,6 +1,7 @@
 import { ShoppingCart, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "wouter";
 import { useState } from "react";
 
 interface HeaderProps {
@@ -24,30 +25,30 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
 
-          <div className="font-serif text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-500 to-accent drop-shadow-lg">
+          <Link href="/" className="font-serif text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-500 to-accent drop-shadow-lg cursor-pointer" data-testid="link-logo">
             Sweet Delights
-          </div>
+          </Link>
 
           <nav className="hidden lg:flex items-center gap-6">
-            <a href="#" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-catalog">
+            <Link href="/" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-catalog">
               Каталог
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-chocolates">
+            </Link>
+            <Link href="/category/chocolates" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-chocolates">
               Шоколад
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-candies">
+            </Link>
+            <Link href="/category/candies" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-candies">
               Конфеты
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-accessories">
+            </Link>
+            <Link href="/category/accessories" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-accessories">
               Аксессуары
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
-            </a>
-            <a href="#" className="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-destructive to-orange-500 hover:scale-110 transition-all pulse-glow" data-testid="link-sale">
+            </Link>
+            <Link href="/category/sale" className="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-destructive to-orange-500 hover:scale-110 transition-all pulse-glow" data-testid="link-sale">
               SALE
-            </a>
+            </Link>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -103,21 +104,21 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
         {mobileMenuOpen && (
           <nav className="lg:hidden py-4 border-t animate-in slide-in-from-top-2 caramel-drip">
             <div className="flex flex-col gap-3">
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-catalog">
+              <Link href="/" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-catalog">
                 Каталог
-              </a>
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-chocolates">
+              </Link>
+              <Link href="/category/chocolates" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-chocolates">
                 Шоколад
-              </a>
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-candies">
+              </Link>
+              <Link href="/category/candies" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-candies">
                 Конфеты
-              </a>
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-accessories">
+              </Link>
+              <Link href="/category/accessories" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-accessories">
                 Аксессуары
-              </a>
-              <a href="#" className="text-sm font-medium text-destructive hover:text-destructive/80 transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-sale">
+              </Link>
+              <Link href="/category/sale" className="text-sm font-medium text-destructive hover:text-destructive/80 transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-sale">
                 SALE
-              </a>
+              </Link>
             </div>
           </nav>
         )}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import HeroSlider from "@/components/HeroSlider";
 import BenefitsBar from "@/components/BenefitsBar";
@@ -27,6 +28,7 @@ interface CartItem {
 }
 
 export default function Home() {
+  const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
@@ -56,11 +58,11 @@ export default function Home() {
   ];
 
   const categories = [
-    { name: 'Шоколад', image: chocolateImage },
-    { name: 'Конфеты', image: candiesImage },
-    { name: 'Печенье', image: cookiesImage },
-    { name: 'Аксессуары', image: accessoriesImage },
-    { name: 'SALE', image: saleImage },
+    { name: 'Шоколад', image: chocolateImage, slug: 'chocolates' },
+    { name: 'Конфеты', image: candiesImage, slug: 'candies' },
+    { name: 'Печенье', image: cookiesImage, slug: 'cookies' },
+    { name: 'Аксессуары', image: accessoriesImage, slug: 'accessories' },
+    { name: 'SALE', image: saleImage, slug: 'sale' },
   ];
 
   const handleAddToCart = (productId: string) => {
@@ -140,7 +142,7 @@ export default function Home() {
                   key={index}
                   name={category.name}
                   image={category.image}
-                  onClick={() => console.log('Category clicked:', category.name)}
+                  onClick={() => setLocation(`/category/${category.slug}`)}
                 />
               ))}
             </div>
@@ -165,7 +167,7 @@ export default function Home() {
                   salePrice={product.salePrice}
                   image={product.image}
                   onAddToCart={handleAddToCart}
-                  onClick={(id) => console.log('Product clicked:', id)}
+                  onClick={(id) => setLocation(`/product/${id}`)}
                 />
               ))}
             </div>
