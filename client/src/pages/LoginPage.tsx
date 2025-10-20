@@ -114,7 +114,7 @@ export default function LoginPage() {
       setIsResetDialogOpen(false);
       setResetEmail("");
     } catch (error: any) {
-      console.error("Ошибка восстановления пароля:", error.code, error.message);
+      console.error("Ошибка восстановления пароля:", error.code, error.message, error);
       
       let errorMessage = "Не удалось отправить письмо";
       
@@ -126,6 +126,12 @@ export default function LoginPage() {
         errorMessage = "Слишком много запросов. Попробуйте позже";
       } else if (error.code === "auth/missing-email") {
         errorMessage = "Введите email адрес";
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Проблема с интернет-соединением";
+      } else if (error.code === "auth/invalid-api-key") {
+        errorMessage = "Ошибка конфигурации Firebase. Обратитесь к администратору";
+      } else {
+        errorMessage = `Ошибка: ${error.code || error.message}`;
       }
       
       toast({
