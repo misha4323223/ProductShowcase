@@ -1,7 +1,7 @@
 import { ShoppingCart, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useState } from "react";
 
 interface HeaderProps {
@@ -12,6 +12,17 @@ interface HeaderProps {
 export default function Header({ cartCount, onCartClick }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [, setLocation] = useLocation();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setLocation(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b sticky-candy shadow-lg">
@@ -53,24 +64,39 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
 
           <div className="flex items-center gap-2">
             {searchOpen ? (
-              <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2">
+              <form onSubmit={handleSearch} className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2">
                 <Input
                   type="search"
                   placeholder="Поиск..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-40 md:w-64 rounded-full border-2 border-pink-200 focus:border-primary sugar-crystals"
                   autoFocus
                   data-testid="input-search"
                 />
                 <Button
+                  type="submit"
                   size="icon"
                   variant="ghost"
-                  onClick={() => setSearchOpen(false)}
+                  className="rounded-full hover-elevate"
+                  data-testid="button-submit-search"
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setSearchQuery("");
+                  }}
                   className="rounded-full hover-elevate"
                   data-testid="button-close-search"
                 >
                   <X className="h-5 w-5" />
                 </Button>
-              </div>
+              </form>
             ) : (
               <Button
                 size="icon"

@@ -3,7 +3,7 @@ import { useRoute, useLocation, Link } from "wouter";
 import Header from "@/components/Header";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
-import { products, categories } from "@/lib/products";
+import { useProducts, useProduct } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -27,7 +27,8 @@ export default function ProductPage() {
   const { toast } = useToast();
 
   const productId = params?.id || '';
-  const product = products.find(p => p.id === productId);
+  const { product, isLoading } = useProduct(productId);
+  const { products, categories } = useProducts();
   const category = product ? categories.find(c => c.id === product.category) : null;
 
   const handleAddToCart = () => {
@@ -76,11 +77,26 @@ export default function ProductPage() {
   };
 
   const handleCheckout = () => {
-    toast({
-      title: "Оформление заказа",
-      description: "Эта функция будет доступна в полной версии приложения",
-    });
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    setLocation('/checkout');
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col candy-pattern">
+        <Header 
+          cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+          onCartClick={() => setCartOpen(true)}
+        />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-muted-foreground">Загрузка...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!product) {
     return (

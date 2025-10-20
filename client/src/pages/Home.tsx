@@ -7,7 +7,7 @@ import CategoryCard from "@/components/CategoryCard";
 import ProductCard from "@/components/ProductCard";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
-import { products } from "@/lib/products";
+import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
@@ -32,6 +32,7 @@ export default function Home() {
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
+  const { products, isLoading } = useProducts();
 
   const slides = [
     {
@@ -111,10 +112,8 @@ export default function Home() {
   };
 
   const handleCheckout = () => {
-    toast({
-      title: "Оформление заказа",
-      description: "Эта функция будет доступна в полной версии приложения",
-    });
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    setLocation('/checkout');
   };
 
   return (
@@ -157,20 +156,26 @@ export default function Home() {
               </h2>
               <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mx-auto shadow-lg shadow-pink-200" />
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  price={product.price}
-                  salePrice={product.salePrice}
-                  image={product.image}
-                  onAddToCart={handleAddToCart}
-                  onClick={(id) => setLocation(`/product/${id}`)}
-                />
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">Загрузка товаров...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    name={product.name}
+                    price={product.price}
+                    salePrice={product.salePrice}
+                    image={product.image}
+                    onAddToCart={handleAddToCart}
+                    onClick={(id) => setLocation(`/product/${id}`)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>

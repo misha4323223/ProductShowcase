@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useRoute, useLocation } from "wouter";
+import { useLocation, useSearch } from "wouter";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
-import { useProducts, useProductsByCategory } from "@/hooks/use-products";
+import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { Link } from "wouter";
 
 interface CartItem {
@@ -17,20 +17,22 @@ interface CartItem {
   image: string;
 }
 
-export default function CategoryPage() {
-  const [, params] = useRoute("/category/:slug");
+export default function SearchPage() {
+  const searchParams = useSearch();
+  const query = new URLSearchParams(searchParams).get('q') || '';
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
+  const { products, isLoading } = useProducts();
 
-  const categorySlug = params?.slug || '';
-  const { categories, products: allProducts } = useProducts();
-  const { products: categoryProducts, isLoading } = useProductsByCategory(categorySlug);
-  const category = categories.find(c => c.slug === categorySlug);
+  const searchResults = products.filter(p => 
+    p.name.toLowerCase().includes(query.toLowerCase()) ||
+    p.description.toLowerCase().includes(query.toLowerCase())
+  );
 
   const handleAddToCart = (productId: string) => {
-    const product = allProducts.find(p => p.id === productId);
+    const product = products.find(p => p.id === productId);
     if (!product) return;
 
     setCartItems(prev => {
@@ -79,28 +81,6 @@ export default function CategoryPage() {
     setLocation('/checkout');
   };
 
-  if (!category) {
-    return (
-      <div className="min-h-screen flex flex-col candy-pattern">
-        <Header 
-          cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
-          onCartClick={() => setCartOpen(true)}
-        />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-muted-foreground mb-4">
-              Категория не найдена
-            </h1>
-            <Link href="/" className="text-primary hover:underline" data-testid="link-home">
-              Вернуться на главную
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
       <Header 
@@ -116,14 +96,17 @@ export default function CategoryPage() {
                 Главная
               </Link>
               <ChevronRight className="h-4 w-4" />
-              <span className="text-foreground font-medium" data-testid="breadcrumb-category">
-                {category.name}
+              <span className="text-foreground font-medium" data-testid="breadcrumb-search">
+                Результаты поиска
               </span>
             </div>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid="text-category-title">
-              {category.name}
-            </h1>
-            <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mt-4 shadow-lg shadow-pink-200" />
+            <div className="flex items-center gap-3 mb-4">
+              <Search className="h-8 w-8 text-primary" />
+              <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid="text-search-title">
+                Поиск: "{query}"
+              </h1>
+            </div>
+            <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full shadow-lg shadow-pink-200" />
           </div>
         </div>
 
@@ -131,23 +114,27 @@ export default function CategoryPage() {
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             {isLoading ? (
               <div className="text-center py-8">
-                <p className="text-muted-foreground">Загрузка товаров...</p>
+                <p className="text-muted-foreground">Поиск товаров...</p>
               </div>
-            ) : categoryProducts.length === 0 ? (
+            ) : searchResults.length === 0 ? (
               <div className="text-center py-16">
-                <p className="text-muted-foreground text-lg" data-testid="text-no-products">
-                  В этой категории пока нет товаров
+                <Search className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground text-lg mb-2" data-testid="text-no-results">
+                  По вашему запросу ничего не найдено
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  Попробуйте изменить поисковый запрос
                 </p>
               </div>
             ) : (
               <>
                 <div className="mb-6">
-                  <p className="text-muted-foreground" data-testid="text-product-count">
-                    Найдено товаров: <span className="font-semibold text-foreground">{categoryProducts.length}</span>
+                  <p className="text-muted-foreground" data-testid="text-results-count">
+                    Найдено товаров: <span className="font-semibold text-foreground">{searchResults.length}</span>
                   </p>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                  {categoryProducts.map((product) => (
+                  {searchResults.map((product) => (
                     <ProductCard
                       key={product.id}
                       id={product.id}
