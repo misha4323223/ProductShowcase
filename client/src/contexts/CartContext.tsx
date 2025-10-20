@@ -29,8 +29,6 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const SESSION_KEY = 'cart-session-loaded';
-
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, loading } = useAuth();
@@ -44,34 +42,44 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!loading && isInitialized && user) {
-      const sessionLoaded = sessionStorage.getItem(SESSION_KEY);
-      
-      if (!sessionLoaded) {
-        console.log('Загрузка корзины из Firebase для пользователя:', user.uid);
+    if (!loading && isInitialized) {
+      if (user) {
+        const sessionKey = `cart-loaded-${user.uid}`;
+        const sessionLoaded = sessionStorage.getItem(sessionKey);
         
-        loadCartFromFirebase(user.uid).then(firebaseCart => {
-          console.log('Корзина из Firebase:', firebaseCart);
+        if (!sessionLoaded) {
+          console.log('Загрузка корзины из Firebase для пользователя:', user.uid);
           
-          const uiCart: CartItem[] = firebaseCart.map(item => ({
-            id: item.productId,
-            name: item.name,
-            image: item.image,
-            quantity: item.quantity,
-            price: item.price,
-          }));
-          
-          console.log('Установка корзины из Firebase:', uiCart);
-          setCartItems(uiCart);
-          saveCartToLocalStorage(uiCart);
-          sessionStorage.setItem(SESSION_KEY, 'true');
-        }).catch(err => {
-          console.error('Ошибка загрузки корзины из Firebase:', err);
-          sessionStorage.setItem(SESSION_KEY, 'true');
+          loadCartFromFirebase(user.uid).then(firebaseCart => {
+            console.log('Корзина из Firebase:', firebaseCart);
+            
+            const uiCart: CartItem[] = firebaseCart.map(item => ({
+              id: item.productId,
+              name: item.name,
+              image: item.image,
+              quantity: item.quantity,
+              price: item.price,
+            }));
+            
+            console.log('Установка корзины из Firebase:', uiCart);
+            setCartItems(uiCart);
+            saveCartToLocalStorage(uiCart);
+            sessionStorage.setItem(sessionKey, 'true');
+          }).catch(err => {
+            console.error('Ошибка загрузки корзины из Firebase:', err);
+            sessionStorage.setItem(sessionKey, 'true');
+          });
+        } else {
+          console.log('Корзина уже загружена для этого пользователя в этой сессии');
+        }
+      } else {
+        console.log('Пользователь не авторизован, очистка sessionStorage');
+        Object.keys(sessionStorage).forEach(key => {
+          if (key.startsWith('cart-loaded-')) {
+            sessionStorage.removeItem(key);
+          }
         });
       }
-    } else if (!loading && !user) {
-      sessionStorage.removeItem(SESSION_KEY);
     }
   }, [user, loading, isInitialized]);
 
