@@ -73,7 +73,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           console.log('Корзина уже загружена для этого пользователя в этой сессии');
         }
       } else {
-        console.log('Пользователь не авторизован, очистка sessionStorage');
+        console.log('Пользователь вышел из аккаунта, очистка корзины');
+        setCartItems([]);
+        saveCartToLocalStorage([]);
         Object.keys(sessionStorage).forEach(key => {
           if (key.startsWith('cart-loaded-')) {
             sessionStorage.removeItem(key);
