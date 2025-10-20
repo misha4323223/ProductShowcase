@@ -11,6 +11,7 @@ import CheckoutPage from "@/pages/CheckoutPage";
 import SearchPage from "@/pages/SearchPage";
 import LoginPage from "@/pages/LoginPage";
 import AccountPage from "@/pages/AccountPage";
+import AdminUploadPage from "@/pages/AdminUploadPage";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/search" component={SearchPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/account" component={AccountPage} />
+      <Route path="/admin/upload" component={AdminUploadPage} />
       <Route component={NotFound} />
     </Switch>
   );
