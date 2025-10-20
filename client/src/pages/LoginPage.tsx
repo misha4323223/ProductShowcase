@@ -97,14 +97,24 @@ export default function LoginPage() {
       await resetPassword(resetEmail);
       toast({
         title: "Письмо отправлено!",
-        description: "Проверьте свою почту для сброса пароля",
+        description: "Проверьте свою почту для сброса пароля. Письмо может попасть в спам.",
       });
       setIsResetDialogOpen(false);
       setResetEmail("");
     } catch (error: any) {
+      let errorMessage = "Не удалось отправить письмо";
+      
+      if (error.code === "auth/user-not-found") {
+        errorMessage = "Пользователь с таким email не найден";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "Неверный формат email";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Слишком много запросов. Попробуйте позже";
+      }
+      
       toast({
-        title: "Ошибка",
-        description: error.message || "Не удалось отправить письмо",
+        title: "Ошибка восстановления пароля",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
