@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   saveCartToLocalStorage, 
@@ -33,6 +33,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, loading } = useAuth();
   const [isInitialized, setIsInitialized] = useState(false);
+  const skipNextSaveRef = useRef(false);
 
   useEffect(() => {
     const localCart = loadCartFromLocalStorage();
@@ -62,6 +63,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }));
             
             console.log('Установка корзины из Firebase:', uiCart);
+            skipNextSaveRef.current = true;
             setCartItems(uiCart);
             saveCartToLocalStorage(uiCart);
             sessionStorage.setItem(sessionKey, 'true');
@@ -73,7 +75,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           console.log('Корзина уже загружена для этого пользователя в этой сессии');
         }
       } else {
-        console.log('Пользователь вышел из аккаунта, очистка корзины');
+        console.log('Пользователь вышел из аккаунта, очистка локальной корзины');
+        skipNextSaveRef.current = true;
         setCartItems([]);
         saveCartToLocalStorage([]);
         Object.keys(sessionStorage).forEach(key => {
@@ -86,25 +89,31 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [user, loading, isInitialized]);
 
   useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized && user) {
+      if (skipNextSaveRef.current) {
+        skipNextSaveRef.current = false;
+        console.log('Пропуск сохранения в Firebase (загрузка или выход)');
+        return;
+      }
+
       console.log('Сохранение корзины:', cartItems);
       saveCartToLocalStorage(cartItems);
       
-      if (user) {
-        const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
-          productId: item.id,
-          name: item.name,
-          image: item.image,
-          quantity: item.quantity,
-          price: item.price,
-        }));
-        
-        console.log('Сохранение корзины в Firebase:', firebaseCartItems);
-        
-        saveCartToFirebase(user.uid, firebaseCartItems).catch(err => {
-          console.error('Ошибка сохранения в Firebase:', err);
-        });
-      }
+      const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
+        productId: item.id,
+        name: item.name,
+        image: item.image,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+      
+      console.log('Сохранение корзины в Firebase:', firebaseCartItems);
+      
+      saveCartToFirebase(user.uid, firebaseCartItems).catch(err => {
+        console.error('Ошибка сохранения в Firebase:', err);
+      });
+    } else if (isInitialized && !user) {
+      saveCartToLocalStorage(cartItems);
     }
   }, [cartItems, user, isInitialized]);
 
