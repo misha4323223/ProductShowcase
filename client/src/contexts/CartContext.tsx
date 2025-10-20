@@ -9,13 +9,15 @@ import {
 } from '@/services/firebase-cart';
 import type { CartItem as FirebaseCartItem } from '@/types/firebase-types';
 
-export interface CartItem {
+export interface UICartItem {
   id: string;
   name: string;
   price: number;
   quantity: number;
   image: string;
 }
+
+export type CartItem = UICartItem;
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -32,6 +34,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, loading } = useAuth();
   const [isInitialized, setIsInitialized] = useState(false);
+  const [hasLoadedFromFirebase, setHasLoadedFromFirebase] = useState(false);
 
   useEffect(() => {
     const localCart = loadCartFromLocalStorage();
@@ -40,30 +43,45 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!loading && isInitialized) {
-      if (user) {
-        const localCart = loadCartFromLocalStorage();
-        const firebaseCartItems: FirebaseCartItem[] = localCart.map(item => ({
-          productId: item.id,
+    if (!loading && isInitialized && user && !hasLoadedFromFirebase) {
+      const localCart = loadCartFromLocalStorage();
+      const firebaseCartItems: FirebaseCartItem[] = localCart.map(item => ({
+        productId: item.id,
+        name: item.name,
+        image: item.image,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+      
+      mergeCartsOnLogin(user.uid, firebaseCartItems).then(merged => {
+        const mergedUICart: CartItem[] = merged.map(item => ({
+          id: item.productId,
+          name: item.name,
+          image: item.image,
           quantity: item.quantity,
           price: item.price,
         }));
-        
-        mergeCartsOnLogin(user.uid, firebaseCartItems).then(merged => {
-          const mergedUICart = loadCartFromLocalStorage();
-          setCartItems(mergedUICart);
-        });
-      }
+        setCartItems(mergedUICart);
+        saveCartToLocalStorage(mergedUICart);
+        setHasLoadedFromFirebase(true);
+      }).catch(err => {
+        console.error('Failed to merge carts:', err);
+        setHasLoadedFromFirebase(true);
+      });
+    } else if (!loading && !user) {
+      setHasLoadedFromFirebase(false);
     }
-  }, [user, loading, isInitialized]);
+  }, [user, loading, isInitialized, hasLoadedFromFirebase]);
 
   useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized && hasLoadedFromFirebase) {
       saveCartToLocalStorage(cartItems);
       
       if (user) {
         const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
           productId: item.id,
+          name: item.name,
+          image: item.image,
           quantity: item.quantity,
           price: item.price,
         }));
@@ -73,7 +91,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         });
       }
     }
-  }, [cartItems, user, isInitialized]);
+  }, [cartItems, user, isInitialized, hasLoadedFromFirebase]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
     const quantity = item.quantity || 1;

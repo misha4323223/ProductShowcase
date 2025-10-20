@@ -1,14 +1,22 @@
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import type { CartItem } from "@/types/firebase-types";
+import type { CartItem as FirebaseCartItem } from "@/types/firebase-types";
+
+export interface UICartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
 
 const CART_STORAGE_KEY = 'sweet-delights-cart';
 
-export function saveCartToLocalStorage(items: CartItem[]): void {
+export function saveCartToLocalStorage(items: UICartItem[]): void {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
-export function loadCartFromLocalStorage(): CartItem[] {
+export function loadCartFromLocalStorage(): UICartItem[] {
   const stored = localStorage.getItem(CART_STORAGE_KEY);
   if (stored) {
     try {
@@ -20,7 +28,7 @@ export function loadCartFromLocalStorage(): CartItem[] {
   return [];
 }
 
-export async function saveCartToFirebase(userId: string, items: CartItem[]): Promise<void> {
+export async function saveCartToFirebase(userId: string, items: FirebaseCartItem[]): Promise<void> {
   const cartRef = doc(db, "carts", userId);
   await setDoc(cartRef, {
     items,
@@ -28,7 +36,7 @@ export async function saveCartToFirebase(userId: string, items: CartItem[]): Pro
   });
 }
 
-export async function loadCartFromFirebase(userId: string): Promise<CartItem[]> {
+export async function loadCartFromFirebase(userId: string): Promise<FirebaseCartItem[]> {
   const cartRef = doc(db, "carts", userId);
   const cartSnap = await getDoc(cartRef);
   
@@ -38,7 +46,7 @@ export async function loadCartFromFirebase(userId: string): Promise<CartItem[]> 
   return [];
 }
 
-export async function mergeCartsOnLogin(userId: string, localCart: CartItem[]): Promise<CartItem[]> {
+export async function mergeCartsOnLogin(userId: string, localCart: FirebaseCartItem[]): Promise<FirebaseCartItem[]> {
   const firebaseCart = await loadCartFromFirebase(userId);
   
   const merged = [...firebaseCart];
@@ -53,7 +61,6 @@ export async function mergeCartsOnLogin(userId: string, localCart: CartItem[]): 
   }
   
   await saveCartToFirebase(userId, merged);
-  saveCartToLocalStorage(merged);
   
   return merged;
 }

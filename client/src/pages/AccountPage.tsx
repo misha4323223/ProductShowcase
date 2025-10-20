@@ -39,11 +39,13 @@ export default function AccountPage() {
     setLoadingOrders(true);
     try {
       const userOrders = await getUserOrders(user.uid);
+      console.log('Загруженные заказы:', userOrders);
       setOrders(userOrders);
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Ошибка загрузки заказов:', error);
       toast({
         title: "Ошибка",
-        description: "Не удалось загрузить заказы",
+        description: error.message || "Не удалось загрузить заказы",
         variant: "destructive",
       });
     } finally {
