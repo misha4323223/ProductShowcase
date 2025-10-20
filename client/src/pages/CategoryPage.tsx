@@ -6,23 +6,16 @@ import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
 import { useProducts, useProductsByCategory } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 import { ChevronRight } from "lucide-react";
 import { Link } from "wouter";
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
 
 export default function CategoryPage() {
   const [, params] = useRoute("/category/:slug");
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
+  const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
 
   const categorySlug = params?.slug || '';
   const { categories, products: allProducts } = useProducts();
@@ -33,41 +26,27 @@ export default function CategoryPage() {
     const product = allProducts.find(p => p.id === productId);
     if (!product) return;
 
-    setCartItems(prev => {
-      const existing = prev.find(item => item.id === productId);
-      if (existing) {
-        toast({
-          title: "Количество обновлено",
-          description: `${product.name} - теперь ${existing.quantity + 1} шт.`,
-        });
-        return prev.map(item =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      toast({
-        title: "Добавлено в корзину",
-        description: product.name,
-      });
-      return [...prev, {
-        id: product.id,
-        name: product.name,
-        price: product.salePrice || product.price,
-        quantity: 1,
-        image: product.image,
-      }];
+    const existing = cartItems.find(item => item.id === productId);
+    
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.salePrice || product.price,
+      image: product.image,
+    });
+
+    toast({
+      title: existing ? "Количество обновлено" : "Добавлено в корзину",
+      description: existing ? `${product.name} - теперь ${existing.quantity + 1} шт.` : product.name,
     });
   };
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
-    setCartItems(prev =>
-      prev.map(item => item.id === id ? { ...item, quantity } : item)
-    );
+    updateQuantity(id, quantity);
   };
 
   const handleRemoveItem = (id: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+    removeItem(id);
     toast({
       title: "Удалено из корзины",
       variant: "destructive",
@@ -83,7 +62,7 @@ export default function CategoryPage() {
     return (
       <div className="min-h-screen flex flex-col candy-pattern">
         <Header 
-          cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+          cartCount={cartCount}
           onCartClick={() => setCartOpen(true)}
         />
         <main className="flex-1 flex items-center justify-center">
@@ -104,7 +83,7 @@ export default function CategoryPage() {
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
       <Header 
-        cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+        cartCount={cartCount}
         onCartClick={() => setCartOpen(true)}
       />
       
