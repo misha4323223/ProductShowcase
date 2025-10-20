@@ -101,16 +101,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
     const quantity = item.quantity || 1;
+    console.log('Добавление товара в корзину:', item);
     setCartItems(prev => {
       const existing = prev.find(i => i.id === item.id);
+      let newCart: CartItem[];
       if (existing) {
-        return prev.map(i =>
+        newCart = prev.map(i =>
           i.id === item.id
             ? { ...i, quantity: i.quantity + quantity }
             : i
         );
+      } else {
+        newCart = [...prev, { ...item, quantity }];
       }
-      return [...prev, { ...item, quantity }];
+      console.log('Новая корзина после добавления:', newCart);
+      return newCart;
     });
   };
 

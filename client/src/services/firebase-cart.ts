@@ -13,14 +13,18 @@ export interface UICartItem {
 const CART_STORAGE_KEY = 'sweet-delights-cart';
 
 export function saveCartToLocalStorage(items: UICartItem[]): void {
+  console.log('Сохранение в localStorage:', items);
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
 export function loadCartFromLocalStorage(): UICartItem[] {
   const stored = localStorage.getItem(CART_STORAGE_KEY);
+  console.log('Загрузка из localStorage (raw):', stored);
   if (stored) {
     try {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      console.log('Загрузка из localStorage (parsed):', parsed);
+      return parsed;
     } catch {
       return [];
     }
