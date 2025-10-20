@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,7 +40,7 @@ export default function AdminUploadPage() {
           ...product,
           featured: false,
           popularity: Math.floor(Math.random() * 100),
-          createdAt: new Date(),
+          createdAt: serverTimestamp(),
         };
         await setDoc(doc(db, "products", product.id), productData);
         completed++;

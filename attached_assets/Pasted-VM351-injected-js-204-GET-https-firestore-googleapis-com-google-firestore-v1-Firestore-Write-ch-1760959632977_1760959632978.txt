@@ -1,0 +1,323 @@
+VM351 injected.js:204 
+ GET https://firestore.googleapis.com/google.firestore.v1.Firestore/Write/channe…rpc&SID=7fPkVHI_XqudZUAvhCdFnA&AID=0&CI=0&TYPE=xmlhttp&zx=1phv77d4pyzh&t=1 400 (Bad Request)
+apply	@	VM351 injected.js:204
+h.send	@	VM399 firebase_firestore.js:1712
+h.ea	@	VM399 firebase_firestore.js:1853
+Eb	@	VM399 firebase_firestore.js:1182
+$c	@	VM399 firebase_firestore.js:2278
+h.Da	@	VM399 firebase_firestore.js:2245
+sa	@	VM399 firebase_firestore.js:624
+Promise.then		
+u	@	VM399 firebase_firestore.js:618
+ac	@	VM399 firebase_firestore.js:2231
+Lb	@	VM399 firebase_firestore.js:1384
+N2.Y	@	VM399 firebase_firestore.js:1238
+N2.ba	@	VM399 firebase_firestore.js:1189
+Va	@	VM399 firebase_firestore.js:920
+D	@	VM399 firebase_firestore.js:888
+Qc	@	VM399 firebase_firestore.js:1885
+h.Xa	@	VM399 firebase_firestore.js:1880
+h.Ca	@	VM399 firebase_firestore.js:1877
+Gc	@	VM399 firebase_firestore.js:1778
+h.Ma	@	VM399 firebase_firestore.js:1745
+Promise.then		
+Ic	@	VM399 firebase_firestore.js:1736
+h.Pa	@	VM399 firebase_firestore.js:1732
+Promise.then		
+h.send	@	VM399 firebase_firestore.js:1712
+h.ea	@	VM399 firebase_firestore.js:1853
+Eb	@	VM399 firebase_firestore.js:1177
+Cb	@	VM399 firebase_firestore.js:1152
+h.Ea	@	VM399 firebase_firestore.js:2154
+sa	@	VM399 firebase_firestore.js:624
+Promise.then		
+u	@	VM399 firebase_firestore.js:618
+bc	@	VM399 firebase_firestore.js:2098
+h.connect	@	VM399 firebase_firestore.js:2058
+Y2.m	@	VM399 firebase_firestore.js:2425
+Yo	@	VM399 firebase_firestore.js:12587
+send	@	VM399 firebase_firestore.js:12478
+q_	@	VM399 firebase_firestore.js:12795
+ra	@	VM399 firebase_firestore.js:12998
+__PRIVATE_onWriteStreamOpen	@	VM399 firebase_firestore.js:13350
+(anonymous)	@	VM399 firebase_firestore.js:12873
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:12873
+__	@	VM399 firebase_firestore.js:12484
+(anonymous)	@	VM399 firebase_firestore.js:12635
+setTimeout		
+T_	@	VM399 firebase_firestore.js:12634
+j_	@	VM399 firebase_firestore.js:12977
+G_	@	VM399 firebase_firestore.js:12870
+(anonymous)	@	VM399 firebase_firestore.js:12860
+Promise.then		
+auth	@	VM399 firebase_firestore.js:12856
+start	@	VM399 firebase_firestore.js:12755
+start	@	VM399 firebase_firestore.js:12971
+(anonymous)	@	VM399 firebase_firestore.js:12882
+(anonymous)	@	VM399 firebase_firestore.js:12702
+(anonymous)	@	VM399 firebase_firestore.js:13493
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+handleDelayElapsed	@	VM399 firebase_firestore.js:13493
+(anonymous)	@	VM399 firebase_firestore.js:13473
+setTimeout		
+start	@	VM399 firebase_firestore.js:13473
+createAndSchedule	@	VM399 firebase_firestore.js:13466
+enqueueAfterDelay	@	VM399 firebase_firestore.js:16028
+p_	@	VM399 firebase_firestore.js:12702
+N_	@	VM399 firebase_firestore.js:12881
+start	@	VM399 firebase_firestore.js:12755
+start	@	VM399 firebase_firestore.js:12971
+__PRIVATE_startWriteStream	@	VM399 firebase_firestore.js:13347
+__PRIVATE_onWriteStreamClose	@	VM399 firebase_firestore.js:13375
+close	@	VM399 firebase_firestore.js:12845
+z_	@	VM399 firebase_firestore.js:12887
+(anonymous)	@	VM399 firebase_firestore.js:12875
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:12875
+a_	@	VM399 firebase_firestore.js:12487
+(anonymous)	@	VM399 firebase_firestore.js:12606
+(anonymous)	@	VM399 firebase_firestore.js:12593
+Va	@	VM399 firebase_firestore.js:920
+D	@	VM399 firebase_firestore.js:888
+Z2.pa	@	VM399 firebase_firestore.js:2480
+R	@	VM399 firebase_firestore.js:2335
+Qb	@	VM399 firebase_firestore.js:2315
+Mb	@	VM399 firebase_firestore.js:1314
+N2.Y	@	VM399 firebase_firestore.js:1256
+N2.ba	@	VM399 firebase_firestore.js:1189
+Va	@	VM399 firebase_firestore.js:920
+D	@	VM399 firebase_firestore.js:888
+Qc	@	VM399 firebase_firestore.js:1885
+h.Xa	@	VM399 firebase_firestore.js:1880
+h.Ca	@	VM399 firebase_firestore.js:1877
+Gc	@	VM399 firebase_firestore.js:1778
+h.Ma	@	VM399 firebase_firestore.js:1745
+Promise.then		
+Ic	@	VM399 firebase_firestore.js:1736
+h.Pa	@	VM399 firebase_firestore.js:1732
+Promise.then		
+h.send	@	VM399 firebase_firestore.js:1712
+h.ea	@	VM399 firebase_firestore.js:1853
+Eb	@	VM399 firebase_firestore.js:1182
+$c	@	VM399 firebase_firestore.js:2278
+h.Da	@	VM399 firebase_firestore.js:2245
+sa	@	VM399 firebase_firestore.js:624
+Promise.then		
+u	@	VM399 firebase_firestore.js:618
+ac	@	VM399 firebase_firestore.js:2231
+Lb	@	VM399 firebase_firestore.js:1384
+N2.Y	@	VM399 firebase_firestore.js:1238
+N2.ba	@	VM399 firebase_firestore.js:1189
+Va	@	VM399 firebase_firestore.js:920
+D	@	VM399 firebase_firestore.js:888
+Qc	@	VM399 firebase_firestore.js:1885
+h.Xa	@	VM399 firebase_firestore.js:1880
+h.Ca	@	VM399 firebase_firestore.js:1877
+Gc	@	VM399 firebase_firestore.js:1778
+h.Ma	@	VM399 firebase_firestore.js:1745
+Promise.then		
+Ic	@	VM399 firebase_firestore.js:1736
+h.Pa	@	VM399 firebase_firestore.js:1732
+Promise.then		
+h.send	@	VM399 firebase_firestore.js:1712
+h.ea	@	VM399 firebase_firestore.js:1853
+Eb	@	VM399 firebase_firestore.js:1177
+Cb	@	VM399 firebase_firestore.js:1152
+h.Ea	@	VM399 firebase_firestore.js:2154
+sa	@	VM399 firebase_firestore.js:624
+Promise.then		
+u	@	VM399 firebase_firestore.js:618
+bc	@	VM399 firebase_firestore.js:2098
+h.connect	@	VM399 firebase_firestore.js:2058
+Y2.m	@	VM399 firebase_firestore.js:2425
+Yo	@	VM399 firebase_firestore.js:12587
+send	@	VM399 firebase_firestore.js:12478
+q_	@	VM399 firebase_firestore.js:12795
+ra	@	VM399 firebase_firestore.js:12998
+__PRIVATE_onWriteStreamOpen	@	VM399 firebase_firestore.js:13350
+(anonymous)	@	VM399 firebase_firestore.js:12873
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:12873
+__	@	VM399 firebase_firestore.js:12484
+(anonymous)	@	VM399 firebase_firestore.js:12635
+setTimeout		
+T_	@	VM399 firebase_firestore.js:12634
+j_	@	VM399 firebase_firestore.js:12977
+G_	@	VM399 firebase_firestore.js:12870
+(anonymous)	@	VM399 firebase_firestore.js:12860
+Promise.then		
+auth	@	VM399 firebase_firestore.js:12856
+start	@	VM399 firebase_firestore.js:12755
+start	@	VM399 firebase_firestore.js:12971
+(anonymous)	@	VM399 firebase_firestore.js:12882
+(anonymous)	@	VM399 firebase_firestore.js:12702
+(anonymous)	@	VM399 firebase_firestore.js:13493
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+handleDelayElapsed	@	VM399 firebase_firestore.js:13493
+(anonymous)	@	VM399 firebase_firestore.js:13473
+setTimeout		
+start	@	VM399 firebase_firestore.js:13473
+createAndSchedule	@	VM399 firebase_firestore.js:13466
+enqueueAfterDelay	@	VM399 firebase_firestore.js:16028
+p_	@	VM399 firebase_firestore.js:12702
+N_	@	VM399 firebase_firestore.js:12881
+start	@	VM399 firebase_firestore.js:12755
+start	@	VM399 firebase_firestore.js:12971
+__PRIVATE_startWriteStream	@	VM399 firebase_firestore.js:13347
+__PRIVATE_onWriteStreamClose	@	VM399 firebase_firestore.js:13375
+close	@	VM399 firebase_firestore.js:12845
+z_	@	VM399 firebase_firestore.js:12887
+(anonymous)	@	VM399 firebase_firestore.js:12875
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:12875
+a_	@	VM399 firebase_firestore.js:12487
+(anonymous)	@	VM399 firebase_firestore.js:12606
+(anonymous)	@	VM399 firebase_firestore.js:12593
+Va	@	VM399 firebase_firestore.js:920
+D	@	VM399 firebase_firestore.js:888
+Z2.pa	@	VM399 firebase_firestore.js:2480
+R	@	VM399 firebase_firestore.js:2335
+Qb	@	VM399 firebase_firestore.js:2312
+Mb	@	VM399 firebase_firestore.js:1314
+N2.Y	@	VM399 firebase_firestore.js:1256
+N2.ba	@	VM399 firebase_firestore.js:1189
+Va	@	VM399 firebase_firestore.js:920
+D	@	VM399 firebase_firestore.js:888
+Qc	@	VM399 firebase_firestore.js:1885
+h.Xa	@	VM399 firebase_firestore.js:1880
+h.Ca	@	VM399 firebase_firestore.js:1877
+Gc	@	VM399 firebase_firestore.js:1778
+h.Ma	@	VM399 firebase_firestore.js:1745
+Promise.then		
+Ic	@	VM399 firebase_firestore.js:1736
+h.Pa	@	VM399 firebase_firestore.js:1732
+Promise.then		
+h.send	@	VM399 firebase_firestore.js:1712
+h.ea	@	VM399 firebase_firestore.js:1853
+Eb	@	VM399 firebase_firestore.js:1182
+$c	@	VM399 firebase_firestore.js:2278
+h.Da	@	VM399 firebase_firestore.js:2245
+sa	@	VM399 firebase_firestore.js:624
+Promise.then		
+u	@	VM399 firebase_firestore.js:618
+ac	@	VM399 firebase_firestore.js:2231
+Lb	@	VM399 firebase_firestore.js:1384
+N2.Y	@	VM399 firebase_firestore.js:1238
+N2.ba	@	VM399 firebase_firestore.js:1189
+Va	@	VM399 firebase_firestore.js:920
+D	@	VM399 firebase_firestore.js:888
+Qc	@	VM399 firebase_firestore.js:1885
+h.Xa	@	VM399 firebase_firestore.js:1880
+h.Ca	@	VM399 firebase_firestore.js:1877
+Gc	@	VM399 firebase_firestore.js:1778
+h.Ma	@	VM399 firebase_firestore.js:1745
+Promise.then		
+Ic	@	VM399 firebase_firestore.js:1736
+h.Pa	@	VM399 firebase_firestore.js:1732
+Promise.then		
+h.send	@	VM399 firebase_firestore.js:1712
+h.ea	@	VM399 firebase_firestore.js:1853
+Eb	@	VM399 firebase_firestore.js:1177
+Cb	@	VM399 firebase_firestore.js:1152
+h.Ea	@	VM399 firebase_firestore.js:2154
+sa	@	VM399 firebase_firestore.js:624
+Promise.then		
+u	@	VM399 firebase_firestore.js:618
+bc	@	VM399 firebase_firestore.js:2098
+h.connect	@	VM399 firebase_firestore.js:2058
+Y2.m	@	VM399 firebase_firestore.js:2425
+Yo	@	VM399 firebase_firestore.js:12587
+send	@	VM399 firebase_firestore.js:12478
+q_	@	VM399 firebase_firestore.js:12795
+ra	@	VM399 firebase_firestore.js:12998
+__PRIVATE_onWriteStreamOpen	@	VM399 firebase_firestore.js:13350
+(anonymous)	@	VM399 firebase_firestore.js:12873
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+(anonymous)	@	VM399 firebase_firestore.js:12897
+(anonymous)	@	VM399 firebase_firestore.js:12873
+__	@	VM399 firebase_firestore.js:12484
+(anonymous)	@	VM399 firebase_firestore.js:12635
+setTimeout		
+T_	@	VM399 firebase_firestore.js:12634
+j_	@	VM399 firebase_firestore.js:12977
+G_	@	VM399 firebase_firestore.js:12870
+(anonymous)	@	VM399 firebase_firestore.js:12860
+Promise.then		
+auth	@	VM399 firebase_firestore.js:12856
+start	@	VM399 firebase_firestore.js:12755
+start	@	VM399 firebase_firestore.js:12971
+(anonymous)	@	VM399 firebase_firestore.js:12882
+(anonymous)	@	VM399 firebase_firestore.js:12702
+(anonymous)	@	VM399 firebase_firestore.js:13493
+(anonymous)	@	VM399 firebase_firestore.js:15988
+(anonymous)	@	VM399 firebase_firestore.js:16019
+Promise.then		
+cc	@	VM399 firebase_firestore.js:16019
+enqueue	@	VM399 firebase_firestore.js:15988
+enqueueAndForget	@	VM399 firebase_firestore.js:15970
+handleDelayElapsed	@	VM399 firebase_firestore.js:13493
+(anonymous)	@	VM399 firebase_firestore.js:13473
+VM351 injected.js:27 [2025-10-20T11:17:30.141Z]  @firebase/firestore: Firestore (12.4.0): WebChannelConnection RPC 'Write' stream 0x8a1e978f transport errored. Name: undefined Message: undefined
+VM351 injected.js:204 
+ GET https://firestore.googleapis.com/google.firestore.v1.Firestore/Write/channe…rpc&SID=O50FHCFnrdKlsnkWEDUpxg&AID=0&CI=0&TYPE=xmlhttp&zx=shingjikwbi2&t=1 400 (Bad Request)
+VM351 injected.js:27 [2025-10-20T11:18:38.130Z]  @firebase/firestore: Firestore (12.4.0): WebChannelConnection RPC 'Write' stream 0x8a1e9790 transport errored. Name: undefined Message: undefined
+VM351 injected.js:204 
+ GET https://firestore.googleapis.com/google.firestore.v1.Firestore/Write/channe…rpc&SID=ABtUM_TIfwn5xM-pKHl5yQ&AID=0&CI=0&TYPE=xmlhttp&zx=fqv9399mf959&t=1 400 (Bad Request)
+VM351 injected.js:27 [2025-10-20T11:20:04.099Z]  @firebase/firestore: Firestore (12.4.0): WebChannelConnection RPC 'Write' stream 0x8a1e9791 transport errored. Name: undefined Message: undefined
+VM351 injected.js:204 
+ GET https://firestore.googleapis.com/google.firestore.v1.Firestore/Write/channe…=rpc&SID=grV17W6qmfcQRDS3vSJ9Mg&AID=0&CI=0&TYPE=xmlhttp&zx=4ssryx20m2d&t=1 400 (Bad Request)
+VM351 injected.js:27 [2025-10-20T11:21:00.939Z]  @firebase/firestore: Firestore (12.4.0): WebChannelConnection RPC 'Write' stream 0x8a1e9792 transport errored. Name: undefined Message: undefined
+VM351 injected.js:27 [vite] server connection lost. Polling for restart...
+ProductShowcase:1 Access to XMLHttpRequest at 'https://events.launchdarkly.com/events/diagnostic/62b35a8…' from origin 'https://replit.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+_app-a08f47be77cc6897.js:28 
+ POST https://events.launchdarkly.com/events/diagnostic/62b35a8… net::ERR_FAILED
+ProductShowcase:1 Access to XMLHttpRequest at 'https://events.launchdarkly.com/events/diagnostic/62b35a8…' from origin 'https://replit.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+_app-a08f47be77cc6897.js:28 
+ POST https://events.launchdarkly.com/events/diagnostic/62b35a8… net::ERR_FAILED
+﻿
+
