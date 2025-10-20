@@ -9,6 +9,7 @@ import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
 import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
 import heroImage2 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
@@ -19,20 +20,12 @@ import accessoriesImage from '@assets/generated_images/Sweet_accessories_categor
 import cookiesImage from '@assets/generated_images/Cookies_and_biscuits_image_6375c6a9.png';
 import saleImage from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.png';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
 export default function Home() {
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
   const { products, isLoading } = useProducts();
+  const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
 
   const slides = [
     {
@@ -70,41 +63,27 @@ export default function Home() {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-    setCartItems(prev => {
-      const existing = prev.find(item => item.id === productId);
-      if (existing) {
-        toast({
-          title: "Количество обновлено",
-          description: `${product.name} - теперь ${existing.quantity + 1} шт.`,
-        });
-        return prev.map(item =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      toast({
-        title: "Добавлено в корзину",
-        description: product.name,
-      });
-      return [...prev, {
-        id: product.id,
-        name: product.name,
-        price: product.salePrice || product.price,
-        quantity: 1,
-        image: product.image,
-      }];
+    const existing = cartItems.find(item => item.id === productId);
+
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.salePrice || product.price,
+      image: product.image,
+    });
+
+    toast({
+      title: existing ? "Количество обновлено" : "Добавлено в корзину",
+      description: existing ? `${product.name} - теперь ${existing.quantity + 1} шт.` : product.name,
     });
   };
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
-    setCartItems(prev =>
-      prev.map(item => item.id === id ? { ...item, quantity } : item)
-    );
+    updateQuantity(id, quantity);
   };
 
   const handleRemoveItem = (id: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+    removeItem(id);
     toast({
       title: "Удалено из корзины",
       variant: "destructive",
@@ -119,7 +98,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col relative candy-pattern">
       <Header 
-        cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+        cartCount={cartCount}
         onCartClick={() => setCartOpen(true)}
       />
       
