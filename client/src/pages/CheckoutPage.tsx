@@ -21,6 +21,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { createOrder } from "@/services/firebase-orders";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CartItem {
   id: string;
@@ -48,6 +50,7 @@ export default function CheckoutPage() {
   const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const cartItemsStr = localStorage.getItem('cartItems');
   const cartItems: CartItem[] = cartItemsStr ? JSON.parse(cartItemsStr) : [];
@@ -87,11 +90,29 @@ export default function CheckoutPage() {
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      console.log("Заказ оформлен:", data);
+    try {
+      const orderData = {
+        userId: user?.uid || 'guest',
+        items: cartItems.map(item => ({
+          productId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image,
+        })),
+        total: finalTotal,
+        status: 'pending' as const,
+        customerName: `${data.firstName} ${data.lastName}`,
+        customerEmail: data.email,
+        customerPhone: data.phone,
+        shippingAddress: `${data.address}, ${data.city}, ${data.postalCode}`,
+      };
+
+      const orderId = await createOrder(orderData);
+
       toast({
         title: "Заказ успешно оформлен!",
-        description: `Номер заказа: ${Math.random().toString(36).substr(2, 9).toUpperCase()}. Мы свяжемся с вами в ближайшее время.`,
+        description: `Номер заказа: ${orderId.substring(0, 8).toUpperCase()}. Мы свяжемся с вами в ближайшее время.`,
       });
       
       localStorage.removeItem('cartItems');
@@ -99,7 +120,14 @@ export default function CheckoutPage() {
       setTimeout(() => {
         setLocation('/');
       }, 2000);
-    }, 1500);
+    } catch (error: any) {
+      toast({
+        title: "Ошибка оформления заказа",
+        description: error.message || "Попробуйте еще раз",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+    }
   };
 
   if (cartItems.length === 0) {
