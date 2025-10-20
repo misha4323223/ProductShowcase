@@ -27,7 +27,12 @@ export default function AdminUploadPage() {
       console.log("📦 Загрузка категорий...");
       for (const category of productsData.categories) {
         console.log(`  ➜ Загрузка категории: ${category.name}`);
-        await setDoc(doc(db, "categories", category.id), category);
+        const cleanCategory = {
+          id: category.id,
+          name: category.name,
+          slug: category.slug,
+        };
+        await setDoc(doc(db, "categories", category.id), cleanCategory);
         completed++;
         setProgress((completed / totalItems) * 100);
         console.log(`  ✅ Категория загружена: ${category.name}`);
@@ -36,13 +41,25 @@ export default function AdminUploadPage() {
       console.log("🛍️ Загрузка товаров...");
       for (const product of productsData.products) {
         console.log(`  ➜ Загрузка товара: ${product.name}`);
-        const productData = {
-          ...product,
+        const cleanProduct: any = {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          category: product.category,
+          description: product.description,
           featured: false,
           popularity: Math.floor(Math.random() * 100),
-          createdAt: serverTimestamp(),
         };
-        await setDoc(doc(db, "products", product.id), productData);
+        
+        if (product.salePrice) {
+          cleanProduct.salePrice = product.salePrice;
+        }
+        
+        if (product.image && product.image.trim() !== "") {
+          cleanProduct.image = product.image;
+        }
+        
+        await setDoc(doc(db, "products", product.id), cleanProduct);
         completed++;
         setProgress((completed / totalItems) * 100);
         console.log(`  ✅ Товар загружен: ${product.name}`);
