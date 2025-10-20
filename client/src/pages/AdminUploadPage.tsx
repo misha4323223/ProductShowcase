@@ -19,16 +19,23 @@ export default function AdminUploadPage() {
     setProgress(0);
 
     try {
+      console.log("🚀 Начинаем загрузку данных в Firestore...");
+      
       const totalItems = productsData.categories.length + productsData.products.length;
       let completed = 0;
 
+      console.log("📦 Загрузка категорий...");
       for (const category of productsData.categories) {
+        console.log(`  ➜ Загрузка категории: ${category.name}`);
         await setDoc(doc(db, "categories", category.id), category);
         completed++;
         setProgress((completed / totalItems) * 100);
+        console.log(`  ✅ Категория загружена: ${category.name}`);
       }
 
+      console.log("🛍️ Загрузка товаров...");
       for (const product of productsData.products) {
+        console.log(`  ➜ Загрузка товара: ${product.name}`);
         const productData = {
           ...product,
           featured: false,
@@ -38,11 +45,27 @@ export default function AdminUploadPage() {
         await setDoc(doc(db, "products", product.id), productData);
         completed++;
         setProgress((completed / totalItems) * 100);
+        console.log(`  ✅ Товар загружен: ${product.name}`);
       }
 
+      console.log("🎉 Все данные успешно загружены!");
       setDone(true);
     } catch (err: any) {
-      setError(err.message || "Произошла ошибка при загрузке данных");
+      console.error("❌ ОШИБКА при загрузке:", err);
+      console.error("Код ошибки:", err.code);
+      console.error("Сообщение:", err.message);
+      
+      let errorMessage = "Произошла ошибка при загрузке данных";
+      
+      if (err.code === 'permission-denied') {
+        errorMessage = "❌ Доступ запрещен! Необходимо:\n1. Создать Firestore Database в Firebase Console\n2. Включить тестовый режим (Test mode)\n3. Обновить страницу и попробовать снова";
+      } else if (err.code === 'unavailable') {
+        errorMessage = "❌ Firebase Firestore недоступен! Проверьте:\n1. Создана ли база Firestore в Firebase Console\n2. Правильные ли API ключи";
+      } else {
+        errorMessage = `❌ Ошибка: ${err.message}\n\nКод: ${err.code || 'неизвестно'}`;
+      }
+      
+      setError(errorMessage);
     } finally {
       setUploading(false);
     }
@@ -110,7 +133,16 @@ export default function AdminUploadPage() {
 
           {error && (
             <div className="p-4 bg-destructive/10 border border-destructive rounded-md">
-              <p className="text-sm text-destructive">{error}</p>
+              <p className="text-sm text-destructive whitespace-pre-wrap">{error}</p>
+              <div className="mt-3 text-xs text-muted-foreground">
+                <p className="font-semibold mb-1">Как исправить:</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Откройте Firebase Console</li>
+                  <li>Создайте Firestore Database</li>
+                  <li>Выберите "Start in test mode"</li>
+                  <li>Обновите эту страницу</li>
+                </ol>
+              </div>
             </div>
           )}
         </CardContent>
