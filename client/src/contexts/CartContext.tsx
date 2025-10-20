@@ -45,6 +45,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!loading && isInitialized && user && !hasLoadedFromFirebase) {
       const localCart = loadCartFromLocalStorage();
+      console.log('Локальная корзина перед слиянием:', localCart);
+      
       const firebaseCartItems: FirebaseCartItem[] = localCart.map(item => ({
         productId: item.id,
         name: item.name,
@@ -54,6 +56,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }));
       
       mergeCartsOnLogin(user.uid, firebaseCartItems).then(merged => {
+        console.log('Слитая корзина из Firebase:', merged);
         const mergedUICart: CartItem[] = merged.map(item => ({
           id: item.productId,
           name: item.name,
@@ -61,6 +64,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           quantity: item.quantity,
           price: item.price,
         }));
+        console.log('UI корзина после слияния:', mergedUICart);
         setCartItems(mergedUICart);
         saveCartToLocalStorage(mergedUICart);
         setHasLoadedFromFirebase(true);
@@ -74,10 +78,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [user, loading, isInitialized, hasLoadedFromFirebase]);
 
   useEffect(() => {
-    if (isInitialized && hasLoadedFromFirebase) {
+    if (isInitialized) {
       saveCartToLocalStorage(cartItems);
       
-      if (user) {
+      if (user && hasLoadedFromFirebase) {
         const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
           productId: item.id,
           name: item.name,
@@ -85,6 +89,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           quantity: item.quantity,
           price: item.price,
         }));
+        
+        console.log('Сохранение корзины в Firebase:', firebaseCartItems);
         
         saveCartToFirebase(user.uid, firebaseCartItems).catch(err => {
           console.error('Failed to save cart to Firebase:', err);
