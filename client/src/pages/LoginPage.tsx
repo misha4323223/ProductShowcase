@@ -6,13 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Sparkles } from "lucide-react";
 import { Link } from "wouter";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, resetPassword } = useAuth();
   const { toast } = useToast();
   
   const [loginEmail, setLoginEmail] = useState("");
@@ -21,6 +22,9 @@ export default function LoginPage() {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [isResetLoading, setIsResetLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,6 +89,29 @@ export default function LoginPage() {
     }
   };
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsResetLoading(true);
+    
+    try {
+      await resetPassword(resetEmail);
+      toast({
+        title: "Письмо отправлено!",
+        description: "Проверьте свою почту для сброса пароля",
+      });
+      setIsResetDialogOpen(false);
+      setResetEmail("");
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось отправить письмо",
+        variant: "destructive",
+      });
+    } finally {
+      setIsResetLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -124,7 +151,52 @@ export default function LoginPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Пароль</Label>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="login-password">Пароль</Label>
+                      <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            className="px-0 text-xs h-auto text-primary hover:underline"
+                            type="button"
+                            data-testid="button-forgot-password"
+                          >
+                            Забыли пароль?
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent data-testid="dialog-reset-password">
+                          <form onSubmit={handleResetPassword}>
+                            <DialogHeader>
+                              <DialogTitle>Восстановление пароля</DialogTitle>
+                              <DialogDescription>
+                                Введите email, на который зарегистрирован ваш аккаунт. Мы отправим вам письмо со ссылкой для сброса пароля.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="py-4">
+                              <Label htmlFor="reset-email">Email</Label>
+                              <Input
+                                id="reset-email"
+                                type="email"
+                                placeholder="your@email.com"
+                                value={resetEmail}
+                                onChange={(e) => setResetEmail(e.target.value)}
+                                required
+                                data-testid="input-reset-email"
+                              />
+                            </div>
+                            <DialogFooter>
+                              <Button 
+                                type="submit" 
+                                disabled={isResetLoading}
+                                data-testid="button-reset-submit"
+                              >
+                                {isResetLoading ? "Отправка..." : "Отправить письмо"}
+                              </Button>
+                            </DialogFooter>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                     <Input
                       id="login-password"
                       type="password"
