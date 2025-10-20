@@ -1,11 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   saveCartToLocalStorage, 
   loadCartFromLocalStorage,
   saveCartToFirebase,
-  loadCartFromFirebase,
-  mergeCartsOnLogin 
+  loadCartFromFirebase
 } from '@/services/firebase-cart';
 import type { CartItem as FirebaseCartItem } from '@/types/firebase-types';
 
@@ -30,11 +29,12 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const SESSION_KEY = 'cart-session-loaded';
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, loading } = useAuth();
   const [isInitialized, setIsInitialized] = useState(false);
-  const loadedUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const localCart = loadCartFromLocalStorage();
@@ -44,43 +44,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!loading && isInitialized) {
-      const currentUserId = user?.uid || null;
+    if (!loading && isInitialized && user) {
+      const sessionLoaded = sessionStorage.getItem(SESSION_KEY);
       
-      if (currentUserId && currentUserId !== loadedUserIdRef.current) {
-        console.log('Пользователь вошел, загружаем корзину из Firebase один раз');
-        const localCart = loadCartFromLocalStorage();
-        console.log('Локальная корзина перед слиянием:', localCart);
+      if (!sessionLoaded) {
+        console.log('Загрузка корзины из Firebase для пользователя:', user.uid);
         
-        const firebaseCartItems: FirebaseCartItem[] = localCart.map(item => ({
-          productId: item.id,
-          name: item.name,
-          image: item.image,
-          quantity: item.quantity,
-          price: item.price,
-        }));
-        
-        mergeCartsOnLogin(currentUserId, firebaseCartItems).then(merged => {
-          console.log('Слитая корзина из Firebase:', merged);
-          const mergedUICart: CartItem[] = merged.map(item => ({
+        loadCartFromFirebase(user.uid).then(firebaseCart => {
+          console.log('Корзина из Firebase:', firebaseCart);
+          
+          const uiCart: CartItem[] = firebaseCart.map(item => ({
             id: item.productId,
             name: item.name,
             image: item.image,
             quantity: item.quantity,
             price: item.price,
           }));
-          console.log('UI корзина после слияния:', mergedUICart);
-          setCartItems(mergedUICart);
-          saveCartToLocalStorage(mergedUICart);
-          loadedUserIdRef.current = currentUserId;
+          
+          console.log('Установка корзины из Firebase:', uiCart);
+          setCartItems(uiCart);
+          saveCartToLocalStorage(uiCart);
+          sessionStorage.setItem(SESSION_KEY, 'true');
         }).catch(err => {
-          console.error('Ошибка слияния корзин:', err);
-          loadedUserIdRef.current = currentUserId;
+          console.error('Ошибка загрузки корзины из Firebase:', err);
+          sessionStorage.setItem(SESSION_KEY, 'true');
         });
-      } else if (!currentUserId && loadedUserIdRef.current) {
-        console.log('Пользователь вышел из аккаунта');
-        loadedUserIdRef.current = null;
       }
+    } else if (!loading && !user) {
+      sessionStorage.removeItem(SESSION_KEY);
     }
   }, [user, loading, isInitialized]);
 
@@ -89,7 +80,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.log('Сохранение корзины:', cartItems);
       saveCartToLocalStorage(cartItems);
       
-      if (user && loadedUserIdRef.current === user.uid) {
+      if (user) {
         const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
           productId: item.id,
           name: item.name,
