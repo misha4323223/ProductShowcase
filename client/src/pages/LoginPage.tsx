@@ -114,14 +114,18 @@ export default function LoginPage() {
       setIsResetDialogOpen(false);
       setResetEmail("");
     } catch (error: any) {
+      console.error("Ошибка восстановления пароля:", error.code, error.message);
+      
       let errorMessage = "Не удалось отправить письмо";
       
       if (error.code === "auth/user-not-found") {
-        errorMessage = "Пользователь с таким email не найден";
+        errorMessage = "Пользователь с таким email не найден. Сначала зарегистрируйтесь!";
       } else if (error.code === "auth/invalid-email") {
         errorMessage = "Неверный формат email";
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Слишком много запросов. Попробуйте позже";
+      } else if (error.code === "auth/missing-email") {
+        errorMessage = "Введите email адрес";
       }
       
       toast({
