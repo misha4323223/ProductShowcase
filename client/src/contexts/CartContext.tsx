@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   saveCartToLocalStorage, 
@@ -34,7 +34,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, loading } = useAuth();
   const [isInitialized, setIsInitialized] = useState(false);
-  const [previousUserId, setPreviousUserId] = useState<string | null>(null);
+  const loadedUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const localCart = loadCartFromLocalStorage();
@@ -47,8 +47,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!loading && isInitialized) {
       const currentUserId = user?.uid || null;
       
-      if (currentUserId && currentUserId !== previousUserId) {
-        console.log('Пользователь вошел, загружаем корзину из Firebase');
+      if (currentUserId && currentUserId !== loadedUserIdRef.current) {
+        console.log('Пользователь вошел, загружаем корзину из Firebase один раз');
         const localCart = loadCartFromLocalStorage();
         console.log('Локальная корзина перед слиянием:', localCart);
         
@@ -72,24 +72,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
           console.log('UI корзина после слияния:', mergedUICart);
           setCartItems(mergedUICart);
           saveCartToLocalStorage(mergedUICart);
-          setPreviousUserId(currentUserId);
+          loadedUserIdRef.current = currentUserId;
         }).catch(err => {
           console.error('Ошибка слияния корзин:', err);
-          setPreviousUserId(currentUserId);
+          loadedUserIdRef.current = currentUserId;
         });
-      } else if (!currentUserId && previousUserId) {
+      } else if (!currentUserId && loadedUserIdRef.current) {
         console.log('Пользователь вышел из аккаунта');
-        setPreviousUserId(null);
+        loadedUserIdRef.current = null;
       }
     }
-  }, [user, loading, isInitialized, previousUserId]);
+  }, [user, loading, isInitialized]);
 
   useEffect(() => {
     if (isInitialized) {
       console.log('Сохранение корзины:', cartItems);
       saveCartToLocalStorage(cartItems);
       
-      if (user && previousUserId === user.uid) {
+      if (user && loadedUserIdRef.current === user.uid) {
         const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
           productId: item.id,
           name: item.name,
@@ -105,7 +105,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         });
       }
     }
-  }, [cartItems, user, isInitialized, previousUserId]);
+  }, [cartItems, user, isInitialized]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
     const quantity = item.quantity || 1;
