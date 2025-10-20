@@ -34,54 +34,62 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, loading } = useAuth();
   const [isInitialized, setIsInitialized] = useState(false);
-  const [hasLoadedFromFirebase, setHasLoadedFromFirebase] = useState(false);
+  const [previousUserId, setPreviousUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const localCart = loadCartFromLocalStorage();
+    console.log('Начальная загрузка из localStorage:', localCart);
     setCartItems(localCart);
     setIsInitialized(true);
   }, []);
 
   useEffect(() => {
-    if (!loading && isInitialized && user && !hasLoadedFromFirebase) {
-      const localCart = loadCartFromLocalStorage();
-      console.log('Локальная корзина перед слиянием:', localCart);
+    if (!loading && isInitialized) {
+      const currentUserId = user?.uid || null;
       
-      const firebaseCartItems: FirebaseCartItem[] = localCart.map(item => ({
-        productId: item.id,
-        name: item.name,
-        image: item.image,
-        quantity: item.quantity,
-        price: item.price,
-      }));
-      
-      mergeCartsOnLogin(user.uid, firebaseCartItems).then(merged => {
-        console.log('Слитая корзина из Firebase:', merged);
-        const mergedUICart: CartItem[] = merged.map(item => ({
-          id: item.productId,
+      if (currentUserId && currentUserId !== previousUserId) {
+        console.log('Пользователь вошел, загружаем корзину из Firebase');
+        const localCart = loadCartFromLocalStorage();
+        console.log('Локальная корзина перед слиянием:', localCart);
+        
+        const firebaseCartItems: FirebaseCartItem[] = localCart.map(item => ({
+          productId: item.id,
           name: item.name,
           image: item.image,
           quantity: item.quantity,
           price: item.price,
         }));
-        console.log('UI корзина после слияния:', mergedUICart);
-        setCartItems(mergedUICart);
-        saveCartToLocalStorage(mergedUICart);
-        setHasLoadedFromFirebase(true);
-      }).catch(err => {
-        console.error('Failed to merge carts:', err);
-        setHasLoadedFromFirebase(true);
-      });
-    } else if (!loading && !user) {
-      setHasLoadedFromFirebase(false);
+        
+        mergeCartsOnLogin(currentUserId, firebaseCartItems).then(merged => {
+          console.log('Слитая корзина из Firebase:', merged);
+          const mergedUICart: CartItem[] = merged.map(item => ({
+            id: item.productId,
+            name: item.name,
+            image: item.image,
+            quantity: item.quantity,
+            price: item.price,
+          }));
+          console.log('UI корзина после слияния:', mergedUICart);
+          setCartItems(mergedUICart);
+          saveCartToLocalStorage(mergedUICart);
+          setPreviousUserId(currentUserId);
+        }).catch(err => {
+          console.error('Ошибка слияния корзин:', err);
+          setPreviousUserId(currentUserId);
+        });
+      } else if (!currentUserId && previousUserId) {
+        console.log('Пользователь вышел из аккаунта');
+        setPreviousUserId(null);
+      }
     }
-  }, [user, loading, isInitialized, hasLoadedFromFirebase]);
+  }, [user, loading, isInitialized, previousUserId]);
 
   useEffect(() => {
     if (isInitialized) {
+      console.log('Сохранение корзины:', cartItems);
       saveCartToLocalStorage(cartItems);
       
-      if (user && hasLoadedFromFirebase) {
+      if (user && previousUserId === user.uid) {
         const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
           productId: item.id,
           name: item.name,
@@ -93,11 +101,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         console.log('Сохранение корзины в Firebase:', firebaseCartItems);
         
         saveCartToFirebase(user.uid, firebaseCartItems).catch(err => {
-          console.error('Failed to save cart to Firebase:', err);
+          console.error('Ошибка сохранения в Firebase:', err);
         });
       }
     }
-  }, [cartItems, user, isInitialized, hasLoadedFromFirebase]);
+  }, [cartItems, user, isInitialized, previousUserId]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
     const quantity = item.quantity || 1;
