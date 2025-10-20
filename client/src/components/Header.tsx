@@ -1,8 +1,9 @@
-import { ShoppingCart, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, Search, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   cartCount: number;
@@ -14,6 +15,7 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,6 +111,38 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
               </Button>
             )}
             
+            {user ? (
+              <Link href="/account">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="rounded-full hover-elevate gummy-button bg-gradient-to-br from-purple-50 to-blue-50"
+                  data-testid="button-account"
+                >
+                  <User className="h-5 w-5" />
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/login">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full hidden md:flex"
+                  data-testid="button-login"
+                >
+                  Войти
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="rounded-full md:hidden hover-elevate gummy-button bg-gradient-to-br from-purple-50 to-blue-50"
+                  data-testid="button-login-mobile"
+                >
+                  <User className="h-5 w-5" />
+                </Button>
+              </Link>
+            )}
+            
             <button
               className="relative w-12 h-12 donut-shape donut-sprinkles hover:scale-110 transition-all jelly-wobble cursor-pointer"
               onClick={onCartClick}
@@ -145,6 +179,11 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
               <Link href="/category/sale" className="text-sm font-medium text-destructive hover:text-destructive/80 transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-sale">
                 SALE
               </Link>
+              {user && (
+                <Link href="/account" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-account">
+                  Личный кабинет
+                </Link>
+              )}
             </div>
           </nav>
         )}
