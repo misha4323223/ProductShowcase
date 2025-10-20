@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
-import productsData from "../client/public/data/products.json" assert { type: "json" };
+import productsData from "../client/src/data/products.json" assert { type: "json" };
 
 const firebaseConfig = {
   apiKey: process.env.VITE_FIREBASE_API_KEY,

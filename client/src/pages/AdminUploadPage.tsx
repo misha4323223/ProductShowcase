@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Upload } from "lucide-react";
-import productsData from "../../public/data/products.json";
+import productsData from "../data/products.json";
 
 export default function AdminUploadPage() {
   const [uploading, setUploading] = useState(false);
