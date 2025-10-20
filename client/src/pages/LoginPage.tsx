@@ -38,9 +38,21 @@ export default function LoginPage() {
       });
       setLocation("/");
     } catch (error: any) {
+      let errorMessage = "Проверьте email и пароль";
+      
+      if (error.code === "auth/user-not-found") {
+        errorMessage = "Пользователь с таким email не найден. Зарегистрируйтесь!";
+      } else if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+        errorMessage = "Неверный пароль. Попробуйте ещё раз или восстановите пароль";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "Неверный формат email";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Слишком много попыток входа. Попробуйте позже";
+      }
+      
       toast({
         title: "Ошибка входа",
-        description: error.message || "Проверьте email и пароль",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
