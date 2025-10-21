@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import HeroSlider from "@/components/HeroSlider";
-import BenefitsBar from "@/components/BenefitsBar";
 import CategoryCard from "@/components/CategoryCard";
 import ProductCard from "@/components/ProductCard";
 import ShoppingCart from "@/components/ShoppingCart";
@@ -107,7 +106,6 @@ export default function Home() {
       
       <main className="flex-1 relative z-10">
         <HeroSlider slides={slides} />
-        <BenefitsBar />
         
         <section className="py-16 candy-stripe">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
