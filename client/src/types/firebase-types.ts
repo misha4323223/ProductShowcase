@@ -63,3 +63,8 @@ export interface Review {
   comment: string;
   createdAt: Date;
 }
+
+export interface WishlistItem {
+  productId: string;
+  addedAt: Date;
+}

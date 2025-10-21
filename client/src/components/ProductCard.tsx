@@ -1,8 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Sparkles } from "lucide-react";
+import { ShoppingCart, Sparkles, Heart } from "lucide-react";
 import { useState } from "react";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: string;
@@ -24,14 +27,46 @@ export default function ProductCard({
   onClick 
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const { user } = useAuth();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const { toast } = useToast();
   const hasDiscount = salePrice && salePrice < price;
   const discount = hasDiscount ? Math.round(((price - salePrice) / price) * 100) : 0;
+  const inWishlist = isInWishlist(id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsAdding(true);
     onAddToCart(id);
     setTimeout(() => setIsAdding(false), 500);
+  };
+
+  const handleToggleWishlist = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!user) {
+      toast({
+        title: "Требуется авторизация",
+        description: "Войдите в аккаунт чтобы добавлять товары в избранное",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await toggleWishlist(id);
+      toast({
+        title: inWishlist ? "Удалено из избранного" : "Добавлено в избранное",
+        description: inWishlist ? `${name} удалён` : `${name} добавлен`,
+      });
+    } catch (error) {
+      console.error("Ошибка wishlist:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить избранное",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -48,6 +83,20 @@ export default function ProductCard({
             <ShoppingCart className="h-16 w-16" />
           </div>
         )}
+        <Button
+          size="icon"
+          variant="ghost"
+          className={`absolute top-3 left-3 w-10 h-10 rounded-full backdrop-blur-md transition-all duration-300 z-20 ${
+            inWishlist 
+              ? 'bg-pink-500/90 hover:bg-pink-600 text-white' 
+              : 'bg-white/70 hover:bg-white text-pink-500'
+          }`}
+          onClick={handleToggleWishlist}
+          data-testid={`button-wishlist-${id}`}
+        >
+          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+        </Button>
+        
         {hasDiscount && (
           <div className="absolute top-3 right-3 w-16 h-16 lollipop-swirl-badge rounded-full flex items-center justify-center shadow-2xl shadow-red-500/50 animate-rotate-slow border-4 border-white" data-testid={`badge-discount-${id}`}>
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent"></div>
