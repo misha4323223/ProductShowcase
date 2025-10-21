@@ -12,9 +12,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star } from "lucide-react";
 import { getUserOrders, updateOrderStatus } from "@/services/firebase-orders";
-import type { Order } from "@/types/firebase-types";
+import { getAllReviews, deleteReview } from "@/services/firebase-reviews";
+import type { Order, Review } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -77,6 +78,11 @@ export default function AdminPage() {
   const filteredOrders = selectedStatus === "all" 
     ? allOrders 
     : allOrders.filter(order => order.status === selectedStatus);
+
+  const { data: allReviews = [], isLoading: reviewsLoading } = useQuery<Review[]>({
+    queryKey: ["/api/admin/reviews"],
+    queryFn: getAllReviews,
+  });
 
   const categoryForm = useForm<Category>({
     resolver: zodResolver(categorySchema),
@@ -213,6 +219,40 @@ export default function AdminPage() {
     }
   };
 
+  const deleteReviewMutation = useMutation({
+    mutationFn: async (reviewId: string) => {
+      await deleteReview(reviewId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/reviews"] });
+      toast({ title: "Отзыв удалён" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`h-4 w-4 ${
+              star <= rating 
+                ? "fill-yellow-500 text-yellow-500" 
+                : "text-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       <div className="mb-6">
@@ -221,10 +261,14 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3 mb-6">
+        <TabsList className="grid w-full grid-cols-4 mb-6">
           <TabsTrigger value="orders" data-testid="tab-orders">
             <ShoppingBag className="w-4 h-4 mr-2" />
             Заказы ({allOrders.length})
+          </TabsTrigger>
+          <TabsTrigger value="reviews" data-testid="tab-reviews">
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Отзывы ({allReviews.length})
           </TabsTrigger>
           <TabsTrigger value="products" data-testid="tab-products">
             <Package className="w-4 h-4 mr-2" />
@@ -344,6 +388,72 @@ export default function AdminPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="reviews" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Управление отзывами</CardTitle>
+              <CardDescription>Просмотр и модерация отзывов пользователей</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {reviewsLoading ? (
+                <p className="text-muted-foreground">Загрузка отзывов...</p>
+              ) : allReviews.length === 0 ? (
+                <p className="text-muted-foreground">Отзывов пока нет</p>
+              ) : (
+                <div className="space-y-4">
+                  {allReviews.map((review) => {
+                    const product = products.find(p => p.id === review.productId);
+                    return (
+                      <div key={review.id} className="border rounded-lg p-4 space-y-3" data-testid={`review-${review.id}`}>
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1 flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="font-semibold">{review.userName}</p>
+                              {renderStars(review.rating)}
+                              <Badge variant="outline" className="ml-2">
+                                {review.rating}/5
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {review.createdAt.toLocaleDateString('ru-RU', { 
+                                day: 'numeric', 
+                                month: 'long', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteReviewMutation.mutate(review.id)}
+                            disabled={deleteReviewMutation.isPending}
+                            data-testid={`button-delete-review-${review.id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-muted-foreground">Товар:</p>
+                            <p className="font-medium">{product?.name || `ID: ${review.productId}`}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-1">Комментарий:</p>
+                            <p className="text-sm bg-muted/50 p-3 rounded-md">{review.comment}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
