@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Test</title>
+</head>
+<body>
+    <h1>Тест Firebase на GitHub Pages</h1>
+    <div id="result"></div>
+    
+    <script type="module">
+        // Откройте эту страницу на GitHub Pages и проверьте консоль
+        const config = {
+            apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'NOT_SET',
+            projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'NOT_SET'
+        };
+        
+        document.getElementById('result').innerHTML = `
+            <p>API Key: ${config.apiKey}</p>
+            <p>Project ID: ${config.projectId}</p>
+            <p>Если видите NOT_SET - секреты не работают</p>
+        `;
+        
+        console.log('Firebase Config:', config);
+    </script>
+</body>
+</html>
