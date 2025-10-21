@@ -1,4 +1,4 @@
-import { ShoppingCart, Search, Menu, X, User } from "lucide-react";
+import { ShoppingCart, Search, Menu, X, User, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -7,10 +7,11 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   cartCount: number;
+  wishlistCount?: number;
   onCartClick: () => void;
 }
 
-export default function Header({ cartCount, onCartClick }: HeaderProps) {
+export default function Header({ cartCount, wishlistCount = 0, onCartClick }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -143,6 +144,20 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
               </Link>
             )}
             
+            <Link href="/wishlist">
+              <button
+                className="relative w-12 h-12 rounded-full hover:scale-110 transition-all jelly-wobble cursor-pointer bg-gradient-to-br from-pink-400 to-pink-600 shadow-lg flex items-center justify-center"
+                data-testid="button-wishlist"
+              >
+                <Heart className={`h-5 w-5 text-white z-10 drop-shadow-lg ${wishlistCount > 0 ? 'fill-white' : ''}`} />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl animate-bounce-soft border-2 border-white z-20" data-testid="text-wishlist-count">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+            </Link>
+            
             <button
               className="relative w-12 h-12 donut-shape donut-sprinkles hover:scale-110 transition-all jelly-wobble cursor-pointer"
               onClick={onCartClick}
@@ -180,9 +195,20 @@ export default function Header({ cartCount, onCartClick }: HeaderProps) {
                 SALE
               </Link>
               {user && (
-                <Link href="/account" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-account">
-                  Личный кабинет
-                </Link>
+                <>
+                  <Link href="/wishlist" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate flex items-center gap-2" data-testid="link-mobile-wishlist">
+                    <Heart className="h-4 w-4" />
+                    Избранное
+                    {wishlistCount > 0 && (
+                      <span className="ml-auto bg-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </Link>
+                  <Link href="/account" className="text-sm font-medium hover:text-primary transition-colors py-2 px-3 rounded-lg hover-elevate" data-testid="link-mobile-account">
+                    Личный кабинет
+                  </Link>
+                </>
               )}
             </div>
           </nav>

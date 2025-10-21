@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
 import heroImage2 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
@@ -26,6 +27,7 @@ export default function Home() {
   const { toast } = useToast();
   const { products, isLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
 
   const slides = [
     {
@@ -99,6 +101,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col relative candy-pattern">
       <Header 
         cartCount={cartCount}
+        wishlistCount={wishlistCount}
         onCartClick={() => setCartOpen(true)}
       />
       

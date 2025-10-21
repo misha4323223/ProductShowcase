@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { useProducts, useProductsByCategory } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 
@@ -17,6 +18,7 @@ export default function CategoryPage() {
   const [cartOpen, setCartOpen] = useState(false);
   const { toast } = useToast();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
 
   const categorySlug = params?.slug || '';
   const { categories, products: allProducts } = useProducts();
@@ -107,6 +109,7 @@ export default function CategoryPage() {
       <div className="min-h-screen flex flex-col candy-pattern">
         <Header 
           cartCount={cartCount}
+          wishlistCount={wishlistCount}
           onCartClick={() => setCartOpen(true)}
         />
         <main className="flex-1 flex items-center justify-center">
@@ -128,6 +131,7 @@ export default function CategoryPage() {
     <div className="min-h-screen flex flex-col candy-pattern">
       <Header 
         cartCount={cartCount}
+        wishlistCount={wishlistCount}
         onCartClick={() => setCartOpen(true)}
       />
       
