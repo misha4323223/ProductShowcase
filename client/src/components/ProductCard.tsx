@@ -33,8 +33,6 @@ export default function ProductCard({
   const hasDiscount = salePrice && salePrice < price;
   const discount = hasDiscount ? Math.round(((price - salePrice) / price) * 100) : 0;
   const inWishlist = isInWishlist(id);
-  
-  console.log(`ProductCard ${id}: inWishlist=${inWishlist}, user=${!!user}`);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -13,7 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingCart as ShoppingCartIcon, ChevronRight, Minus, Plus } from "lucide-react";
+import { ShoppingCart as ShoppingCartIcon, ChevronRight, Minus, Plus, Heart } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 interface CartItem {
   id: string;
@@ -30,11 +32,11 @@ export default function ProductPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [quantity, setQuantity] = useState(1);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   const productId = params?.id || '';
-  console.log('ProductPage - Product ID from URL:', productId);
   const { product, isLoading } = useProduct(productId);
-  console.log('ProductPage - Product loaded:', product);
   const { products, categories } = useProducts();
   const { reviews, rating, refetch: refetchReviews } = useReviews(productId);
   const category = product ? categories.find(c => c.id === product.category) : null;
@@ -87,6 +89,35 @@ export default function ProductPage() {
   const handleCheckout = () => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
     setLocation('/checkout');
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!user) {
+      toast({
+        title: "Требуется авторизация",
+        description: "Войдите в аккаунт чтобы добавлять товары в избранное",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!product) return;
+
+    try {
+      await toggleWishlist(productId);
+      const inWishlist = isInWishlist(productId);
+      toast({
+        title: inWishlist ? "Добавлено в избранное" : "Удалено из избранного",
+        description: inWishlist ? `${product.name} добавлен` : `${product.name} удалён`,
+      });
+    } catch (error) {
+      console.error("Ошибка wishlist:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить избранное",
+        variant: "destructive",
+      });
+    }
   };
 
   if (isLoading) {
@@ -259,14 +290,29 @@ export default function ProductPage() {
                   </div>
                 </div>
 
-                <Button 
-                  className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold py-6 text-lg" 
-                  onClick={handleAddToCart}
-                  data-testid="button-add-to-cart"
-                >
-                  <ShoppingCartIcon className="h-5 w-5 mr-2" />
-                  Добавить в корзину
-                </Button>
+                <div className="flex gap-3">
+                  <Button 
+                    className="flex-1 rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold py-6 text-lg" 
+                    onClick={handleAddToCart}
+                    data-testid="button-add-to-cart"
+                  >
+                    <ShoppingCartIcon className="h-5 w-5 mr-2" />
+                    Добавить в корзину
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className={`rounded-full gummy-button squish-active min-h-[56px] min-w-[56px] ${
+                      isInWishlist(productId)
+                        ? 'bg-pink-500 hover:bg-pink-600 text-white border-pink-500'
+                        : 'bg-white hover:bg-pink-50 text-pink-500 border-pink-200'
+                    }`}
+                    onClick={handleToggleWishlist}
+                    data-testid="button-wishlist"
+                  >
+                    <Heart className={`h-6 w-6 ${isInWishlist(productId) ? 'fill-current' : ''}`} />
+                  </Button>
+                </div>
               </Card>
             </div>
           </div>
