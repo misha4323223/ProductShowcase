@@ -3,11 +3,16 @@ import { useRoute, useLocation, Link } from "wouter";
 import Header from "@/components/Header";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
+import ReviewsList from "@/components/ReviewsList";
+import AddReviewForm from "@/components/AddReviewForm";
+import StarRating from "@/components/StarRating";
 import { useProducts, useProduct } from "@/hooks/use-products";
+import { useReviews } from "@/hooks/use-reviews";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingCart as ShoppingCartIcon, ChevronRight, Minus, Plus } from "lucide-react";
 
 interface CartItem {
@@ -29,6 +34,7 @@ export default function ProductPage() {
   const productId = params?.id || '';
   const { product, isLoading } = useProduct(productId);
   const { products, categories } = useProducts();
+  const { reviews, rating, refetch: refetchReviews } = useReviews(productId);
   const category = product ? categories.find(c => c.id === product.category) : null;
 
   const handleAddToCart = () => {
@@ -196,6 +202,15 @@ export default function ProductPage() {
                 </p>
               </div>
 
+              {rating.totalReviews > 0 && (
+                <div className="mb-6 flex items-center gap-3">
+                  <StarRating rating={rating.averageRating} size="md" dataTestIdPrefix="product-rating" />
+                  <span className="text-sm font-medium">
+                    {rating.averageRating.toFixed(1)} ({rating.totalReviews} {rating.totalReviews === 1 ? 'отзыв' : rating.totalReviews < 5 ? 'отзыва' : 'отзывов'})
+                  </span>
+                </div>
+              )}
+
               <Card className="p-6 mb-6 bg-gradient-to-br from-pink-50/50 to-purple-50/50 border-2 border-pink-100">
                 <div className="flex items-baseline gap-3 mb-6">
                   {hasDiscount ? (
@@ -253,6 +268,40 @@ export default function ProductPage() {
               </Card>
             </div>
           </div>
+
+          <section className="py-12 border-t">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600">
+              Отзывы и рейтинг
+            </h2>
+            
+            <Tabs defaultValue="reviews" className="w-full">
+              <TabsList className="mb-8">
+                <TabsTrigger value="reviews" data-testid="tab-reviews">
+                  Все отзывы ({rating.totalReviews})
+                </TabsTrigger>
+                <TabsTrigger value="add-review" data-testid="tab-add-review">
+                  Написать отзыв
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="reviews">
+                <ReviewsList 
+                  reviews={reviews}
+                  averageRating={rating.averageRating}
+                  totalReviews={rating.totalReviews}
+                />
+              </TabsContent>
+
+              <TabsContent value="add-review">
+                <AddReviewForm 
+                  productId={productId}
+                  onReviewAdded={() => {
+                    refetchReviews();
+                  }}
+                />
+              </TabsContent>
+            </Tabs>
+          </section>
 
           {relatedProducts.length > 0 && (
             <section className="py-12 border-t">
