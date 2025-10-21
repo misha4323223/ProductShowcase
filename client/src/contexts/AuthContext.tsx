@@ -34,11 +34,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const trimmedEmail = email.trim().toLowerCase();
+    await createUserWithEmailAndPassword(auth, trimmedEmail, password);
   };
 
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const trimmedEmail = email.trim().toLowerCase();
+    await signInWithEmailAndPassword(auth, trimmedEmail, password);
   };
 
   const signOut = async () => {
@@ -46,7 +48,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
-    await sendPasswordResetEmail(auth, email);
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail) {
+      throw new Error('Введите email адрес');
+    }
+    await sendPasswordResetEmail(auth, trimmedEmail);
   };
 
   return (
