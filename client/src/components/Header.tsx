@@ -132,46 +132,51 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
                 </Button>
               </form>
             ) : (
-              <Button
-                size="icon"
-                variant="ghost"
+              <button
                 onClick={() => setSearchOpen(true)}
-                className="rounded-full hover-elevate gummy-button bg-gradient-to-br from-pink-50 to-purple-50"
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-green-400 via-emerald-500 to-green-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble"
+                style={{
+                  boxShadow: '0 4px 0 rgba(22, 163, 74, 0.4), 0 6px 12px rgba(34, 197, 94, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                }}
                 data-testid="button-open-search"
               >
-                <Search className="h-5 w-5" />
-              </Button>
+                <Search className="h-5 w-5 text-white drop-shadow-lg" />
+              </button>
             )}
             
             {user ? (
               <Link href="/account">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="rounded-full hover-elevate gummy-button bg-gradient-to-br from-purple-50 to-blue-50"
+                <button
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-400 via-violet-500 to-indigo-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble"
+                  style={{
+                    boxShadow: '0 4px 0 rgba(99, 102, 241, 0.4), 0 6px 12px rgba(139, 92, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                  }}
                   data-testid="button-account"
                 >
-                  <User className="h-5 w-5" />
-                </Button>
+                  <User className="h-5 w-5 text-white drop-shadow-lg" />
+                </button>
               </Link>
             ) : (
               <Link href="/login">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full hidden md:flex"
+                <button
+                  className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-indigo-400 via-violet-500 to-indigo-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble hidden md:flex items-center gap-2"
+                  style={{
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                    boxShadow: '0 4px 0 rgba(99, 102, 241, 0.4), 0 6px 12px rgba(139, 92, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                  }}
                   data-testid="button-login"
                 >
                   Войти
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="rounded-full md:hidden hover-elevate gummy-button bg-gradient-to-br from-purple-50 to-blue-50"
+                </button>
+                <button
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-400 via-violet-500 to-indigo-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble md:hidden"
+                  style={{
+                    boxShadow: '0 4px 0 rgba(99, 102, 241, 0.4), 0 6px 12px rgba(139, 92, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                  }}
                   data-testid="button-login-mobile"
                 >
-                  <User className="h-5 w-5" />
-                </Button>
+                  <User className="h-5 w-5 text-white drop-shadow-lg" />
+                </button>
               </Link>
             )}
             
