@@ -33,6 +33,8 @@ export default function ProductCard({
   const hasDiscount = salePrice && salePrice < price;
   const discount = hasDiscount ? Math.round(((price - salePrice) / price) * 100) : 0;
   const inWishlist = isInWishlist(id);
+  
+  console.log(`ProductCard ${id}: inWishlist=${inWishlist}, user=${!!user}`);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -70,7 +72,20 @@ export default function ProductCard({
   };
 
   return (
-    <Card className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100" data-testid={`card-product-${id}`}>
+    <Card className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100 relative" data-testid={`card-product-${id}`}>
+      <Button
+        size="icon"
+        variant="ghost"
+        className={`absolute top-2 left-2 w-10 h-10 rounded-full backdrop-blur-md transition-all duration-300 z-40 shadow-lg ${
+          inWishlist 
+            ? 'bg-pink-500 hover:bg-pink-600 text-white' 
+            : 'bg-white hover:bg-white text-pink-500'
+        }`}
+        onClick={handleToggleWishlist}
+        data-testid={`button-wishlist-${id}`}
+      >
+        <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+      </Button>
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-t-3xl sugar-crystals" onClick={() => onClick(id)}>
         {image ? (
           <img
@@ -83,19 +98,6 @@ export default function ProductCard({
             <ShoppingCart className="h-16 w-16" />
           </div>
         )}
-        <Button
-          size="icon"
-          variant="ghost"
-          className={`absolute top-3 left-3 w-10 h-10 rounded-full backdrop-blur-md transition-all duration-300 z-20 ${
-            inWishlist 
-              ? 'bg-pink-500/90 hover:bg-pink-600 text-white' 
-              : 'bg-white/70 hover:bg-white text-pink-500'
-          }`}
-          onClick={handleToggleWishlist}
-          data-testid={`button-wishlist-${id}`}
-        >
-          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
-        </Button>
         
         {hasDiscount && (
           <div className="absolute top-3 right-3 w-16 h-16 lollipop-swirl-badge rounded-full flex items-center justify-center shadow-2xl shadow-red-500/50 animate-rotate-slow border-4 border-white" data-testid={`badge-discount-${id}`}>
