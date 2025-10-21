@@ -43,25 +43,56 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
             Sweet Delights
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6">
-            <Link href="/" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-catalog">
+          <nav className="hidden lg:flex items-center gap-3">
+            <Link 
+              href="/" 
+              className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble" 
+              style={{
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                boxShadow: '0 4px 0 rgba(219, 39, 119, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+              }}
+              data-testid="link-catalog">
               Каталог
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
             </Link>
-            <Link href="/category/chocolates" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-chocolates">
+            <Link 
+              href="/category/chocolates" 
+              className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble" 
+              style={{
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                boxShadow: '0 4px 0 rgba(180, 83, 9, 0.4), 0 6px 12px rgba(217, 119, 6, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+              }}
+              data-testid="link-chocolates">
               Шоколад
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
             </Link>
-            <Link href="/category/candies" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-candies">
+            <Link 
+              href="/category/candies" 
+              className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble" 
+              style={{
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                boxShadow: '0 4px 0 rgba(126, 34, 206, 0.4), 0 6px 12px rgba(147, 51, 234, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+              }}
+              data-testid="link-candies">
               Конфеты
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
             </Link>
-            <Link href="/category/accessories" className="text-sm font-medium hover:text-primary transition-all hover:scale-105 relative group" data-testid="link-accessories">
+            <Link 
+              href="/category/accessories" 
+              className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-cyan-400 via-blue-500 to-cyan-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble" 
+              style={{
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                boxShadow: '0 4px 0 rgba(8, 145, 178, 0.4), 0 6px 12px rgba(14, 165, 233, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+              }}
+              data-testid="link-accessories">
               Аксессуары
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full"></span>
             </Link>
-            <Link href="/category/sale" className="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-destructive to-orange-500 hover:scale-110 transition-all pulse-glow" data-testid="link-sale">
-              SALE
+            <Link 
+              href="/category/sale" 
+              className="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-br from-red-500 via-orange-500 to-yellow-400 hover:scale-110 transition-all shadow-lg hover:shadow-xl animate-pulse-soft jelly-wobble" 
+              style={{
+                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                boxShadow: '0 4px 0 rgba(239, 68, 68, 0.4), 0 6px 12px rgba(249, 115, 22, 0.4), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.6)'
+              }}
+              data-testid="link-sale">
+              SALE 🔥
             </Link>
           </nav>
 
