@@ -105,7 +105,7 @@ export default function LoginPage() {
     e.preventDefault();
     console.log('🔍 ОТЛАДКА handleResetPassword: Email из input поля:', `"${resetEmail}"`);
     console.log('🔍 ОТЛАДКА: Длина email из input:', resetEmail.length);
-    console.log('🔍 ОТЛАДКА: Коды символов из input:', [...resetEmail].map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
+    console.log('🔍 ОТЛАДКА: Коды символов из input:', Array.from(resetEmail).map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
     
     setIsResetLoading(true);
     

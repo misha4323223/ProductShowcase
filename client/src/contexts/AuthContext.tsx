@@ -50,12 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const resetPassword = async (email: string) => {
     console.log('🔍 ОТЛАДКА resetPassword: Исходный email:', `"${email}"`);
     console.log('🔍 ОТЛАДКА: Длина исходной строки:', email.length);
-    console.log('🔍 ОТЛАДКА: Коды символов исходного email:', [...email].map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
+    console.log('🔍 ОТЛАДКА: Коды символов исходного email:', Array.from(email).map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
     
     const trimmedEmail = email.trim().toLowerCase();
     console.log('🔍 ОТЛАДКА: Email после trim().toLowerCase():', `"${trimmedEmail}"`);
     console.log('🔍 ОТЛАДКА: Длина обработанной строки:', trimmedEmail.length);
-    console.log('🔍 ОТЛАДКА: Коды символов обработанного email:', [...trimmedEmail].map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
+    console.log('🔍 ОТЛАДКА: Коды символов обработанного email:', Array.from(trimmedEmail).map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
     
     if (!trimmedEmail) {
       console.error('❌ ОТЛАДКА: Email пустой после обработки!');
