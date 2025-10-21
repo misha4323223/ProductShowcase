@@ -103,30 +103,17 @@ export default function LoginPage() {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🔍 ОТЛАДКА handleResetPassword: Email из input поля:', `"${resetEmail}"`);
-    console.log('🔍 ОТЛАДКА: Длина email из input:', resetEmail.length);
-    console.log('🔍 ОТЛАДКА: Коды символов из input:', Array.from(resetEmail).map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
-    
     setIsResetLoading(true);
     
     try {
-      console.log('🔍 ОТЛАДКА: Вызываем resetPassword...');
       await resetPassword(resetEmail);
-      console.log('✅ ОТЛАДКА: resetPassword завершился успешно!');
-      
       toast({
         title: "Письмо отправлено!",
         description: "Проверьте свою почту для сброса пароля. Письмо может попасть в спам.",
       });
-      console.log('✅ ОТЛАДКА: Показано ЗЕЛЕНОЕ окно "Письмо отправлено!"');
-      
       setIsResetDialogOpen(false);
       setResetEmail("");
     } catch (error: any) {
-      console.error('❌ ОТЛАДКА handleResetPassword: Полная ошибка:', error);
-      console.error("Ошибка восстановления пароля:", error.code, error.message, error);
-      console.error('❌ ОТЛАДКА: СЕЙЧАС ПОКАЖЕМ КРАСНОЕ ОКНО С ОШИБКОЙ!');
-      
       let errorMessage = "Не удалось отправить письмо";
       
       if (error.code === "auth/user-not-found") {
@@ -150,10 +137,8 @@ export default function LoginPage() {
         description: errorMessage,
         variant: "destructive",
       });
-      console.error('❌ ОТЛАДКА: Красное окно показано с текстом:', errorMessage);
     } finally {
       setIsResetLoading(false);
-      console.log('🔍 ОТЛАДКА: handleResetPassword завершен');
     }
   };
 
