@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Sparkles, Heart } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -27,12 +27,24 @@ export default function ProductCard({
   onClick 
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { toast } = useToast();
   const hasDiscount = salePrice && salePrice < price;
   const discount = hasDiscount ? Math.round(((price - salePrice) / price) * 100) : 0;
   const inWishlist = isInWishlist(id);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    cardRef.current.style.setProperty('--mouse-x', `${x}%`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}%`);
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -70,7 +82,16 @@ export default function ProductCard({
   };
 
   return (
-    <Card className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100 relative glossy-card" data-testid={`card-product-${id}`}>
+    <div 
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      className="holographic-foil"
+    >
+      <Card 
+        className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100 relative glossy-card" 
+        data-testid={`card-product-${id}`}
+      >
+        <div className="sparkle-dots"></div>
       <Button
         size="icon"
         variant="ghost"
@@ -139,5 +160,6 @@ export default function ProductCard({
         </Button>
       </div>
     </Card>
+    </div>
   );
 }
