@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
 
 interface Slide {
   id: number;
@@ -8,6 +9,7 @@ interface Slide {
   title: string;
   subtitle: string;
   buttonText: string;
+  link?: string;
 }
 
 interface HeroSliderProps {
@@ -16,6 +18,7 @@ interface HeroSliderProps {
 
 export default function HeroSlider({ slides }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -61,6 +64,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               </p>
               <Button 
                 size="lg" 
+                onClick={() => slide.link && setLocation(slide.link)}
                 className="bg-gradient-to-r from-primary via-pink-500 to-accent text-white shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all duration-300 glossy relative overflow-hidden sprinkles"
                 data-testid={`button-slide-cta-${index}`}
               >

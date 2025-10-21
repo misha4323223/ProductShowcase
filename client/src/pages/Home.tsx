@@ -35,6 +35,7 @@ export default function Home() {
       title: 'Французские Макаронс',
       subtitle: 'Изысканные пирожные ручной работы',
       buttonText: 'Заказать сейчас',
+      link: '/category/cookies',
     },
     {
       id: 2,
@@ -42,6 +43,7 @@ export default function Home() {
       title: 'Премиум Шоколад',
       subtitle: 'Бельгийское качество в каждом кусочке',
       buttonText: 'Смотреть каталог',
+      link: '/category/chocolates',
     },
     {
       id: 3,
@@ -49,6 +51,7 @@ export default function Home() {
       title: 'Яркие Сладости',
       subtitle: 'Радуга вкусов для всей семьи',
       buttonText: 'Выбрать подарок',
+      link: '/category/candies',
     },
   ];
 
