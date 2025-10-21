@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -16,20 +16,24 @@ import AdminPage from "@/pages/AdminPage";
 import AdminUploadPage from "@/pages/AdminUploadPage";
 import NotFound from "@/pages/not-found";
 
+const base = import.meta.env.BASE_URL;
+
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/category/:slug" component={CategoryPage} />
-      <Route path="/product/:id" component={ProductPage} />
-      <Route path="/checkout" component={CheckoutPage} />
-      <Route path="/search" component={SearchPage} />
-      <Route path="/login" component={LoginPage} />
-      <Route path="/account" component={AccountPage} />
-      <Route path="/admin" component={AdminPage} />
-      <Route path="/admin/upload" component={AdminUploadPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <WouterRouter base={base}>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/category/:slug" component={CategoryPage} />
+        <Route path="/product/:id" component={ProductPage} />
+        <Route path="/checkout" component={CheckoutPage} />
+        <Route path="/search" component={SearchPage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/account" component={AccountPage} />
+        <Route path="/admin" component={AdminPage} />
+        <Route path="/admin/upload" component={AdminUploadPage} />
+        <Route component={NotFound} />
+      </Switch>
+    </WouterRouter>
   );
 }
 
