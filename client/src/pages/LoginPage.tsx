@@ -103,6 +103,10 @@ export default function LoginPage() {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔍 ОТЛАДКА handleResetPassword: Email из input поля:', `"${resetEmail}"`);
+    console.log('🔍 ОТЛАДКА: Длина email из input:', resetEmail.length);
+    console.log('🔍 ОТЛАДКА: Коды символов из input:', [...resetEmail].map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
+    
     setIsResetLoading(true);
     
     try {
@@ -114,6 +118,7 @@ export default function LoginPage() {
       setIsResetDialogOpen(false);
       setResetEmail("");
     } catch (error: any) {
+      console.error('❌ ОТЛАДКА handleResetPassword: Полная ошибка:', error);
       console.error("Ошибка восстановления пароля:", error.code, error.message, error);
       
       let errorMessage = "Не удалось отправить письмо";
