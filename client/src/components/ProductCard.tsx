@@ -70,7 +70,7 @@ export default function ProductCard({
   };
 
   return (
-    <Card className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100 relative" data-testid={`card-product-${id}`}>
+    <Card className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100 relative glossy-card" data-testid={`card-product-${id}`}>
       <Button
         size="icon"
         variant="ghost"

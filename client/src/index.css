@@ -867,4 +867,59 @@
   .squish-active:active {
     animation: squish 0.3s ease-in-out;
   }
+
+  /* Глянцевый эффект для карточек */
+  @keyframes glossy-shine {
+    0% {
+      left: -150%;
+    }
+    50% {
+      left: 150%;
+    }
+    100% {
+      left: 150%;
+    }
+  }
+
+  .glossy-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glossy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    z-index: 10;
+    pointer-events: none;
+    animation: glossy-shine 6s infinite;
+  }
+
+  .glossy-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    border-radius: 1.5rem 1.5rem 0 0;
+    z-index: 5;
+    pointer-events: none;
+  }
 }
