@@ -144,18 +144,24 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    name={product.name}
-                    price={product.price}
-                    salePrice={product.salePrice}
-                    image={product.image}
-                    onAddToCart={handleAddToCart}
-                    onClick={(id) => setLocation(`/product/${id}`)}
-                  />
-                ))}
+                {products.map((product) => {
+                  console.log('Home page - Product ID:', product.id, 'Name:', product.name);
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      id={product.id}
+                      name={product.name}
+                      price={product.price}
+                      salePrice={product.salePrice}
+                      image={product.image}
+                      onAddToCart={handleAddToCart}
+                      onClick={(id) => {
+                        console.log('Home - ProductCard clicked, navigating to:', `/product/${id}`);
+                        setLocation(`/product/${id}`);
+                      }}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>

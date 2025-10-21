@@ -5,7 +5,12 @@ import type { Product, Category } from "@/types/firebase-types";
 export async function getAllProducts(): Promise<Product[]> {
   const productsCol = collection(db, "products");
   const snapshot = await getDocs(productsCol);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+  const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+  console.log('getAllProducts - Firebase returned:', products.length, 'products');
+  if (products.length > 0) {
+    console.log('First product:', products[0]);
+  }
+  return products;
 }
 
 export async function getProductById(id: string): Promise<Product | null> {

@@ -32,7 +32,9 @@ export default function ProductPage() {
   const { toast } = useToast();
 
   const productId = params?.id || '';
+  console.log('ProductPage - Product ID from URL:', productId);
   const { product, isLoading } = useProduct(productId);
+  console.log('ProductPage - Product loaded:', product);
   const { products, categories } = useProducts();
   const { reviews, rating, refetch: refetchReviews } = useReviews(productId);
   const category = product ? categories.find(c => c.id === product.category) : null;
