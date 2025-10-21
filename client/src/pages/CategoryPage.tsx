@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRoute, useLocation } from "wouter";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
+import ProductFilters from "@/components/ProductFilters";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
 import { useProducts, useProductsByCategory } from "@/hooks/use-products";
@@ -21,6 +22,49 @@ export default function CategoryPage() {
   const { categories, products: allProducts } = useProducts();
   const { products: categoryProducts, isLoading } = useProductsByCategory(categorySlug);
   const category = categories.find(c => c.slug === categorySlug);
+
+  const [sortBy, setSortBy] = useState('default');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const [saleOnly, setSaleOnly] = useState(false);
+
+  const maxPrice = useMemo(() => {
+    if (categoryProducts.length === 0) return 10000;
+    return Math.max(...categoryProducts.map(p => p.price));
+  }, [categoryProducts]);
+
+  useEffect(() => {
+    setPriceRange([0, maxPrice]);
+  }, [maxPrice]);
+
+  const filteredAndSortedProducts = useMemo(() => {
+    let filtered = [...categoryProducts];
+
+    filtered = filtered.filter(p => {
+      const price = p.salePrice || p.price;
+      return price >= priceRange[0] && price <= priceRange[1];
+    });
+
+    if (saleOnly) {
+      filtered = filtered.filter(p => p.salePrice !== undefined && p.salePrice !== null);
+    }
+
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'price-asc':
+          return (a.salePrice || a.price) - (b.salePrice || b.price);
+        case 'price-desc':
+          return (b.salePrice || b.price) - (a.salePrice || a.price);
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [categoryProducts, sortBy, priceRange, saleOnly]);
 
   const handleAddToCart = (productId: string) => {
     const product = allProducts.find(p => p.id === productId);
@@ -120,25 +164,40 @@ export default function CategoryPage() {
               </div>
             ) : (
               <>
-                <div className="mb-6">
-                  <p className="text-muted-foreground" data-testid="text-product-count">
-                    Найдено товаров: <span className="font-semibold text-foreground">{categoryProducts.length}</span>
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                  {categoryProducts.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      id={product.id}
-                      name={product.name}
-                      price={product.price}
-                      salePrice={product.salePrice}
-                      image={product.image}
-                      onAddToCart={handleAddToCart}
-                      onClick={(id) => setLocation(`/product/${id}`)}
-                    />
-                  ))}
-                </div>
+                <ProductFilters
+                  onSortChange={setSortBy}
+                  onPriceRangeChange={(min, max) => setPriceRange([min, max])}
+                  onSaleOnlyChange={setSaleOnly}
+                  maxPrice={maxPrice}
+                  currentSort={sortBy}
+                  currentPriceRange={priceRange}
+                  saleOnly={saleOnly}
+                  totalProducts={categoryProducts.length}
+                  filteredCount={filteredAndSortedProducts.length}
+                />
+
+                {filteredAndSortedProducts.length === 0 ? (
+                  <div className="text-center py-16">
+                    <p className="text-muted-foreground text-lg" data-testid="text-no-filtered-products">
+                      Нет товаров, соответствующих выбранным фильтрам
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mt-8">
+                    {filteredAndSortedProducts.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        id={product.id}
+                        name={product.name}
+                        price={product.price}
+                        salePrice={product.salePrice}
+                        image={product.image}
+                        onAddToCart={handleAddToCart}
+                        onClick={(id) => setLocation(`/product/${id}`)}
+                      />
+                    ))}
+                  </div>
+                )}
               </>
             )}
           </div>
