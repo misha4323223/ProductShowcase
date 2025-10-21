@@ -29,7 +29,7 @@ export default function ProductFilters({
   totalProducts,
   filteredCount,
 }: ProductFiltersProps) {
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   const handleReset = () => {
     onSortChange('default');
