@@ -6,6 +6,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -297,12 +298,12 @@ export default function AdminPage() {
                         <div>
                           <p className="text-muted-foreground">Клиент:</p>
                           <p className="font-medium">{order.customerName}</p>
-                          <p className="text-muted-foreground">{order.email}</p>
-                          <p className="text-muted-foreground">{order.phone}</p>
+                          <p className="text-muted-foreground">{order.customerEmail}</p>
+                          <p className="text-muted-foreground">{order.customerPhone}</p>
                         </div>
                         <div>
                           <p className="text-muted-foreground">Адрес доставки:</p>
-                          <p className="font-medium">{order.address}</p>
+                          <p className="font-medium">{order.shippingAddress}</p>
                         </div>
                       </div>
 
