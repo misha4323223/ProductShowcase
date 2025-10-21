@@ -110,16 +110,22 @@ export default function LoginPage() {
     setIsResetLoading(true);
     
     try {
+      console.log('🔍 ОТЛАДКА: Вызываем resetPassword...');
       await resetPassword(resetEmail);
+      console.log('✅ ОТЛАДКА: resetPassword завершился успешно!');
+      
       toast({
         title: "Письмо отправлено!",
         description: "Проверьте свою почту для сброса пароля. Письмо может попасть в спам.",
       });
+      console.log('✅ ОТЛАДКА: Показано ЗЕЛЕНОЕ окно "Письмо отправлено!"');
+      
       setIsResetDialogOpen(false);
       setResetEmail("");
     } catch (error: any) {
       console.error('❌ ОТЛАДКА handleResetPassword: Полная ошибка:', error);
       console.error("Ошибка восстановления пароля:", error.code, error.message, error);
+      console.error('❌ ОТЛАДКА: СЕЙЧАС ПОКАЖЕМ КРАСНОЕ ОКНО С ОШИБКОЙ!');
       
       let errorMessage = "Не удалось отправить письмо";
       
@@ -144,8 +150,10 @@ export default function LoginPage() {
         description: errorMessage,
         variant: "destructive",
       });
+      console.error('❌ ОТЛАДКА: Красное окно показано с текстом:', errorMessage);
     } finally {
       setIsResetLoading(false);
+      console.log('🔍 ОТЛАДКА: handleResetPassword завершен');
     }
   };
 
