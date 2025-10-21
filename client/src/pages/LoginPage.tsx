@@ -198,49 +198,15 @@ export default function LoginPage() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="login-password">Пароль</Label>
-                      <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-                        <DialogTrigger asChild>
-                          <Button 
-                            variant="ghost" 
-                            className="px-0 text-xs h-auto text-primary hover:underline"
-                            type="button"
-                            data-testid="button-forgot-password"
-                          >
-                            Забыли пароль?
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent data-testid="dialog-reset-password">
-                          <form onSubmit={handleResetPassword}>
-                            <DialogHeader>
-                              <DialogTitle>Восстановление пароля</DialogTitle>
-                              <DialogDescription>
-                                Введите email, на который зарегистрирован ваш аккаунт. Мы отправим вам письмо со ссылкой для сброса пароля.
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="py-4">
-                              <Label htmlFor="reset-email">Email</Label>
-                              <Input
-                                id="reset-email"
-                                type="email"
-                                placeholder="your@email.com"
-                                value={resetEmail}
-                                onChange={(e) => setResetEmail(e.target.value)}
-                                required
-                                data-testid="input-reset-email"
-                              />
-                            </div>
-                            <DialogFooter>
-                              <Button 
-                                type="submit" 
-                                disabled={isResetLoading}
-                                data-testid="button-reset-submit"
-                              >
-                                {isResetLoading ? "Отправка..." : "Отправить письмо"}
-                              </Button>
-                            </DialogFooter>
-                          </form>
-                        </DialogContent>
-                      </Dialog>
+                      <Button 
+                        variant="ghost" 
+                        className="px-0 text-xs h-auto text-primary hover:underline"
+                        type="button"
+                        onClick={() => setIsResetDialogOpen(true)}
+                        data-testid="button-forgot-password"
+                      >
+                        Забыли пароль?
+                      </Button>
                     </div>
                     <Input
                       id="login-password"
@@ -326,6 +292,41 @@ export default function LoginPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Dialog восстановления пароля вынесен за пределы форм */}
+      <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+        <DialogContent data-testid="dialog-reset-password">
+          <form onSubmit={handleResetPassword}>
+            <DialogHeader>
+              <DialogTitle>Восстановление пароля</DialogTitle>
+              <DialogDescription>
+                Введите email, на который зарегистрирован ваш аккаунт. Мы отправим вам письмо со ссылкой для сброса пароля.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <Label htmlFor="reset-email">Email</Label>
+              <Input
+                id="reset-email"
+                type="email"
+                placeholder="your@email.com"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+                data-testid="input-reset-email"
+              />
+            </div>
+            <DialogFooter>
+              <Button 
+                type="submit" 
+                disabled={isResetLoading}
+                data-testid="button-reset-submit"
+              >
+                {isResetLoading ? "Отправка..." : "Отправить письмо"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
