@@ -48,11 +48,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
+    console.log('🔍 ОТЛАДКА resetPassword: Исходный email:', `"${email}"`);
+    console.log('🔍 ОТЛАДКА: Длина исходной строки:', email.length);
+    console.log('🔍 ОТЛАДКА: Коды символов исходного email:', [...email].map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
+    
     const trimmedEmail = email.trim().toLowerCase();
+    console.log('🔍 ОТЛАДКА: Email после trim().toLowerCase():', `"${trimmedEmail}"`);
+    console.log('🔍 ОТЛАДКА: Длина обработанной строки:', trimmedEmail.length);
+    console.log('🔍 ОТЛАДКА: Коды символов обработанного email:', [...trimmedEmail].map(c => `${c}(${c.charCodeAt(0)})`).join(', '));
+    
     if (!trimmedEmail) {
+      console.error('❌ ОТЛАДКА: Email пустой после обработки!');
       throw new Error('Введите email адрес');
     }
-    await sendPasswordResetEmail(auth, trimmedEmail);
+    
+    try {
+      console.log('🔍 ОТЛАДКА: Отправляем запрос в Firebase с email:', `"${trimmedEmail}"`);
+      await sendPasswordResetEmail(auth, trimmedEmail);
+      console.log('✅ ОТЛАДКА: Письмо успешно отправлено на:', trimmedEmail);
+    } catch (error: any) {
+      console.error('❌ ОТЛАДКА: Полная ошибка от Firebase:', error);
+      console.error('❌ ОТЛАДКА: Код ошибки:', error.code);
+      console.error('❌ ОТЛАДКА: Сообщение ошибки:', error.message);
+      console.error('❌ ОТЛАДКА: JSON ошибки:', JSON.stringify(error, null, 2));
+      if (error.customData) {
+        console.error('❌ ОТЛАДКА: Дополнительные данные:', error.customData);
+      }
+      throw error;
+    }
   };
 
   return (
