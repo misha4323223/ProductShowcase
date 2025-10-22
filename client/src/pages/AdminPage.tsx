@@ -12,11 +12,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell } from "lucide-react";
 import { getUserOrders, updateOrderStatus } from "@/services/firebase-orders";
 import { getAllReviews, deleteReview } from "@/services/firebase-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/firebase-promocodes";
-import { sendStockNotifications } from "@/services/firebase-stock-notifications";
+import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/firebase-stock-notifications";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -111,6 +111,11 @@ export default function AdminPage() {
   const { data: promoCodes = [], isLoading: promoCodesLoading } = useQuery<PromoCode[]>({
     queryKey: ["/api/admin/promocodes"],
     queryFn: getAllPromoCodes,
+  });
+
+  const { data: stockNotifications = [], isLoading: notificationsLoading } = useQuery({
+    queryKey: ["/api/admin/stock-notifications"],
+    queryFn: getAllNotifications,
   });
 
   useEffect(() => {
@@ -399,6 +404,23 @@ export default function AdminPage() {
     },
   });
 
+  const deleteStockNotificationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await deleteNotification(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/stock-notifications"] });
+      toast({ title: "Подписка удалена" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
   const renderStars = (rating: number) => {
     return (
       <div className="flex items-center gap-1">
@@ -424,7 +446,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5 mb-6">
+        <TabsList className="grid w-full grid-cols-6 mb-6">
           <TabsTrigger value="orders" data-testid="tab-orders">
             <ShoppingBag className="w-4 h-4 mr-2" />
             Заказы ({allOrders.length})
@@ -436,6 +458,10 @@ export default function AdminPage() {
           <TabsTrigger value="promocodes" data-testid="tab-promocodes">
             <Ticket className="w-4 h-4 mr-2" />
             Промокоды
+          </TabsTrigger>
+          <TabsTrigger value="notifications" data-testid="tab-notifications">
+            <Bell className="w-4 h-4 mr-2" />
+            Подписки ({stockNotifications.length})
           </TabsTrigger>
           <TabsTrigger value="products" data-testid="tab-products">
             <Package className="w-4 h-4 mr-2" />
@@ -891,6 +917,79 @@ export default function AdminPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Подписки на уведомления</CardTitle>
+              <CardDescription>
+                Управление email-подписками на уведомления о поступлении товаров
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {notificationsLoading ? (
+                <p className="text-muted-foreground">Загрузка...</p>
+              ) : stockNotifications.length === 0 ? (
+                <p className="text-muted-foreground">Нет активных подписок</p>
+              ) : (
+                <div className="space-y-4">
+                  {stockNotifications.map((notification) => {
+                    const product = products.find(p => p.id === notification.productId);
+                    return (
+                      <div 
+                        key={notification.id} 
+                        className="border rounded-lg p-4 flex items-start justify-between gap-4"
+                        data-testid={`notification-${notification.id}`}
+                      >
+                        <div className="flex-1 space-y-2">
+                          <div>
+                            <p className="font-semibold">{notification.productName}</p>
+                            <p className="text-sm text-muted-foreground">ID товара: {notification.productId}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Email:</p>
+                            <p className="font-medium">{notification.email}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Дата подписки:</p>
+                            <p className="font-medium">
+                              {notification.createdAt.toLocaleDateString('ru-RU', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                          {product && (
+                            <div>
+                              <Badge variant={product.stock === 0 ? "destructive" : "outline"}>
+                                {product.stock === 0 ? "Нет в наличии" : `В наличии: ${product.stock} шт`}
+                              </Badge>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteStockNotificationMutation.mutate(notification.id)}
+                            disabled={deleteStockNotificationMutation.isPending}
+                            data-testid={`button-delete-notification-${notification.id}`}
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Удалить
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
