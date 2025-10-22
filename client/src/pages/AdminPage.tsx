@@ -49,6 +49,14 @@ const promoCodeSchema = z.object({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   active: z.boolean().default(true),
+}).refine((data) => {
+  if (data.discountType === 'percentage' && data.discountValue >= 100) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Процентная скидка должна быть меньше 100%",
+  path: ["discountValue"],
 });
 
 type Category = z.infer<typeof categorySchema>;

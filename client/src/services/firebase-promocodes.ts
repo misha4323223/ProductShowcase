@@ -75,12 +75,18 @@ export async function validatePromoCode(
   
   let discountAmount = 0;
   if (promoCode.discountType === 'percentage') {
+    if (promoCode.discountValue >= 100) {
+      return { valid: false, message: "Некорректная скидка" };
+    }
     discountAmount = Math.round(orderTotal * (promoCode.discountValue / 100));
   } else {
+    if (promoCode.discountValue >= orderTotal) {
+      return { valid: false, message: "Скидка не может превышать сумму заказа" };
+    }
     discountAmount = promoCode.discountValue;
   }
   
-  discountAmount = Math.min(discountAmount, orderTotal);
+  discountAmount = Math.min(discountAmount, Math.floor(orderTotal * 0.99));
   
   return { 
     valid: true, 

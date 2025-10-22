@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createOrder } from "@/services/firebase-orders";
-import { validatePromoCode, applyPromoCode } from "@/services/firebase-promocodes";
+import { validatePromoCode } from "@/services/firebase-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface CartItem {
@@ -92,7 +92,7 @@ export default function CheckoutPage() {
   const selectedDelivery = deliveryOptions.find(opt => opt.id === form.watch("delivery"));
   const deliveryPrice = selectedDelivery?.price || 0;
   const subtotal = total + deliveryPrice;
-  const finalTotal = subtotal - promoDiscount;
+  const finalTotal = Math.max(0, subtotal - promoDiscount);
 
   const handleApplyPromoCode = async () => {
     if (!promoCodeInput.trim()) {
@@ -168,10 +168,6 @@ export default function CheckoutPage() {
       };
 
       const orderId = await createOrder(orderData);
-      
-      if (validPromoCodeId) {
-        await applyPromoCode(validPromoCodeId);
-      }
 
       toast({
         title: "Заказ успешно оформлен!",
