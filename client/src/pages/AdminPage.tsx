@@ -510,6 +510,15 @@ export default function AdminPage() {
                         </div>
                       </div>
 
+                      {order.promoCode && (
+                        <div className="flex items-center gap-2">
+                          <Ticket className="w-4 h-4 text-primary" />
+                          <Badge variant="secondary" className="text-xs" data-testid={`order-promo-${order.id}`}>
+                            {order.promoCode.code} • -{order.promoCode.discountAmount} ₽
+                          </Badge>
+                        </div>
+                      )}
+
                       <div className="pt-3 border-t">
                         <Label className="text-sm">Изменить статус:</Label>
                         <Select 
