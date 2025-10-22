@@ -1,5 +1,6 @@
 import { collection, doc, getDocs, setDoc, deleteDoc, query, where } from "firebase/firestore";
-import { db, auth } from "@/lib/firebase";
+import { httpsCallable } from "firebase/functions";
+import { db, auth, functions } from "@/lib/firebase";
 import type { StockNotification } from "@/types/firebase-types";
 
 export async function subscribeToStockNotification(
@@ -63,49 +64,23 @@ export async function sendStockNotifications(
   productName: string,
   productUrl: string
 ): Promise<number> {
-  const notifications = await getNotificationsByProduct(productId);
-  
-  if (notifications.length === 0) {
-    return 0;
-  }
-  
-  const emails = notifications.map(n => n.email);
-  
   try {
     const user = auth.currentUser;
     if (!user) {
       throw new Error("Требуется авторизация");
     }
     
-    const idToken = await user.getIdToken();
-    
-    const response = await fetch("/api/send-stock-notifications", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${idToken}`,
-      },
-      body: JSON.stringify({
-        productId,
-        productName,
-        productUrl,
-        emails,
-      }),
+    const sendNotifications = httpsCallable(functions, 'sendStockNotifications');
+    const result = await sendNotifications({
+      productId,
+      productName,
+      productUrl,
     });
     
-    if (!response.ok) {
-      throw new Error("Ошибка отправки уведомлений");
-    }
-    
-    const { sentCount } = await response.json();
-    
-    for (const notification of notifications) {
-      await deleteNotification(notification.id);
-    }
-    
+    const { sentCount } = result.data as { sentCount: number };
     return sentCount;
   } catch (error) {
     console.error("Ошибка отправки уведомлений:", error);
-    return 0;
+    throw error;
   }
 }
