@@ -1,11 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Sparkles, Heart } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ShoppingCart, Sparkles, Heart, Bell } from "lucide-react";
 import { useState, useRef } from "react";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { subscribeToStockNotification } from "@/services/firebase-stock-notifications";
 
 interface ProductCardProps {
   id: string;
@@ -29,6 +33,9 @@ export default function ProductCard({
   onClick 
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [showNotifyDialog, setShowNotifyDialog] = useState(false);
+  const [notifyEmail, setNotifyEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -96,7 +103,46 @@ export default function ProductCard({
     }
   };
 
+  const handleNotifyClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (user?.email) {
+      setNotifyEmail(user.email);
+    }
+    setShowNotifyDialog(true);
+  };
+
+  const handleSubscribe = async () => {
+    if (!notifyEmail || !notifyEmail.includes('@')) {
+      toast({
+        title: "Ошибка",
+        description: "Введите корректный email адрес",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubscribing(true);
+    try {
+      await subscribeToStockNotification(id, name, notifyEmail);
+      toast({
+        title: "Подписка оформлена! 🔔",
+        description: "Мы уведомим вас когда товар появится в наличии",
+      });
+      setShowNotifyDialog(false);
+      setNotifyEmail("");
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось оформить подписку",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   return (
+    <>
     <div 
       ref={cardRef}
       onMouseMove={handleMouseMove}
@@ -184,17 +230,60 @@ export default function ProductCard({
             </Badge>
           )}
         </div>
-        <Button 
-          className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6 disabled:opacity-50 disabled:cursor-not-allowed" 
-          onClick={handleAddToCart}
-          disabled={isOutOfStock}
-          data-testid={`button-add-to-cart-${id}`}
-        >
-          <ShoppingCart className="h-4 w-4 mr-2" />
-          {isOutOfStock ? 'Нет в наличии' : 'В корзину'}
-        </Button>
+        {isOutOfStock ? (
+          <Button 
+            className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold text-sm py-6" 
+            onClick={handleNotifyClick}
+            data-testid={`button-notify-${id}`}
+          >
+            <Bell className="h-4 w-4 mr-2" />
+            Уведомить меня
+          </Button>
+        ) : (
+          <Button 
+            className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6" 
+            onClick={handleAddToCart}
+            data-testid={`button-add-to-cart-${id}`}
+          >
+            <ShoppingCart className="h-4 w-4 mr-2" />
+            В корзину
+          </Button>
+        )}
       </div>
     </Card>
     </div>
+
+    <Dialog open={showNotifyDialog} onOpenChange={setShowNotifyDialog}>
+      <DialogContent data-testid={`dialog-notify-${id}`}>
+        <DialogHeader>
+          <DialogTitle>Уведомить о поступлении</DialogTitle>
+          <DialogDescription>
+            Мы отправим письмо на вашу почту когда товар <strong>{name}</strong> появится в наличии
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="notify-email">Email адрес</Label>
+            <Input
+              id="notify-email"
+              type="email"
+              placeholder="ваш@email.ru"
+              value={notifyEmail}
+              onChange={(e) => setNotifyEmail(e.target.value)}
+              data-testid={`input-notify-email-${id}`}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setShowNotifyDialog(false)}>
+            Отмена
+          </Button>
+          <Button onClick={handleSubscribe} disabled={isSubscribing} data-testid={`button-subscribe-${id}`}>
+            {isSubscribing ? "Подписка..." : "Подписаться"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
