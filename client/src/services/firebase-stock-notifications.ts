@@ -1,5 +1,5 @@
 import { collection, doc, getDocs, setDoc, deleteDoc, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import type { StockNotification } from "@/types/firebase-types";
 
 export async function subscribeToStockNotification(
@@ -72,10 +72,18 @@ export async function sendStockNotifications(
   const emails = notifications.map(n => n.email);
   
   try {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("Требуется авторизация");
+    }
+    
+    const idToken = await user.getIdToken();
+    
     const response = await fetch("/api/send-stock-notifications", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${idToken}`,
       },
       body: JSON.stringify({
         productId,
