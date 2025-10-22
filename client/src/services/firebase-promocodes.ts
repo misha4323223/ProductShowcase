@@ -1,6 +1,13 @@
-import { collection, doc, getDoc, getDocs, setDoc, deleteDoc, updateDoc, increment, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, deleteDoc, updateDoc, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { PromoCode } from "@/types/firebase-types";
+
+export async function getPromoCodeUsageCount(promoCodeOrId: string): Promise<number> {
+  const ordersRef = collection(db, "orders");
+  const q = query(ordersRef, where("promoCode.code", "==", promoCodeOrId.toUpperCase()));
+  const snapshot = await getDocs(q);
+  return snapshot.size;
+}
 
 export async function getAllPromoCodes(): Promise<PromoCode[]> {
   const snapshot = await getDocs(collection(db, "promocodes"));
@@ -62,8 +69,11 @@ export async function validatePromoCode(
     return { valid: false, message: "Промокод истек" };
   }
   
-  if (promoCode.maxUses && promoCode.currentUses >= promoCode.maxUses) {
-    return { valid: false, message: "Промокод исчерпан" };
+  if (promoCode.maxUses) {
+    const currentUses = await getPromoCodeUsageCount(promoCode.code);
+    if (currentUses >= promoCode.maxUses) {
+      return { valid: false, message: "Промокод исчерпан" };
+    }
   }
   
   if (promoCode.minOrderAmount && orderTotal < promoCode.minOrderAmount) {
@@ -95,12 +105,6 @@ export async function validatePromoCode(
   };
 }
 
-export async function applyPromoCode(promoCodeId: string): Promise<void> {
-  const docRef = doc(db, "promocodes", promoCodeId);
-  await updateDoc(docRef, {
-    currentUses: increment(1)
-  });
-}
 
 export async function createPromoCode(promoCode: Omit<PromoCode, 'id' | 'createdAt'>): Promise<string> {
   const docRef = doc(collection(db, "promocodes"));

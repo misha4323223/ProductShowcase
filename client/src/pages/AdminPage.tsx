@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { collection, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket } from "lucide-react";
 import { getUserOrders, updateOrderStatus } from "@/services/firebase-orders";
 import { getAllReviews, deleteReview } from "@/services/firebase-reviews";
-import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode } from "@/services/firebase-promocodes";
+import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/firebase-promocodes";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,6 +67,7 @@ export default function AdminPage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("categories");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [promoUsageCounts, setPromoUsageCounts] = useState<Record<string, number>>({});
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -110,6 +111,22 @@ export default function AdminPage() {
     queryKey: ["/api/admin/promocodes"],
     queryFn: getAllPromoCodes,
   });
+
+  useEffect(() => {
+    async function loadPromoUsageCounts() {
+      if (promoCodes.length > 0) {
+        const counts: Record<string, number> = {};
+        await Promise.all(
+          promoCodes.map(async (promo) => {
+            const count = await getPromoCodeUsageCount(promo.code);
+            counts[promo.id] = count;
+          })
+        );
+        setPromoUsageCounts(counts);
+      }
+    }
+    loadPromoUsageCounts();
+  }, [promoCodes]);
 
   const categoryForm = useForm<Category>({
     resolver: zodResolver(categorySchema),
@@ -308,7 +325,6 @@ export default function AdminPage() {
         discountValue: data.discountValue,
         minOrderAmount: data.minOrderAmount,
         maxUses: data.maxUses,
-        currentUses: 0,
         startDate: data.startDate ? new Date(data.startDate) : undefined,
         endDate: data.endDate ? new Date(data.endDate) : undefined,
         active: data.active,
@@ -818,7 +834,7 @@ export default function AdminPage() {
                         <div>
                           <p className="text-muted-foreground">Использований:</p>
                           <p className="font-medium">
-                            {promo.currentUses}{promo.maxUses ? ` / ${promo.maxUses}` : ' / ∞'}
+                            {promoUsageCounts[promo.id] ?? 0}{promo.maxUses ? ` / ${promo.maxUses}` : ' / ∞'}
                           </p>
                         </div>
                         {(promo.startDate || promo.endDate) && (

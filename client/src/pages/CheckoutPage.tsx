@@ -55,6 +55,7 @@ export default function CheckoutPage() {
   const [isCheckingPromo, setIsCheckingPromo] = useState(false);
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [validPromoCodeId, setValidPromoCodeId] = useState<string | null>(null);
+  const [validatedPromoCode, setValidatedPromoCode] = useState<{ code: string; discountAmount: number; discountType: 'percentage' | 'fixed' } | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -111,6 +112,11 @@ export default function CheckoutPage() {
         setPromoCode(result.promoCode.code);
         setPromoDiscount(result.discountAmount);
         setValidPromoCodeId(result.promoCode.id);
+        setValidatedPromoCode({
+          code: result.promoCode.code,
+          discountAmount: result.discountAmount,
+          discountType: result.promoCode.discountType,
+        });
         toast({
           title: "Промокод применён!",
           description: `Скидка: ${result.discountAmount}₽`,
@@ -138,6 +144,7 @@ export default function CheckoutPage() {
     setPromoCodeInput("");
     setPromoDiscount(0);
     setValidPromoCodeId(null);
+    setValidatedPromoCode(null);
     toast({
       title: "Промокод удалён",
     });
@@ -159,7 +166,7 @@ export default function CheckoutPage() {
         total: finalTotal,
         subtotal: promoDiscount > 0 ? subtotal : undefined,
         discount: promoDiscount > 0 ? promoDiscount : undefined,
-        promoCode: promoCode || undefined,
+        promoCode: validatedPromoCode || undefined,
         status: 'pending' as const,
         customerName: `${data.firstName} ${data.lastName}`,
         customerEmail: data.email,

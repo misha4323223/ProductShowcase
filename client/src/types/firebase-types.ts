@@ -40,7 +40,11 @@ export interface Order {
   total: number;
   subtotal?: number;
   discount?: number;
-  promoCode?: string;
+  promoCode?: {
+    code: string;
+    discountAmount: number;
+    discountType: 'percentage' | 'fixed';
+  };
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   customerName: string;
   customerEmail: string;
@@ -80,7 +84,6 @@ export interface PromoCode {
   discountValue: number;
   minOrderAmount?: number;
   maxUses?: number;
-  currentUses: number;
   startDate?: Date;
   endDate?: Date;
   active: boolean;
