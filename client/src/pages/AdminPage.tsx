@@ -16,6 +16,7 @@ import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ti
 import { getUserOrders, updateOrderStatus } from "@/services/firebase-orders";
 import { getAllReviews, deleteReview } from "@/services/firebase-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/firebase-promocodes";
+import { sendStockNotifications } from "@/services/firebase-stock-notifications";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -244,9 +245,28 @@ export default function AdminPage() {
   });
 
   const updateStockMutation = useMutation({
-    mutationFn: async ({ productId, newStock }: { productId: string; newStock: number }) => {
+    mutationFn: async ({ productId, newStock, oldStock, productName }: { 
+      productId: string; 
+      newStock: number; 
+      oldStock: number; 
+      productName: string;
+    }) => {
+      const finalStock = Math.max(0, newStock);
       const productRef = doc(db, "products", productId);
-      await setDoc(productRef, { stock: Math.max(0, newStock) }, { merge: true });
+      await setDoc(productRef, { stock: finalStock }, { merge: true });
+      
+      if (oldStock === 0 && finalStock > 0) {
+        const productUrl = `${window.location.origin}`;
+        const sentCount = await sendStockNotifications(productId, productName, productUrl);
+        if (sentCount > 0) {
+          toast({ 
+            title: "Уведомления отправлены", 
+            description: `Отправлено ${sentCount} уведомлений о поступлении товара` 
+          });
+        }
+      }
+      
+      return finalStock;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
@@ -1203,7 +1223,9 @@ export default function AdminPage() {
                                 size="sm"
                                 onClick={() => updateStockMutation.mutate({ 
                                   productId: product.id, 
-                                  newStock: stock - 10 
+                                  newStock: stock - 10,
+                                  oldStock: stock,
+                                  productName: product.name
                                 })}
                                 disabled={updateStockMutation.isPending || stock === 0}
                                 data-testid={`button-stock-minus10-${product.id}`}
@@ -1215,7 +1237,9 @@ export default function AdminPage() {
                                 size="sm"
                                 onClick={() => updateStockMutation.mutate({ 
                                   productId: product.id, 
-                                  newStock: stock - 1 
+                                  newStock: stock - 1,
+                                  oldStock: stock,
+                                  productName: product.name
                                 })}
                                 disabled={updateStockMutation.isPending || stock === 0}
                                 data-testid={`button-stock-minus1-${product.id}`}
@@ -1227,7 +1251,9 @@ export default function AdminPage() {
                                 size="sm"
                                 onClick={() => updateStockMutation.mutate({ 
                                   productId: product.id, 
-                                  newStock: stock + 1 
+                                  newStock: stock + 1,
+                                  oldStock: stock,
+                                  productName: product.name
                                 })}
                                 disabled={updateStockMutation.isPending}
                                 data-testid={`button-stock-plus1-${product.id}`}
@@ -1239,7 +1265,9 @@ export default function AdminPage() {
                                 size="sm"
                                 onClick={() => updateStockMutation.mutate({ 
                                   productId: product.id, 
-                                  newStock: stock + 10 
+                                  newStock: stock + 10,
+                                  oldStock: stock,
+                                  productName: product.name
                                 })}
                                 disabled={updateStockMutation.isPending}
                                 data-testid={`button-stock-plus10-${product.id}`}
@@ -1251,7 +1279,9 @@ export default function AdminPage() {
                                 size="sm"
                                 onClick={() => updateStockMutation.mutate({ 
                                   productId: product.id, 
-                                  newStock: stock + 50 
+                                  newStock: stock + 50,
+                                  oldStock: stock,
+                                  productName: product.name
                                 })}
                                 disabled={updateStockMutation.isPending}
                                 data-testid={`button-stock-plus50-${product.id}`}
@@ -1263,7 +1293,9 @@ export default function AdminPage() {
                                 size="sm"
                                 onClick={() => updateStockMutation.mutate({ 
                                   productId: product.id, 
-                                  newStock: stock + 100 
+                                  newStock: stock + 100,
+                                  oldStock: stock,
+                                  productName: product.name
                                 })}
                                 disabled={updateStockMutation.isPending}
                                 data-testid={`button-stock-plus100-${product.id}`}
