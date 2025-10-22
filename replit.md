@@ -2,7 +2,7 @@
 
 ## Overview
 
-Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a full-stack TypeScript application using React and Express, it provides a modern shopping experience with product browsing, cart management, and responsive design.
+Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a static React TypeScript application deployed on GitHub Pages with Firebase backend (Firestore, Authentication, Cloud Functions), it provides a modern shopping experience with product browsing, cart management, automated stock notifications, and responsive design.
 
 ## User Preferences
 
@@ -164,9 +164,39 @@ Configured in both TypeScript and Vite:
 - Firebase Auth always lowercases emails in tokens, ensure rules match
 - Promo code rules update needed: See FIREBASE_RULES_UPDATE.md for instructions
 
+**Stock Notification System** (October 2025):
+- Email notifications for out-of-stock items via Firebase Cloud Functions + Resend API
+- User subscribes when product is out of stock → email saved to Firestore
+- Admin replenishes stock → sends notifications from admin panel
+- Cloud Function (`sendStockNotifications`) automatically emails all subscribers
+- Automatic cleanup: subscriptions deleted after notification sent
+- Service layer: `client/src/services/firebase-stock-notifications.ts`
+- Cloud Function: `functions/index.js`
+- Free tier: 125,000 function invocations/month, 100 emails/day via Resend
+- Configuration: `firebase functions:config:set resend.api_key="KEY"`
+- Types: `client/src/types/firebase-types.ts` (StockNotification interface)
+
+### Deployment Architecture
+
+**Static Hosting**: GitHub Pages (https://misha4323223.github.io/ProductShowcase)
+- Automatic deployment via GitHub Actions on push to main branch
+- Build process: `npm run build` → deploys to `dist/` directory
+- Environment variables configured as GitHub Secrets
+
+**Backend Services**: Firebase
+- Firestore: Database for products, orders, reviews, promo codes, stock notifications
+- Authentication: Email/password auth with admin controls
+- Cloud Functions: Serverless functions for email notifications (deployed separately to Firebase)
+- Security: Firestore rules enforce admin-only writes, public reads
+
+**Email Service**: Resend API
+- Integrated with Firebase Cloud Functions for server-side email sending
+- Free tier: 100 emails/day (3,000/month)
+- Domain: onboarding@resend.dev (default sending domain)
+
 ### Notes
-- Product data currently mocked in `client/src/lib/products.ts`
 - Image assets stored in `attached_assets/generated_images/`
-- Database connection requires `DATABASE_URL` environment variable
 - Application designed for Russian language market (content in Russian)
 - Firebase project ID: sweetweb-3543f
+- GitHub repository: misha4323223/ProductShowcase
+- Deployment instructions: See `DEPLOY_INSTRUCTIONS.md`
