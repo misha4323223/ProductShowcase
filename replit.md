@@ -135,8 +135,26 @@ Configured in both TypeScript and Vite:
 - **express-session**: Session middleware (ready for implementation)
 - **connect-pg-simple**: PostgreSQL session store (ready for implementation)
 
+### Firebase Configuration
+
+**Authentication**: Firebase Auth with email/password
+- Admin email: pimashin2015@gmail.com (lowercase enforced by AuthContext)
+- Email normalization: All emails converted to lowercase on sign-in/sign-up (AuthContext.tsx line 37, 42)
+
+**Security Rules**: Firestore rules configured for admin-only access
+- Admin check: `request.auth.token.email == 'pimashin2015@gmail.com'`
+- CRITICAL: Email must be lowercase in rules to match Firebase Auth token
+- Products/Categories: Admin-only create/update/delete, public read
+- Orders: User can read own orders, admin can read all
+- Reviews: Authenticated users can create, admin can delete
+
+**Common Issues**:
+- "Missing or insufficient permissions" error: Verify admin email case matches exactly (lowercase)
+- Firebase Auth always lowercases emails in tokens, ensure rules match
+
 ### Notes
 - Product data currently mocked in `client/src/lib/products.ts`
 - Image assets stored in `attached_assets/generated_images/`
 - Database connection requires `DATABASE_URL` environment variable
 - Application designed for Russian language market (content in Russian)
+- Firebase project ID: sweetweb-3543f
