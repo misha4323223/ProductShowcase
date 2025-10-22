@@ -38,6 +38,9 @@ export interface Order {
     image: string;
   }[];
   total: number;
+  subtotal?: number;
+  discount?: number;
+  promoCode?: string;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   customerName: string;
   customerEmail: string;
@@ -68,4 +71,18 @@ export interface Review {
 export interface WishlistItem {
   productId: string;
   addedAt: Date;
+}
+
+export interface PromoCode {
+  id: string;
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  minOrderAmount?: number;
+  maxUses?: number;
+  currentUses: number;
+  startDate?: Date;
+  endDate?: Date;
+  active: boolean;
+  createdAt: Date;
 }
