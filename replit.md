@@ -147,10 +147,22 @@ Configured in both TypeScript and Vite:
 - Products/Categories: Admin-only create/update/delete, public read
 - Orders: User can read own orders, admin can read all
 - Reviews: Authenticated users can create, admin can delete
+- Promo Codes: Public read (for validation), admin create/delete, system can increment currentUses
+
+**Promo Code System** (October 2025):
+- Full CRUD interface in admin panel (5th tab)
+- Support for percentage and fixed amount discounts
+- Optional features: min order amount, usage limits, start/end dates, active/inactive toggle
+- Real-time validation during checkout with discount calculation
+- Automatic usage tracking (currentUses incremented on order creation)
+- Orders store promo code info: code, discount amount, original subtotal
+- Service layer: `client/src/services/firebase-promocodes.ts`
+- Types: `client/src/types/firebase-types.ts` (PromoCode interface)
 
 **Common Issues**:
 - "Missing or insufficient permissions" error: Verify admin email case matches exactly (lowercase)
 - Firebase Auth always lowercases emails in tokens, ensure rules match
+- Promo code rules update needed: See FIREBASE_RULES_UPDATE.md for instructions
 
 ### Notes
 - Product data currently mocked in `client/src/lib/products.ts`
