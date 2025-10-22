@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createOrder } from "@/services/firebase-orders";
+import { validatePromoCode, applyPromoCode } from "@/services/firebase-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface CartItem {
@@ -49,6 +50,11 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>;
 export default function CheckoutPage() {
   const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [isCheckingPromo, setIsCheckingPromo] = useState(false);
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [validPromoCodeId, setValidPromoCodeId] = useState<string | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -85,7 +91,57 @@ export default function CheckoutPage() {
 
   const selectedDelivery = deliveryOptions.find(opt => opt.id === form.watch("delivery"));
   const deliveryPrice = selectedDelivery?.price || 0;
-  const finalTotal = total + deliveryPrice;
+  const subtotal = total + deliveryPrice;
+  const finalTotal = subtotal - promoDiscount;
+
+  const handleApplyPromoCode = async () => {
+    if (!promoCodeInput.trim()) {
+      toast({
+        title: "Введите промокод",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCheckingPromo(true);
+    try {
+      const result = await validatePromoCode(promoCodeInput, subtotal);
+      
+      if (result.valid && result.promoCode && result.discountAmount) {
+        setPromoCode(result.promoCode.code);
+        setPromoDiscount(result.discountAmount);
+        setValidPromoCodeId(result.promoCode.id);
+        toast({
+          title: "Промокод применён!",
+          description: `Скидка: ${result.discountAmount}₽`,
+        });
+      } else {
+        toast({
+          title: "Промокод недействителен",
+          description: result.message || "Проверьте правильность ввода",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось применить промокод",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCheckingPromo(false);
+    }
+  };
+
+  const handleRemovePromoCode = () => {
+    setPromoCode("");
+    setPromoCodeInput("");
+    setPromoDiscount(0);
+    setValidPromoCodeId(null);
+    toast({
+      title: "Промокод удалён",
+    });
+  };
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
@@ -101,6 +157,9 @@ export default function CheckoutPage() {
           image: item.image,
         })),
         total: finalTotal,
+        subtotal: promoDiscount > 0 ? subtotal : undefined,
+        discount: promoDiscount > 0 ? promoDiscount : undefined,
+        promoCode: promoCode || undefined,
         status: 'pending' as const,
         customerName: `${data.firstName} ${data.lastName}`,
         customerEmail: data.email,
@@ -109,6 +168,10 @@ export default function CheckoutPage() {
       };
 
       const orderId = await createOrder(orderData);
+      
+      if (validPromoCodeId) {
+        await applyPromoCode(validPromoCodeId);
+      }
 
       toast({
         title: "Заказ успешно оформлен!",
@@ -454,6 +517,60 @@ export default function CheckoutPage() {
                         {deliveryPrice === 0 ? "Бесплатно" : `${deliveryPrice} ₽`}
                       </span>
                     </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-sm font-medium mb-2 block">Промокод</Label>
+                      {promoCode ? (
+                        <div className="flex items-center gap-2">
+                          <code className="flex-1 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 px-3 py-2 rounded text-sm font-mono font-bold text-green-700 dark:text-green-300">
+                            {promoCode}
+                          </code>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleRemovePromoCode}
+                            data-testid="button-remove-promo"
+                          >
+                            Удалить
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Введите промокод"
+                            value={promoCodeInput}
+                            onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleApplyPromoCode();
+                              }
+                            }}
+                            data-testid="input-promo-code"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleApplyPromoCode}
+                            disabled={isCheckingPromo || !promoCodeInput.trim()}
+                            data-testid="button-apply-promo"
+                          >
+                            {isCheckingPromo ? "Проверка..." : "Применить"}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                    {promoDiscount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-medium">
+                        <span>Скидка по промокоду:</span>
+                        <span data-testid="text-promo-discount">-{promoDiscount} ₽</span>
+                      </div>
+                    )}
                   </div>
 
                   <Separator />
