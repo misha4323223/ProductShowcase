@@ -89,3 +89,12 @@ export interface PromoCode {
   active: boolean;
   createdAt: Date;
 }
+
+export interface StockNotification {
+  id: string;
+  productId: string;
+  productName: string;
+  email: string;
+  createdAt: Date;
+  notified?: boolean;
+}
