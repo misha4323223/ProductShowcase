@@ -142,6 +142,7 @@ export default function SearchPage() {
                       price={product.price}
                       salePrice={product.salePrice}
                       image={product.image}
+                      stock={product.stock}
                       onAddToCart={handleAddToCart}
                       onClick={(id) => setLocation(`/product/${id}`)}
                     />

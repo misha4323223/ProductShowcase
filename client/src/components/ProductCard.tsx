@@ -13,6 +13,7 @@ interface ProductCardProps {
   price: number;
   salePrice?: number;
   image: string;
+  stock?: number;
   onAddToCart: (id: string) => void;
   onClick: (id: string) => void;
 }
@@ -22,7 +23,8 @@ export default function ProductCard({
   name, 
   price, 
   salePrice, 
-  image, 
+  image,
+  stock,
   onAddToCart,
   onClick 
 }: ProductCardProps) {
@@ -34,6 +36,9 @@ export default function ProductCard({
   const hasDiscount = salePrice && salePrice < price;
   const discount = hasDiscount ? Math.round(((price - salePrice) / price) * 100) : 0;
   const inWishlist = isInWishlist(id);
+  const isOutOfStock = stock !== undefined && stock === 0;
+  const isLowStock = stock !== undefined && stock > 0 && stock < 10;
+  const hasUnlimitedStock = stock === undefined;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -48,6 +53,16 @@ export default function ProductCard({
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    if (isOutOfStock) {
+      toast({
+        title: "Нет в наличии",
+        description: "К сожалению, этот товар закончился",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsAdding(true);
     onAddToCart(id);
     setTimeout(() => setIsAdding(false), 500);
@@ -134,29 +149,49 @@ export default function ProductCard({
         <h3 className="font-medium text-sm line-clamp-2 min-h-[2.5rem] text-foreground" data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
-        <div className="flex items-center gap-2">
-          {hasDiscount ? (
-            <>
-              <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid={`text-sale-price-${id}`}>
-                {salePrice}₽
-              </span>
-              <span className="text-sm text-muted-foreground line-through" data-testid={`text-original-price-${id}`}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            {hasDiscount ? (
+              <>
+                <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid={`text-sale-price-${id}`}>
+                  {salePrice}₽
+                </span>
+                <span className="text-sm text-muted-foreground line-through" data-testid={`text-original-price-${id}`}>
+                  {price}₽
+                </span>
+              </>
+            ) : (
+              <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid={`text-price-${id}`}>
                 {price}₽
               </span>
-            </>
+            )}
+          </div>
+          {isOutOfStock ? (
+            <Badge variant="destructive" className="text-xs shrink-0" data-testid={`badge-out-of-stock-${id}`}>
+              Нет в наличии
+            </Badge>
+          ) : isLowStock ? (
+            <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 shrink-0" data-testid={`badge-low-stock-${id}`}>
+              Мало
+            </Badge>
+          ) : hasUnlimitedStock ? (
+            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+              В наличии
+            </Badge>
           ) : (
-            <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid={`text-price-${id}`}>
-              {price}₽
-            </span>
+            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+              {stock} шт
+            </Badge>
           )}
         </div>
         <Button 
-          className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6" 
+          className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6 disabled:opacity-50 disabled:cursor-not-allowed" 
           onClick={handleAddToCart}
+          disabled={isOutOfStock}
           data-testid={`button-add-to-cart-${id}`}
         >
           <ShoppingCart className="h-4 w-4 mr-2" />
-          В корзину
+          {isOutOfStock ? 'Нет в наличии' : 'В корзину'}
         </Button>
       </div>
     </Card>

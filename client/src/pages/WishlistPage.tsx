@@ -136,6 +136,7 @@ export default function WishlistPage() {
                     price={product.price}
                     salePrice={product.salePrice}
                     image={product.image}
+                    stock={product.stock}
                     onAddToCart={handleAddToCart}
                     onClick={(id) => setLocation(`/product/${id}`)}
                   />

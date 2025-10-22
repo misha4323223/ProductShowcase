@@ -153,6 +153,7 @@ export default function Home() {
                     price={product.price}
                     salePrice={product.salePrice}
                     image={product.image}
+                    stock={product.stock}
                     onAddToCart={handleAddToCart}
                     onClick={(id) => setLocation(`/product/${id}`)}
                   />

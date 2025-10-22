@@ -9,6 +9,7 @@ export interface Product {
   description: string;
   featured?: boolean;
   popularity?: number;
+  stock?: number;
   createdAt?: Date;
 }
 

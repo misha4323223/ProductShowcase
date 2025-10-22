@@ -36,6 +36,7 @@ const productSchema = z.object({
   image: z.string().trim().optional(),
   salePrice: z.number().optional(),
   featured: z.boolean().default(false),
+  stock: z.number().min(0, "Остаток не может быть отрицательным").optional(),
 });
 
 type Category = z.infer<typeof categorySchema>;
@@ -103,6 +104,7 @@ export default function AdminPage() {
       description: "",
       image: "",
       featured: false,
+      stock: undefined,
     },
   });
 
@@ -135,6 +137,10 @@ export default function AdminPage() {
         featured: data.featured || false,
         popularity: Math.floor(Math.random() * 100),
       };
+      
+      if (data.stock !== undefined && data.stock >= 0) {
+        cleanData.stock = data.stock;
+      }
       
       if (data.salePrice && data.salePrice > 0) {
         cleanData.salePrice = data.salePrice;
@@ -177,6 +183,24 @@ export default function AdminPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
       toast({ title: "Товар удалён" });
+    },
+  });
+
+  const updateStockMutation = useMutation({
+    mutationFn: async ({ productId, newStock }: { productId: string; newStock: number }) => {
+      const productRef = doc(db, "products", productId);
+      await setDoc(productRef, { stock: Math.max(0, newStock) }, { merge: true });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      toast({ title: "Остаток обновлён" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
     },
   });
 
@@ -672,6 +696,30 @@ export default function AdminPage() {
 
                   <FormField
                     control={productForm.control}
+                    name="stock"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Остаток товара (шт)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            {...field} 
+                            onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                            value={field.value ?? ""}
+                            placeholder="Оставьте пустым для безлимитного товара" 
+                            data-testid="input-product-stock" 
+                          />
+                        </FormControl>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Оставьте поле пустым если товар не требует учета остатков
+                        </p>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={productForm.control}
                     name="image"
                     render={({ field }) => (
                       <FormItem>
@@ -696,6 +744,7 @@ export default function AdminPage() {
           <Card>
             <CardHeader>
               <CardTitle>Существующие товары</CardTitle>
+              <CardDescription>Управление остатками и товарами</CardDescription>
             </CardHeader>
             <CardContent>
               {productsLoading ? (
@@ -703,26 +752,142 @@ export default function AdminPage() {
               ) : products.length === 0 ? (
                 <p className="text-muted-foreground">Товаров пока нет</p>
               ) : (
-                <div className="space-y-2">
-                  {products.map((product) => (
-                    <div key={product.id} className="flex items-center justify-between p-3 border rounded-md" data-testid={`product-${product.id}`}>
-                      <div>
-                        <p className="font-medium">{product.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {product.price}₽ {product.salePrice && `→ ${product.salePrice}₽`} • {product.category}
-                        </p>
-                      </div>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => deleteProductMutation.mutate(product.id)}
-                        disabled={deleteProductMutation.isPending}
-                        data-testid={`button-delete-product-${product.id}`}
+                <div className="space-y-4">
+                  {products.map((product) => {
+                    const stock = product.stock;
+                    const hasStock = stock !== undefined;
+                    const isLowStock = hasStock && stock < 10;
+                    const isOutOfStock = hasStock && stock === 0;
+                    
+                    return (
+                      <div 
+                        key={product.id} 
+                        className="border rounded-lg p-4 space-y-3 bg-card" 
+                        data-testid={`product-${product.id}`}
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className="font-semibold text-lg">{product.name}</p>
+                              {isOutOfStock && (
+                                <Badge variant="destructive" data-testid={`badge-out-of-stock-${product.id}`}>
+                                  Нет в наличии
+                                </Badge>
+                              )}
+                              {!isOutOfStock && isLowStock && (
+                                <Badge variant="outline" className="border-yellow-500 text-yellow-700" data-testid={`badge-low-stock-${product.id}`}>
+                                  ⚠️ Мало
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {product.price}₽ {product.salePrice && `→ ${product.salePrice}₽`} • {product.category}
+                            </p>
+                          </div>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteProductMutation.mutate(product.id)}
+                            disabled={deleteProductMutation.isPending}
+                            data-testid={`button-delete-product-${product.id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className="pt-3 border-t space-y-3">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium">Остаток на складе:</p>
+                            <p className={`text-2xl font-bold ${isOutOfStock ? 'text-red-600' : isLowStock ? 'text-yellow-600' : 'text-green-600'}`} data-testid={`text-stock-${product.id}`}>
+                              {hasStock ? `${stock} шт` : 'Безлимитный'}
+                            </p>
+                          </div>
+
+                          {hasStock ? (
+                            <div className="flex flex-wrap gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateStockMutation.mutate({ 
+                                  productId: product.id, 
+                                  newStock: stock - 10 
+                                })}
+                                disabled={updateStockMutation.isPending || stock === 0}
+                                data-testid={`button-stock-minus10-${product.id}`}
+                              >
+                                -10
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateStockMutation.mutate({ 
+                                  productId: product.id, 
+                                  newStock: stock - 1 
+                                })}
+                                disabled={updateStockMutation.isPending || stock === 0}
+                                data-testid={`button-stock-minus1-${product.id}`}
+                              >
+                                -1
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateStockMutation.mutate({ 
+                                  productId: product.id, 
+                                  newStock: stock + 1 
+                                })}
+                                disabled={updateStockMutation.isPending}
+                                data-testid={`button-stock-plus1-${product.id}`}
+                              >
+                                +1
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateStockMutation.mutate({ 
+                                  productId: product.id, 
+                                  newStock: stock + 10 
+                                })}
+                                disabled={updateStockMutation.isPending}
+                                data-testid={`button-stock-plus10-${product.id}`}
+                              >
+                                +10
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateStockMutation.mutate({ 
+                                  productId: product.id, 
+                                  newStock: stock + 50 
+                                })}
+                                disabled={updateStockMutation.isPending}
+                                data-testid={`button-stock-plus50-${product.id}`}
+                              >
+                                +50
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => updateStockMutation.mutate({ 
+                                  productId: product.id, 
+                                  newStock: stock + 100 
+                                })}
+                                disabled={updateStockMutation.isPending}
+                                data-testid={`button-stock-plus100-${product.id}`}
+                              >
+                                +100
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="text-sm text-muted-foreground">
+                              Для безлимитных товаров управление остатками недоступно. 
+                              Добавьте начальный остаток через форму редактирования.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
