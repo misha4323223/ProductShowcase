@@ -12,10 +12,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket } from "lucide-react";
 import { getUserOrders, updateOrderStatus } from "@/services/firebase-orders";
 import { getAllReviews, deleteReview } from "@/services/firebase-reviews";
-import type { Order, Review } from "@/types/firebase-types";
+import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode } from "@/services/firebase-promocodes";
+import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -39,8 +40,20 @@ const productSchema = z.object({
   stock: z.number().min(0, "Остаток не может быть отрицательным").optional(),
 });
 
+const promoCodeSchema = z.object({
+  code: z.string().trim().min(1, "Код обязателен").toUpperCase(),
+  discountType: z.enum(['percentage', 'fixed']),
+  discountValue: z.number().min(0.01, "Значение скидки должно быть больше 0"),
+  minOrderAmount: z.number().min(0).optional(),
+  maxUses: z.number().min(1).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  active: z.boolean().default(true),
+});
+
 type Category = z.infer<typeof categorySchema>;
 type Product = z.infer<typeof productSchema>;
+type PromoCodeForm = z.infer<typeof promoCodeSchema>;
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -85,6 +98,11 @@ export default function AdminPage() {
     queryFn: getAllReviews,
   });
 
+  const { data: promoCodes = [], isLoading: promoCodesLoading } = useQuery<PromoCode[]>({
+    queryKey: ["/api/admin/promocodes"],
+    queryFn: getAllPromoCodes,
+  });
+
   const categoryForm = useForm<Category>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
@@ -105,6 +123,20 @@ export default function AdminPage() {
       image: "",
       featured: false,
       stock: undefined,
+    },
+  });
+
+  const promoCodeForm = useForm<PromoCodeForm>({
+    resolver: zodResolver(promoCodeSchema),
+    defaultValues: {
+      code: "",
+      discountType: "percentage",
+      discountValue: 0,
+      minOrderAmount: undefined,
+      maxUses: undefined,
+      startDate: "",
+      endDate: "",
+      active: true,
     },
   });
 
@@ -260,6 +292,69 @@ export default function AdminPage() {
     },
   });
 
+  const addPromoCodeMutation = useMutation({
+    mutationFn: async (data: PromoCodeForm) => {
+      const promoData = {
+        code: data.code,
+        discountType: data.discountType,
+        discountValue: data.discountValue,
+        minOrderAmount: data.minOrderAmount,
+        maxUses: data.maxUses,
+        currentUses: 0,
+        startDate: data.startDate ? new Date(data.startDate) : undefined,
+        endDate: data.endDate ? new Date(data.endDate) : undefined,
+        active: data.active,
+      };
+      await createPromoCode(promoData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/promocodes"] });
+      toast({ title: "Промокод создан!" });
+      promoCodeForm.reset();
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
+  const togglePromoCodeMutation = useMutation({
+    mutationFn: async ({ id, active }: { id: string; active: boolean }) => {
+      await updatePromoCode(id, { active });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/promocodes"] });
+      toast({ title: "Статус промокода обновлён" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
+  const deletePromoCodeMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await deletePromoCode(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/promocodes"] });
+      toast({ title: "Промокод удалён" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
   const renderStars = (rating: number) => {
     return (
       <div className="flex items-center gap-1">
@@ -285,7 +380,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4 mb-6">
+        <TabsList className="grid w-full grid-cols-5 mb-6">
           <TabsTrigger value="orders" data-testid="tab-orders">
             <ShoppingBag className="w-4 h-4 mr-2" />
             Заказы ({allOrders.length})
@@ -293,6 +388,10 @@ export default function AdminPage() {
           <TabsTrigger value="reviews" data-testid="tab-reviews">
             <MessageSquare className="w-4 h-4 mr-2" />
             Отзывы ({allReviews.length})
+          </TabsTrigger>
+          <TabsTrigger value="promocodes" data-testid="tab-promocodes">
+            <Ticket className="w-4 h-4 mr-2" />
+            Промокоды
           </TabsTrigger>
           <TabsTrigger value="products" data-testid="tab-products">
             <Package className="w-4 h-4 mr-2" />
@@ -478,6 +577,267 @@ export default function AdminPage() {
                       </div>
                     );
                   })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="promocodes" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Создать промокод</CardTitle>
+              <CardDescription>Добавьте новый промокод для скидок</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...promoCodeForm}>
+                <form onSubmit={promoCodeForm.handleSubmit((data) => addPromoCodeMutation.mutate(data))} className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="code"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Код промокода</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="ЛЕТО2025" data-testid="input-promo-code" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="discountType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Тип скидки</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-discount-type">
+                                <SelectValue placeholder="Выберите тип" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="percentage">Процент (%)</SelectItem>
+                              <SelectItem value="fixed">Фиксированная сумма (₽)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="discountValue"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Размер скидки</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              {...field} 
+                              onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                              placeholder="10" 
+                              data-testid="input-discount-value" 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="minOrderAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Мин. сумма заказа (опц.)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              {...field} 
+                              onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                              value={field.value || ""}
+                              placeholder="1000" 
+                              data-testid="input-min-order" 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="maxUses"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Макс. использований (опц.)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              {...field} 
+                              onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                              value={field.value || ""}
+                              placeholder="100" 
+                              data-testid="input-max-uses" 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="active"
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3 pt-8">
+                          <FormControl>
+                            <input 
+                              type="checkbox" 
+                              checked={field.value} 
+                              onChange={field.onChange}
+                              className="w-4 h-4" 
+                              data-testid="checkbox-promo-active" 
+                            />
+                          </FormControl>
+                          <FormLabel className="!mt-0">Активен</FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="startDate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Дата начала (опц.)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="date" 
+                              {...field} 
+                              data-testid="input-start-date" 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={promoCodeForm.control}
+                      name="endDate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Дата окончания (опц.)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="date" 
+                              {...field} 
+                              data-testid="input-end-date" 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <Button type="submit" disabled={addPromoCodeMutation.isPending} data-testid="button-add-promo">
+                    <Plus className="w-4 h-4 mr-2" />
+                    {addPromoCodeMutation.isPending ? "Создание..." : "Создать промокод"}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Существующие промокоды</CardTitle>
+              <CardDescription>Управление промокодами</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {promoCodesLoading ? (
+                <p className="text-muted-foreground">Загрузка...</p>
+              ) : promoCodes.length === 0 ? (
+                <p className="text-muted-foreground">Промокодов пока нет</p>
+              ) : (
+                <div className="space-y-4">
+                  {promoCodes.map((promo) => (
+                    <div 
+                      key={promo.id} 
+                      className="border rounded-lg p-4 space-y-3" 
+                      data-testid={`promo-${promo.id}`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <code className="bg-primary/10 px-3 py-1 rounded font-mono text-lg font-bold">
+                              {promo.code}
+                            </code>
+                            <Badge variant={promo.active ? "default" : "secondary"}>
+                              {promo.active ? "Активен" : "Неактивен"}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-2">
+                            Скидка: {promo.discountType === 'percentage' ? `${promo.discountValue}%` : `${promo.discountValue}₽`}
+                            {promo.minOrderAmount && ` • От ${promo.minOrderAmount}₽`}
+                          </p>
+                        </div>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deletePromoCodeMutation.mutate(promo.id)}
+                          disabled={deletePromoCodeMutation.isPending}
+                          data-testid={`button-delete-promo-${promo.id}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <p className="text-muted-foreground">Использований:</p>
+                          <p className="font-medium">
+                            {promo.currentUses}{promo.maxUses ? ` / ${promo.maxUses}` : ' / ∞'}
+                          </p>
+                        </div>
+                        {(promo.startDate || promo.endDate) && (
+                          <div>
+                            <p className="text-muted-foreground">Период действия:</p>
+                            <p className="font-medium">
+                              {promo.startDate && promo.startDate.toLocaleDateString('ru-RU')}
+                              {promo.startDate && promo.endDate && ' - '}
+                              {promo.endDate && promo.endDate.toLocaleDateString('ru-RU')}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button
+                          variant={promo.active ? "outline" : "default"}
+                          size="sm"
+                          onClick={() => togglePromoCodeMutation.mutate({ id: promo.id, active: !promo.active })}
+                          disabled={togglePromoCodeMutation.isPending}
+                          data-testid={`button-toggle-promo-${promo.id}`}
+                        >
+                          {promo.active ? "Деактивировать" : "Активировать"}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </CardContent>
