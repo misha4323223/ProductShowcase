@@ -33,7 +33,8 @@ Preferred communication style: Simple, everyday language.
 - `ShoppingCart`: Side-panel cart with quantity management
 - `CategoryCard`: Visual category navigation
 - `BenefitsBar`: Feature highlights (shipping, returns, etc.)
-- `Footer`: Contact info, newsletter signup, social links
+- `Footer`: Contact info, newsletter signup, social links, legal document links (modal + full pages)
+- `LegalDialog`: Modal component for quick preview of legal documents (Privacy/Terms)
 
 ### Backend Architecture
 
@@ -175,6 +176,15 @@ Configured in both TypeScript and Vite:
 - Templates: Order confirmation + stock notification (need to be configured in EmailJS dashboard)
 - Environment variables needed: VITE_EMAILJS_PUBLIC_KEY, VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_ORDER_TEMPLATE_ID, VITE_EMAILJS_STOCK_TEMPLATE_ID
 - Types: `client/src/types/firebase-types.ts` (StockNotification interface)
+
+**Legal Compliance** (October 2025):
+- Privacy Policy page (`/privacy`) - Политика конфиденциальности (152-ФЗ compliance)
+- Terms of Service page (`/terms`) - Договор публичной оферты
+- Compromise UX: Full pages accessible via direct links + modal dialogs from footer
+- Modal component: `LegalDialog.tsx` for quick preview with "Open full version" button
+- Footer updated with legal document links and business requisites placeholder
+- Content in Russian, compliant with Russian consumer protection laws
+- Business requisites section (placeholder for ИП/ООО details after registration)
 
 ### Deployment Architecture
 
