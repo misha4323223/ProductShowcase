@@ -164,16 +164,15 @@ Configured in both TypeScript and Vite:
 - Firebase Auth always lowercases emails in tokens, ensure rules match
 - Promo code rules update needed: See FIREBASE_RULES_UPDATE.md for instructions
 
-**Stock Notification System** (October 2025):
-- Email notifications for out-of-stock items via Firebase Cloud Functions + Resend API
-- User subscribes when product is out of stock → email saved to Firestore
-- Admin replenishes stock → sends notifications from admin panel
-- Cloud Function (`sendStockNotifications`) automatically emails all subscribers
-- Automatic cleanup: subscriptions deleted after notification sent
-- Service layer: `client/src/services/firebase-stock-notifications.ts`
-- Cloud Function: `functions/index.js`
-- Free tier: 125,000 function invocations/month, 100 emails/day via Resend
-- Configuration: `firebase functions:config:set resend.api_key="KEY"`
+**Email Notification System** (October 2025):
+- Automated email notifications via EmailJS (client-side email service)
+- Order confirmations sent to customers after checkout
+- Stock availability notifications when out-of-stock items return
+- Service layer: `client/src/services/emailjs.ts`, `client/src/services/firebase-stock-notifications.ts`
+- Free tier: 200 emails/month (sufficient for ~200 orders or mixed usage)
+- Setup instructions: See `EMAILJS_SETUP.md` for complete configuration guide
+- Templates: Order confirmation + stock notification templates in EmailJS dashboard
+- Environment variables: VITE_EMAILJS_PUBLIC_KEY, VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_ORDER_TEMPLATE_ID, VITE_EMAILJS_STOCK_TEMPLATE_ID
 - Types: `client/src/types/firebase-types.ts` (StockNotification interface)
 
 ### Deployment Architecture
@@ -186,13 +185,14 @@ Configured in both TypeScript and Vite:
 **Backend Services**: Firebase
 - Firestore: Database for products, orders, reviews, promo codes, stock notifications
 - Authentication: Email/password auth with admin controls
-- Cloud Functions: Serverless functions for email notifications (deployed separately to Firebase)
 - Security: Firestore rules enforce admin-only writes, public reads
 
-**Email Service**: Resend API
-- Integrated with Firebase Cloud Functions for server-side email sending
-- Free tier: 100 emails/day (3,000/month)
-- Domain: onboarding@resend.dev (default sending domain)
+**Email Service**: EmailJS
+- Client-side email service integrated with user's Gmail account
+- Sends order confirmations and stock availability notifications
+- Free tier: 200 emails/month
+- No server-side code required - works directly from GitHub Pages
+- Configuration: See EMAILJS_SETUP.md for setup instructions
 
 ### Notes
 - Image assets stored in `attached_assets/generated_images/`
