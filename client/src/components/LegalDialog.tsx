@@ -15,23 +15,23 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[80vh]" data-testid={`dialog-${type}`}>
-        <DialogHeader>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-full bg-gradient-to-br from-pink-100 to-purple-100">
+      <DialogContent className="w-[95vw] max-w-3xl h-[90vh] max-h-[90vh] p-4 md:p-6 flex flex-col" data-testid={`dialog-${type}`}>
+        <DialogHeader className="flex-shrink-0">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="p-1.5 md:p-2 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 flex-shrink-0">
               {isPrivacy ? (
-                <Shield className="h-5 w-5 text-primary" />
+                <Shield className="h-4 w-4 md:h-5 md:w-5 text-primary" />
               ) : (
-                <FileText className="h-5 w-5 text-primary" />
+                <FileText className="h-4 w-4 md:h-5 md:w-5 text-primary" />
               )}
             </div>
-            <DialogTitle className="text-xl font-serif text-primary" data-testid={`title-${type}`}>
+            <DialogTitle className="text-base md:text-xl font-serif text-primary leading-tight" data-testid={`title-${type}`}>
               {isPrivacy ? "Политика конфиденциальности" : "Договор публичной оферты"}
             </DialogTitle>
           </div>
         </DialogHeader>
 
-        <ScrollArea className="h-[60vh] pr-4">
+        <ScrollArea className="flex-1 pr-2 md:pr-4 my-3 md:my-4">
           <div className="prose prose-sm max-w-none space-y-4">
             {isPrivacy ? (
               <>
@@ -130,15 +130,15 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
           </div>
         </ScrollArea>
 
-        <div className="flex items-center justify-between gap-3 pt-4 border-t">
-          <Link href={isPrivacy ? "/privacy" : "/terms"} onClick={onClose}>
-            <Button variant="outline" className="gap-2" data-testid={`button-open-full-${type}`}>
-              <ExternalLink className="h-4 w-4" />
-              Открыть полную версию
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 pt-3 md:pt-4 border-t flex-shrink-0">
+          <Link href={isPrivacy ? "/privacy" : "/terms"} onClick={onClose} className="w-full sm:w-auto">
+            <Button variant="outline" className="gap-2 w-full sm:w-auto" size="sm" data-testid={`button-open-full-${type}`}>
+              <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <span className="text-xs md:text-sm">Полная версия</span>
             </Button>
           </Link>
-          <Button onClick={onClose} data-testid={`button-close-${type}`}>
-            Понятно
+          <Button onClick={onClose} className="w-full sm:w-auto" size="sm" data-testid={`button-close-${type}`}>
+            <span className="text-xs md:text-sm">Понятно</span>
           </Button>
         </div>
       </DialogContent>
