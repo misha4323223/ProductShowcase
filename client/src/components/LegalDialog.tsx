@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Shield, FileText } from "lucide-react";
 import { Link } from "wouter";
@@ -29,6 +29,11 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
               {isPrivacy ? "Политика конфиденциальности" : "Договор публичной оферты"}
             </DialogTitle>
           </div>
+          <DialogDescription className="sr-only">
+            {isPrivacy 
+              ? "Краткая версия политики конфиденциальности Sweet Delights" 
+              : "Краткая версия договора публичной оферты Sweet Delights"}
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="flex-1 pr-2 md:pr-4 my-3 md:my-4">
