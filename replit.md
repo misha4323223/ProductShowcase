@@ -170,9 +170,10 @@ Configured in both TypeScript and Vite:
 - Stock availability notifications when out-of-stock items return
 - Service layer: `client/src/services/emailjs.ts`, `client/src/services/firebase-stock-notifications.ts`
 - Free tier: 200 emails/month (sufficient for ~200 orders or mixed usage)
-- Setup instructions: See `EMAILJS_SETUP.md` for complete configuration guide
-- Templates: Order confirmation + stock notification templates in EmailJS dashboard
-- Environment variables: VITE_EMAILJS_PUBLIC_KEY, VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_ORDER_TEMPLATE_ID, VITE_EMAILJS_STOCK_TEMPLATE_ID
+- **Current Status**: Code integrated, EmailJS account created, awaiting template/key configuration
+- Setup instructions: See `EMAILJS_SETUP.md` for full guide, `EMAILJS_CHECKLIST.md` for quick steps
+- Templates: Order confirmation + stock notification (need to be configured in EmailJS dashboard)
+- Environment variables needed: VITE_EMAILJS_PUBLIC_KEY, VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_ORDER_TEMPLATE_ID, VITE_EMAILJS_STOCK_TEMPLATE_ID
 - Types: `client/src/types/firebase-types.ts` (StockNotification interface)
 
 ### Deployment Architecture
