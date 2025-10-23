@@ -2,9 +2,15 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { SiTelegram, SiInstagram, SiVk } from "react-icons/si";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import LegalDialog from "@/components/LegalDialog";
 
 export default function Footer() {
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
+
   return (
+    <>
     <footer className="bg-gradient-to-b from-pink-50/30 to-sidebar border-t border-pink-200/30 relative overflow-hidden">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 left-0 w-64 h-64 bg-pink-300/30 rounded-full blur-3xl" />
@@ -84,17 +90,35 @@ export default function Footer() {
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <p data-testid="text-copyright">© 2025 Sweet Delights. Все права защищены.</p>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-foreground transition-colors" data-testid="link-privacy">
+            <div className="flex flex-wrap justify-center gap-6">
+              <button 
+                onClick={() => setPrivacyOpen(true)} 
+                className="hover:text-foreground transition-colors" 
+                data-testid="link-privacy"
+              >
                 Политика конфиденциальности
-              </a>
-              <a href="#" className="hover:text-foreground transition-colors" data-testid="link-terms">
-                Условия использования
-              </a>
+              </button>
+              <button 
+                onClick={() => setTermsOpen(true)} 
+                className="hover:text-foreground transition-colors" 
+                data-testid="link-terms"
+              >
+                Договор оферты
+              </button>
             </div>
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-border/50">
+            <p className="text-xs text-muted-foreground text-center">
+              <strong>Реквизиты:</strong> [Будут добавлены после регистрации ИП/ООО]
+            </p>
           </div>
         </div>
       </div>
+
+      <LegalDialog isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} type="privacy" />
+      <LegalDialog isOpen={termsOpen} onClose={() => setTermsOpen(false)} type="terms" />
     </footer>
+    </>
   );
 }

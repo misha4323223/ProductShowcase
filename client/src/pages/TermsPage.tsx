@@ -242,7 +242,7 @@ export default function TermsPage() {
 
             <section className="border-t pt-6 mt-8">
               <p className="text-sm text-muted-foreground italic">
-                Настоящая оферта является публичным документом. Полный текст договора доступен по адресу: {window.location.origin}/terms
+                Настоящая оферта является публичным документом. Полный текст договора доступен на нашем сайте в разделе "Договор оферты".
               </p>
             </section>
           </CardContent>
