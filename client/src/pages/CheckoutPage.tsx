@@ -24,6 +24,7 @@ import {
 import { createOrder } from "@/services/firebase-orders";
 import { validatePromoCode } from "@/services/firebase-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
+import { sendOrderConfirmation } from "@/services/emailjs";
 
 interface CartItem {
   id: string;
@@ -175,6 +176,29 @@ export default function CheckoutPage() {
       };
 
       const orderId = await createOrder(orderData);
+
+      try {
+        await sendOrderConfirmation({
+          customerEmail: data.email,
+          customerName: `${data.firstName} ${data.lastName}`,
+          orderNumber: orderId.substring(0, 8).toUpperCase(),
+          orderDate: new Date().toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
+          items: cartItems.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          totalAmount: finalTotal,
+          shippingAddress: `${data.address}, ${data.city}, ${data.postalCode}`,
+          phone: data.phone,
+        });
+      } catch (emailError) {
+        console.error('Не удалось отправить email:', emailError);
+      }
 
       toast({
         title: "Заказ успешно оформлен!",
