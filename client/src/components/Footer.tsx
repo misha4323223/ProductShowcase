@@ -3,6 +3,7 @@ import { SiTelegram, SiInstagram, SiVk } from "react-icons/si";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Link } from "wouter";
 import LegalDialog from "@/components/LegalDialog";
 
 export default function Footer() {
@@ -91,13 +92,11 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <p data-testid="text-copyright">© 2025 Sweet Delights. Все права защищены.</p>
             <div className="flex flex-wrap justify-center gap-6">
-              <a 
-                href="/faq" 
-                className="hover:text-foreground transition-colors" 
-                data-testid="link-faq"
-              >
-                Частые вопросы
-              </a>
+              <Link href="/faq">
+                <a className="hover:text-foreground transition-colors" data-testid="link-faq">
+                  Частые вопросы
+                </a>
+              </Link>
               <button 
                 onClick={() => setPrivacyOpen(true)} 
                 className="hover:text-foreground transition-colors" 
