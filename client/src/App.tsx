@@ -18,6 +18,7 @@ import AdminPage from "@/pages/AdminPage";
 import AdminUploadPage from "@/pages/AdminUploadPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
+import FaqPage from "@/pages/FaqPage";
 import NotFound from "@/pages/not-found";
 
 const base = import.meta.env.BASE_URL;
@@ -36,6 +37,7 @@ function Router() {
         <Route path="/wishlist" component={WishlistPage} />
         <Route path="/privacy" component={PrivacyPage} />
         <Route path="/terms" component={TermsPage} />
+        <Route path="/faq" component={FaqPage} />
         <Route path="/admin" component={AdminPage} />
         <Route path="/admin/upload" component={AdminUploadPage} />
         <Route component={NotFound} />
