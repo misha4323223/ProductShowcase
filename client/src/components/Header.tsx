@@ -2,7 +2,7 @@ import { ShoppingCart, Search, Menu, X, User, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
@@ -15,8 +15,28 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cartBounce, setCartBounce] = useState(false);
+  const [wishlistBounce, setWishlistBounce] = useState(false);
+  const prevCartCount = useRef(cartCount);
+  const prevWishlistCount = useRef(wishlistCount);
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (cartCount > prevCartCount.current) {
+      setCartBounce(true);
+      setTimeout(() => setCartBounce(false), 600);
+    }
+    prevCartCount.current = cartCount;
+  }, [cartCount]);
+
+  useEffect(() => {
+    if (wishlistCount > prevWishlistCount.current) {
+      setWishlistBounce(true);
+      setTimeout(() => setWishlistBounce(false), 700);
+    }
+    prevWishlistCount.current = wishlistCount;
+  }, [wishlistCount]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,9 +205,9 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
                 className="relative w-12 h-12 rounded-full hover:scale-110 transition-all jelly-wobble cursor-pointer bg-gradient-to-br from-pink-400 to-pink-600 shadow-lg flex items-center justify-center"
                 data-testid="button-wishlist"
               >
-                <Heart className={`h-5 w-5 text-white z-10 drop-shadow-lg ${wishlistCount > 0 ? 'fill-white' : ''}`} />
+                <Heart className={`h-5 w-5 text-white z-10 drop-shadow-lg transition-all ${wishlistCount > 0 ? 'fill-white' : ''} ${wishlistBounce ? 'heart-melt-animation' : ''}`} />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl animate-bounce-soft border-2 border-white z-20" data-testid="text-wishlist-count">
+                  <span className={`absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${wishlistBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-wishlist-count">
                     {wishlistCount}
                   </span>
                 )}
@@ -204,7 +224,7 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
                 <ShoppingCart className="h-5 w-5 text-white z-10 drop-shadow-lg" />
               </div>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl animate-bounce-soft border-2 border-white z-20" data-testid="text-cart-count">
+                <span className={`absolute -top-1 -right-1 h-6 w-6 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${cartBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-cart-count">
                   {cartCount}
                 </span>
               )}

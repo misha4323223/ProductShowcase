@@ -241,7 +241,7 @@ export default function ProductCard({
           </Button>
         ) : (
           <Button 
-            className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6" 
+            className={`w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6 ${isAdding ? 'jelly-add-animation' : ''}`}
             onClick={handleAddToCart}
             data-testid={`button-add-to-cart-${id}`}
           >
