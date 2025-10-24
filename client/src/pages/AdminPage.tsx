@@ -119,6 +119,10 @@ export default function AdminPage() {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     async function loadPromoUsageCounts() {
       if (promoCodes.length > 0) {
         const counts: Record<string, number> = {};

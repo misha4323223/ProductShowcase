@@ -22,6 +22,10 @@ export default function AccountPage() {
   const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (!loading && !user) {
       setLocation("/login");
     }

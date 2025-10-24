@@ -35,6 +35,10 @@ export default function CategoryPage() {
   }, [categoryProducts]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     setPriceRange([0, maxPrice]);
   }, [maxPrice]);
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute, useLocation, Link } from "wouter";
 import Header from "@/components/Header";
 import ShoppingCart from "@/components/ShoppingCart";
@@ -34,6 +34,10 @@ export default function ProductPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const productId = params?.id || '';
   const { product, isLoading } = useProduct(productId);

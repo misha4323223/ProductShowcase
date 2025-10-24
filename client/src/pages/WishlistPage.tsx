@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -20,6 +20,10 @@ export default function WishlistPage() {
   const { products } = useProducts();
   const { addToCart, updateQuantity, removeItem, cartItems, cartCount } = useCart();
   const { toast } = useToast();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const wishlistProducts = products.filter(p => 
     wishlistItems.some(item => item.productId === p.id)

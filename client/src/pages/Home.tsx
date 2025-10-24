@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import HeroSlider from "@/components/HeroSlider";
@@ -27,6 +27,10 @@ export default function Home() {
   const { products, isLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const slides = [
     {

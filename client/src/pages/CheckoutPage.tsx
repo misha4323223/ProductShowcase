@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,6 +53,10 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [promoCode, setPromoCode] = useState("");
   const [promoCodeInput, setPromoCodeInput] = useState("");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [isCheckingPromo, setIsCheckingPromo] = useState(false);
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [validPromoCodeId, setValidPromoCodeId] = useState<string | null>(null);

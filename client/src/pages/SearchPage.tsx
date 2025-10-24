@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
@@ -25,6 +25,10 @@ export default function SearchPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { toast } = useToast();
   const { products, isLoading } = useProducts();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const searchResults = products.filter(p => 
     p.name.toLowerCase().includes(query.toLowerCase()) ||
