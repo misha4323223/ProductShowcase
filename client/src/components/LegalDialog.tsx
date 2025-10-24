@@ -136,7 +136,14 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
         </ScrollArea>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 pt-3 md:pt-4 border-t flex-shrink-0">
-          <Link href={isPrivacy ? "/privacy" : "/terms"} onClick={onClose} className="w-full sm:w-auto">
+          <Link 
+            href={isPrivacy ? "/privacy" : "/terms"} 
+            onClick={() => {
+              onClose();
+              setTimeout(() => window.scrollTo(0, 0), 0);
+            }} 
+            className="w-full sm:w-auto"
+          >
             <Button variant="outline" className="gap-2 w-full sm:w-auto" size="sm" data-testid={`button-open-full-${type}`}>
               <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="text-xs md:text-sm">Полная версия</span>

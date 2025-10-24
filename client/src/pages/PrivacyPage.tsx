@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Shield } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ShoppingCart from "@/components/ShoppingCart";
 import { useLocation } from "wouter";
 
@@ -15,6 +15,10 @@ export default function PrivacyPage() {
   const { cartItems, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
   const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleCheckout = () => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
