@@ -160,7 +160,11 @@ export default function CheckoutPage() {
 
     try {
       // Валидация наличия товаров перед оформлением заказа
-      const { data: productsData } = await fetch('/api/products').then(res => res.json());
+      const response = await fetch('/api/products');
+      if (!response.ok) {
+        throw new Error('Не удалось получить данные о товарах');
+      }
+      const productsData = await response.json();
       
       for (const cartItem of cartItems) {
         const product = productsData?.find((p: any) => p.id === cartItem.id);
