@@ -159,7 +159,7 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
-      const orderData = {
+      const orderData: any = {
         userId: user?.uid || 'guest',
         items: cartItems.map(item => ({
           productId: item.id,
@@ -169,15 +169,18 @@ export default function CheckoutPage() {
           image: item.image,
         })),
         total: finalTotal,
-        subtotal: promoDiscount > 0 ? subtotal : undefined,
-        discount: promoDiscount > 0 ? promoDiscount : undefined,
-        promoCode: validatedPromoCode || undefined,
         status: 'pending' as const,
         customerName: `${data.firstName} ${data.lastName}`,
         customerEmail: data.email,
         customerPhone: data.phone,
         shippingAddress: `${data.address}, ${data.city}, ${data.postalCode}`,
       };
+
+      if (promoDiscount > 0) {
+        orderData.subtotal = subtotal;
+        orderData.discount = promoDiscount;
+        orderData.promoCode = validatedPromoCode;
+      }
 
       const orderId = await createOrder(orderData);
 
