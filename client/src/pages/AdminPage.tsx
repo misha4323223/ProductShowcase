@@ -460,6 +460,27 @@ export default function AdminPage() {
     setIsUploadingImage(true);
     try {
       const result = await uploadImageToImgBB(selectedFile);
+      
+      // Устанавливаем URL изображения в форму
+      productForm.setValue('image', result.url);
+      
+      toast({ 
+        title: "Изображение загружено!", 
+        description: "URL успешно сохранен" 
+      });
+    } catch (error: any) {
+      toast({ 
+        title: "Ошибка загрузки", 
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInpury {
+      const result = await uploadImageToImgBB(selectedFile);
       productForm.setValue('image', result.url);
       toast({ 
         title: "Успешно!", 
