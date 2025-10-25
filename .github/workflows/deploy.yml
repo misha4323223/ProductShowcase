@@ -43,6 +43,7 @@ jobs:
           VITE_EMAILJS_SERVICE_ID: ${{ secrets.VITE_EMAILJS_SERVICE_ID }}
           VITE_EMAILJS_ORDER_TEMPLATE_ID: ${{ secrets.VITE_EMAILJS_ORDER_TEMPLATE_ID }}
           VITE_EMAILJS_STOCK_TEMPLATE_ID: ${{ secrets.VITE_EMAILJS_STOCK_TEMPLATE_ID }}
+          VITE_IMGBB_API_KEY: ${{ secrets.VITE_IMGBB_API_KEY }}
         run: npm run build:gh-pages -- --base=/ProductShowcase/
 
       - name: Upload artifact

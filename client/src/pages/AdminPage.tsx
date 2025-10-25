@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { uploadImageToGitHub, validateImageFile } from "@/services/github-upload";
+import { uploadImageToImgBB, validateImageFile } from "@/services/imgbb-upload";
 
 const categorySchema = z.object({
   id: z.string().trim().min(1, "ID обязателен"),
@@ -459,11 +459,11 @@ export default function AdminPage() {
 
     setIsUploadingImage(true);
     try {
-      const result = await uploadImageToGitHub(selectedFile);
+      const result = await uploadImageToImgBB(selectedFile);
       productForm.setValue('image', result.url);
       toast({ 
         title: "Успешно!", 
-        description: "Изображение загружено на GitHub" 
+        description: "Изображение загружено на ImgBB" 
       });
     } catch (error: any) {
       toast({ 

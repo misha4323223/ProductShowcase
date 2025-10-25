@@ -2,12 +2,9 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { initializeFirebaseAdmin, verifyFirebaseToken, isAdmin } from "./firebase-admin";
-import { uploadImageToGitHub } from "./github-upload";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   initializeFirebaseAdmin();
-
-  app.post("/api/upload-image", uploadImageToGitHub);
 
   app.post("/api/send-stock-notifications", async (req, res) => {
     try {
