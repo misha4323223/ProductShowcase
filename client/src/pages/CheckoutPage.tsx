@@ -25,6 +25,7 @@ import { createOrder } from "@/services/firebase-orders";
 import { validatePromoCode } from "@/services/firebase-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
 import { sendOrderConfirmation } from "@/services/emailjs";
+import { getAllProducts } from "@/services/firebase-products";
 
 interface CartItem {
   id: string;
@@ -160,11 +161,7 @@ export default function CheckoutPage() {
 
     try {
       // Валидация наличия товаров перед оформлением заказа
-      const response = await fetch('/api/products');
-      if (!response.ok) {
-        throw new Error('Не удалось получить данные о товарах');
-      }
-      const productsData = await response.json();
+      const productsData = await getAllProducts();
       
       for (const cartItem of cartItems) {
         const product = productsData?.find((p: any) => p.id === cartItem.id);
