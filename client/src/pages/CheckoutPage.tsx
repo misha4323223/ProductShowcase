@@ -159,6 +159,45 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
+      // Валидация наличия товаров перед оформлением заказа
+      const { data: productsData } = await fetch('/api/products').then(res => res.json());
+      
+      for (const cartItem of cartItems) {
+        const product = productsData?.find((p: any) => p.id === cartItem.id);
+        
+        if (!product) {
+          toast({
+            title: "Товар не найден",
+            description: `Товар "${cartItem.name}" больше не доступен`,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Проверка наличия на складе
+        if (product.stock !== undefined && product.stock < cartItem.quantity) {
+          toast({
+            title: "Недостаточно товара",
+            description: `Товара "${cartItem.name}" на складе только ${product.stock} шт., а в корзине ${cartItem.quantity} шт.`,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Проверка что товар вообще есть в наличии
+        if (product.stock === 0) {
+          toast({
+            title: "Товар закончился",
+            description: `Товар "${cartItem.name}" закончился на складе`,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const orderData: any = {
         userId: user?.uid || 'guest',
         items: cartItems.map(item => ({

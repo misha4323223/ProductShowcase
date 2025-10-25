@@ -72,6 +72,18 @@ export default function Home() {
     if (!product) return;
 
     const existing = cartItems.find(item => item.id === productId);
+    const currentQuantityInCart = existing ? existing.quantity : 0;
+    const newQuantity = currentQuantityInCart + 1;
+
+    // Проверка наличия на складе
+    if (product.stock !== undefined && product.stock < newQuantity) {
+      toast({
+        title: "Недостаточно товара",
+        description: `На складе осталось только ${product.stock} шт.`,
+        variant: "destructive",
+      });
+      return;
+    }
 
     addToCart({
       id: product.id,
@@ -82,11 +94,23 @@ export default function Home() {
 
     toast({
       title: existing ? "Количество обновлено" : "Добавлено в корзину",
-      description: existing ? `${product.name} - теперь ${existing.quantity + 1} шт.` : product.name,
+      description: existing ? `${product.name} - теперь ${newQuantity} шт.` : product.name,
     });
   };
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
+    const product = products.find(p => p.id === id);
+    
+    // Проверка наличия на складе при увеличении количества
+    if (product && product.stock !== undefined && product.stock < quantity) {
+      toast({
+        title: "Недостаточно товара",
+        description: `На складе осталось только ${product.stock} шт.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     updateQuantity(id, quantity);
   };
 
