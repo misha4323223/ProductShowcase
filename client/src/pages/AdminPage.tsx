@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X } from "lucide-react";
 import { getUserOrders, updateOrderStatus } from "@/services/firebase-orders";
 import { getAllReviews, deleteReview } from "@/services/firebase-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/firebase-promocodes";
@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { uploadImageToGitHub, validateImageFile } from "@/services/github-upload";
 
 const categorySchema = z.object({
   id: z.string().trim().min(1, "ID обязателен"),
@@ -69,6 +70,9 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("categories");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [promoUsageCounts, setPromoUsageCounts] = useState<Record<string, number>>({});
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -223,6 +227,8 @@ export default function AdminPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
       toast({ title: "Товар добавлен!" });
       productForm.reset();
+      setSelectedFile(null);
+      setImagePreview("");
     },
     onError: (error: any) => {
       toast({ 
@@ -424,6 +430,57 @@ export default function AdminPage() {
       });
     },
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const error = validateImageFile(file);
+    if (error) {
+      toast({ 
+        title: "Ошибка", 
+        description: error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSelectedFile(file);
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUploadImage = async () => {
+    if (!selectedFile) return;
+
+    setIsUploadingImage(true);
+    try {
+      const result = await uploadImageToGitHub(selectedFile);
+      productForm.setValue('image', result.url);
+      toast({ 
+        title: "Успешно!", 
+        description: "Изображение загружено на GitHub" 
+      });
+    } catch (error: any) {
+      toast({ 
+        title: "Ошибка загрузки", 
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleClearImage = () => {
+    setSelectedFile(null);
+    setImagePreview("");
+    productForm.setValue('image', '');
+  };
 
   const renderStars = (rating: number) => {
     return (
@@ -1239,10 +1296,66 @@ export default function AdminPage() {
                     name="image"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>URL изображения (опционально)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="https://example.com/image.jpg" data-testid="input-product-image" />
-                        </FormControl>
+                        <FormLabel>Изображение товара (опционально)</FormLabel>
+                        <div className="space-y-4">
+                          <div className="flex gap-2">
+                            <div className="flex-1">
+                              <Input 
+                                type="file" 
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                className="cursor-pointer"
+                                data-testid="input-product-image-file"
+                              />
+                            </div>
+                            {selectedFile && (
+                              <Button
+                                type="button"
+                                onClick={handleUploadImage}
+                                disabled={isUploadingImage}
+                                data-testid="button-upload-image"
+                              >
+                                <Upload className="w-4 h-4 mr-2" />
+                                {isUploadingImage ? "Загрузка..." : "Загрузить"}
+                              </Button>
+                            )}
+                          </div>
+
+                          {imagePreview && (
+                            <div className="relative inline-block">
+                              <img 
+                                src={imagePreview} 
+                                alt="Preview" 
+                                className="max-w-xs max-h-48 rounded-lg border"
+                                data-testid="image-preview"
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-2 right-2"
+                                onClick={handleClearImage}
+                                data-testid="button-clear-image"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          )}
+
+                          <div className="text-sm text-muted-foreground">
+                            или введите URL изображения вручную:
+                          </div>
+
+                          <FormControl>
+                            <Input {...field} placeholder="https://example.com/image.jpg" data-testid="input-product-image-url" />
+                          </FormControl>
+
+                          {field.value && (
+                            <div className="text-sm text-green-600">
+                              ✓ URL изображения установлен
+                            </div>
+                          )}
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
