@@ -156,10 +156,10 @@ export default function ProductCard({
       <Button
         size="icon"
         variant="ghost"
-        className={`absolute top-2 left-2 w-10 h-10 rounded-full backdrop-blur-md transition-all duration-300 z-40 shadow-lg ${
+        className={`absolute top-3 left-3 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
           inWishlist 
-            ? 'bg-pink-500 hover:bg-pink-600 text-white' 
-            : 'bg-white hover:bg-white text-pink-500'
+            ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50' 
+            : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
         }`}
         onClick={handleToggleWishlist}
         data-testid={`button-wishlist-${id}`}
