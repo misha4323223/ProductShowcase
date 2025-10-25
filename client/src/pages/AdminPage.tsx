@@ -199,6 +199,8 @@ export default function AdminPage() {
 
   const addProductMutation = useMutation({
     mutationFn: async (data: Product) => {
+      console.log("Данные товара перед сохранением:", data);
+      
       const cleanData: any = {
         id: data.id,
         name: data.name,
@@ -219,13 +221,20 @@ export default function AdminPage() {
       
       if (data.image && data.image.trim() !== "") {
         cleanData.image = data.image;
+        console.log("✅ URL изображения будет сохранен:", data.image);
+      } else {
+        console.log("⚠️ URL изображения отсутствует");
       }
       
+      console.log("Сохраняем в Firebase:", cleanData);
       await setDoc(doc(db, "products", data.id), cleanData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
-      toast({ title: "Товар добавлен!" });
+      toast({ 
+        title: "Товар успешно создан!", 
+        description: "Проверьте Firebase Console для подтверждения"
+      });
       productForm.reset();
       setSelectedFile(null);
       setImagePreview("");
@@ -466,25 +475,7 @@ export default function AdminPage() {
       
       toast({ 
         title: "Изображение загружено!", 
-        description: "URL успешно сохранен" 
-      });
-    } catch (error: any) {
-      toast({ 
-        title: "Ошибка загрузки", 
-        description: error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInpury {
-      const result = await uploadImageToImgBB(selectedFile);
-      productForm.setValue('image', result.url);
-      toast({ 
-        title: "Успешно!", 
-        description: "Изображение загружено на ImgBB" 
+        description: "URL успешно сохранен в форму" 
       });
     } catch (error: any) {
       toast({ 
