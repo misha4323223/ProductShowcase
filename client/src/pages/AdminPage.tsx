@@ -199,7 +199,9 @@ export default function AdminPage() {
 
   const addProductMutation = useMutation({
     mutationFn: async (data: Product) => {
-      console.log("Данные товара перед сохранением:", data);
+      console.log("📦 Данные товара перед сохранением:", data);
+      console.log("🖼️ Значение поля image:", data.image);
+      console.log("📏 Длина строки image:", data.image?.length);
       
       const cleanData: any = {
         id: data.id,
@@ -223,10 +225,12 @@ export default function AdminPage() {
         cleanData.image = data.image;
         console.log("✅ URL изображения будет сохранен:", data.image);
       } else {
-        console.log("⚠️ URL изображения отсутствует");
+        console.log("⚠️ URL изображения отсутствует или пустой");
+        console.log("   Тип данных:", typeof data.image);
+        console.log("   Значение:", JSON.stringify(data.image));
       }
       
-      console.log("Сохраняем в Firebase:", cleanData);
+      console.log("💾 Сохраняем в Firebase:", cleanData);
       await setDoc(doc(db, "products", data.id), cleanData);
     },
     onSuccess: () => {
@@ -470,12 +474,19 @@ export default function AdminPage() {
     try {
       const result = await uploadImageToImgBB(selectedFile);
       
-      // Устанавливаем URL изображения в форму
-      productForm.setValue('image', result.url);
+      // Устанавливаем URL изображения в форму и помечаем поле как "touched"
+      productForm.setValue('image', result.url, { 
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+      });
+      
+      console.log("✅ URL изображения установлен в форму:", result.url);
+      console.log("📋 Текущее значение image в форме:", productForm.getValues('image'));
       
       toast({ 
         title: "Изображение загружено!", 
-        description: "URL успешно сохранен в форму" 
+        description: `URL: ${result.url.substring(0, 50)}...` 
       });
     } catch (error: any) {
       toast({ 
@@ -1362,9 +1373,14 @@ export default function AdminPage() {
                             <Input {...field} placeholder="https://example.com/image.jpg" data-testid="input-product-image-url" />
                           </FormControl>
 
-                          {field.value && (
-                            <div className="text-sm text-green-600">
-                              ✓ URL изображения установлен
+                          {field.value && field.value.trim() !== "" && (
+                            <div className="text-sm space-y-1">
+                              <div className="text-green-600 font-semibold">
+                                ✓ URL изображения установлен
+                              </div>
+                              <div className="text-xs text-muted-foreground break-all bg-muted/50 p-2 rounded">
+                                {field.value}
+                              </div>
                             </div>
                           )}
                         </div>
