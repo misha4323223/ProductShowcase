@@ -153,20 +153,21 @@ export default function ProductCard({
         data-testid={`card-product-${id}`}
       >
         <div className="sparkle-dots"></div>
-      <Button
-        size="icon"
-        variant="ghost"
-        className={`absolute top-3 left-3 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
-          inWishlist 
-            ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50' 
-            : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
-        }`}
-        onClick={handleToggleWishlist}
-        data-testid={`button-wishlist-${id}`}
-      >
-        <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
-      </Button>
-      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-t-3xl sugar-crystals" onClick={() => onClick(id)}>
+      <div className="relative aspect-square overflow-visible bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-t-3xl sugar-crystals" onClick={() => onClick(id)}>
+        <Button
+          size="icon"
+          variant="ghost"
+          className={`absolute top-3 left-3 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
+            inWishlist 
+              ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50' 
+              : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
+          }`}
+          onClick={handleToggleWishlist}
+          data-testid={`button-wishlist-${id}`}
+        >
+          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+        </Button>
+        <div className="w-full h-full overflow-hidden rounded-t-3xl">
         {image ? (
           <img
             src={image}
@@ -190,6 +191,7 @@ export default function ProductCard({
             <Sparkles className="h-12 w-12 text-white animate-sparkle drop-shadow-2xl" />
           </div>
         )}
+        </div>
       </div>
       <div className="p-4 space-y-3 bg-gradient-to-b from-white via-pink-50/20 to-white relative caramel-drip">
         <h3 className="font-medium text-sm line-clamp-2 min-h-[2.5rem] text-foreground" data-testid={`text-product-name-${id}`}>
