@@ -10,7 +10,15 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 exports.handler = async (event) => {
   try {
@@ -21,7 +29,7 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "Promo code ID is required" }),
+        body: JSON.stringify({ error: "Category ID is required" }),
       };
     }
 
@@ -33,7 +41,7 @@ exports.handler = async (event) => {
       if (key !== 'id') {
         updateExpressions.push(`#field${index} = :value${index}`);
         expressionAttributeNames[`#field${index}`] = key;
-        expressionAttributeValues[`:value${index}`] = key === 'code' ? body[key].toUpperCase() : body[key];
+        expressionAttributeValues[`:value${index}`] = body[key];
       }
     });
 
@@ -46,7 +54,7 @@ exports.handler = async (event) => {
     }
 
     await docClient.send(new UpdateCommand({
-      TableName: "promocodes",
+      TableName: "categories",
       Key: { id },
       UpdateExpression: `SET ${updateExpressions.join(', ')}`,
       ExpressionAttributeNames: expressionAttributeNames,

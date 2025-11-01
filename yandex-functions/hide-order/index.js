@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -10,7 +10,15 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 exports.handler = async (event) => {
   try {
@@ -20,13 +28,17 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "Promo code ID is required" }),
+        body: JSON.stringify({ error: "Order ID is required" }),
       };
     }
 
-    await docClient.send(new DeleteCommand({
-      TableName: "promocodes",
+    await docClient.send(new UpdateCommand({
+      TableName: "orders",
       Key: { id },
+      UpdateExpression: 'SET hiddenByUser = :hidden',
+      ExpressionAttributeValues: {
+        ':hidden': true,
+      },
     }));
 
     return {

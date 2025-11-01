@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, GetCommand, PutCommand } = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -10,35 +10,75 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 exports.handler = async (event) => {
   try {
-    const userId = event.pathParameters?.userId;
+    const userId = event.pathParams?.userId || event.pathParameters?.userId || event.params?.userId;
     const body = JSON.parse(event.body || '{}');
-    const { productIds } = body;
+    const { action, productId } = body;
 
-    if (!userId || !Array.isArray(productIds)) {
+    if (!userId) {
       return {
         statusCode: 400,
         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "User ID and productIds array are required" }),
+        body: JSON.stringify({ error: "User ID is required" }),
+      };
+    }
+
+    if (!action || !productId) {
+      return {
+        statusCode: 400,
+        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Action and productId are required" }),
+      };
+    }
+
+    const result = await docClient.send(new GetCommand({
+      TableName: "wishlists",
+      Key: { userId },
+    }));
+
+    let items = result.Item?.items || [];
+
+    if (action === 'add') {
+      const exists = items.some(item => item.productId === productId);
+      if (!exists) {
+        items.push({
+          productId,
+          addedAt: new Date().toISOString(),
+        });
+      }
+    } else if (action === 'remove') {
+      items = items.filter(item => item.productId !== productId);
+    } else {
+      return {
+        statusCode: 400,
+        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Invalid action. Use 'add' or 'remove'" }),
       };
     }
 
     await docClient.send(new PutCommand({
-      TableName: "wishlist",
+      TableName: "wishlists",
       Item: {
-        id: userId,
-        productIds,
-        updatedAt: new Date().toISOString(),
+        userId,
+        items,
       },
     }));
 
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ success: true }),
+      body: JSON.stringify({ success: true, items }),
     };
   } catch (error) {
     console.error("Error:", error);

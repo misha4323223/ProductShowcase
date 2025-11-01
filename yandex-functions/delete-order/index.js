@@ -10,7 +10,15 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 exports.handler = async (event) => {
   try {
@@ -20,12 +28,12 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "Promo code ID is required" }),
+        body: JSON.stringify({ error: "Order ID is required" }),
       };
     }
 
     await docClient.send(new DeleteCommand({
-      TableName: "promocodes",
+      TableName: "orders",
       Key: { id },
     }));
 
