@@ -1,9 +1,9 @@
-name: Deploy to GitHub Pages (Yandex Cloud)
+name: Deploy to GitHub Pages (Yandex Cloud) - DISABLED
 
 on:
   push:
     branches:
-      - main
+      - disabled-branch
   workflow_dispatch:
 
 permissions:
