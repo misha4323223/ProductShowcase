@@ -10,15 +10,7 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client, {
-  marshallOptions: {
-    removeUndefinedValues: true,
-    convertEmptyValues: false,
-  },
-  unmarshallOptions: {
-    wrapNumbers: false,
-  },
-});
+const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
   try {
