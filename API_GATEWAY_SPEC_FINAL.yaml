@@ -479,6 +479,15 @@ paths:
 
   # ========== ORDERS (уже существует) ==========
   /orders:
+    get:
+      summary: Получить все заказы (для админки)
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: <FUNCTION_ID_get-all-orders>  # ⬅️ ЗАМЕНИТЬ!
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список всех заказов
     post:
       summary: Создать заказ
       x-yc-apigateway-integration:
