@@ -52,3 +52,22 @@ export async function deleteReview(id: string): Promise<void> {
     throw new Error('Failed to delete review');
   }
 }
+
+export async function getReviewsByProduct(productId: string): Promise<Review[]> {
+  return getReviews(productId);
+}
+
+export async function getAllReviews(): Promise<Review[]> {
+  return getReviews();
+}
+
+export async function getProductRating(productId: string): Promise<number> {
+  const reviews = await getReviewsByProduct(productId);
+  
+  if (reviews.length === 0) {
+    return 0;
+  }
+  
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return sum / reviews.length;
+}
