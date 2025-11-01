@@ -14,7 +14,7 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
   try {
-    const userId = event.pathParams?.userId || event.queryStringParameters?.userId;
+    const userId = event.pathParams?.userId || event.pathParameters?.userId || event.params?.userId || event.queryStringParameters?.userId;
     
     if (!userId) {
       return {
@@ -40,7 +40,7 @@ exports.handler = async (event) => {
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(result.Item?.items || []),
+      body: JSON.stringify({ items: result.Item?.items || [] }),
     };
   } catch (error) {
     console.error("Error:", error);

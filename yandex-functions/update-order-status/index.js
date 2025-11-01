@@ -10,47 +10,57 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 exports.handler = async (event) => {
   try {
     const id = event.pathParams?.id || event.pathParameters?.id || event.params?.id;
     const body = JSON.parse(event.body || '{}');
+    const { status } = body;
 
     if (!id) {
       return {
         statusCode: 400,
         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "Promo code ID is required" }),
+        body: JSON.stringify({ error: "Order ID is required" }),
       };
     }
 
-    const updateExpressions = [];
-    const expressionAttributeNames = {};
-    const expressionAttributeValues = {};
-
-    Object.keys(body).forEach((key, index) => {
-      if (key !== 'id') {
-        updateExpressions.push(`#field${index} = :value${index}`);
-        expressionAttributeNames[`#field${index}`] = key;
-        expressionAttributeValues[`:value${index}`] = key === 'code' ? body[key].toUpperCase() : body[key];
-      }
-    });
-
-    if (updateExpressions.length === 0) {
+    if (!status) {
       return {
         statusCode: 400,
         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: "No fields to update" }),
+        body: JSON.stringify({ error: "Status is required" }),
+      };
+    }
+
+    const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      return {
+        statusCode: 400,
+        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: "Invalid status" }),
       };
     }
 
     await docClient.send(new UpdateCommand({
-      TableName: "promocodes",
+      TableName: "orders",
       Key: { id },
-      UpdateExpression: `SET ${updateExpressions.join(', ')}`,
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues,
+      UpdateExpression: 'SET #status = :status',
+      ExpressionAttributeNames: {
+        '#status': 'status',
+      },
+      ExpressionAttributeValues: {
+        ':status': status,
+      },
     }));
 
     return {

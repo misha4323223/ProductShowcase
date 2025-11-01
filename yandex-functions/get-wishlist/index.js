@@ -10,11 +10,19 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 exports.handler = async (event) => {
   try {
-    const userId = event.pathParameters?.userId;
+    const userId = event.pathParams?.userId || event.pathParameters?.userId || event.params?.userId;
 
     if (!userId) {
       return {
@@ -25,16 +33,16 @@ exports.handler = async (event) => {
     }
 
     const result = await docClient.send(new GetCommand({
-      TableName: "wishlist",
-      Key: { id: userId },
+      TableName: "wishlists",
+      Key: { userId },
     }));
 
-    const productIds = result.Item?.productIds || [];
+    const items = result.Item?.items || [];
 
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      body: JSON.stringify(productIds),
+      body: JSON.stringify({ items }),
     };
   } catch (error) {
     console.error("Error:", error);
