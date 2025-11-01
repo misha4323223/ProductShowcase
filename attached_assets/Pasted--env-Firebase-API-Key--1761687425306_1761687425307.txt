@@ -1,0 +1,52 @@
+
+✅ Загружены переменные из .env файла
+🔥 Инициализация Firebase...
+📋 Конфигурация:
+   API Key: AIzaSyBXfemrtkGlgFl_...
+   Project ID: sweetweb-3543f
+   App ID: 1:907618119619:web:a...
+🚀 Начинаем экспорт всех данных из Firebase...
+
+📦 Экспорт коллекции: products...
+✅ Экспортировано 9 записей из products → /home/runner/workspace/export/products.json
+📦 Экспорт коллекции: categories...
+✅ Экспортировано 5 записей из categories → /home/runner/workspace/export/categories.json
+📦 Экспорт коллекции: orders...
+❌ Ошибка при экспорте orders: [FirebaseError: Missing or insufficient permissions.] {
+  code: 'permission-denied',
+  customData: undefined,
+  toString: [Function (anonymous)]
+}
+📦 Экспорт коллекции: reviews...
+✅ Экспортировано 0 записей из reviews → /home/runner/workspace/export/reviews.json
+📦 Экспорт коллекции: promocodes...
+✅ Экспортировано 1 записей из promocodes → /home/runner/workspace/export/promocodes.json
+📦 Экспорт коллекции: carts...
+❌ Ошибка при экспорте carts: [FirebaseError: Missing or insufficient permissions.] {
+  code: 'permission-denied',
+  customData: undefined,
+  toString: [Function (anonymous)]
+}
+📦 Экспорт коллекции: wishlists...
+❌ Ошибка при экспорте wishlists: [FirebaseError: Missing or insufficient permissions.] {
+  code: 'permission-denied',
+  customData: undefined,
+  toString: [Function (anonymous)]
+}
+📦 Экспорт коллекции: stockNotifications...
+❌ Ошибка при экспорте stockNotifications: [FirebaseError: Missing or insufficient permissions.] {
+  code: 'permission-denied',
+  customData: undefined,
+  toString: [Function (anonymous)]
+}
+📦 Экспорт коллекции: pushSubscriptions...
+❌ Ошибка при экспорте pushSubscriptions: [FirebaseError: Missing or insufficient permissions.] {
+  code: 'permission-denied',
+  customData: undefined,
+  toString: [Function (anonymous)]
+}
+
+✨ Экспорт завершен! Всего записей: 15
+📁 Файлы сохранены в папке: /home/runner/workspace/export
+
+🎉 Готово! Теперь можно импортировать данные в Yandex Cloud.

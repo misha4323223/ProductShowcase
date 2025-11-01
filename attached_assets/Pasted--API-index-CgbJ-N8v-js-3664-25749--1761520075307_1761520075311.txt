@@ -1,0 +1,47 @@
+✅ Все API доступны, проверяем статус подписки index-CgbJ-N8v.js:3664:25749
+📊 Текущий статус подписки: false index-CgbJ-N8v.js:3664:25874
+🚀 Показываем промпт подписки... index-CgbJ-N8v.js:3664:26261
+🔐 Browser permission: true index-CgbJ-N8v.js:3664:26398
+🎯 Вызываем Slidedown.promptPush()... index-CgbJ-N8v.js:3664:26793
+GET
+https://onesignal.com/sdks/web/v16/OneSignalSDK.page.styles.css?v=160510
+
+	
+GET
+	https://onesignal.com/sdks/web/v16/OneSignalSDK.page.styles.css?v=160510
+Передано0 ГБ (размер 0 ГБ)
+Referrer policystrict-origin-when-cross-origin
+Поиск в DNSСистема
+Блокировка
+Улучшенная защита от отслеживания
+Этот URL соответствует известному трекеру и будет заблокирован при включении Блокировки содержимого.
+	
+Accept
+	text/css,*/*;q=0.1
+Accept-Encoding
+	gzip, deflate, br, zstd
+Accept-Language
+	ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3
+Connection
+	keep-alive
+Cookie
+	_biz_uid=72623cc307af408dd4668658a7b71262; _biz_nA=11; _biz_pendingA=%5B%5D; _gcl_au=1.1.1790608917.1760862973; _ga_Z6LSTXWLPN=GS2.1.s1760869651$o2$g0$t1760869651$j60$l0$h1612376950; _ga=GA1.1.707189295.1760862974; _hjSessionUser_1261032=eyJpZCI6IjIyOTA3ODliLWZlZmMtNWJlYy04ZTEzLTNlMTlkMzk3YTNhNSIsImNyZWF0ZWQiOjE3NjA4NjI5NzY0MzcsImV4aXN0aW5nIjp0cnVlfQ==; _biz_flagsA=%7B%22Version%22%3A1%2C%22XDomain%22%3A%221%22%2C%22ViewThrough%22%3A%221%22%7D; _clck=tit6vc%5E2%5Eg0a%5E0%5E2118; _fbp=fb.1.1760862981796.9238…5D%2C%22%24search_engine%22%3A%22google%22%2C%22%24user_id%22%3A%229b669fc6-5881-4249-aaa3-d3f3fb19c38b%22%7D; _uetvid=ad022e30acc611f08dc1d5d17aa72841; __cf_bm=kZSld99pt0EXCgXMGE4Hvj9dOMoX4U_lrrgFGiH.LKM-1761518180-1.0.1.1-V27LUnl3qQkaalwFzjd6MaD0UvccUwv9_Xm9o2bCfoOUsjDAWYx4ehAdLbYs_Lu4f8rX9YCKxqCLr_GVCvIuNUjx6Q4iQrRaGuFbu12p2mE; __cf_bm=d13XtWRbx4N0PJgpmupIKezVAxULew_Rmj9PgpWrXjI-1761519075-1.0.1.1-LWPNdokSuUSoIoqfQgGXNV.ab_3W1ThKl6fu3yjPChpXKk3pOXRx1Xvw9AHJk.6tER.1osMCvS.Ug26ynbRr5ZKacOgTgrWcFHoPw9ocMf0
+Host
+	onesignal.com
+Priority
+	u=2
+Referer
+	https://sweetdelights.store/
+Sec-Fetch-Dest
+	style
+Sec-Fetch-Mode
+	no-cors
+Sec-Fetch-Site
+	cross-site
+User-Agent
+	Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0
+✅ promptPush() выполнен index-CgbJ-N8v.js:3664:26902
+📊 Статус после промпта: false index-CgbJ-N8v.js:3664:27114
+
+​
+

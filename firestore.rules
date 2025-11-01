@@ -1,0 +1,66 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'pimashin2015@gmail.com';
+    }
+    
+    // Products - чтение для всех, запись только для админа
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Categories - чтение для всех, запись только для админа
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Orders - пользователь видит только свои заказы, админ видит все
+    match /orders/{orderId} {
+      allow read: if request.auth != null && 
+                     (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if request.auth != null;
+      allow update, delete: if isAdmin();
+    }
+    
+    // Reviews - авторизованные могут создавать, админ может удалять
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow delete: if isAdmin();
+    }
+    
+    // Carts - пользователь управляет только своей корзиной
+    match /carts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Promo Codes - чтение для всех, изменение только для админа
+    match /promocodes/{promoCodeId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Wishlists - пользователь управляет только своим избранным
+    match /wishlists/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Stock Notifications - любой может подписаться, только админ управляет
+    match /stockNotifications/{notificationId} {
+      allow create: if true;
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
+    
+    // Push-подписки OneSignal - любой может подписаться/отписаться, админ управляет
+    match /pushSubscriptions/{subscriptionId} {
+      allow create, update: if true;
+      allow read, delete: if isAdmin();
+    }
+  }
+}

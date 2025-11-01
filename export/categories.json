@@ -1,0 +1,27 @@
+[
+  {
+    "id": "accessories",
+    "name": "Аксессуары",
+    "slug": "accessories"
+  },
+  {
+    "id": "candies",
+    "name": "Конфеты",
+    "slug": "candies"
+  },
+  {
+    "id": "chocolates",
+    "name": "Шоколад",
+    "slug": "chocolates"
+  },
+  {
+    "id": "cookies",
+    "name": "Печенье",
+    "slug": "cookies"
+  },
+  {
+    "id": "sale",
+    "name": "SALE",
+    "slug": "sale"
+  }
+]

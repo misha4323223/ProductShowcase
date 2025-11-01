@@ -1,0 +1,264 @@
+[
+  {
+    "id": "1rpB6reOP3MxQ1Fg99kE",
+    "userId": "qPOkH9xvaRPTJ4NvV9EkqHOSEtu2",
+    "items": [
+      {
+        "productId": "5",
+        "name": "Трюфели премиум",
+        "price": 1500,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 1500,
+    "status": "pending",
+    "customerName": "dada dasd",
+    "customerEmail": "pimashin1636@rambler.ru",
+    "customerPhone": "+7 953 181 41 36",
+    "shippingAddress": "авпавпвп, Новомосковск, 606777",
+    "createdAt": "2025-10-20T13:14:14.661Z"
+  },
+  {
+    "id": "317JwL8ddWNfdddZdhGI",
+    "userId": "qPOkH9xvaRPTJ4NvV9EkqHOSEtu2",
+    "items": [
+      {
+        "productId": "4",
+        "name": "Стильная сумка-кроссбоди",
+        "price": 1999,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 1539,
+    "subtotal": 1999,
+    "discount": 460,
+    "promoCode": {
+      "code": "ЗИМА2025",
+      "discountAmount": 460,
+      "discountType": "percentage"
+    },
+    "status": "pending",
+    "customerName": "Евгения Ковальчук",
+    "customerEmail": "eva.kovalchuk.94@gmail.com",
+    "customerPhone": "89531814136",
+    "shippingAddress": "Ulitsa Kirova, 16А, Donskoy, 301764",
+    "createdAt": "2025-10-22T20:44:48.656Z"
+  },
+  {
+    "id": "4fXzSNevlKfsYt9J6oFA",
+    "userId": "test-user-123",
+    "items": [
+      {
+        "productId": "1",
+        "name": "Бельгийский шоколад ассорти",
+        "price": 1200,
+        "quantity": 2,
+        "image": ""
+      },
+      {
+        "productId": "2",
+        "name": "Французские макаронс",
+        "price": 650,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 3050,
+    "customerName": "Тестовый Пользователь",
+    "customerEmail": "test@example.com",
+    "customerPhone": "+7 900 123 45 67",
+    "shippingAddress": "Москва, ул. Тестовая, д. 1",
+    "createdAt": "2025-10-20T13:19:55.803Z",
+    "status": "processing"
+  },
+  {
+    "id": "NP1rfZ8UEBy4Ta6mM6BF",
+    "userId": "lLVSXCNlLSdUnEa5T7TJpAGJcyy2",
+    "items": [
+      {
+        "productId": "1",
+        "name": "Бельгийский шоколад ассорти",
+        "price": 1200,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 1500,
+    "status": "pending",
+    "customerName": "Михаил Пимашин",
+    "customerEmail": "Pimashin2016@gmail.com",
+    "customerPhone": "+79531814136",
+    "shippingAddress": "Кирова 16А, Донской, 606777",
+    "createdAt": "2025-10-25T13:32:29.398Z"
+  },
+  {
+    "id": "XKx5VX9hc88ubbchldQo",
+    "userId": "test-user-123",
+    "items": [
+      {
+        "productId": "5",
+        "name": "Трюфели премиум",
+        "price": 1500,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 1800,
+    "status": "delivered",
+    "customerName": "Иван Иванов",
+    "customerEmail": "ivan@example.com",
+    "customerPhone": "+7 900 111 22 33",
+    "shippingAddress": "Москва, ул. Ленина, д. 10",
+    "createdAt": "2025-10-13T13:20:23.449Z"
+  },
+  {
+    "id": "axvyIX6B3ePbAufHlxXW",
+    "userId": "qPOkH9xvaRPTJ4NvV9EkqHOSEtu2",
+    "items": [
+      {
+        "productId": "5",
+        "name": "Трюфели премиум",
+        "price": 1500,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 1500,
+    "status": "pending",
+    "customerName": "Миша Пимашин",
+    "customerEmail": "Pimashin2015@gmail.com",
+    "customerPhone": "+7 953 181 41 36",
+    "shippingAddress": "Ген белова, Новомосковск, 606777",
+    "createdAt": "2025-10-20T15:32:05.848Z"
+  },
+  {
+    "id": "b0yhCWaHkVb2QEApl2OW",
+    "userId": "qPOkH9xvaRPTJ4NvV9EkqHOSEtu2",
+    "items": [
+      {
+        "productId": "2",
+        "name": "Французские макаронс",
+        "price": 650,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 950,
+    "status": "pending",
+    "customerName": "Михаил Пимашин",
+    "customerEmail": "Pimashin2015@gmail.com",
+    "customerPhone": "+7 953 181 41 36",
+    "shippingAddress": "Генерала белова 21 кв 62, Новомосковск, 606777",
+    "createdAt": "2025-10-25T11:31:16.981Z",
+    "hiddenByUser": true
+  },
+  {
+    "id": "g0aexsFvROSZ5l72oBgc",
+    "userId": "lLVSXCNlLSdUnEa5T7TJpAGJcyy2",
+    "items": [
+      {
+        "productId": "2",
+        "name": "Французские макаронс",
+        "price": 650,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 950,
+    "status": "pending",
+    "customerName": "Михаил Пимашин",
+    "customerEmail": "Pimashin2016@gmail.com",
+    "customerPhone": "+79531814136",
+    "shippingAddress": "Кирова 16А, Донской, 606777",
+    "createdAt": "2025-10-25T13:23:08.354Z"
+  },
+  {
+    "id": "h4ssE55S7PUbXSD9mn5H",
+    "userId": "test-user-456",
+    "items": [
+      {
+        "productId": "4",
+        "name": "Стильная сумка-кроссбоди",
+        "price": 1999,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 2299,
+    "status": "processing",
+    "customerName": "Мария Петрова",
+    "customerEmail": "maria@example.com",
+    "customerPhone": "+7 900 222 33 44",
+    "shippingAddress": "Санкт-Петербург, Невский пр., д. 20",
+    "createdAt": "2025-10-19T13:20:23.449Z"
+  },
+  {
+    "id": "hOQ2uk30u1Rs4PErnld5",
+    "userId": "guest",
+    "items": [
+      {
+        "productId": "7",
+        "name": "Леденцы ручной работы",
+        "price": 250,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 250,
+    "status": "pending",
+    "customerName": "Миша Пимашин",
+    "customerEmail": "pimashin1636@rambler.ru",
+    "customerPhone": "+7 953 181 41 36",
+    "shippingAddress": "Ген белова, Новомосковск, 606777",
+    "createdAt": "2025-10-20T14:09:25.828Z"
+  },
+  {
+    "id": "l4I5yhbuy2s7rexA9T8e",
+    "userId": "qPOkH9xvaRPTJ4NvV9EkqHOSEtu2",
+    "items": [
+      {
+        "productId": "2",
+        "name": "Французские макаронс",
+        "price": 650,
+        "quantity": 1,
+        "image": ""
+      }
+    ],
+    "total": 950,
+    "customerName": "Михаил Пимашин",
+    "customerEmail": "Pimashin2015@gmail.com",
+    "customerPhone": "+79531814136",
+    "shippingAddress": "Генерала белова 21 кв 62, Новомосковск, 606777",
+    "createdAt": "2025-10-25T13:00:00.394Z",
+    "status": "delivered"
+  },
+  {
+    "id": "rgTarHReycTwNf1eU1qw",
+    "userId": "test-user-123",
+    "items": [
+      {
+        "productId": "2",
+        "name": "Французские макаронс",
+        "price": 650,
+        "quantity": 3,
+        "image": ""
+      },
+      {
+        "productId": "6",
+        "name": "Печенье с шоколадной крошкой",
+        "price": 380,
+        "quantity": 2,
+        "image": ""
+      }
+    ],
+    "total": 2510,
+    "status": "shipped",
+    "customerName": "Иван Иванов",
+    "customerEmail": "ivan@example.com",
+    "customerPhone": "+7 900 111 22 33",
+    "shippingAddress": "Москва, ул. Ленина, д. 10",
+    "createdAt": "2025-10-18T13:20:23.449Z"
+  }
+]

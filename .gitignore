@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+client/.env
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+.env.local
+.env.production
+client/.env.local
+client/.env.productionattached_assets/Pasted--type-service-account-*.txt
+attached_assets/Pasted--type-service-account-*.txt
+attached_assets/Pasted--type-service-account-*.txt

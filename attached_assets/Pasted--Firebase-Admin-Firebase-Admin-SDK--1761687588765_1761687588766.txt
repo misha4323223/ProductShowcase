@@ -1,0 +1,77 @@
+
+✅ Firebase Admin инициализирован
+🚀 Начинаем экспорт всех данных из Firebase (Admin SDK)...
+
+📦 Экспорт коллекции: products...
+❌ Ошибка при экспорте products: Error: 2 UNKNOWN: Getting metadata from plugin failed with error: Could not refresh access token: request to http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdatastore failed, reason: connect ECONNREFUSED 169.254.169.254:80
+    at callErrorFromStatus (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/call.ts:84:17)
+    at Object.onReceiveStatus (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/client.ts:612:51)
+    at Object.onReceiveStatus (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/client-interceptors.ts:424:48)
+    at <anonymous> (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/resolving-call.ts:170:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+for call at
+    at ServiceClientImpl.makeServerStreamRequest (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/client.ts:595:42)
+    at ServiceClientImpl.<anonymous> (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/make-client.ts:189:15)
+    at /home/runner/workspace/node_modules/@google-cloud/firestore/build/src/v1/firestore_client.js:242:33
+    at <anonymous> (/home/runner/workspace/node_modules/google-gax/src/streamingCalls/streamingApiCaller.ts:59:19)
+    at <anonymous> (/home/runner/workspace/node_modules/google-gax/src/normalCalls/timeout.ts:54:13)
+    at Object.request (/home/runner/workspace/node_modules/google-gax/src/streamingCalls/streaming.ts:331:28)
+    at Timeout.makeRequest [as _onTimeout] (/home/runner/workspace/node_modules/retry-request/index.js:159:28)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7)
+Caused by: Error
+    at QueryUtil._getResponse (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query-util.js:44:23)
+    at CollectionReference._getResponse (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query.js:784:32)
+    at CollectionReference._get (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query.js:777:35)
+    at /home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query.js:745:43
+    at /home/runner/workspace/node_modules/@google-cloud/firestore/build/src/telemetry/enabled-trace-util.js:110:30
+    at NoopContextManager.with (/home/runner/workspace/node_modules/@opentelemetry/api/src/context/NoopContextManager.ts:31:15)
+    at ContextAPI.with (/home/runner/workspace/node_modules/@opentelemetry/api/src/api/context.ts:77:42)
+    at NoopTracer.startActiveSpan (/home/runner/workspace/node_modules/@opentelemetry/api/src/trace/NoopTracer.ts:98:27)
+    at ProxyTracer.startActiveSpan (/home/runner/workspace/node_modules/@opentelemetry/api/src/trace/ProxyTracer.ts:51:20)
+    at EnabledTraceUtil.startActiveSpan (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/telemetry/enabled-trace-util.js:102:28) {
+  code: 2,
+  details: 'Getting metadata from plugin failed with error: Could not refresh access token: request to http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdatastore failed, reason: connect ECONNREFUSED 169.254.169.254:80',
+  metadata: Metadata {
+    internalRepr: Map(0) {},
+    opaqueData: Map(0) {},
+    options: {}
+  }
+}
+📦 Экспорт коллекции: categories...
+❌ Ошибка при экспорте categories: Error: 2 UNKNOWN: Getting metadata from plugin failed with error: Could not refresh access token: request to http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdatastore failed, reason: connect ECONNREFUSED 169.254.169.254:80
+    at callErrorFromStatus (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/call.ts:84:17)
+    at Object.onReceiveStatus (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/client.ts:612:51)
+    at Object.onReceiveStatus (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/client-interceptors.ts:424:48)
+    at <anonymous> (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/resolving-call.ts:170:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+for call at
+    at ServiceClientImpl.makeServerStreamRequest (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/client.ts:595:42)
+    at ServiceClientImpl.<anonymous> (/home/runner/workspace/node_modules/google-gax/node_modules/@grpc/grpc-js/src/make-client.ts:189:15)
+    at /home/runner/workspace/node_modules/@google-cloud/firestore/build/src/v1/firestore_client.js:242:33
+    at <anonymous> (/home/runner/workspace/node_modules/google-gax/src/streamingCalls/streamingApiCaller.ts:59:19)
+    at <anonymous> (/home/runner/workspace/node_modules/google-gax/src/normalCalls/timeout.ts:54:13)
+    at Object.request (/home/runner/workspace/node_modules/google-gax/src/streamingCalls/streaming.ts:331:28)
+    at Timeout.makeRequest [as _onTimeout] (/home/runner/workspace/node_modules/retry-request/index.js:159:28)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7)
+Caused by: Error
+    at QueryUtil._getResponse (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query-util.js:44:23)
+    at CollectionReference._getResponse (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query.js:784:32)
+    at CollectionReference._get (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query.js:777:35)
+    at /home/runner/workspace/node_modules/@google-cloud/firestore/build/src/reference/query.js:745:43
+    at /home/runner/workspace/node_modules/@google-cloud/firestore/build/src/telemetry/enabled-trace-util.js:110:30
+    at NoopContextManager.with (/home/runner/workspace/node_modules/@opentelemetry/api/src/context/NoopContextManager.ts:31:15)
+    at ContextAPI.with (/home/runner/workspace/node_modules/@opentelemetry/api/src/api/context.ts:77:42)
+    at NoopTracer.startActiveSpan (/home/runner/workspace/node_modules/@opentelemetry/api/src/trace/NoopTracer.ts:98:27)
+    at ProxyTracer.startActiveSpan (/home/runner/workspace/node_modules/@opentelemetry/api/src/trace/ProxyTracer.ts:51:20)
+    at EnabledTraceUtil.startActiveSpan (/home/runner/workspace/node_modules/@google-cloud/firestore/build/src/telemetry/enabled-trace-util.js:102:28) {
+  code: 2,
+  details: 'Getting metadata from plugin failed with error: Could not refresh access token: request to http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token?scopes=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%2Chttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdatastore failed, reason: connect ECONNREFUSED 169.254.169.254:80',
+  metadata: Metadata {
+    internalRepr: Map(0) {},
+    opaqueData: Map(0) {},
+    options: {}
+  }
+}
+📦 Экспорт коллекции: orders...

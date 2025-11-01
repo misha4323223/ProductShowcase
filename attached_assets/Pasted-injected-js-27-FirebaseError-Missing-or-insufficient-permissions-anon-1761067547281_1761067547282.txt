@@ -1,0 +1,14 @@
+injected.js:27 Ошибка загрузки избранного: FirebaseError: Missing or insufficient permissions.
+(anonymous) @ injected.js:27
+injected.js:27 Корзина из Firebase: Array(0)
+injected.js:27 Корзина загружена: Array(0)
+injected.js:27 Сохранение корзины в Firebase: Array(0)
+2injected.js:27 Error loading reviews: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/sweetweb-3543f/firestore/indexes?create_composite=Ck5wcm9qZWN0cy9zd2VldHdlYi0zNTQzZi9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvcmV2aWV3cy9pbmRleGVzL18QARoNCglwcm9kdWN0SWQQARoNCgljcmVhdGVkQXQQAhoMCghfX25hbWVfXxAC
+(anonymous) @ injected.js:27
+www.google.nl/ads/ga-audiences?v=1&t=sr&slf_rd=1&_r=4&tid=G-MPJY3F1YEL&cid=1881021077.1752576129&gtm=45je5ak0h1v9135634466za200&aip=1&dma=1&dma_cps=syphamo&gcd=13l3lPl2l2l1&npa=0&frm=0&tag_exp=101509157~103116026~103200004~103233427~104527907~104528501~104684208~104684211~104948813~105446120~115480709~115616985~115938465~115938469~116110425~116110427&z=992503681:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+8injected.js:27 Error loading reviews: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/sweetweb-3543f/firestore/indexes?create_composite=Ck5wcm9qZWN0cy9zd2VldHdlYi0zNTQzZi9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvcmV2aWV3cy9pbmRleGVzL18QARoNCglwcm9kdWN0SWQQARoNCgljcmVhdGVkQXQQAhoMCghfX25hbWVfXxAC
+(anonymous) @ injected.js:27
+www.google.nl/ads/ga-audiences?v=1&t=sr&slf_rd=1&_r=4&tid=G-MPJY3F1YEL&cid=1881021077.1752576129&gtm=45je5ak0h1v9135634466za200&aip=1&dma=1&dma_cps=syphamo&gcd=13l3lPl2l2l1&npa=0&frm=0&tag_exp=101509157~103116026~103200004~103233427~104527907~104528501~104684208~104684211~104948813~105446120~115480709~115616985~115938465~115938469~116110425~116110427&z=261284891:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+4injected.js:27 Error loading reviews: FirebaseError: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/sweetweb-3543f/firestore/indexes?create_composite=Ck5wcm9qZWN0cy9zd2VldHdlYi0zNTQzZi9kYXRhYmFzZXMvKGRlZmF1bHQpL2NvbGxlY3Rpb25Hcm91cHMvcmV2aWV3cy9pbmRleGVzL18QARoNCglwcm9kdWN0SWQQARoNCgljcmVhdGVkQXQQAhoMCghfX25hbWVfXxAC
+(anonymous) @ injected.js:27

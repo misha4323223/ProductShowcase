@@ -1,0 +1,17 @@
+{
+  "exportDate": "2025-10-28T21:58:21.226Z",
+  "totalRecords": 31,
+  "collections": [
+    "products",
+    "categories",
+    "orders",
+    "reviews",
+    "promocodes",
+    "carts",
+    "wishlists",
+    "stockNotifications",
+    "pushSubscriptions"
+  ],
+  "source": "Firebase (Admin SDK)",
+  "destination": "Yandex Cloud (готово к импорту)"
+}

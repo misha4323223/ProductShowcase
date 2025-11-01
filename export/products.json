@@ -1,0 +1,104 @@
+[
+  {
+    "id": "1",
+    "name": "Сумка",
+    "price": 2000,
+    "category": "accessories",
+    "description": "dsd",
+    "featured": false,
+    "popularity": 67,
+    "stock": 1,
+    "image": "https://i.ibb.co/1fKKxbMH/generated-icon.png"
+  },
+  {
+    "id": "2",
+    "name": "Французские макаронс",
+    "price": 850,
+    "salePrice": 650,
+    "category": "cookies",
+    "image": "",
+    "description": "Нежные французские миндальные пирожные с различными вкусами.",
+    "featured": false,
+    "popularity": 29,
+    "createdAt": "2025-10-20T12:57:54.992Z"
+  },
+  {
+    "id": "3",
+    "name": "Жевательные мармеладки",
+    "price": 450,
+    "category": "candies",
+    "image": "",
+    "description": "Яркие фруктовые мармеладки без искусственных красителей.",
+    "featured": false,
+    "popularity": 18,
+    "createdAt": "2025-10-20T12:57:55.173Z"
+  },
+  {
+    "id": "30",
+    "name": "Носки",
+    "price": 300,
+    "category": "sale",
+    "description": "Крем",
+    "featured": false,
+    "popularity": 84,
+    "salePrice": 250,
+    "stock": 1
+  },
+  {
+    "id": "4",
+    "name": "Стильная сумка-кроссбоди",
+    "price": 2500,
+    "salePrice": 1999,
+    "category": "accessories",
+    "image": "",
+    "description": "Элегантная пастельно-розовая сумка из эко-кожи.",
+    "featured": false,
+    "popularity": 54,
+    "createdAt": "2025-10-20T12:57:55.413Z"
+  },
+  {
+    "id": "5",
+    "name": "Трюфели премиум",
+    "price": 1500,
+    "category": "chocolates",
+    "image": "",
+    "description": "Роскошные шоколадные трюфели с начинками.",
+    "featured": false,
+    "popularity": 54,
+    "createdAt": "2025-10-20T12:57:55.566Z"
+  },
+  {
+    "id": "6",
+    "name": "Печенье с шоколадной крошкой",
+    "price": 380,
+    "category": "cookies",
+    "image": "",
+    "description": "Домашнее печенье с щедрым количеством шоколада.",
+    "featured": false,
+    "popularity": 40,
+    "createdAt": "2025-10-20T12:57:55.754Z"
+  },
+  {
+    "id": "7",
+    "name": "Леденцы ручной работы",
+    "price": 320,
+    "salePrice": 250,
+    "category": "candies",
+    "image": "",
+    "description": "Красочные леденцы с натуральными вкусами.",
+    "featured": false,
+    "popularity": 32,
+    "createdAt": "2025-10-20T12:57:55.935Z"
+  },
+  {
+    "id": "8",
+    "name": "Набор украшений",
+    "price": 1800,
+    "category": "accessories",
+    "image": "",
+    "description": "Комплект: серьги и браслет в нежных тонах.",
+    "featured": false,
+    "popularity": 10,
+    "createdAt": "2025-10-20T12:57:56.116Z"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "kgSXBBDTmwIrWbDfvhc8",
+    "code": "ЗИМА2025",
+    "discountType": "percentage",
+    "discountValue": 20,
+    "minOrderAmount": 900,
+    "maxUses": 3,
+    "startDate": "2025-10-22T00:00:00.000Z",
+    "endDate": "2025-10-23T00:00:00.000Z",
+    "active": true,
+    "createdAt": "2025-10-22T20:41:37.164Z"
+  }
+]

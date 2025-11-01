@@ -1,0 +1,99 @@
+WebGL warning: drawElementsInstanced: Drawing to a destination rect smaller than the viewport rect. (This warning will only be given once)
+POST
+https://ingest.app.coframe.com/ingest/v2/batched_events/68c9ad4d4cddb58cf3a1f93d/
+NS_ERROR_FAILURE
+
+GET
+wss://eval.worf.platform.replit.com/wsv2/v2.public.Q2dZSXp2UDR4d1lTQmdqdGovbkhCaUlFZDI5eVpqQUFPcjhCQ2lRNU5USTFOR0l4TXkweU1tVmhMVFJpT1dJdE9HSmtNaTB3TldRMlpEaGxaR1ZsWW1JU0EyNXBlQm9XY21Wd2JHbDBMWEpsY0d3dFptbHNaWE10ZDI5eVppSVBVSEp2WkhWamRGTm9iM2RqWVhObEtneHdhVzFoYzJocGJqRTJNRFpDVGdvWGNtVndiR2wwTFhKbGNHd3RZbXh2WTJ0ekxYZHZjbVlTRlhKbGNHeHBkQzF5WlhCc0xXMWxkR0V0ZDI5eVpob2NjbVZ3YkdsMExXMWhjbWRoY21sdVpTMWliRzlqYTNNdGQyOXlaa29IQ1BIcXNCY1FBVkFBZUFCU0pBZ0JFSUNBZ0lBSUdRQUFBQUFBQUJCQUlRQUFBQUFBQUJCQUtJQ0FnSUFRTUFJNEFHQURhaE1JOGVxd0Z4SU1jR2x0WVhOb2FXNHhOakEyZ2dFQ0tnQ2FBUW9LQ0RBdU1DNHlNREV4b0FFQXfwMfOuqQ5K2-lxxhlGvWcT-buO3NiVT1aDL0vzSrA7x4B19su4WFHyQvrzrdHbPpsQCVaWbtQwbR86MuVsHAw.Q2dad2NtOWtPak1pQ25KbGNHeHBkQzVqYjIwPQ
+[HTTP/1.1 101 Switching Protocols 257ms]
+
+GET
+wss://eval.worf.platform.replit.com/wsv2/v2.public.Q2dZSTF2UDR4d1lTQmdqMWovbkhCaUlFZDI5eVpqQUFPcjhCQ2lRNU5USTFOR0l4TXkweU1tVmhMVFJpT1dJdE9HSmtNaTB3TldRMlpEaGxaR1ZsWW1JU0EyNXBlQm9XY21Wd2JHbDBMWEpsY0d3dFptbHNaWE10ZDI5eVppSVBVSEp2WkhWamRGTm9iM2RqWVhObEtneHdhVzFoYzJocGJqRTJNRFpDVGdvWGNtVndiR2wwTFhKbGNHd3RZbXh2WTJ0ekxYZHZjbVlTRlhKbGNHeHBkQzF5WlhCc0xXMWxkR0V0ZDI5eVpob2NjbVZ3YkdsMExXMWhjbWRoY21sdVpTMWliRzlqYTNNdGQyOXlaa29IQ1BIcXNCY1FBVkFBZUFCU0pBZ0JFSUNBZ0lBSUdRQUFBQUFBQUJCQUlRQUFBQUFBQUJCQUtJQ0FnSUFRTUFJNEFHQURhaE1JOGVxd0Z4SU1jR2x0WVhOb2FXNHhOakEyZ2dFQ0tnQ2FBUW9LQ0RBdU1DNHlNREV4b0FFQUc1qrIrEoWUCOlFnBlAYePE7TGKE1S6Ek-nRE67UuMC-ULvLu679h5WZFxU3x2Qr08Ym6cCH6FL99kBTuyLCQ8.Q2dad2NtOWtPak1pQ25KbGNHeHBkQzVqYjIwPQ
+[HTTP/1.1 101 Switching Protocols 244ms]
+
+Клик на кнопку подписки injected.js:27:27
+OneSignal загружен, проверяем User API injected.js:27:27
+Проверяем статус подписки injected.js:27:27
+isPushEnabled: false injected.js:27:27
+Запрашиваем разрешение на уведомления injected.js:27:27
+POST
+https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?VER=8&database=projects/sweetweb-3543f/databases/(default)&gsessionid=Dal4VuOvTD0pQ0rNi18bCQKH-70IjjclvLSmgA_jwZg&SID=-iMsE6mR8PlaoEdznP5ptQ&RID=50066&TYPE=terminate&zx=e7ded3627pzc
+[HTTP/2 200  284ms]
+
+	
+POST
+	https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?VER=8&database=projects/sweetweb-3543f/databases/(default)&gsessionid=Dal4VuOvTD0pQ0rNi18bCQKH-70IjjclvLSmgA_jwZg&SID=-iMsE6mR8PlaoEdznP5ptQ&RID=50066&TYPE=terminate&zx=e7ded3627pzc
+Состояние
+200
+ВерсияHTTP/2
+Передано491 б (размер 0 б)
+Referrer policystrict-origin-when-cross-origin
+Приоритет запросаLowest
+Поиск в DNSDNS через HTTPS
+
+	
+access-control-allow-credentials
+	true
+access-control-allow-origin
+	https://95254b13-22ea-4b9b-8bd2-05d6d8edeebb-00-1glu2uo8gsxu6.worf.replit.dev
+alt-svc
+	h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+content-length
+	0
+content-type
+	text/plain; charset=utf-8
+cross-origin-resource-policy
+	cross-origin
+date
+	Sun, 26 Oct 2025 15:10:51 GMT
+server
+	ESF
+vary
+	origin
+x-content-type-options
+	nosniff
+X-Firefox-Spdy
+	h2
+x-frame-options
+	SAMEORIGIN
+x-xss-protection
+	0
+	
+Accept
+	*/*
+Accept-Encoding
+	gzip, deflate, br, zstd
+Accept-Language
+	ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3
+Connection
+	keep-alive
+Content-Length
+	0
+Content-Type
+	text/plain;charset=UTF-8
+Host
+	firestore.googleapis.com
+Origin
+	https://95254b13-22ea-4b9b-8bd2-05d6d8edeebb-00-1glu2uo8gsxu6.worf.replit.dev
+Priority
+	u=6
+Referer
+	https://95254b13-22ea-4b9b-8bd2-05d6d8edeebb-00-1glu2uo8gsxu6.worf.replit.dev/
+Sec-Fetch-Dest
+	empty
+Sec-Fetch-Mode
+	no-cors
+Sec-Fetch-Site
+	cross-site
+TE
+	trailers
+User-Agent
+	Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0
+Клик на кнопку подписки injected.js:27:27
+OneSignal загружен, проверяем User API injected.js:27:27
+Проверяем статус подписки injected.js:27:27
+isPushEnabled: false injected.js:27:27
+Запрашиваем разрешение на уведомления injected.js:27:27
+
+​
+
