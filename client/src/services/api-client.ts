@@ -72,10 +72,32 @@ export async function getAllCategories(): Promise<Category[]> {
   return fetchJSON<Category[]>('/categories');
 }
 
-export { 
-  createProduct, 
-  updateProduct, 
-  deleteProduct,
-  createCategory,
-  deleteCategory
-} from './yandex-products';
+// ВРЕМЕННО ЗАКОММЕНТИРОВАНО: Прямой доступ к БД из браузера небезопасен
+// Нужно создать API endpoints для админки
+// export { 
+//   createProduct, 
+//   updateProduct, 
+//   deleteProduct,
+//   createCategory,
+//   deleteCategory
+// } from './yandex-products';
+
+export async function createProduct(product: any): Promise<void> {
+  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+}
+
+export async function updateProduct(id: string, updates: any): Promise<void> {
+  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+}
+
+export async function createCategory(category: any): Promise<void> {
+  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+}
