@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-<<<<<<< HEAD
 import { initializeFirebaseAdmin, verifyFirebaseToken, isAdmin } from "./firebase-admin";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -178,15 +177,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: error.message });
     }
   });
-=======
-
-export async function registerRoutes(app: Express): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
-
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
->>>>>>> 370eca2 (Initial commit)
 
   const httpServer = createServer(app);
 
