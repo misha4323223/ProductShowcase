@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { auth } from "@/lib/firebase";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { getAllProducts, getAllCategories, createProduct, updateProduct, deleteProduct, createCategory, deleteCategory } from "@/services/yandex-products";
+import { getAllProducts, getAllCategories, createProduct, updateProduct, deleteProduct, createCategory, deleteCategory } from "@/services/api-client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

@@ -71,3 +71,11 @@ export async function getProductsSorted(sortBy: 'price-asc' | 'price-desc' | 'po
 export async function getAllCategories(): Promise<Category[]> {
   return fetchJSON<Category[]>('/categories');
 }
+
+export { 
+  createProduct, 
+  updateProduct, 
+  deleteProduct,
+  createCategory,
+  deleteCategory
+} from './yandex-products';

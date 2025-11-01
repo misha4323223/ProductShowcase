@@ -26,7 +26,7 @@ import { createOrder } from "@/services/yandex-orders";
 import { validatePromoCode } from "@/services/yandex-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
 import { sendOrderConfirmation } from "@/services/emailjs";
-import { getAllProducts } from "@/services/yandex-products";
+import { getAllProducts } from "@/services/api-client";
 
 interface CartItem {
   id: string;

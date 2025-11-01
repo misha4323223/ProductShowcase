@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllProducts, getProductById, getProductsByCategory, getAllCategories } from "@/services/yandex-products";
+import { getAllProducts, getProductById, getProductsByCategory, getAllCategories } from "@/services/api-client";
 import type { Product } from "@/types/firebase-types";
 
 export function useProducts() {
