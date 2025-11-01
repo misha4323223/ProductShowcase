@@ -77,11 +77,7 @@
   --chart-5: 200 75% 50%;
 
   --font-sans: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
-<<<<<<< HEAD
   --font-serif: 'Pacifico', cursive;
-=======
-  --font-serif: 'Bangers', cursive;
->>>>>>> 370eca2 (Initial commit)
   --font-mono: Menlo, Monaco, 'Courier New', monospace;
   --radius: .5rem; /* 8px */
   --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.05);
@@ -244,7 +240,6 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
-<<<<<<< HEAD
 
   /* Улучшенная читаемость на iPhone и устройствах с высокой плотностью пикселей */
   /* Делаем шрифт толще только на iPhone, не меняя размер */
@@ -256,8 +251,6 @@
       -moz-osx-font-smoothing: grayscale;
     }
   }
-=======
->>>>>>> 370eca2 (Initial commit)
 }
 
 /**
@@ -367,7 +360,6 @@
     inset: -1px;
   }
 
-<<<<<<< HEAD
   /* ========================================
      Анимация переключения логотипа
      ======================================== */
@@ -407,8 +399,6 @@
     animation-delay: 5s;
   }
 
-=======
->>>>>>> 370eca2 (Initial commit)
   /* Cute animations */
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
@@ -887,7 +877,6 @@
     animation: rotate-slow 20s linear infinite;
   }
 
-<<<<<<< HEAD
   /* Animated gradient background */
   @keyframes animate-gradient {
     0% { background-position: 0% 50%; }
@@ -912,8 +901,6 @@
     animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-=======
->>>>>>> 370eca2 (Initial commit)
   /* Metallic Candy Wrapper - металлическая обертка */
   .metallic-wrapper {
     background: linear-gradient(
@@ -954,7 +941,6 @@
   .squish-active:active {
     animation: squish 0.3s ease-in-out;
   }
-<<<<<<< HEAD
 
   /* Глянцевый эффект для карточек */
   @keyframes glossy-shine {
@@ -1304,6 +1290,4 @@
   }
 
   
-=======
->>>>>>> 370eca2 (Initial commit)
 }
