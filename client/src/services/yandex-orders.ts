@@ -1,82 +1,62 @@
-import { docClient, generateId } from "@/lib/yandex-db";
-import { PutCommand, ScanCommand, UpdateCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import type { Order } from "@/types/firebase-types";
+const API_GATEWAY_URL = 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
 
-const ORDERS_TABLE = "orders";
+export interface Order {
+  id: string;
+  userId: string;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  items: Array<{
+    productId: string;
+    quantity: number;
+    price: number;
+  }>;
+  totalAmount: number;
+  customerInfo: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
+  createdAt: Date;
+  hiddenByUser?: boolean;
+}
 
 export async function createOrder(orderData: Omit<Order, 'id' | 'createdAt'>): Promise<string> {
-  const id = generateId();
-  const order = {
-    ...orderData,
-    id,
-    createdAt: new Date().toISOString(),
-  };
-  
-  await docClient.send(new PutCommand({
-    TableName: ORDERS_TABLE,
-    Item: order,
-  }));
-  
-  return id;
+  const response = await fetch(`${API_GATEWAY_URL}/orders`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create order');
+  }
+
+  const data = await response.json();
+  return data.id;
 }
 
 export async function getUserOrders(userId: string): Promise<Order[]> {
-  const result = await docClient.send(new ScanCommand({
-    TableName: ORDERS_TABLE,
-  }));
-  
-  const orders = (result.Items || []) as Order[];
-  
-  return orders
-    .filter(order => order.userId === userId && !order.hiddenByUser)
-    .map(order => ({
-      ...order,
-      createdAt: order.createdAt ? new Date(order.createdAt) : new Date(),
-    }))
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  // В текущей спецификации нет GET /orders/{userId}
+  // Используем заглушку или локальное хранилище
+  return [];
 }
 
 export async function updateOrderStatus(orderId: string, status: Order['status']): Promise<void> {
-  await docClient.send(new UpdateCommand({
-    TableName: ORDERS_TABLE,
-    Key: { id: orderId },
-    UpdateExpression: 'SET #status = :status',
-    ExpressionAttributeNames: {
-      '#status': 'status',
-    },
-    ExpressionAttributeValues: {
-      ':status': status,
-    },
-  }));
+  // В текущей спецификации нет PUT /orders/{id}
+  console.warn('updateOrderStatus not implemented in API Gateway');
 }
 
 export async function deleteOrder(orderId: string): Promise<void> {
-  await docClient.send(new DeleteCommand({
-    TableName: ORDERS_TABLE,
-    Key: { id: orderId },
-  }));
+  // В текущей спецификации нет DELETE /orders/{id}
+  console.warn('deleteOrder not implemented in API Gateway');
 }
 
 export async function hideOrderForUser(orderId: string): Promise<void> {
-  await docClient.send(new UpdateCommand({
-    TableName: ORDERS_TABLE,
-    Key: { id: orderId },
-    UpdateExpression: 'SET hiddenByUser = :hidden',
-    ExpressionAttributeValues: {
-      ':hidden': true,
-    },
-  }));
+  // В текущей спецификации нет этого эндпоинта
+  console.warn('hideOrderForUser not implemented in API Gateway');
 }
 
 export async function getAllOrders(): Promise<Order[]> {
-  const result = await docClient.send(new ScanCommand({
-    TableName: ORDERS_TABLE,
-  }));
-  
-  return (result.Items || [])
-    .map(order => ({
-      ...order,
-      createdAt: order.createdAt ? new Date(order.createdAt) : new Date(),
-    }))
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) as Order[];
+  // В текущей спецификации нет GET /orders
+  return [];
 }

@@ -1,75 +1,54 @@
-import { docClient, generateId } from "@/lib/yandex-db";
-import { PutCommand, ScanCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import type { Review } from "@/types/firebase-types";
+const API_GATEWAY_URL = 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
 
-const REVIEWS_TABLE = "reviews";
-
-export async function getReviewsByProduct(productId: string): Promise<Review[]> {
-  const result = await docClient.send(new ScanCommand({
-    TableName: REVIEWS_TABLE,
-  }));
-  
-  const reviews = (result.Items || [])
-    .filter((item: any) => item.productId === productId)
-    .map((item: any) => ({
-      ...item,
-      createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
-    }))
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  
-  return reviews as Review[];
+export interface Review {
+  id: string;
+  productId: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
 }
 
-export async function addReview(review: Omit<Review, 'id' | 'createdAt'>): Promise<string> {
-  const id = generateId();
-  const newReview = {
-    ...review,
-    id,
-    createdAt: new Date().toISOString(),
-  };
-  
-  await docClient.send(new PutCommand({
-    TableName: REVIEWS_TABLE,
-    Item: newReview,
-  }));
-  
-  return id;
-}
+export async function getReviews(productId?: string): Promise<Review[]> {
+  const url = productId
+    ? `${API_GATEWAY_URL}/reviews?productId=${productId}`
+    : `${API_GATEWAY_URL}/reviews`;
 
-export async function getProductRating(productId: string): Promise<{ averageRating: number; totalReviews: number }> {
-  const reviews = await getReviewsByProduct(productId);
-  
-  if (reviews.length === 0) {
-    return { averageRating: 0, totalReviews: 0 };
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('Failed to get reviews');
   }
-  
-  const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-  const averageRating = totalRating / reviews.length;
-  
-  return {
-    averageRating: Math.round(averageRating * 10) / 10,
-    totalReviews: reviews.length,
-  };
+
+  const data = await response.json();
+  return data.map((review: any) => ({
+    ...review,
+    createdAt: new Date(review.createdAt),
+  }));
 }
 
-export async function getAllReviews(): Promise<Review[]> {
-  const result = await docClient.send(new ScanCommand({
-    TableName: REVIEWS_TABLE,
-  }));
-  
-  const reviews = (result.Items || [])
-    .map((item: any) => ({
-      ...item,
-      createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
-    }))
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  
-  return reviews as Review[];
+export async function createReview(review: Omit<Review, 'id' | 'createdAt'>): Promise<string> {
+  const response = await fetch(`${API_GATEWAY_URL}/reviews`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(review),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create review');
+  }
+
+  const data = await response.json();
+  return data.id;
 }
 
-export async function deleteReview(reviewId: string): Promise<void> {
-  await docClient.send(new DeleteCommand({
-    TableName: REVIEWS_TABLE,
-    Key: { id: reviewId },
-  }));
+export async function deleteReview(id: string): Promise<void> {
+  const response = await fetch(`${API_GATEWAY_URL}/reviews/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete review');
+  }
 }

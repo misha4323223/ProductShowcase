@@ -1,6 +1,6 @@
-import { docClient } from "@/lib/yandex-db";
-import { PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
-import type { CartItem as FirebaseCartItem } from "@/types/firebase-types";
+
+const API_GATEWAY_URL = 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
+const CART_STORAGE_KEY = 'sweet-delights-cart';
 
 export interface UICartItem {
   id: string;
@@ -10,8 +10,10 @@ export interface UICartItem {
   image: string;
 }
 
-const CART_STORAGE_KEY = 'sweet-delights-cart';
-const CARTS_TABLE = "carts";
+export interface FirebaseCartItem {
+  productId: string;
+  quantity: number;
+}
 
 export function saveCartToLocalStorage(items: UICartItem[]): void {
   console.log('Сохранение в localStorage:', items);
@@ -34,26 +36,26 @@ export function loadCartFromLocalStorage(): UICartItem[] {
 }
 
 export async function saveCartToYDB(userId: string, items: FirebaseCartItem[]): Promise<void> {
-  await docClient.send(new PutCommand({
-    TableName: CARTS_TABLE,
-    Item: {
-      id: userId,
-      items,
-      updatedAt: new Date().toISOString(),
-    },
-  }));
+  const response = await fetch(`${API_GATEWAY_URL}/cart`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, items }),
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to save cart');
+  }
 }
 
 export async function loadCartFromYDB(userId: string): Promise<FirebaseCartItem[]> {
-  const result = await docClient.send(new GetCommand({
-    TableName: CARTS_TABLE,
-    Key: { id: userId },
-  }));
+  const response = await fetch(`${API_GATEWAY_URL}/cart/${userId}`);
   
-  if (result.Item) {
-    return result.Item.items || [];
+  if (!response.ok) {
+    throw new Error('Failed to load cart');
   }
-  return [];
+  
+  const data = await response.json();
+  return data.items || [];
 }
 
 export async function mergeCartsOnLogin(userId: string, localCart: FirebaseCartItem[]): Promise<FirebaseCartItem[]> {
