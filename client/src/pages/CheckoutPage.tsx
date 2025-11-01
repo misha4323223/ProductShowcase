@@ -284,7 +284,290 @@ export default function CheckoutPage() {
 
           <h1 className="font-serif text-3xl md:text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600" data-testid="text-checkout-title">Оформление заказа</h1>
 
-          {/* Далее форма и блок заказа остаются как в твоем коде */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Контактная информация</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="firstName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Имя</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Иван" {...field} data-testid="input-first-name" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="lastName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Фамилия</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Иванов" {...field} data-testid="input-last-name" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input type="email" placeholder="ivan@example.com" {...field} data-testid="input-email" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Телефон</FormLabel>
+                            <FormControl>
+                              <Input placeholder="+7 (999) 123-45-67" {...field} data-testid="input-phone" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Адрес доставки</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Адрес</FormLabel>
+                            <FormControl>
+                              <Input placeholder="ул. Пушкина, д. 10, кв. 5" {...field} data-testid="input-address" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Город</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Москва" {...field} data-testid="input-city" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="postalCode"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Почтовый индекс</FormLabel>
+                              <FormControl>
+                                <Input placeholder="123456" {...field} data-testid="input-postal-code" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Способ доставки</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <FormField
+                        control={form.control}
+                        name="delivery"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="space-y-3"
+                              >
+                                {deliveryOptions.map((option) => (
+                                  <div key={option.id} className="flex items-center space-x-3 border rounded-lg p-4 hover-elevate">
+                                    <RadioGroupItem value={option.id} id={option.id} data-testid={`radio-delivery-${option.id}`} />
+                                    <Label htmlFor={option.id} className="flex-1 cursor-pointer">
+                                      <div className="flex justify-between items-start">
+                                        <div>
+                                          <div className="font-medium">{option.name}</div>
+                                          <div className="text-sm text-muted-foreground">{option.description}</div>
+                                        </div>
+                                        <div className="font-semibold">{option.price === 0 ? 'Бесплатно' : `${option.price}₽`}</div>
+                                      </div>
+                                    </Label>
+                                  </div>
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Способ оплаты</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <FormField
+                        control={form.control}
+                        name="payment"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="space-y-3"
+                              >
+                                {paymentOptions.map((option) => (
+                                  <div key={option.id} className="flex items-center space-x-3 border rounded-lg p-4 hover-elevate">
+                                    <RadioGroupItem value={option.id} id={option.id} data-testid={`radio-payment-${option.id}`} />
+                                    <Label htmlFor={option.id} className="flex-1 cursor-pointer">
+                                      <div className="font-medium">{option.name}</div>
+                                      <div className="text-sm text-muted-foreground">{option.description}</div>
+                                    </Label>
+                                  </div>
+                                ))}
+                              </RadioGroup>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Button type="submit" size="lg" className="w-full" disabled={isSubmitting} data-testid="button-place-order">
+                    {isSubmitting ? "Обработка..." : "Оформить заказ"}
+                  </Button>
+                </form>
+              </Form>
+            </div>
+
+            <div>
+              <Card className="sticky top-4">
+                <CardHeader>
+                  <CardTitle>Ваш заказ</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    {cartItems.map((item) => (
+                      <div key={item.id} className="flex gap-3" data-testid={`order-item-${item.id}`}>
+                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                        <div className="flex-1">
+                          <div className="font-medium text-sm">{item.name}</div>
+                          <div className="text-sm text-muted-foreground">Количество: {item.quantity}</div>
+                        </div>
+                        <div className="font-semibold">{item.price * item.quantity}₽</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Товары</span>
+                      <span data-testid="text-subtotal">{total}₽</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Доставка</span>
+                      <span data-testid="text-delivery">{deliveryPrice === 0 ? 'Бесплатно' : `${deliveryPrice}₽`}</span>
+                    </div>
+                    {promoDiscount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>Скидка по промокоду</span>
+                        <span data-testid="text-discount">-{promoDiscount}₽</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  <div className="flex justify-between text-lg font-bold">
+                    <span>Итого</span>
+                    <span data-testid="text-total">{finalTotal}₽</span>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <Label>Промокод</Label>
+                    {!promoCode ? (
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Введите промокод"
+                          value={promoCodeInput}
+                          onChange={(e) => setPromoCodeInput(e.target.value)}
+                          data-testid="input-promo-code"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleApplyPromoCode}
+                          disabled={isCheckingPromo}
+                          data-testid="button-apply-promo"
+                        >
+                          {isCheckingPromo ? "..." : "Применить"}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                        <div className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium text-green-600">{promoCode}</span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleRemovePromoCode}
+                          data-testid="button-remove-promo"
+                        >
+                          Удалить
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />
