@@ -32,7 +32,7 @@ exports.handler = async (event) => {
     const promoCode = {
       ...body,
       id,
-      code: body.code.toUpperCase(),
+      code: body.code.trim().toUpperCase(),
       createdAt: new Date().toISOString(),
     };
 
