@@ -29,7 +29,12 @@ exports.handler = async (event) => {
     const promoResult = await docClient.send(new ScanCommand({
       TableName: "promocodes",
     }));
-    const promoCode = (promoResult.Items || []).find(p => p.code === code.toUpperCase());
+    // Нормализуем входящий код (удаляем пробелы, приводим к верхнему регистру)
+    const normalizedInputCode = code.trim().toUpperCase();
+    // Ищем промокод с нечувствительным к регистру сравнением
+    const promoCode = (promoResult.Items || []).find(p => 
+      p.code && p.code.trim().toUpperCase() === normalizedInputCode
+    );
 
     if (!promoCode) {
       return {
@@ -70,7 +75,8 @@ exports.handler = async (event) => {
         TableName: "orders",
       }));
       const usageCount = (ordersResult.Items || []).filter(order =>
-        order.promoCode && order.promoCode.code === code.toUpperCase()
+        order.promoCode && order.promoCode.code && 
+        order.promoCode.code.trim().toUpperCase() === normalizedInputCode
       ).length;
 
       if (usageCount >= promoCode.maxUses) {

@@ -33,7 +33,7 @@ exports.handler = async (event) => {
       if (key !== 'id') {
         updateExpressions.push(`#field${index} = :value${index}`);
         expressionAttributeNames[`#field${index}`] = key;
-        expressionAttributeValues[`:value${index}`] = key === 'code' ? body[key].toUpperCase() : body[key];
+        expressionAttributeValues[`:value${index}`] = key === 'code' ? body[key].trim().toUpperCase() : body[key];
       }
     });
 
