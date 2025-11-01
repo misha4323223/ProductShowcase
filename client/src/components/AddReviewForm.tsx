@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import StarRating from "@/components/StarRating";
 import { useAuth } from "@/contexts/AuthContext";
-import { addReview } from "@/services/yandex-reviews";
+import { createReview } from "@/services/yandex-reviews";
 import { useToast } from "@/hooks/use-toast";
 
 interface AddReviewFormProps {
@@ -53,7 +53,7 @@ export default function AddReviewForm({ productId, onReviewAdded }: AddReviewFor
     setIsSubmitting(true);
 
     try {
-      await addReview({
+      await createReview({
         productId,
         userId: user.uid,
         userName: user.email?.split('@')[0] || 'Пользователь',
