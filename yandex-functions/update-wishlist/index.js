@@ -22,9 +22,23 @@ const docClient = DynamoDBDocumentClient.from(client, {
 
 exports.handler = async (event) => {
   try {
+    // 🔍 ПОЛНОЕ ЛОГИРОВАНИЕ ДЛЯ ДИАГНОСТИКИ
+    console.log('=== FULL EVENT OBJECT ===');
+    console.log(JSON.stringify(event, null, 2));
+    console.log('=========================');
+    
+    console.log('event.pathParams:', event.pathParams);
+    console.log('event.pathParameters:', event.pathParameters);
+    console.log('event.params:', event.params);
+    console.log('event.requestContext:', event.requestContext);
+    
     const userId = event.pathParams?.userId || event.pathParameters?.userId || event.params?.userId;
+    console.log('Extracted userId:', userId);
+    
     const body = JSON.parse(event.body || '{}');
     const { action, productId } = body;
+    
+    console.log('Request body:', { action, productId });
 
     if (!userId) {
       return {
