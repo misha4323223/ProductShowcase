@@ -72,32 +72,128 @@ export async function getAllCategories(): Promise<Category[]> {
   return fetchJSON<Category[]>('/categories');
 }
 
-// ВРЕМЕННО ЗАКОММЕНТИРОВАНО: Прямой доступ к БД из браузера небезопасен
-// Нужно создать API endpoints для админки
-// export { 
-//   createProduct, 
-//   updateProduct, 
-//   deleteProduct,
-//   createCategory,
-//   deleteCategory
-// } from './yandex-products';
+// ========== ADMIN API: PRODUCTS ==========
 
 export async function createProduct(product: any): Promise<void> {
-  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+  const response = await fetch(`${API_BASE_URL}/products`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(product),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to create product: ${response.status}`);
+  }
 }
 
 export async function updateProduct(id: string, updates: any): Promise<void> {
-  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to update product: ${response.status}`);
+  }
 }
 
 export async function deleteProduct(id: string): Promise<void> {
-  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+    method: 'DELETE',
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to delete product: ${response.status}`);
+  }
 }
 
+// ========== ADMIN API: CATEGORIES ==========
+
 export async function createCategory(category: any): Promise<void> {
-  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+  const response = await fetch(`${API_BASE_URL}/categories`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(category),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to create category: ${response.status}`);
+  }
 }
 
 export async function deleteCategory(id: string): Promise<void> {
-  throw new Error('Admin API не настроен. Используйте Yandex Cloud Console для управления данными.');
+  const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+    method: 'DELETE',
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to delete category: ${response.status}`);
+  }
+}
+
+// ========== REVIEWS API ==========
+
+export interface Review {
+  id: string;
+  productId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+export async function getReviews(productId?: string): Promise<Review[]> {
+  const endpoint = productId ? `/reviews?productId=${productId}` : '/reviews';
+  return fetchJSON<Review[]>(endpoint);
+}
+
+export async function createReview(review: {
+  productId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+}): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/reviews`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(review),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to create review: ${response.status}`);
+  }
+}
+
+export async function deleteReview(id: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/reviews/${id}`, {
+    method: 'DELETE',
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to delete review: ${response.status}`);
+  }
+}
+
+// ========== PROMO CODES API ==========
+
+export interface PromoCodeValidation {
+  valid: boolean;
+  message?: string;
+  promoCode?: any;
+  discountAmount?: number;
+}
+
+export async function validatePromoCode(code: string, orderTotal: number): Promise<PromoCodeValidation> {
+  const response = await fetch(`${API_BASE_URL}/promocodes/validate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, orderTotal }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to validate promo code: ${response.status}`);
+  }
+  
+  return response.json();
 }
