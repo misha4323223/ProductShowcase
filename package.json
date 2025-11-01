@@ -13,7 +13,8 @@
     "db:push": "drizzle-kit push",
     "export-firebase": "tsx scripts/export-from-firebase.ts",
     "export-firebase-admin": "tsx scripts/export-from-firebase-admin.ts",
-    "import-to-ydb": "tsx scripts/import-to-ydb.ts"
+    "import-to-ydb": "tsx scripts/import-to-ydb.ts",
+    "normalize-promocodes": "tsx scripts/normalize-promocodes.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.919.0",
