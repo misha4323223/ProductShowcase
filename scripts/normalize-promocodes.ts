@@ -1,15 +1,16 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import * as dotenv from "dotenv";
+import { join } from "path";
 
-dotenv.config();
+dotenv.config({ path: join(process.cwd(), 'client', '.env') });
 
 const client = new DynamoDBClient({
   region: "ru-central1",
-  endpoint: process.env.YDB_ENDPOINT,
+  endpoint: process.env.VITE_YDB_ENDPOINT,
   credentials: {
-    accessKeyId: process.env.YDB_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.YDB_SECRET_KEY || "",
+    accessKeyId: process.env.VITE_YDB_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.VITE_YDB_SECRET_KEY || "",
   },
 });
 
@@ -17,7 +18,20 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 async function normalizePromoCodes() {
   try {
-    console.log("🔍 Получение всех промокодов из YDB...");
+    console.log('🔧 Проверка подключения к YDB...');
+    console.log(`   Endpoint: ${process.env.VITE_YDB_ENDPOINT}`);
+    console.log(`   Access Key ID: ${process.env.VITE_YDB_ACCESS_KEY_ID?.substring(0, 20)}...`);
+
+    if (!process.env.VITE_YDB_ENDPOINT || !process.env.VITE_YDB_ACCESS_KEY_ID || !process.env.VITE_YDB_SECRET_KEY) {
+      console.error('\n❌ Ошибка: Не настроены переменные окружения для YDB!');
+      console.error('Добавьте в .env файл:');
+      console.error('  VITE_YDB_ENDPOINT=...');
+      console.error('  VITE_YDB_ACCESS_KEY_ID=...');
+      console.error('  VITE_YDB_SECRET_KEY=...');
+      throw new Error('Missing YDB environment variables');
+    }
+
+    console.log("\n🔍 Получение всех промокодов из YDB...");
     
     const result = await docClient.send(new ScanCommand({
       TableName: "promocodes",
