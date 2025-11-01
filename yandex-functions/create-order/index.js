@@ -10,7 +10,15 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -52,7 +60,7 @@ exports.handler = async (event) => {
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ success: true, orderId: id }),
+      body: JSON.stringify({ success: true, id, orderId: id }),
     };
   } catch (error) {
     console.error("Error:", error);
