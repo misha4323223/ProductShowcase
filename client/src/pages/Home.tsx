@@ -1,27 +1,15 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import HeroSlider from "@/components/HeroSlider";
-=======
-import { useState } from "react";
-import Header from "@/components/Header";
-import HeroSlider from "@/components/HeroSlider";
-import BenefitsBar from "@/components/BenefitsBar";
->>>>>>> 370eca2 (Initial commit)
 import CategoryCard from "@/components/CategoryCard";
 import ProductCard from "@/components/ProductCard";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
-<<<<<<< HEAD
 import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-=======
-import { products } from "@/lib/products";
-import { useToast } from "@/hooks/use-toast";
->>>>>>> 370eca2 (Initial commit)
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
 import heroImage2 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
@@ -32,7 +20,6 @@ import accessoriesImage from '@assets/generated_images/Sweet_accessories_categor
 import cookiesImage from '@assets/generated_images/Cookies_and_biscuits_image_6375c6a9.png';
 import saleImage from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.png';
 
-<<<<<<< HEAD
 export default function Home() {
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
@@ -44,20 +31,6 @@ export default function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-=======
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
-export default function Home() {
-  const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const { toast } = useToast();
->>>>>>> 370eca2 (Initial commit)
 
   const slides = [
     {
@@ -65,54 +38,33 @@ export default function Home() {
       image: heroImage1,
       title: 'Французские Макаронс',
       subtitle: 'Изысканные пирожные ручной работы',
-<<<<<<< HEAD
-=======
-      buttonText: 'Заказать сейчас',
->>>>>>> 370eca2 (Initial commit)
     },
     {
       id: 2,
       image: heroImage2,
       title: 'Премиум Шоколад',
       subtitle: 'Бельгийское качество в каждом кусочке',
-<<<<<<< HEAD
-=======
-      buttonText: 'Смотреть каталог',
->>>>>>> 370eca2 (Initial commit)
     },
     {
       id: 3,
       image: heroImage3,
       title: 'Яркие Сладости',
       subtitle: 'Радуга вкусов для всей семьи',
-<<<<<<< HEAD
-=======
-      buttonText: 'Выбрать подарок',
->>>>>>> 370eca2 (Initial commit)
     },
   ];
 
   const categories = [
-<<<<<<< HEAD
     { name: 'Шоколад', image: chocolateImage, slug: 'chocolates' },
     { name: 'Конфеты', image: candiesImage, slug: 'candies' },
     { name: 'Печенье', image: cookiesImage, slug: 'cookies' },
     { name: 'Аксессуары', image: accessoriesImage, slug: 'accessories' },
     { name: 'SALE', image: saleImage, slug: 'sale' },
-=======
-    { name: 'Шоколад', image: chocolateImage },
-    { name: 'Конфеты', image: candiesImage },
-    { name: 'Печенье', image: cookiesImage },
-    { name: 'Аксессуары', image: accessoriesImage },
-    { name: 'SALE', image: saleImage },
->>>>>>> 370eca2 (Initial commit)
   ];
 
   const handleAddToCart = (productId: string) => {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-<<<<<<< HEAD
     const existing = cartItems.find(item => item.id === productId);
     const currentQuantityInCart = existing ? existing.quantity : 0;
     const newQuantity = currentQuantityInCart + 1;
@@ -137,37 +89,10 @@ export default function Home() {
     toast({
       title: existing ? "Количество обновлено" : "Добавлено в корзину",
       description: existing ? `${product.name} - теперь ${newQuantity} шт.` : product.name,
-=======
-    setCartItems(prev => {
-      const existing = prev.find(item => item.id === productId);
-      if (existing) {
-        toast({
-          title: "Количество обновлено",
-          description: `${product.name} - теперь ${existing.quantity + 1} шт.`,
-        });
-        return prev.map(item =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      toast({
-        title: "Добавлено в корзину",
-        description: product.name,
-      });
-      return [...prev, {
-        id: product.id,
-        name: product.name,
-        price: product.salePrice || product.price,
-        quantity: 1,
-        image: product.image,
-      }];
->>>>>>> 370eca2 (Initial commit)
     });
   };
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
-<<<<<<< HEAD
     const product = products.find(p => p.id === id);
     
     // Проверка наличия на складе при увеличении количества
@@ -185,15 +110,6 @@ export default function Home() {
 
   const handleRemoveItem = (id: string) => {
     removeItem(id);
-=======
-    setCartItems(prev =>
-      prev.map(item => item.id === id ? { ...item, quantity } : item)
-    );
-  };
-
-  const handleRemoveItem = (id: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
->>>>>>> 370eca2 (Initial commit)
     toast({
       title: "Удалено из корзины",
       variant: "destructive",
@@ -201,31 +117,19 @@ export default function Home() {
   };
 
   const handleCheckout = () => {
-<<<<<<< HEAD
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
     setLocation('/checkout');
-=======
-    toast({
-      title: "Оформление заказа",
-      description: "Эта функция будет доступна в полной версии приложения",
-    });
->>>>>>> 370eca2 (Initial commit)
   };
 
   return (
     <div className="min-h-screen flex flex-col relative candy-pattern">
       <Header 
-<<<<<<< HEAD
         cartCount={cartCount}
         wishlistCount={wishlistCount}
-=======
-        cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
->>>>>>> 370eca2 (Initial commit)
         onCartClick={() => setCartOpen(true)}
       />
       
       <main className="flex-1 relative z-10">
-<<<<<<< HEAD
         {/* Coming Soon Banner */}
         <div className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 py-6 sm:py-8 md:py-12 animate-gradient backdrop-blur-sm">
           <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/40 via-purple-200/35 to-yellow-100/40"></div>
@@ -285,10 +189,6 @@ export default function Home() {
         </div>
         
         <HeroSlider slides={slides} />
-=======
-        <HeroSlider slides={slides} />
-        <BenefitsBar />
->>>>>>> 370eca2 (Initial commit)
         
         <section className="py-16 candy-stripe">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -304,11 +204,7 @@ export default function Home() {
                   key={index}
                   name={category.name}
                   image={category.image}
-<<<<<<< HEAD
                   onClick={() => setLocation(`/category/${category.slug}`)}
-=======
-                  onClick={() => console.log('Category clicked:', category.name)}
->>>>>>> 370eca2 (Initial commit)
                 />
               ))}
             </div>
@@ -323,7 +219,6 @@ export default function Home() {
               </h2>
               <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mx-auto shadow-lg shadow-pink-200" />
             </div>
-<<<<<<< HEAD
             {isLoading ? (
               <div className="text-center py-8">
                 <p className="text-muted-foreground">Загрузка товаров...</p>
@@ -345,22 +240,6 @@ export default function Home() {
                 ))}
               </div>
             )}
-=======
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  price={product.price}
-                  salePrice={product.salePrice}
-                  image={product.image}
-                  onAddToCart={handleAddToCart}
-                  onClick={(id) => console.log('Product clicked:', id)}
-                />
-              ))}
-            </div>
->>>>>>> 370eca2 (Initial commit)
           </div>
         </section>
       </main>
