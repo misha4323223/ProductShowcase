@@ -22,7 +22,7 @@ const docClient = DynamoDBDocumentClient.from(client, {
 
 exports.handler = async (event) => {
   try {
-    const productId = event.pathParams?.id || event.queryStringParameters?.id;
+    const productId = event.params?.id || event.pathParams?.id || event.queryStringParameters?.id;
     
     if (!productId) {
       return {
