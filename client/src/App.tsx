@@ -23,9 +23,7 @@ import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
 import FaqPage from "@/pages/FaqPage";
 import NotFound from "@/pages/not-found";
-
 const base = import.meta.env.BASE_URL;
-
 function Router() {
   return (
     <WouterRouter base={base}>
@@ -70,7 +68,6 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-<<<<<<< HEAD
       <AuthProvider>
         <AdminAuthProvider>
           <CartProvider>
@@ -83,12 +80,10 @@ function App() {
           </CartProvider>
         </AdminAuthProvider>
       </AuthProvider>
-=======
       <TooltipProvider>
         <Toaster />
         <Router />
       </TooltipProvider>
->>>>>>> 370eca2 (Initial commit)
     </QueryClientProvider>
   );
 }
