@@ -34,7 +34,7 @@ exports.handler = async (event) => {
 
     const result = await docClient.send(new GetCommand({
       TableName: "wishlists",
-      Key: { userId },
+      Key: { id: userId },
     }));
 
     const items = result.Item?.items || [];
