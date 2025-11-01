@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Sweet Delights API
+  version: 1.0.0
+
+paths:
+  /products:
+    get:
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e4idepedeld78laqoc
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: '*'
+          Access-Control-Allow-Methods: 'GET, POST, OPTIONS'
+          Access-Control-Allow-Headers: 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /products/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e456gq1squ9ai8diod
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: '*'
+          Access-Control-Allow-Methods: 'GET, POST, OPTIONS'
+          Access-Control-Allow-Headers: 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /categories:
+    get:
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e2ld9g5nijdfj1533f
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: '*'
+          Access-Control-Allow-Methods: 'GET, POST, OPTIONS'
+          Access-Control-Allow-Headers: 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /cart/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4esojcuk9b5n3t778dj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: '*'
+          Access-Control-Allow-Methods: 'GET, POST, OPTIONS'
+          Access-Control-Allow-Headers: 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /cart:
+    post:
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ehmac1vf3aaurmkd4v
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: '*'
+          Access-Control-Allow-Methods: 'GET, POST, OPTIONS'
+          Access-Control-Allow-Headers: 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /orders:
+    post:
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4endddm1udm56n8ilqm
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: '*'
+          Access-Control-Allow-Methods: 'GET, POST, OPTIONS'
+          Access-Control-Allow-Headers: 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
