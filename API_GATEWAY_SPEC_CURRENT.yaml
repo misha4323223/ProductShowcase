@@ -497,3 +497,28 @@ paths:
           'Access-Control-Allow-Origin': '*'
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
           'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+
+  # ========== NEWSLETTER SUBSCRIPTIONS ==========
+  /subscribe-newsletter:
+    post:
+      summary: Подписаться на рассылку новостей
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eib9soupsav59r8ctj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Подписка успешно оформлена
+        '400':
+          description: Ошибка валидации или email уже подписан
+        '500':
+          description: Внутренняя ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
