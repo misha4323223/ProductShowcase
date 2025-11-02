@@ -1,81 +1,39 @@
-import { docClient, generateId } from "@/lib/yandex-db";
-import { PutCommand, ScanCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import type { NewsletterSubscription } from "@/types/firebase-types";
-import { sendWelcomeEmail } from "./postbox-client";
-
-const NEWSLETTER_TABLE = "newsletterSubscriptions";
+const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
 export async function subscribeToNewsletter(email: string): Promise<void> {
-  const normalizedEmail = email.toLowerCase().trim();
-  
-  const result = await docClient.send(new ScanCommand({
-    TableName: NEWSLETTER_TABLE,
-  }));
-  
-  const existing = (result.Items || []).find(
-    (item: any) => item.email === normalizedEmail && item.active === true
-  );
-  
-  if (existing) {
-    throw new Error("Этот email уже подписан на рассылку");
-  }
-  
-  const id = generateId();
-  await docClient.send(new PutCommand({
-    TableName: NEWSLETTER_TABLE,
-    Item: {
-      id,
-      email: normalizedEmail,
-      createdAt: new Date().toISOString(),
-      active: true,
+  const response = await fetch(`${API_BASE_URL}/subscribe-newsletter`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-  }));
+    body: JSON.stringify({ email }),
+  });
 
-  // Отправляем приветственное письмо
-  try {
-    await sendWelcomeEmail(normalizedEmail);
-  } catch (error) {
-    console.error('Не удалось отправить приветственное письмо:', error);
-    // Не прерываем процесс, даже если письмо не отправилось
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Не удалось подписаться' }));
+    throw new Error(errorData.error || 'Не удалось подписаться на рассылку');
   }
+
+  return response.json();
 }
 
-export async function getAllNewsletterSubscriptions(): Promise<NewsletterSubscription[]> {
-  const result = await docClient.send(new ScanCommand({
-    TableName: NEWSLETTER_TABLE,
-  }));
-  
-  return (result.Items || [])
-    .filter((item: any) => item.active === true)
-    .map((item: any) => ({
-      ...item,
-      createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
-    })) as NewsletterSubscription[];
+// Эти функции пока оставлены для совместимости с админкой
+// TODO: Перенести на API Gateway когда будут созданы соответствующие endpoints
+
+export async function getAllNewsletterSubscriptions(): Promise<any[]> {
+  console.warn('getAllNewsletterSubscriptions: Функция требует API endpoint');
+  return [];
 }
 
 export async function getActiveNewsletterEmails(): Promise<string[]> {
-  const subscriptions = await getAllNewsletterSubscriptions();
-  return subscriptions.map(sub => sub.email);
+  console.warn('getActiveNewsletterEmails: Функция требует API endpoint');
+  return [];
 }
 
 export async function unsubscribeFromNewsletter(id: string): Promise<void> {
-  await docClient.send(new DeleteCommand({
-    TableName: NEWSLETTER_TABLE,
-    Key: { id },
-  }));
+  console.warn('unsubscribeFromNewsletter: Функция требует API endpoint');
 }
 
 export async function unsubscribeByEmail(email: string): Promise<void> {
-  const normalizedEmail = email.toLowerCase().trim();
-  const result = await docClient.send(new ScanCommand({
-    TableName: NEWSLETTER_TABLE,
-  }));
-  
-  const subscription = (result.Items || []).find(
-    (item: any) => item.email === normalizedEmail
-  );
-  
-  if (subscription) {
-    await unsubscribeFromNewsletter(subscription.id);
-  }
+  console.warn('unsubscribeByEmail: Функция требует API endpoint');
 }
