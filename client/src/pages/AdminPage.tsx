@@ -12,13 +12,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send } from "lucide-react";
 import { getUserOrders, updateOrderStatus, getAllOrders } from "@/services/yandex-orders";
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
 import { getAllPushSubscriptions, deletePushSubscription } from "@/services/yandex-push-subscriptions";
-import type { Order, Review, PromoCode, PushSubscription } from "@/types/firebase-types";
+import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter } from "@/services/yandex-newsletter";
+import { sendNewsletter } from "@/services/postbox-client";
+import type { Order, Review, PromoCode, PushSubscription, NewsletterSubscription } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -74,6 +76,14 @@ const pushNotificationSchema = z.object({
 });
 
 type PushNotificationForm = z.infer<typeof pushNotificationSchema>;
+
+const newsletterSchema = z.object({
+  subject: z.string().trim().min(1, "Тема обязательна"),
+  title: z.string().trim().min(1, "Заголовок обязателен"),
+  message: z.string().trim().min(1, "Сообщение обязательно"),
+});
+
+type NewsletterForm = z.infer<typeof newsletterSchema>;
 
 function PushNotificationForm() {
   const { toast } = useToast();
@@ -236,6 +246,11 @@ export default function AdminPage() {
     queryFn: getAllPushSubscriptions,
   });
 
+  const { data: newsletterSubscriptions = [], isLoading: newsletterLoading } = useQuery<NewsletterSubscription[]>({
+    queryKey: ["/api/admin/newsletter-subscriptions"],
+    queryFn: getAllNewsletterSubscriptions,
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -290,6 +305,15 @@ export default function AdminPage() {
       startDate: "",
       endDate: "",
       active: true,
+    },
+  });
+
+  const newsletterForm = useForm<NewsletterForm>({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: {
+      subject: "Магазин Sweet Delights открыт!",
+      title: "Мы открылись!",
+      message: "<p>Дорогие подписчики!</p><p>Наш магазин <strong>Sweet Delights</strong> теперь открыт! Мы рады предложить вам широкий ассортимент вкусных сладостей.</p><p>Заходите к нам за лучшими десертами!</p>",
     },
   });
 
@@ -669,7 +693,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6 mb-6">
+        <TabsList className="grid w-full grid-cols-7 mb-6">
           <TabsTrigger value="orders" data-testid="tab-orders">
             <ShoppingBag className="w-4 h-4 mr-2" />
             Заказы ({allOrders.length})
@@ -681,6 +705,10 @@ export default function AdminPage() {
           <TabsTrigger value="promocodes" data-testid="tab-promocodes">
             <Ticket className="w-4 h-4 mr-2" />
             Промокоды
+          </TabsTrigger>
+          <TabsTrigger value="newsletter" data-testid="tab-newsletter">
+            <Mail className="w-4 h-4 mr-2" />
+            Рассылка ({newsletterSubscriptions.length})
           </TabsTrigger>
           <TabsTrigger value="notifications" data-testid="tab-notifications">
             <Bell className="w-4 h-4 mr-2" />
@@ -1138,6 +1166,155 @@ export default function AdminPage() {
                           {promo.active ? "Деактивировать" : "Активировать"}
                         </Button>
                       </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="newsletter" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Массовая рассылка по Email</CardTitle>
+              <CardDescription>
+                Отправьте письмо всем подписчикам на рассылку ({newsletterSubscriptions.length} чел.)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...newsletterForm}>
+                <form
+                  onSubmit={newsletterForm.handleSubmit(async (data) => {
+                    try {
+                      const emails = newsletterSubscriptions.map(sub => sub.email);
+                      if (emails.length === 0) {
+                        toast({
+                          title: "Нет подписчиков",
+                          description: "На рассылку пока никто не подписался",
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+
+                      const sentCount = await sendNewsletter(emails, {
+                        subject: data.subject,
+                        title: data.title,
+                        message: data.message,
+                      });
+
+                      toast({
+                        title: "Рассылка отправлена!",
+                        description: `Успешно отправлено ${sentCount} из ${emails.length} писем`,
+                      });
+                      newsletterForm.reset();
+                    } catch (error: any) {
+                      toast({
+                        title: "Ошибка отправки",
+                        description: error.message,
+                        variant: "destructive",
+                      });
+                    }
+                  })}
+                  className="space-y-4"
+                >
+                  <FormField
+                    control={newsletterForm.control}
+                    name="subject"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Тема письма</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Магазин открыт!" data-testid="input-newsletter-subject" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={newsletterForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Заголовок в письме</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Мы открылись!" data-testid="input-newsletter-title" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={newsletterForm.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Текст письма (HTML)</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} placeholder="<p>Ваше сообщение...</p>" rows={8} data-testid="input-newsletter-message" />
+                        </FormControl>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Можно использовать HTML: &lt;p&gt;, &lt;strong&gt;, &lt;a&gt; и т.д.
+                        </p>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="w-full" data-testid="button-send-newsletter">
+                    <Send className="w-4 h-4 mr-2" />
+                    Отправить рассылку всем подписчикам
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Подписчики на рассылку</CardTitle>
+              <CardDescription>
+                Список email адресов подписанных на новости
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {newsletterLoading ? (
+                <p className="text-muted-foreground">Загрузка...</p>
+              ) : newsletterSubscriptions.length === 0 ? (
+                <p className="text-muted-foreground">Пока нет подписчиков</p>
+              ) : (
+                <div className="space-y-2">
+                  {newsletterSubscriptions.map((subscription) => (
+                    <div
+                      key={subscription.id}
+                      className="border rounded-lg p-3 flex items-center justify-between gap-4"
+                      data-testid={`newsletter-subscription-${subscription.id}`}
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium">{subscription.email}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Подписан: {subscription.createdAt.toLocaleDateString('ru-RU')}
+                        </p>
+                      </div>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={async () => {
+                          try {
+                            await unsubscribeFromNewsletter(subscription.id);
+                            queryClient.invalidateQueries({ queryKey: ["/api/admin/newsletter-subscriptions"] });
+                            toast({ title: "Подписчик удален" });
+                          } catch (error: any) {
+                            toast({
+                              title: "Ошибка",
+                              description: error.message,
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                        data-testid={`button-delete-newsletter-${subscription.id}`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
                   ))}
                 </div>

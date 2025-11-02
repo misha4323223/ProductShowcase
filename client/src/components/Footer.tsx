@@ -5,10 +5,55 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Link } from "wouter";
 import LegalDialog from "@/components/LegalDialog";
+import { subscribeToNewsletter } from "@/services/yandex-newsletter";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const { toast } = useToast();
+
+  const handleNewsletterSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newsletterEmail.trim()) {
+      toast({
+        title: "Введите email",
+        description: "Пожалуйста, введите ваш email для подписки",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newsletterEmail)) {
+      toast({
+        title: "Некорректный email",
+        description: "Пожалуйста, введите правильный email адрес",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubscribing(true);
+    try {
+      await subscribeToNewsletter(newsletterEmail);
+      toast({
+        title: "Успешно подписались!",
+        description: "Вы будете получать новости об открытии магазина и эксклюзивные предложения",
+      });
+      setNewsletterEmail("");
+    } catch (error: any) {
+      toast({
+        title: "Ошибка подписки",
+        description: error.message || "Не удалось подписаться на рассылку",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   return (
     <>
@@ -72,19 +117,26 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Подписка на новости</h4>
             <p className="text-sm text-muted-foreground mb-3">
-              Получайте эксклюзивные предложения и новости о новинках
+              Узнайте первыми об открытии магазина и получайте эксклюзивные предложения
             </p>
-            <div className="flex gap-2">
+            <form onSubmit={handleNewsletterSubscribe} className="flex gap-2">
               <Input 
                 type="email" 
                 placeholder="Ваш email" 
                 className="flex-1"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                disabled={isSubscribing}
                 data-testid="input-newsletter-email"
               />
-              <Button data-testid="button-subscribe">
-                Подписаться
+              <Button 
+                type="submit" 
+                disabled={isSubscribing}
+                data-testid="button-subscribe"
+              >
+                {isSubscribing ? "..." : "Подписаться"}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
 
