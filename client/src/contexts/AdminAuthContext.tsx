@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 
+const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 const ADMIN_EMAIL = "admin@sweetdelights.com";
 
 interface AdminAuthContextType {
@@ -18,17 +17,42 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.email === ADMIN_EMAIL) {
-        setIsAuthenticated(true);
+    const token = localStorage.getItem('adminAuthToken');
+    if (token) {
+      verifyAdminToken(token);
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const verifyAdminToken = async (token: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.valid && data.user && data.user.email === ADMIN_EMAIL && data.user.role === 'admin') {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('adminAuthToken');
+          setIsAuthenticated(false);
+        }
       } else {
+        localStorage.removeItem('adminAuthToken');
         setIsAuthenticated(false);
       }
+    } catch (error) {
+      console.error('Admin token verification failed:', error);
+      localStorage.removeItem('adminAuthToken');
+      setIsAuthenticated(false);
+    } finally {
       setIsLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+    }
+  };
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -36,30 +60,42 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         return { success: false, error: "Доступ запрещен" };
       }
 
-      await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        let errorMessage = "Ошибка входа";
+        
+        if (error.error === "Неверный email или пароль") {
+          errorMessage = "Неверный email или пароль";
+        }
+        
+        return { success: false, error: errorMessage };
+      }
+
+      const data = await response.json();
+      
+      if (data.user.role !== 'admin') {
+        return { success: false, error: "Доступ запрещен" };
+      }
+
+      localStorage.setItem('adminAuthToken', data.token);
       setIsAuthenticated(true);
       return { success: true };
+      
     } catch (error: any) {
       console.error("Ошибка при входе:", error);
-      
-      let errorMessage = "Ошибка входа";
-      if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found") {
-        errorMessage = "Неверный email или пароль";
-      } else if (error.code === "auth/invalid-email") {
-        errorMessage = "Неверный формат email";
-      } else if (error.code === "auth/too-many-requests") {
-        errorMessage = "Слишком много попыток. Попробуйте позже";
-      } else if (error.code === "auth/invalid-credential") {
-        errorMessage = "Неверные данные для входа";
-      }
-      
-      return { success: false, error: errorMessage };
+      return { success: false, error: "Ошибка соединения" };
     }
   };
 
   const logout = async () => {
     try {
-      await signOut(auth);
+      localStorage.removeItem('adminAuthToken');
       setIsAuthenticated(false);
     } catch (error) {
       console.error("Ошибка при выходе:", error);
