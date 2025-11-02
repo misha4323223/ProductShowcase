@@ -34,7 +34,13 @@ async function sendEmail({ to, subject, htmlBody, textBody, from }) {
   };
 
   const command = new SendEmailCommand(params);
-  return await sesClient.send(command);
+  const result = await sesClient.send(command);
+  
+  // Возвращаем только нужные данные в валидном JSON формате
+  return {
+    messageId: result.MessageId,
+    success: true
+  };
 }
 
 exports.handler = async (event) => {
