@@ -2,7 +2,7 @@ const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 
 const sesClient = new SESClient({
   region: "ru-central1",
-  endpoint: "https://postbox.cloud.yandex.net",
+  endpoint: "https://postbox.cloud.yandex.net/",
   credentials: {
     accessKeyId: process.env.POSTBOX_ACCESS_KEY_ID,
     secretAccessKey: process.env.POSTBOX_SECRET_KEY,
