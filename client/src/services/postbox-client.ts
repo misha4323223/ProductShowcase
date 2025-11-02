@@ -123,3 +123,13 @@ export async function sendNewsletter(emails: string[], params: NewsletterParams)
   
   return sentCount;
 }
+
+export async function sendWelcomeEmail(email: string): Promise<void> {
+  try {
+    await sendEmailViaCloudFunction('welcome_newsletter', email, {});
+    console.log('Приветственное письмо отправлено:', email);
+  } catch (error) {
+    console.error('Ошибка отправки приветственного письма:', error);
+    throw error;
+  }
+}

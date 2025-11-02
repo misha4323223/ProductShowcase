@@ -100,15 +100,6 @@ export interface StockNotification {
   notified?: boolean;
 }
 
-export interface PushSubscription {
-  id: string;
-  subscriptionId: string;
-  subscriptionToken?: string;
-  createdAt: Date;
-  status: 'subscribed' | 'unsubscribed';
-  lastUpdated: Date;
-}
-
 export interface NewsletterSubscription {
   id: string;
   email: string;

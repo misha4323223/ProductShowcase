@@ -1,6 +1,7 @@
 import { docClient, generateId } from "@/lib/yandex-db";
 import { PutCommand, ScanCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import type { NewsletterSubscription } from "@/types/firebase-types";
+import { sendWelcomeEmail } from "./postbox-client";
 
 const NEWSLETTER_TABLE = "newsletterSubscriptions";
 
@@ -29,6 +30,14 @@ export async function subscribeToNewsletter(email: string): Promise<void> {
       active: true,
     },
   }));
+
+  // Отправляем приветственное письмо
+  try {
+    await sendWelcomeEmail(normalizedEmail);
+  } catch (error) {
+    console.error('Не удалось отправить приветственное письмо:', error);
+    // Не прерываем процесс, даже если письмо не отправилось
+  }
 }
 
 export async function getAllNewsletterSubscriptions(): Promise<NewsletterSubscription[]> {
