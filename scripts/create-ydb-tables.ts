@@ -18,7 +18,8 @@ const tables = [
   'carts',
   'wishlists',
   'stockNotifications',
-  'pushSubscriptions'
+  'pushSubscriptions',
+  'newsletterSubscriptions'
 ];
 
 async function createTable(tableName: string) {
