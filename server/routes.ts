@@ -1,30 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { initializeFirebaseAdmin, verifyFirebaseToken, isAdmin } from "./firebase-admin";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  initializeFirebaseAdmin();
 
   app.post("/api/send-stock-notifications", async (req, res) => {
     try {
-      const authHeader = req.headers.authorization;
-      
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: "Unauthorized: Missing token" });
-      }
-      
-      const idToken = authHeader.split('Bearer ')[1];
-      const decodedToken = await verifyFirebaseToken(idToken);
-      
-      if (!decodedToken) {
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
-      }
-      
-      if (!isAdmin(decodedToken)) {
-        return res.status(403).json({ error: "Forbidden: Admin access required" });
-      }
-      
       const { productId, productName, productUrl } = req.body;
       
       if (!productId || !productName || !productUrl) {
@@ -100,23 +81,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/send-push-notification", async (req, res) => {
     try {
-      const authHeader = req.headers.authorization;
-      
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: "Unauthorized: Missing token" });
-      }
-      
-      const idToken = authHeader.split('Bearer ')[1];
-      const decodedToken = await verifyFirebaseToken(idToken);
-      
-      if (!decodedToken) {
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
-      }
-      
-      if (!isAdmin(decodedToken)) {
-        return res.status(403).json({ error: "Forbidden: Admin access required" });
-      }
-
       const oneSignalAppId = process.env.ONESIGNAL_APP_ID;
       const oneSignalRestApiKey = process.env.ONESIGNAL_REST_API_KEY;
 

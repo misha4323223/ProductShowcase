@@ -1,13 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { 
-  User,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  sendPasswordResetEmail,
-  onAuthStateChanged
-} from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+
+const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
+
+interface User {
+  userId: string;
+  email: string;
+  role: string;
+}
 
 interface AuthContextType {
   user: User | null;
@@ -25,34 +24,103 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      verifyToken(token);
+    } else {
       setLoading(false);
-    });
-
-    return unsubscribe;
+    }
   }, []);
+
+  const verifyToken = async (token: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.valid && data.user) {
+          setUser(data.user);
+        } else {
+          localStorage.removeItem('authToken');
+          setUser(null);
+        }
+      } else {
+        localStorage.removeItem('authToken');
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      localStorage.removeItem('authToken');
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const signUp = async (email: string, password: string) => {
     const trimmedEmail = email.trim().toLowerCase();
-    await createUserWithEmailAndPassword(auth, trimmedEmail, password);
+    
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: trimmedEmail, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Ошибка регистрации');
+    }
+
+    const data = await response.json();
+    localStorage.setItem('authToken', data.token);
+    setUser(data.user);
   };
 
   const signIn = async (email: string, password: string) => {
     const trimmedEmail = email.trim().toLowerCase();
-    await signInWithEmailAndPassword(auth, trimmedEmail, password);
+    
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: trimmedEmail, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Ошибка входа');
+    }
+
+    const data = await response.json();
+    localStorage.setItem('authToken', data.token);
+    setUser(data.user);
   };
 
   const signOut = async () => {
-    await firebaseSignOut(auth);
+    localStorage.removeItem('authToken');
+    setUser(null);
   };
 
   const resetPassword = async (email: string) => {
     const trimmedEmail = email.trim().toLowerCase();
+    
     if (!trimmedEmail) {
       throw new Error('Введите email адрес');
     }
-    await sendPasswordResetEmail(auth, trimmedEmail);
+
+    const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: trimmedEmail, action: 'request' }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Ошибка сброса пароля');
+    }
   };
 
   return (
