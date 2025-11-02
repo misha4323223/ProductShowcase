@@ -108,3 +108,10 @@ export interface PushSubscription {
   status: 'subscribed' | 'unsubscribed';
   lastUpdated: Date;
 }
+
+export interface NewsletterSubscription {
+  id: string;
+  email: string;
+  createdAt: Date;
+  active: boolean;
+}
