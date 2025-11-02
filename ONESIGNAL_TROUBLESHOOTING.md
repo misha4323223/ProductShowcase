@@ -174,9 +174,9 @@ importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
 
 ### Если вам нужна email рассылка:
 Это другой функционал! Для сбора email нужно:
-1. Добавить форму с полем Email
-2. Сохранять email в Firebase (у вас уже есть `stockNotifications` коллекция)
-3. Использовать EmailJS для отправки писем (у вас уже настроен)
+1. Добавить форму с полем Email (уже есть в футере)
+2. Сохранять email в YDB (коллекция `newsletterSubscriptions`)
+3. Использовать Yandex Cloud Postbox для отправки писем (см. YANDEX_POSTBOX_SETUP.md)
 
 **OneSignal и Email рассылка - это два разных инструмента!**
 

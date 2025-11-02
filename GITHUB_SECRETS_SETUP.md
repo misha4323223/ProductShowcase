@@ -48,23 +48,20 @@
 
 ---
 
-### EmailJS (опционально, если используете)
+### Yandex Cloud Postbox (email notifications)
 
-**9. VITE_EMAILJS_SERVICE_ID**
-- Значение: ваш service ID от EmailJS
-
-**10. VITE_EMAILJS_TEMPLATE_ID**
-- Значение: ваш template ID от EmailJS
-
-**11. VITE_EMAILJS_PUBLIC_KEY**
-- Значение: ваш public key от EmailJS
+**9. VITE_API_GATEWAY_URL**
+- Значение: URL вашего Yandex API Gateway
+- Пример: `https://your-gateway-id.apigw.yandexcloud.net`
+- Используется для отправки email через Cloud Function
+- См. инструкцию в YANDEX_POSTBOX_SETUP.md
 
 ---
 
 ## ✅ Проверка
 
 После добавления всех секретов:
-1. В разделе Secrets должно быть 8-11 переменных
+1. В разделе Secrets должно быть 9 переменных
 2. Каждая должна иметь зелёную галочку
 3. Значения скрыты (показываются как `***`)
 
