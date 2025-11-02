@@ -190,17 +190,18 @@ Configured in both TypeScript and Vite:
 - Firebase Auth always lowercases emails in tokens, ensure rules match
 - Promo code rules update needed: See FIREBASE_RULES_UPDATE.md for instructions
 
-**Email Notification System** (October 2025):
-- Automated email notifications via EmailJS (client-side email service)
+**Email Notification System** (November 2025):
+- Automated email notifications via Yandex Cloud Postbox (AWS SES-compatible email service)
 - Order confirmations sent to customers after checkout
 - Stock availability notifications when out-of-stock items return
-- Service layer: `client/src/services/emailjs.ts`, `client/src/services/yandex-stock-notifications.ts`
-- Free tier: 200 emails/month (sufficient for ~200 orders or mixed usage)
-- **Current Status**: Code integrated, EmailJS account created, awaiting template/key configuration
-- Setup instructions: See `EMAILJS_SETUP.md` for full guide, `EMAILJS_CHECKLIST.md` for quick steps
-- Templates: Order confirmation + stock notification (need to be configured in EmailJS dashboard)
-- Environment variables needed: VITE_EMAILJS_PUBLIC_KEY, VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_ORDER_TEMPLATE_ID, VITE_EMAILJS_STOCK_TEMPLATE_ID
-- Types: `client/src/types/firebase-types.ts` (StockNotification interface)
+- Newsletter subscriptions for pre-launch updates
+- Service layer: `client/src/services/postbox-client.ts`, `client/src/services/yandex-newsletter.ts`
+- Cloud Function: `yandex-functions/send-email/index.js` serves as proxy to Postbox API
+- **Current Status**: Code integrated, awaiting Postbox credentials and API Gateway setup
+- Setup instructions: See `YANDEX_POSTBOX_SETUP.md` for complete configuration guide
+- Templates: Order confirmation, stock notification, and newsletter (all HTML-based)
+- Environment variable needed: VITE_API_GATEWAY_URL (points to Cloud Function endpoint)
+- Types: `client/src/types/firebase-types.ts` (StockNotification, NewsletterSubscription interfaces)
 
 **Legal Compliance** (October 2025):
 - Privacy Policy page (`/privacy`) - Политика конфиденциальности (152-ФЗ compliance)
@@ -230,12 +231,14 @@ Configured in both TypeScript and Vite:
   - Admin email: pimashin2015@gmail.com
   - Authentication state management via Firebase Auth SDK
 
-**Email Service**: EmailJS
-- Client-side email service integrated with user's Gmail account
-- Sends order confirmations and stock availability notifications
-- Free tier: 200 emails/month
-- No server-side code required - works directly from GitHub Pages
-- Configuration: See EMAILJS_SETUP.md for setup instructions
+**Email Service**: Yandex Cloud Postbox
+- AWS SES-compatible email service via Yandex Cloud
+- Sends order confirmations, stock notifications, and newsletters
+- Architecture: Static site → API Gateway → Cloud Function → Postbox API
+- Cloud Function serves as secure proxy (credentials not exposed to client)
+- Newsletter system with YDB storage for subscriber management
+- Admin panel integration for bulk email sending
+- Configuration: See YANDEX_POSTBOX_SETUP.md for setup instructions
 
 **Push Notifications**: OneSignal (October 2025)
 - Web push notifications for browser alerts

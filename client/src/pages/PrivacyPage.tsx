@@ -153,7 +153,7 @@ export default function PrivacyPage() {
               </p>
               <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
                 <li>Службам доставки — для доставки ваших заказов</li>
-                <li>Сервисам email-рассылки (EmailJS) — для отправки уведомлений о заказах</li>
+                <li>Yandex Cloud — для хранения данных и отправки email-уведомлений</li>
                 <li>По требованию правоохранительных органов в случаях, предусмотренных законодательством РФ</li>
               </ul>
             </section>

@@ -1,7 +1,7 @@
 import { collection, doc, getDocs, setDoc, deleteDoc, query, where } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import type { StockNotification } from "@/types/firebase-types";
-import { sendBulkStockNotifications } from "@/services/emailjs";
+import { sendBulkStockNotifications } from "@/services/postbox-client";
 
 export async function subscribeToStockNotification(
   productId: string,
