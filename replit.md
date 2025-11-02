@@ -181,10 +181,15 @@ Configured in both TypeScript and Vite:
 - Welcome emails sent automatically upon newsletter subscription
 - Admin panel includes bulk email functionality for newsletter campaigns
 - Service layer: `client/src/services/postbox-client.ts`, `client/src/services/yandex-newsletter.ts`
-- Cloud Function: `yandex-functions/send-email/index.js` serves as proxy to Postbox API
+- Cloud Functions: 
+  - `send-email` (index.js) - serves as proxy to Postbox API
+  - `subscribe-newsletter` (d4eib9soupsav59r8ctj) - handles newsletter subscriptions with YDB integration
+- Architecture: Browser → API Gateway → Cloud Function → YDB + Postbox
+- Newsletter subscription flow: Users subscribe via Footer/HeroSlider → API Gateway `/subscribe-newsletter` → Cloud Function saves to YDB + sends welcome email
 - Templates: Order confirmation, stock notification, newsletter, and welcome email (all HTML-based)
-- Environment variable needed: VITE_API_GATEWAY_URL (points to Cloud Function endpoint)
+- Environment variable needed: VITE_API_GATEWAY_URL (points to API Gateway base URL)
 - Types: `client/src/types/firebase-types.ts` (StockNotification, NewsletterSubscription interfaces)
+- Security: Database credentials NOT exposed to browser - all DB operations via Cloud Functions
 - **Note**: OneSignal push notifications have been completely removed - all notifications now use email-based system
 
 **Legal Compliance**:
