@@ -1,7 +1,7 @@
 import { docClient, generateId } from "@/lib/yandex-db";
 import { PutCommand, ScanCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import type { StockNotification } from "@/types/firebase-types";
-import { sendBulkStockNotifications } from "@/services/emailjs";
+import { sendBulkStockNotifications } from "@/services/postbox-client";
 
 const STOCK_NOTIFICATIONS_TABLE = "stockNotifications";
 
