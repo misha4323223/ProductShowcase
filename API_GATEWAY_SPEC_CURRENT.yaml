@@ -509,10 +509,6 @@ paths:
       responses:
         '200':
           description: Подписка успешно оформлена
-        '400':
-          description: Ошибка валидации или email уже подписан
-        '500':
-          description: Внутренняя ошибка сервера
     options:
       summary: CORS preflight
       x-yc-apigateway-integration:
