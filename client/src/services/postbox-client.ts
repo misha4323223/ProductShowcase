@@ -1,4 +1,5 @@
-const API_GATEWAY_URL = 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
+const API_GATEWAY_URL = import.meta.env.VITE_API_GATEWAY_URL 
+  || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
 
 export interface OrderEmailParams {
   customerEmail: string;
