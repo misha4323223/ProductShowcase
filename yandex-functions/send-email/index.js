@@ -5,13 +5,13 @@ const sesClient = new SESClient({
   endpoint: "https://postbox.cloud.yandex.net/",
   credentials: {
     accessKeyId: process.env.POSTBOX_ACCESS_KEY_ID,
-    secretAccessKey: process.env.POSTBOX_SECRET_KEY,
+    secretAccessKey: process.env.POSTBOX_SECRET_ACCESS_KEY,
   },
 });
 
 async function sendEmail({ to, subject, htmlBody, textBody, from }) {
   const params = {
-    Source: from || process.env.POSTBOX_FROM_EMAIL,
+    Source: from || process.env.FROM_EMAIL,
     Destination: {
       ToAddresses: Array.isArray(to) ? to : [to],
     },
