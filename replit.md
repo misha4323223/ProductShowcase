@@ -2,11 +2,7 @@
 
 ## Overview
 
-<<<<<<< HEAD
-Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a static React TypeScript application deployed on GitHub Pages with Firebase backend (Firestore, Authentication, Cloud Functions), it provides a modern shopping experience with product browsing, cart management, automated stock notifications, and responsive design.
-=======
-Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a full-stack TypeScript application using React and Express, it provides a modern shopping experience with product browsing, cart management, and responsive design.
->>>>>>> 370eca2 (Initial commit)
+Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a static React TypeScript application deployed on GitHub Pages with Yandex Cloud backend services, it provides a modern shopping experience with product browsing, cart management, automated email notifications, and responsive design.
 
 ## User Preferences
 
@@ -29,29 +25,17 @@ Preferred communication style: Simple, everyday language.
 - Custom animations and effects (candy-wrapper, lollipop-swirl, sugar-crystals, etc.)
 - Light/dark mode support with HSL color variables
 - Responsive breakpoints for mobile-first design
-<<<<<<< HEAD
-- **iOS Safari Compatibility** (October 2025): Touch event handlers for mobile menu, disabled mouse-move parallax on touch devices, WebKit-specific CSS fixes for tap highlights and sticky positioning
+- **iOS Safari Compatibility**: Touch event handlers for mobile menu, disabled mouse-move parallax on touch devices, WebKit-specific CSS fixes for tap highlights and sticky positioning
 
 **Key Components**:
 - `Header`: Sticky navigation with cart, search, and mobile menu (with iOS touch event support)
-- `HeroSlider`: Auto-rotating image carousel for promotions
+- `HeroSlider`: Auto-rotating image carousel for promotions with email subscription dialog
 - `ProductCard`: Animated product display with add-to-cart (parallax disabled on touch devices)
 - `ShoppingCart`: Side-panel cart with quantity management
 - `CategoryCard`: Visual category navigation
 - `BenefitsBar`: Feature highlights (shipping, returns, etc.)
-- `Footer`: Contact info, newsletter signup, social links, legal document links (modal + full pages)
+- `Footer`: Contact info, newsletter signup (email-based), social links, legal document links (modal + full pages)
 - `LegalDialog`: Modal component for quick preview of legal documents (Privacy/Terms)
-=======
-
-**Key Components**:
-- `Header`: Sticky navigation with cart, search, and mobile menu
-- `HeroSlider`: Auto-rotating image carousel for promotions
-- `ProductCard`: Animated product display with add-to-cart
-- `ShoppingCart`: Side-panel cart with quantity management
-- `CategoryCard`: Visual category navigation
-- `BenefitsBar`: Feature highlights (shipping, returns, etc.)
-- `Footer`: Contact info, newsletter signup, social links
->>>>>>> 370eca2 (Initial commit)
 
 ### Backend Architecture
 
@@ -153,8 +137,7 @@ Configured in both TypeScript and Vite:
 - **express-session**: Session middleware (ready for implementation)
 - **connect-pg-simple**: PostgreSQL session store (ready for implementation)
 
-<<<<<<< HEAD
-### Database Migration Status (October 2025)
+### Database Migration Status (November 2025)
 
 **✅ Migrated to Yandex Cloud YDB:**
 - Products and categories (yandex-products.ts)
@@ -164,7 +147,7 @@ Configured in both TypeScript and Vite:
 - Reviews (yandex-reviews.ts)
 - Promo codes (yandex-promocodes.ts)
 - Stock notifications (yandex-stock-notifications.ts)
-- Push subscriptions (yandex-push-subscriptions.ts)
+- Newsletter subscriptions (yandex-newsletter.ts)
 
 **⚠️ Still using Firebase:**
 - Authentication (Firebase Auth with email/password)
@@ -175,8 +158,8 @@ Configured in both TypeScript and Vite:
 - Old service files (firebase-*.ts) kept for reference but no longer used
 - Types still in firebase-types.ts for compatibility
 
-**Promo Code System** (October 2025):
-- Full CRUD interface in admin panel (5th tab)
+**Promo Code System**:
+- Full CRUD interface in admin panel
 - Support for percentage and fixed amount discounts
 - Optional features: min order amount, usage limits, start/end dates, active/inactive toggle
 - Real-time validation during checkout with discount calculation
@@ -191,19 +174,20 @@ Configured in both TypeScript and Vite:
 - Promo code rules update needed: See FIREBASE_RULES_UPDATE.md for instructions
 
 **Email Notification System** (November 2025):
-- Automated email notifications via Yandex Cloud Postbox (AWS SES-compatible email service)
+- **PRIMARY NOTIFICATION METHOD**: All user notifications via Yandex Cloud Postbox (AWS SES-compatible email service)
 - Order confirmations sent to customers after checkout
 - Stock availability notifications when out-of-stock items return
-- Newsletter subscriptions for pre-launch updates
+- Newsletter subscriptions for updates and promotions
+- Welcome emails sent automatically upon newsletter subscription
+- Admin panel includes bulk email functionality for newsletter campaigns
 - Service layer: `client/src/services/postbox-client.ts`, `client/src/services/yandex-newsletter.ts`
 - Cloud Function: `yandex-functions/send-email/index.js` serves as proxy to Postbox API
-- **Current Status**: Code integrated, awaiting Postbox credentials and API Gateway setup
-- Setup instructions: See `YANDEX_POSTBOX_SETUP.md` for complete configuration guide
-- Templates: Order confirmation, stock notification, and newsletter (all HTML-based)
+- Templates: Order confirmation, stock notification, newsletter, and welcome email (all HTML-based)
 - Environment variable needed: VITE_API_GATEWAY_URL (points to Cloud Function endpoint)
 - Types: `client/src/types/firebase-types.ts` (StockNotification, NewsletterSubscription interfaces)
+- **Note**: OneSignal push notifications have been completely removed - all notifications now use email-based system
 
-**Legal Compliance** (October 2025):
+**Legal Compliance**:
 - Privacy Policy page (`/privacy`) - Политика конфиденциальности (152-ФЗ compliance)
 - Terms of Service page (`/terms`) - Договор публичной оферты
 - Compromise UX: Full pages accessible via direct links + modal dialogs from footer
@@ -220,7 +204,7 @@ Configured in both TypeScript and Vite:
 - Environment variables configured as GitHub Secrets
 
 **Backend Services**: 
-- **Yandex Cloud YDB**: Main database for products, orders, reviews, promo codes, stock notifications, wishlists, carts, push subscriptions
+- **Yandex Cloud YDB**: Main database for products, orders, reviews, promo codes, stock notifications, wishlists, carts, newsletter subscriptions
   - Document API mode (DynamoDB-compatible)
   - Serverless deployment in ru-central1 region
   - Service files: `client/src/services/yandex-*.ts`
@@ -237,31 +221,8 @@ Configured in both TypeScript and Vite:
 - Architecture: Static site → API Gateway → Cloud Function → Postbox API
 - Cloud Function serves as secure proxy (credentials not exposed to client)
 - Newsletter system with YDB storage for subscriber management
-- Admin panel integration for bulk email sending
+- Admin panel integration for bulk email sending and subscriber management
 - Configuration: See YANDEX_POSTBOX_SETUP.md for setup instructions
-
-**Push Notifications**: OneSignal (October 2025)
-- Web push notifications for browser alerts
-- App ID: db150a33-35e8-4669-94eb-27f4be9b07b2
-- REST API Key: Stored in ONESIGNAL_REST_API_KEY secret
-- **Frontend Integration**:
-  - Subscribe button in HeroSlider component
-  - Service worker: client/public/OneSignalSDKWorker.js
-  - Initialization in client/index.html with SDK v16
-- **Backend Integration**:
-  - API endpoint: POST /api/send-push-notification
-  - Admin-only access (Firebase Auth + isAdmin check)
-  - Sends notifications to all OneSignal subscribers
-  - Located in server/routes.ts
-- **Admin Panel**:
-  - Push notification form in AdminPage (Notifications tab)
-  - Fields: title, message, URL (optional)
-  - PushNotificationForm component with zod validation
-- **Current Status**: Fully integrated and functional
-- **CRITICAL**: Site URL in OneSignal must be https://sweetdelights.store (not GitHub Pages URL)
-- Setup instructions: See ONESIGNAL_SETUP.md for configuration
-- Troubleshooting: See ONESIGNAL_TROUBLESHOOTING.md for diagnostics
-- **Note**: OneSignal push notifications DO NOT collect emails - they subscribe browser to receive notifications
 
 ### Notes
 - Image assets stored in `attached_assets/generated_images/`
@@ -269,10 +230,3 @@ Configured in both TypeScript and Vite:
 - Firebase project ID: sweetweb-3543f
 - GitHub repository: misha4323223/ProductShowcase
 - Deployment instructions: See `DEPLOY_INSTRUCTIONS.md`
-=======
-### Notes
-- Product data currently mocked in `client/src/lib/products.ts`
-- Image assets stored in `attached_assets/generated_images/`
-- Database connection requires `DATABASE_URL` environment variable
-- Application designed for Russian language market (content in Russian)
->>>>>>> 370eca2 (Initial commit)

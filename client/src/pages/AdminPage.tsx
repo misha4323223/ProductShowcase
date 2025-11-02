@@ -17,10 +17,9 @@ import { getUserOrders, updateOrderStatus, getAllOrders } from "@/services/yande
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
-import { getAllPushSubscriptions, deletePushSubscription } from "@/services/yandex-push-subscriptions";
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
-import type { Order, Review, PromoCode, PushSubscription, NewsletterSubscription } from "@/types/firebase-types";
+import type { Order, Review, PromoCode, NewsletterSubscription } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -69,14 +68,6 @@ type Category = z.infer<typeof categorySchema>;
 type Product = z.infer<typeof productSchema>;
 type PromoCodeForm = z.infer<typeof promoCodeSchema>;
 
-const pushNotificationSchema = z.object({
-  title: z.string().trim().min(1, "Заголовок обязателен"),
-  message: z.string().trim().min(1, "Сообщение обязательно"),
-  url: z.string().trim().optional(),
-});
-
-type PushNotificationForm = z.infer<typeof pushNotificationSchema>;
-
 const newsletterSchema = z.object({
   subject: z.string().trim().min(1, "Тема обязательна"),
   title: z.string().trim().min(1, "Заголовок обязателен"),
@@ -84,118 +75,6 @@ const newsletterSchema = z.object({
 });
 
 type NewsletterForm = z.infer<typeof newsletterSchema>;
-
-function PushNotificationForm() {
-  const { toast } = useToast();
-
-  const pushForm = useForm<PushNotificationForm>({
-    resolver: zodResolver(pushNotificationSchema),
-    defaultValues: {
-      title: "Магазин Sweet Delights открыт!",
-      message: "Заходите к нам за самыми вкусными сладостями!",
-      url: "https://sweetdelights.store",
-    },
-  });
-
-  const sendPushMutation = useMutation({
-    mutationFn: async (data: PushNotificationForm) => {
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        throw new Error("Не авторизован");
-      }
-
-      const idToken = await currentUser.getIdToken();
-
-      const response = await fetch("/api/send-push-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Ошибка отправки уведомления");
-      }
-
-      return await response.json();
-    },
-    onSuccess: (data: any) => {
-      toast({ 
-        title: "Push-уведомление отправлено!", 
-        description: `Доставлено ${data.recipients || 0} подписчикам` 
-      });
-      pushForm.reset();
-    },
-    onError: (error: any) => {
-      toast({ 
-        title: "Ошибка отправки", 
-        description: error.message,
-        variant: "destructive"
-      });
-    },
-  });
-
-  return (
-    <Form {...pushForm}>
-      <form onSubmit={pushForm.handleSubmit((data) => sendPushMutation.mutate(data))} className="space-y-4">
-        <FormField
-          control={pushForm.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Заголовок уведомления</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Магазин открыт!" data-testid="input-push-title" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={pushForm.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Текст уведомления</FormLabel>
-              <FormControl>
-                <Textarea {...field} placeholder="Заходите к нам за сладостями!" data-testid="input-push-message" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={pushForm.control}
-          name="url"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL (опционально)</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="https://sweetdelights.store" data-testid="input-push-url" />
-              </FormControl>
-              <p className="text-xs text-muted-foreground mt-1">
-                Куда перенаправить пользователя при клике на уведомление
-              </p>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button 
-          type="submit" 
-          disabled={sendPushMutation.isPending} 
-          data-testid="button-send-push"
-          className="w-full"
-        >
-          <Bell className="w-4 h-4 mr-2" />
-          {sendPushMutation.isPending ? "Отправка..." : "Отправить уведомление всем подписчикам"}
-        </Button>
-      </form>
-    </Form>
-  );
-}
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -241,12 +120,7 @@ export default function AdminPage() {
     queryFn: getAllNotifications,
   });
 
-  const { data: pushSubscriptions = [], isLoading: pushSubscriptionsLoading } = useQuery<PushSubscription[]>({
-    queryKey: ["/api/admin/push-subscriptions"],
-    queryFn: getAllPushSubscriptions,
-  });
-
-  const { data: newsletterSubscriptions = [], isLoading: newsletterLoading } = useQuery<NewsletterSubscription[]>({
+  const { data: newsletterSubscriptions = [], isLoading: newsletterLoading} = useQuery<NewsletterSubscription[]>({
     queryKey: ["/api/admin/newsletter-subscriptions"],
     queryFn: getAllNewsletterSubscriptions,
   });
@@ -580,23 +454,6 @@ export default function AdminPage() {
     },
   });
 
-  const deletePushSubscriptionMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await deletePushSubscription(id);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/push-subscriptions"] });
-      toast({ title: "Push-подписка удалена" });
-    },
-    onError: (error: any) => {
-      toast({ 
-        title: "Ошибка", 
-        description: error.message,
-        variant: "destructive"
-      });
-    },
-  });
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -710,9 +567,9 @@ export default function AdminPage() {
             <Mail className="w-4 h-4 mr-2" />
             Рассылка ({newsletterSubscriptions.length})
           </TabsTrigger>
-          <TabsTrigger value="notifications" data-testid="tab-notifications">
+          <TabsTrigger value="stock-notifications" data-testid="tab-stock-notifications">
             <Bell className="w-4 h-4 mr-2" />
-            Подписки ({stockNotifications.length})
+            Уведомления о товарах ({stockNotifications.length})
           </TabsTrigger>
           <TabsTrigger value="products" data-testid="tab-products">
             <Package className="w-4 h-4 mr-2" />
@@ -1323,110 +1180,12 @@ export default function AdminPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="notifications" className="space-y-6">
+        <TabsContent value="stock-notifications" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Push-уведомления OneSignal</CardTitle>
+              <CardTitle>Уведомления о товарах</CardTitle>
               <CardDescription>
-                Отправьте уведомление всем подписчикам OneSignal
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PushNotificationForm />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Подписчики OneSignal</CardTitle>
-              <CardDescription>
-                Список пользователей, подписанных на Push-уведомления
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {pushSubscriptionsLoading ? (
-                <p className="text-muted-foreground">Загрузка...</p>
-              ) : pushSubscriptions.length === 0 ? (
-                <p className="text-muted-foreground">Нет подписчиков</p>
-              ) : (
-                <div className="space-y-4">
-                  <div className="mb-4">
-                    <p className="text-sm font-medium">
-                      Всего подписок: <Badge variant="secondary">{pushSubscriptions.length}</Badge>
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Активных: {pushSubscriptions.filter(s => s.status === 'subscribed').length}
-                    </p>
-                  </div>
-                  {pushSubscriptions.map((subscription) => (
-                    <div 
-                      key={subscription.id} 
-                      className="border rounded-lg p-4 flex items-start justify-between gap-4"
-                      data-testid={`push-subscription-${subscription.id}`}
-                    >
-                      <div className="flex-1 space-y-2">
-                        <div>
-                          <p className="font-semibold">ID подписки: {subscription.subscriptionId}</p>
-                          {subscription.subscriptionToken && (
-                            <p className="text-xs text-muted-foreground font-mono mt-1">
-                              Токен: {subscription.subscriptionToken.substring(0, 40)}...
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex gap-2 items-center">
-                          <Badge variant={subscription.status === 'subscribed' ? 'default' : 'secondary'}>
-                            {subscription.status === 'subscribed' ? 'Активна' : 'Отписан'}
-                          </Badge>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Дата создания:</p>
-                          <p className="font-medium">
-                            {subscription.createdAt.toLocaleDateString('ru-RU', { 
-                              year: 'numeric', 
-                              month: 'long', 
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Последнее обновление:</p>
-                          <p className="font-medium">
-                            {subscription.lastUpdated.toLocaleDateString('ru-RU', { 
-                              year: 'numeric', 
-                              month: 'long', 
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deletePushSubscriptionMutation.mutate(subscription.id)}
-                          disabled={deletePushSubscriptionMutation.isPending}
-                          data-testid={`button-delete-push-subscription-${subscription.id}`}
-                        >
-                          <Trash2 className="h-4 w-4 mr-1" />
-                          Удалить
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Подписки на уведомления</CardTitle>
-              <CardDescription>
-                Управление email-подписками на уведомления о поступлении товаров
+                Email-подписки пользователей на уведомления о поступлении товаров
               </CardDescription>
             </CardHeader>
             <CardContent>

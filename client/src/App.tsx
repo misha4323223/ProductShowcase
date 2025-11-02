@@ -17,7 +17,6 @@ import LoginPage from "@/pages/LoginPage";
 import AccountPage from "@/pages/AccountPage";
 import WishlistPage from "@/pages/WishlistPage";
 import AdminPage from "@/pages/AdminPage";
-import AdminUploadPage from "@/pages/AdminUploadPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
 import FaqPage from "@/pages/FaqPage";
@@ -43,11 +42,6 @@ function Router() {
         <Route path="/admin">
           <AdminProtectedRoute>
             <AdminPage />
-          </AdminProtectedRoute>
-        </Route>
-        <Route path="/admin/upload">
-          <AdminProtectedRoute>
-            <AdminUploadPage />
           </AdminProtectedRoute>
         </Route>
         <Route component={NotFound} />
