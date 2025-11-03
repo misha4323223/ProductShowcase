@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send } from "lucide-react";
-import { getUserOrders, updateOrderStatus, getAllOrders } from "@/services/yandex-orders";
+import { getUserOrders, updateOrderStatus, getAllOrders, deleteOrder } from "@/services/yandex-orders";
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
@@ -336,6 +336,23 @@ export default function AdminPage() {
     },
   });
 
+  const deleteOrderMutation = useMutation({
+    mutationFn: async (orderId: string) => {
+      await deleteOrder(orderId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/orders"] });
+      toast({ title: "Заказ удалён" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -633,9 +650,20 @@ export default function AdminPage() {
                             })}
                           </p>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold text-lg">{order.total} ₽</p>
-                          <p className="text-sm text-muted-foreground">{order.items.length} товаров</p>
+                        <div className="flex items-center gap-3">
+                          <div className="text-right">
+                            <p className="font-bold text-lg">{order.total} ₽</p>
+                            <p className="text-sm text-muted-foreground">{order.items.length} товаров</p>
+                          </div>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteOrderMutation.mutate(order.id)}
+                            disabled={deleteOrderMutation.isPending}
+                            data-testid={`button-delete-order-${order.id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
 
