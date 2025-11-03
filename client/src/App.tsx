@@ -8,6 +8,7 @@ import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
+import CookieBanner from "@/components/CookieBanner";
 import Home from "@/pages/Home";
 import CategoryPage from "@/pages/CategoryPage";
 import ProductPage from "@/pages/ProductPage";
@@ -59,6 +60,7 @@ function App() {
             <WishlistProvider>
               <TooltipProvider>
                 <Toaster />
+                <CookieBanner />
                 <Router />
               </TooltipProvider>
             </WishlistProvider>
