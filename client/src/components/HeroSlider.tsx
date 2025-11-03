@@ -5,10 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletter } from "@/services/yandex-newsletter";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface Slide {
   id: number;
   image: string;
+  webpImage: string;
   title: string;
   subtitle: string;
 }
@@ -98,8 +100,9 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <img
+            <OptimizedImage
               src={slide.image}
+              webpSrc={slide.webpImage}
               alt={slide.title}
               loading={index === 0 ? "eager" : "lazy"}
               decoding="async"

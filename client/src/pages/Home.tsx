@@ -12,13 +12,21 @@ import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
+import heroImage1WebP from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.webp';
 import heroImage2 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
+import heroImage2WebP from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.webp';
 import heroImage3 from '@assets/generated_images/Candy_store_display_image_21d1d54f.png';
+import heroImage3WebP from '@assets/generated_images/Candy_store_display_image_21d1d54f.webp';
 import chocolateImage from '@assets/generated_images/Artisanal_chocolate_category_image_35f087de.png';
+import chocolateImageWebP from '@assets/generated_images/Artisanal_chocolate_category_image_35f087de.webp';
 import candiesImage from '@assets/generated_images/Assorted_candies_category_image_ce151d27.png';
+import candiesImageWebP from '@assets/generated_images/Assorted_candies_category_image_ce151d27.webp';
 import accessoriesImage from '@assets/generated_images/Sweet_accessories_category_image_fb7f7e3a.png';
+import accessoriesImageWebP from '@assets/generated_images/Sweet_accessories_category_image_fb7f7e3a.webp';
 import cookiesImage from '@assets/generated_images/Cookies_and_biscuits_image_6375c6a9.png';
+import cookiesImageWebP from '@assets/generated_images/Cookies_and_biscuits_image_6375c6a9.webp';
 import saleImage from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.png';
+import saleImageWebP from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.webp';
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -30,35 +38,58 @@ export default function Home() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    const preloadLink = document.createElement('link');
+    preloadLink.rel = 'preload';
+    preloadLink.as = 'image';
+    preloadLink.type = 'image/webp';
+    preloadLink.href = heroImage1WebP;
+    preloadLink.fetchPriority = 'high';
+    document.head.appendChild(preloadLink);
+    
+    const preloadLinkFallback = document.createElement('link');
+    preloadLinkFallback.rel = 'preload';
+    preloadLinkFallback.as = 'image';
+    preloadLinkFallback.type = 'image/png';
+    preloadLinkFallback.href = heroImage1;
+    document.head.appendChild(preloadLinkFallback);
+    
+    return () => {
+      document.head.removeChild(preloadLink);
+      document.head.removeChild(preloadLinkFallback);
+    };
   }, []);
 
   const slides = [
     {
       id: 1,
       image: heroImage1,
+      webpImage: heroImage1WebP,
       title: 'Французские Макаронс',
       subtitle: 'Изысканные пирожные ручной работы',
     },
     {
       id: 2,
       image: heroImage2,
+      webpImage: heroImage2WebP,
       title: 'Премиум Шоколад',
       subtitle: 'Бельгийское качество в каждом кусочке',
     },
     {
       id: 3,
       image: heroImage3,
+      webpImage: heroImage3WebP,
       title: 'Яркие Сладости',
       subtitle: 'Радуга вкусов для всей семьи',
     },
   ];
 
   const categories = [
-    { name: 'Шоколад', image: chocolateImage, slug: 'chocolates' },
-    { name: 'Конфеты', image: candiesImage, slug: 'candies' },
-    { name: 'Печенье', image: cookiesImage, slug: 'cookies' },
-    { name: 'Аксессуары', image: accessoriesImage, slug: 'accessories' },
-    { name: 'SALE', image: saleImage, slug: 'sale' },
+    { name: 'Шоколад', image: chocolateImage, webpImage: chocolateImageWebP, slug: 'chocolates' },
+    { name: 'Конфеты', image: candiesImage, webpImage: candiesImageWebP, slug: 'candies' },
+    { name: 'Печенье', image: cookiesImage, webpImage: cookiesImageWebP, slug: 'cookies' },
+    { name: 'Аксессуары', image: accessoriesImage, webpImage: accessoriesImageWebP, slug: 'accessories' },
+    { name: 'SALE', image: saleImage, webpImage: saleImageWebP, slug: 'sale' },
   ];
 
   const handleAddToCart = (productId: string) => {
@@ -183,6 +214,7 @@ export default function Home() {
                   key={index}
                   name={category.name}
                   image={category.image}
+                  webpImage={category.webpImage}
                   onClick={() => setLocation(`/category/${category.slug}`)}
                 />
               ))}
