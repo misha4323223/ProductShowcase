@@ -58,10 +58,28 @@
 
 ---
 
+---
+
+### Yandex Cloud Function (НЕ нужен для прямой загрузки)
+
+~~**10. VITE_UPLOAD_IMAGE_FUNCTION_URL**~~
+- ❌ Больше не используется! Загрузка теперь идет напрямую через AWS SDK
+
+---
+
 ## ✅ Проверка
 
 После добавления всех секретов:
-1. В разделе Secrets должно быть 9 переменных
+1. В разделе Secrets должно быть **9 переменных**:
+   - VITE_YDB_ENDPOINT
+   - VITE_YDB_ACCESS_KEY_ID
+   - VITE_YDB_SECRET_KEY
+   - VITE_YDB_DATABASE
+   - VITE_STORAGE_BUCKET
+   - VITE_STORAGE_REGION
+   - VITE_TELEGRAM_BOT_TOKEN
+   - VITE_TELEGRAM_BOT_USERNAME
+   - VITE_API_GATEWAY_URL
 2. Каждая должна иметь зелёную галочку
 3. Значения скрыты (показываются как `***`)
 
