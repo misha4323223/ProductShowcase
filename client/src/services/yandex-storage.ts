@@ -7,24 +7,22 @@ import {
 const STORAGE_BUCKET = import.meta.env.VITE_STORAGE_BUCKET || 'sweetdelights-images';
 const STORAGE_REGION = import.meta.env.VITE_STORAGE_REGION || 'ru-central1';
 
-// Removed S3 client initialization as uploads will go through a Cloud Function.
-// const s3Client = new S3Client({
-//  region: STORAGE_REGION,
-//  endpoint: 'https://storage.yandexcloud.net',
-//  credentials: {
-//    accessKeyId: import.meta.env.VITE_YDB_ACCESS_KEY_ID || '',
-//    secretAccessKey: import.meta.env.VITE_YDB_SECRET_KEY || '',
-//  },
-//});
-
-const UPLOAD_IMAGE_FUNCTION_URL = import.meta.env.VITE_UPLOAD_IMAGE_FUNCTION_URL || '';
+// Инициализация S3 клиента для прямой загрузки в Yandex Object Storage
+const s3Client = new S3Client({
+  region: STORAGE_REGION,
+  endpoint: 'https://storage.yandexcloud.net',
+  credentials: {
+    accessKeyId: import.meta.env.VITE_YDB_ACCESS_KEY_ID || '',
+    secretAccessKey: import.meta.env.VITE_YDB_SECRET_KEY || '',
+  },
+});
 
 export async function uploadImageToYandexStorage(
   file: File,
   folder: string = 'products'
 ): Promise<string> {
   try {
-    console.log("Начало загрузки файла через Cloud Function:", {
+    console.log("Начало загрузки файла напрямую в Yandex Object Storage:", {
       fileName: file.name,
       fileSize: file.size,
       fileType: file.type,
@@ -37,40 +35,26 @@ export async function uploadImageToYandexStorage(
     const fileExtension = file.name.split('.').pop();
     const fileName = `${folder}/${timestamp}-${randomStr}.${fileExtension}`;
 
-    // Читаем файл как base64
+    // Читаем файл как ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
-    const base64 = btoa(
-      new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
+    const buffer = new Uint8Array(arrayBuffer);
 
-    console.log("Отправка в Cloud Function:", { fileName, base64Length: base64.length });
-
-    // Отправляем через Cloud Function
-    const response = await fetch(UPLOAD_IMAGE_FUNCTION_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        fileName,
-        fileData: base64,
-        fileType: file.type
-      })
+    // Загружаем напрямую в S3
+    const command = new PutObjectCommand({
+      Bucket: STORAGE_BUCKET,
+      Key: fileName,
+      Body: buffer,
+      ContentType: file.type,
+      ACL: 'public-read',
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Upload failed: ${response.status} ${errorText}`);
-    }
+    await s3Client.send(command);
 
-    const result = await response.json();
-    console.log("Результат загрузки:", result);
+    const imageUrl = `https://storage.yandexcloud.net/${STORAGE_BUCKET}/${fileName}`;
+    
+    console.log("Изображение успешно загружено:", imageUrl);
 
-    if (!result.url) {
-      throw new Error('No URL returned from upload function');
-    }
-
-    return result.url;
+    return imageUrl;
   } catch (error: any) {
     console.error('Error uploading to Yandex Storage:', error);
     throw new Error(`Не удалось загрузить изображение: ${error.message || 'Неизвестная ошибка'}`);
@@ -78,8 +62,25 @@ export async function uploadImageToYandexStorage(
 }
 
 export async function deleteImageFromYandexStorage(imageUrl: string): Promise<void> {
-  console.log('Delete image not yet implemented via Cloud Function:', imageUrl);
-  // TODO: Implement delete via Cloud Function if needed
+  try {
+    // Извлекаем ключ из URL
+    const key = imageUrl.split(`${STORAGE_BUCKET}/`)[1];
+    
+    if (!key) {
+      throw new Error('Invalid image URL');
+    }
+
+    const command = new DeleteObjectCommand({
+      Bucket: STORAGE_BUCKET,
+      Key: key,
+    });
+
+    await s3Client.send(command);
+    console.log('Изображение успешно удалено:', imageUrl);
+  } catch (error: any) {
+    console.error('Error deleting from Yandex Storage:', error);
+    throw new Error(`Не удалось удалить изображение: ${error.message || 'Неизвестная ошибка'}`);
+  }
 }
 
 export function getImageUrl(fileName: string): string {
