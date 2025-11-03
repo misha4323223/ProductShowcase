@@ -61,3 +61,18 @@ export async function deleteImageFromYandexStorage(imageUrl: string): Promise<vo
 export function getImageUrl(fileName: string): string {
   return `https://storage.yandexcloud.net/${STORAGE_BUCKET}/${fileName}`;
 }
+
+export function validateImageFile(file: File): string | null {
+  const maxSize = 32 * 1024 * 1024;
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/bmp'];
+
+  if (!allowedTypes.includes(file.type)) {
+    return 'Разрешены только изображения: JPG, PNG, GIF, WebP, BMP';
+  }
+
+  if (file.size > maxSize) {
+    return 'Размер изображения не должен превышать 32MB';
+  }
+
+  return null;
+}

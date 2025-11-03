@@ -24,7 +24,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { uploadImageToImgBB, validateImageFile } from "@/services/imgbb-upload";
+import { uploadImageToYandexStorage, validateImageFile } from "@/services/yandex-storage";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
 const categorySchema = z.object({
@@ -482,21 +482,21 @@ export default function AdminPage() {
 
     setIsUploadingImage(true);
     try {
-      const result = await uploadImageToImgBB(selectedFile);
+      const imageUrl = await uploadImageToYandexStorage(selectedFile, 'products');
       
       // Устанавливаем URL изображения в форму и помечаем поле как "touched"
-      productForm.setValue('image', result.url, { 
+      productForm.setValue('image', imageUrl, { 
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true
       });
       
-      console.log("✅ URL изображения установлен в форму:", result.url);
+      console.log("✅ URL изображения установлен в форму:", imageUrl);
       console.log("📋 Текущее значение image в форме:", productForm.getValues('image'));
       
       toast({ 
         title: "Изображение загружено!", 
-        description: `URL: ${result.url.substring(0, 50)}...` 
+        description: `URL: ${imageUrl.substring(0, 50)}...` 
       });
     } catch (error: any) {
       toast({ 
