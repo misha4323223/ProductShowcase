@@ -1,13 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface CategoryCardProps {
   name: string;
   image: string;
+  webpImage: string;
   onClick?: () => void;
 }
 
-export default function CategoryCard({ name, image, onClick }: CategoryCardProps) {
+export default function CategoryCard({ name, image, webpImage, onClick }: CategoryCardProps) {
   return (
     <Card 
       className="group relative overflow-visible cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-pink-300/50 transition-all duration-300 hover:-translate-y-3 candy-wrapper metallic-wrapper jelly-wobble"
@@ -15,8 +17,9 @@ export default function CategoryCard({ name, image, onClick }: CategoryCardProps
       data-testid={`card-category-${name.toLowerCase()}`}
     >
       <div className="aspect-[4/3] overflow-hidden rounded-3xl sugar-crystals">
-        <img
+        <OptimizedImage
           src={image}
+          webpSrc={webpImage}
           alt={name}
           loading="lazy"
           decoding="async"
