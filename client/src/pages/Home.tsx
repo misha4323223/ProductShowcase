@@ -131,23 +131,15 @@ export default function Home() {
       
       <main className="flex-1 relative z-10">
         {/* Coming Soon Banner */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 py-6 sm:py-8 md:py-12 animate-gradient backdrop-blur-sm">
+        <div className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 py-4 sm:py-6 md:py-8 animate-gradient backdrop-blur-sm">
           <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/40 via-purple-200/35 to-yellow-100/40"></div>
           <div className="absolute inset-0 opacity-30">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNCIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')] animate-pulse-slow"></div>
           </div>
           
           <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-            {/* Floating candies decoration - показываем меньший размер на мобильных */}
-            <div className="absolute left-[5%] sm:left-[10%] top-1/2 -translate-y-1/2 animate-float-slow">
-              <div className="text-3xl sm:text-4xl md:text-6xl opacity-70 md:opacity-80">🍭</div>
-            </div>
-            <div className="absolute right-[5%] sm:right-[10%] top-1/2 -translate-y-1/2 animate-float-medium">
-              <div className="text-3xl sm:text-4xl md:text-6xl opacity-70 md:opacity-80">🍬</div>
-            </div>
-            
             {/* Main heading */}
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-2 sm:space-y-3">
               <h1 className="font-serif text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white drop-shadow-2xl animate-bounce-soft leading-tight">
                 <span className="inline-block animate-wiggle" style={{ animationDelay: '0s' }}>С</span>
                 <span className="inline-block animate-wiggle" style={{ animationDelay: '0.1s' }}>К</span>
@@ -164,19 +156,6 @@ export default function Home() {
                 <span className="inline-block animate-wiggle" style={{ animationDelay: '1.1s' }}>И</span>
                 <span className="inline-block animate-wiggle" style={{ animationDelay: '1.2s' }}>Е</span>
               </h1>
-              
-              {/* Decorative candies - адаптивный размер */}
-              <div className="flex justify-center gap-2 sm:gap-3 text-xl sm:text-3xl md:text-4xl animate-sparkle flex-wrap">
-                <span className="inline-block animate-rotate-slow">🍭</span>
-                <span className="inline-block animate-rotate-slow" style={{ animationDelay: '1s' }}>🍬</span>
-                <span className="inline-block animate-rotate-slow" style={{ animationDelay: '2s' }}>🧃</span>
-                <span className="inline-block animate-rotate-slow" style={{ animationDelay: '3s' }}>🍡</span>
-                <span className="inline-block animate-rotate-slow" style={{ animationDelay: '4s' }}>🍰</span>
-              </div>
-              
-              <p className="text-sm sm:text-lg md:text-xl lg:text-2xl text-white/90 font-medium drop-shadow-lg px-2">
-                Готовим для вас что-то очень вкусное! 🎉
-              </p>
             </div>
           </div>
           
