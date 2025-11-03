@@ -3,6 +3,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand
 } from "@aws-sdk/client-s3";
+import imageCompression from 'browser-image-compression';
 
 const STORAGE_BUCKET = import.meta.env.VITE_STORAGE_BUCKET || 'sweetdelights-images';
 const STORAGE_REGION = import.meta.env.VITE_STORAGE_REGION || 'ru-central1';
@@ -17,34 +18,71 @@ const s3Client = new S3Client({
   },
 });
 
+/**
+ * Оптимизирует изображение перед загрузкой
+ * - Сжимает размер файла
+ * - Конвертирует в WebP формат для лучшей производительности
+ */
+async function optimizeImage(file: File): Promise<File> {
+  const originalSize = (file.size / 1024 / 1024).toFixed(2);
+  console.log(`🖼️ Начало оптимизации изображения: ${file.name} (${originalSize} MB)`);
+
+  try {
+    // Настройки оптимизации
+    const options = {
+      maxSizeMB: 1, // Максимальный размер 1 MB
+      maxWidthOrHeight: 1920, // Максимальная ширина/высота
+      useWebWorker: true, // Использовать Web Worker для производительности
+      fileType: 'image/webp', // Конвертируем в WebP
+      initialQuality: 0.85, // Качество 85%
+    };
+
+    const compressedFile = await imageCompression(file, options);
+    
+    const optimizedSize = (compressedFile.size / 1024 / 1024).toFixed(2);
+    const savings = ((1 - compressedFile.size / file.size) * 100).toFixed(1);
+    
+    console.log(`✅ Оптимизация завершена:`);
+    console.log(`   Было: ${originalSize} MB → Стало: ${optimizedSize} MB`);
+    console.log(`   Экономия: ${savings}%`);
+    
+    return compressedFile;
+  } catch (error: any) {
+    console.warn('⚠️ Ошибка оптимизации, загружаем оригинал:', error.message);
+    return file; // Если оптимизация не удалась, загружаем оригинал
+  }
+}
+
 export async function uploadImageToYandexStorage(
   file: File,
   folder: string = 'products'
 ): Promise<string> {
   try {
-    console.log("Начало загрузки файла напрямую в Yandex Object Storage:", {
+    console.log("🚀 Начало загрузки файла в Yandex Object Storage:", {
       fileName: file.name,
       fileSize: file.size,
       fileType: file.type,
       folder
     });
 
-    // Генерируем уникальное имя файла
+    // ОПТИМИЗАЦИЯ: Сжимаем и конвертируем в WebP
+    const optimizedFile = await optimizeImage(file);
+
+    // Генерируем уникальное имя файла с расширением .webp
     const timestamp = Date.now();
     const randomStr = Math.random().toString(36).substring(7);
-    const fileExtension = file.name.split('.').pop();
-    const fileName = `${folder}/${timestamp}-${randomStr}.${fileExtension}`;
+    const fileName = `${folder}/${timestamp}-${randomStr}.webp`;
 
-    // Читаем файл как ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer();
+    // Читаем оптимизированный файл как ArrayBuffer
+    const arrayBuffer = await optimizedFile.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
 
-    // Загружаем напрямую в S3
+    // Загружаем оптимизированное изображение в S3
     const command = new PutObjectCommand({
       Bucket: STORAGE_BUCKET,
       Key: fileName,
       Body: buffer,
-      ContentType: file.type,
+      ContentType: 'image/webp', // Всегда WebP
       ACL: 'public-read',
     });
 
@@ -52,11 +90,11 @@ export async function uploadImageToYandexStorage(
 
     const imageUrl = `https://storage.yandexcloud.net/${STORAGE_BUCKET}/${fileName}`;
     
-    console.log("Изображение успешно загружено:", imageUrl);
+    console.log("✅ Изображение успешно загружено:", imageUrl);
 
     return imageUrl;
   } catch (error: any) {
-    console.error('Error uploading to Yandex Storage:', error);
+    console.error('❌ Ошибка загрузки в Yandex Storage:', error);
     throw new Error(`Не удалось загрузить изображение: ${error.message || 'Неизвестная ошибка'}`);
   }
 }
