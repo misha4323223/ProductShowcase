@@ -19,4 +19,3 @@ server/public
 vite.config.ts.*
 *.tar.gz
 >>>>>>> 370eca2 (Initial commit)
-attached_assets/
