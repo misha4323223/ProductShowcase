@@ -2,6 +2,8 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { SiTelegram, SiInstagram, SiVk } from "react-icons/si";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Link } from "wouter";
 import LegalDialog from "@/components/LegalDialog";
@@ -12,6 +14,7 @@ export default function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { toast } = useToast();
 
@@ -36,6 +39,15 @@ export default function Footer() {
       return;
     }
 
+    if (!newsletterConsent) {
+      toast({
+        title: "Требуется согласие",
+        description: "Необходимо дать согласие на обработку персональных данных",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubscribing(true);
     try {
       await subscribeToNewsletter(newsletterEmail);
@@ -44,6 +56,7 @@ export default function Footer() {
         description: "Вы будете получать новости об открытии магазина и эксклюзивные предложения",
       });
       setNewsletterEmail("");
+      setNewsletterConsent(false);
     } catch (error: any) {
       toast({
         title: "Ошибка подписки",
@@ -119,23 +132,49 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground mb-3">
               Узнайте первыми об открытии магазина и получайте эксклюзивные предложения
             </p>
-            <form onSubmit={handleNewsletterSubscribe} className="flex gap-2">
-              <Input 
-                type="email" 
-                placeholder="Ваш email" 
-                className="flex-1"
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                disabled={isSubscribing}
-                data-testid="input-newsletter-email"
-              />
-              <Button 
-                type="submit" 
-                disabled={isSubscribing}
-                data-testid="button-subscribe"
-              >
-                {isSubscribing ? "..." : "Подписаться"}
-              </Button>
+            <form onSubmit={handleNewsletterSubscribe} className="space-y-3">
+              <div className="flex gap-2">
+                <Input 
+                  type="email" 
+                  placeholder="Ваш email" 
+                  className="flex-1"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  disabled={isSubscribing}
+                  data-testid="input-newsletter-email"
+                />
+                <Button 
+                  type="submit" 
+                  disabled={isSubscribing}
+                  data-testid="button-subscribe"
+                >
+                  {isSubscribing ? "..." : "Подписаться"}
+                </Button>
+              </div>
+              <div className="flex items-start space-x-2">
+                <Checkbox
+                  id="newsletter-consent"
+                  checked={newsletterConsent}
+                  onCheckedChange={(checked) => setNewsletterConsent(checked as boolean)}
+                  disabled={isSubscribing}
+                  data-testid="checkbox-newsletter-consent"
+                />
+                <Label 
+                  htmlFor="newsletter-consent" 
+                  className="text-xs text-muted-foreground leading-tight cursor-pointer"
+                >
+                  Я согласен с{" "}
+                  <button
+                    type="button"
+                    onClick={() => setPrivacyOpen(true)}
+                    className="text-primary hover:underline font-medium"
+                    data-testid="link-newsletter-privacy"
+                  >
+                    политикой конфиденциальности
+                  </button>
+                  {" "}и на получение рассылки
+                </Label>
+              </div>
             </form>
           </div>
         </div>
