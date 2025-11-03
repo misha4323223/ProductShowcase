@@ -122,7 +122,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-xl font-semibold text-primary mb-3">4. Как мы храним ваши данные</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Все персональные данные хранятся на защищенных серверах <strong>Firebase (Google Cloud Platform)</strong> с применением 
+                Все персональные данные хранятся на защищенных серверах <strong>Yandex Cloud</strong> с применением 
                 современных методов шифрования и защиты информации.
               </p>
               <p className="text-muted-foreground leading-relaxed mt-2">
