@@ -17,26 +17,49 @@ export async function uploadImageToYandexStorage(
   folder: string = 'products'
 ): Promise<string> {
   try {
+    console.log('Начало загрузки файла в Yandex Storage:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      bucket: STORAGE_BUCKET,
+      region: STORAGE_REGION,
+      hasAccessKey: !!import.meta.env.VITE_YDB_ACCESS_KEY_ID,
+      hasSecretKey: !!import.meta.env.VITE_YDB_SECRET_KEY,
+    });
+
     const fileExtension = file.name.split('.').pop();
     const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
     
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
     
-    await s3Client.send(new PutObjectCommand({
+    console.log('Отправка в S3:', { fileName, bufferSize: buffer.length });
+    
+    const command = new PutObjectCommand({
       Bucket: STORAGE_BUCKET,
       Key: fileName,
       Body: buffer,
       ContentType: file.type,
-      ACL: 'public-read',
-    }));
+    });
+    
+    const result = await s3Client.send(command);
+    console.log('Результат загрузки S3:', result);
     
     const imageUrl = `https://storage.yandexcloud.net/${STORAGE_BUCKET}/${fileName}`;
+    console.log('URL изображения:', imageUrl);
     
     return imageUrl;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error uploading to Yandex Storage:', error);
-    throw new Error('Не удалось загрузить изображение');
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      code: error.Code,
+      statusCode: error.$metadata?.httpStatusCode,
+      requestId: error.$metadata?.requestId,
+      stack: error.stack
+    });
+    throw new Error(`Не удалось загрузить изображение: ${error.message || 'Неизвестная ошибка'}`);
   }
 }
 
