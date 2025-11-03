@@ -8,7 +8,7 @@ export async function subscribeToStockNotification(
   productName: string,
   email: string
 ): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/create-stock-notification`, {
+  const response = await fetch(`${API_BASE_URL}/stock-notifications`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export async function getNotificationsByProduct(productId: string): Promise<Stoc
 }
 
 export async function getAllNotifications(): Promise<StockNotification[]> {
-  const response = await fetch(`${API_BASE_URL}/get-stock-notifications`, {
+  const response = await fetch(`${API_BASE_URL}/stock-notifications`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export async function getAllNotifications(): Promise<StockNotification[]> {
 }
 
 export async function deleteNotification(id: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/delete-stock-notification/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/stock-notifications/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
