@@ -615,3 +615,130 @@ paths:
       responses:
         '200':
           description: OK
+
+  # ========== AUTHENTICATION ==========
+  /auth/register:
+    post:
+      summary: Регистрация нового пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e78ffslu1cki771350
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Пользователь зарегистрирован
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /auth/login:
+    post:
+      summary: Вход пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4es0325rdki0lq6ikn0
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Вход выполнен
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /auth/reset-password:
+    post:
+      summary: Сброс пароля
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e5ialgivnb0lggm58m
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Код отправлен или пароль изменен
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /auth/verify-token:
+    post:
+      summary: Проверка токена
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4euarol8nq2costjglt
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Токен валиден
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== UPLOAD IMAGE ==========
+  /upload-image:
+    post:
+      summary: Загрузка изображения
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4en9dqhqmuokv8s4p8k
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Изображение загружено
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
