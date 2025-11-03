@@ -61,10 +61,9 @@ export async function deleteNotification(id: string): Promise<void> {
   });
 
   if (!response.ok) {
-    throw new Error('Не удалось удалить уведомление');
+    const errorData = await response.json().catch(() => ({ error: 'Не удалось удалить уведомление' }));
+    throw new Error(errorData.error || 'Не удалось удалить уведомление');
   }
-
-  return response.json();
 }
 
 export async function sendStockNotifications(
