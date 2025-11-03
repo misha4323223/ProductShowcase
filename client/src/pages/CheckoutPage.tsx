@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronRight, ShoppingBag, Check } from "lucide-react";
 import {
@@ -20,6 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 
 import { createOrder } from "@/services/yandex-orders";
@@ -46,6 +48,9 @@ const checkoutSchema = z.object({
   postalCode: z.string().min(5, "Некорректный почтовый индекс"),
   delivery: z.enum(["courier", "pickup", "post"]),
   payment: z.enum(["card", "cash", "online"]),
+  privacyConsent: z.boolean().refine((val) => val === true, {
+    message: "Необходимо согласие на обработку персональных данных",
+  }),
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -82,6 +87,7 @@ export default function CheckoutPage() {
       postalCode: "",
       delivery: "courier",
       payment: "card",
+      privacyConsent: false,
     },
   });
 
@@ -466,6 +472,41 @@ export default function CheckoutPage() {
                               </RadioGroup>
                             </FormControl>
                             <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent className="pt-6">
+                      <FormField
+                        control={form.control}
+                        name="privacyConsent"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                data-testid="checkbox-privacy-consent"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel className="text-sm font-normal cursor-pointer">
+                                Я согласен с{" "}
+                                <Link 
+                                  href="/privacy" 
+                                  className="text-primary hover:underline font-medium"
+                                  data-testid="link-privacy-consent"
+                                  target="_blank"
+                                >
+                                  политикой конфиденциальности
+                                </Link>
+                                {" "}и даю согласие на обработку моих персональных данных
+                              </FormLabel>
+                              <FormMessage />
+                            </div>
                           </FormItem>
                         )}
                       />
