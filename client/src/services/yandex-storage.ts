@@ -1,30 +1,34 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand
+} from "@aws-sdk/client-s3";
 
 const STORAGE_BUCKET = import.meta.env.VITE_STORAGE_BUCKET || 'sweetdelights-images';
 const STORAGE_REGION = import.meta.env.VITE_STORAGE_REGION || 'ru-central1';
 
-const s3Client = new S3Client({
-  region: STORAGE_REGION,
-  endpoint: 'https://storage.yandexcloud.net',
-  credentials: {
-    accessKeyId: import.meta.env.VITE_YDB_ACCESS_KEY_ID || '',
-    secretAccessKey: import.meta.env.VITE_YDB_SECRET_KEY || '',
-  },
-});
+// Removed S3 client initialization as uploads will go through a Cloud Function.
+// const s3Client = new S3Client({
+//  region: STORAGE_REGION,
+//  endpoint: 'https://storage.yandexcloud.net',
+//  credentials: {
+//    accessKeyId: import.meta.env.VITE_YDB_ACCESS_KEY_ID || '',
+//    secretAccessKey: import.meta.env.VITE_YDB_SECRET_KEY || '',
+//  },
+//});
+
+const UPLOAD_IMAGE_FUNCTION_URL = import.meta.env.VITE_UPLOAD_IMAGE_FUNCTION_URL || '';
 
 export async function uploadImageToYandexStorage(
   file: File,
   folder: string = 'products'
 ): Promise<string> {
   try {
-    console.log("Начало загрузки файла в Yandex Storage:", {
+    console.log("Начало загрузки файла через Cloud Function:", {
       fileName: file.name,
       fileSize: file.size,
       fileType: file.type,
-      bucket: STORAGE_BUCKET,
-      region: STORAGE_REGION,
-      hasAccessKey: !!import.meta.env.VITE_YDB_ACCESS_KEY_ID,
-      hasSecretKey: !!import.meta.env.VITE_YDB_SECRET_KEY
+      folder
     });
 
     // Генерируем уникальное имя файла
@@ -32,30 +36,41 @@ export async function uploadImageToYandexStorage(
     const randomStr = Math.random().toString(36).substring(7);
     const fileExtension = file.name.split('.').pop();
     const fileName = `${folder}/${timestamp}-${randomStr}.${fileExtension}`;
-    
-    // Читаем файл как ArrayBuffer
+
+    // Читаем файл как base64
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = new Uint8Array(arrayBuffer);
+    const base64 = btoa(
+      new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
 
-    console.log("Отправка в S3:", { fileName, bufferSize: buffer.length });
+    console.log("Отправка в Cloud Function:", { fileName, base64Length: base64.length });
 
-    // Загружаем в S3
-    const command = new PutObjectCommand({
-      Bucket: STORAGE_BUCKET,
-      Key: fileName,
-      Body: buffer,
-      ContentType: file.type,
-      ACL: "public-read",
+    // Отправляем через Cloud Function
+    const response = await fetch(UPLOAD_IMAGE_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fileName,
+        fileData: base64,
+        fileType: file.type
+      })
     });
 
-    const result = await s3Client.send(command);
-    console.log("Результат загрузки S3:", result);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Upload failed: ${response.status} ${errorText}`);
+    }
 
-    // Возвращаем публичный URL
-    const imageUrl = `https://storage.yandexcloud.net/${STORAGE_BUCKET}/${fileName}`;
-    console.log("URL изображения:", imageUrl);
+    const result = await response.json();
+    console.log("Результат загрузки:", result);
 
-    return imageUrl;
+    if (!result.url) {
+      throw new Error('No URL returned from upload function');
+    }
+
+    return result.url;
   } catch (error: any) {
     console.error('Error uploading to Yandex Storage:', error);
     throw new Error(`Не удалось загрузить изображение: ${error.message || 'Неизвестная ошибка'}`);
@@ -63,24 +78,13 @@ export async function uploadImageToYandexStorage(
 }
 
 export async function deleteImageFromYandexStorage(imageUrl: string): Promise<void> {
-  try {
-    const fileName = imageUrl.split(`${STORAGE_BUCKET}/`)[1];
-    
-    if (!fileName) {
-      throw new Error('Invalid image URL');
-    }
-    
-    await s3Client.send(new DeleteObjectCommand({
-      Bucket: STORAGE_BUCKET,
-      Key: fileName,
-    }));
-  } catch (error) {
-    console.error('Error deleting from Yandex Storage:', error);
-    throw new Error('Не удалось удалить изображение');
-  }
+  console.log('Delete image not yet implemented via Cloud Function:', imageUrl);
+  // TODO: Implement delete via Cloud Function if needed
 }
 
 export function getImageUrl(fileName: string): string {
+  // Re-define STORAGE_BUCKET here as it's no longer globally accessible from the S3 client setup.
+  // const STORAGE_BUCKET = import.meta.env.VITE_STORAGE_BUCKET || 'sweetdelights-images';
   return `https://storage.yandexcloud.net/${STORAGE_BUCKET}/${fileName}`;
 }
 
