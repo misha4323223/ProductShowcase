@@ -27,7 +27,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyAdminToken = async (token: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+      const response = await fetch(`${API_BASE_URL}/auth/verify-token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),
