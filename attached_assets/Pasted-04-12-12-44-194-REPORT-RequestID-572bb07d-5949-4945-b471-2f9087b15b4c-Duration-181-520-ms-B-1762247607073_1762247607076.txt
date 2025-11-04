@@ -1,0 +1,458 @@
+04 нояб. 12:12:44.194
+REPORT RequestID: 572bb07d-5949-4945-b471-2f9087b15b4c Duration: 181.520 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 103 MB Queuing Duration: 0.024 ms Function Init Duration: 160.300 ms CPU Usage: 12.695 %
+REPORT RequestID: 572bb07d-5949-4945-b471-2f9087b15b4c Duration: 181.520 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 103 MB Queuing Duration: 0.024 ms Function Init Duration: 160.300 ms CPU Usage: 12.695 %
+"request_id""572bb07d-5949-4945-b471-2f9087b15b4c"
+"source""system"
+"version_id""d4edljk0v8uuogiutqh9"
+
+04 нояб. 12:12:44.194
+END RequestID: 572bb07d-5949-4945-b471-2f9087b15b4c
+END RequestID: 572bb07d-5949-4945-b471-2f9087b15b4c
+"request_id""572bb07d-5949-4945-b471-2f9087b15b4c"
+"source""system"
+"version_id""d4edljk0v8uuogiutqh9"
+
+04 нояб. 12:12:44.194
+}
+
+04 нояб. 12:12:44.194
+'$metadata': { attempts: 1, totalRetryDelay: 0 }
+
+04 нояб. 12:12:44.194
+at async exports.handler [as handlerFn] (/function/code/index.js:43:5) {
+
+04 нояб. 12:12:44.194
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+04 нояб. 12:12:44.194
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+04 нояб. 12:12:44.194
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:123:18
+
+04 нояб. 12:12:44.194
+at async AwsSdkSigV4Signer.sign (/function/code/node_modules/@aws-sdk/core/dist-cjs/index.js:114:31)
+
+04 нояб. 12:12:44.194
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+04 нояб. 12:12:44.194
+at SignatureV4.signRequest (/function/code/node_modules/@smithy/signature-v4/dist-cjs/index.js:481:14)
+
+04 нояб. 12:12:44.194
+at SignatureV4.validateResolvedCredentials (/function/code/node_modules/@smithy/signature-v4/dist-cjs/index.js:374:19)
+
+04 нояб. 12:12:44.193
+Error deleting category: Error: Resolved credential object is not valid
+
+04 нояб. 12:12:44.182
+Attempting to delete category with ID: accessories
+
+04 нояб. 12:12:44.182
+Extracted category ID: accessories
+
+04 нояб. 12:12:44.182
+}
+
+04 нояб. 12:12:44.182
+"path": "/categories/{id}"
+
+04 нояб. 12:12:44.182
+"isBase64Encoded": true,
+
+04 нояб. 12:12:44.182
+"body": "",
+
+04 нояб. 12:12:44.182
+},
+
+04 нояб. 12:12:44.182
+"requestTimeEpoch": 1762247563
+
+04 нояб. 12:12:44.182
+"requestTime": "4/Nov/2025:09:12:43 +0000",
+
+04 нояб. 12:12:44.182
+"requestId": "9bdef01e-a15f-40aa-b2a3-86780b9ead7d",
+
+04 нояб. 12:12:44.182
+"httpMethod": "DELETE",
+
+04 нояб. 12:12:44.182
+},
+
+04 нояб. 12:12:44.182
+"userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 12:12:44.182
+"sourceIp": "176.59.49.253",
+
+04 нояб. 12:12:44.182
+"identity": {
+
+04 нояб. 12:12:44.182
+"requestContext": {
+
+04 нояб. 12:12:44.182
+"multiValueQueryStringParameters": {},
+
+04 нояб. 12:12:44.182
+"queryStringParameters": {},
+
+04 нояб. 12:12:44.182
+},
+
+04 нояб. 12:12:44.182
+]
+
+04 нояб. 12:12:44.182
+"a2c55e4e-e3b5-481e-8a6a-71232e99116b"
+
+04 нояб. 12:12:44.182
+"X-Trace-Id": [
+
+04 нояб. 12:12:44.182
+],
+
+04 нояб. 12:12:44.182
+"d5dimdj7itkijbl4s0g4"
+
+04 нояб. 12:12:44.182
+"X-Serverless-Gateway-Id": [
+
+04 нояб. 12:12:44.182
+],
+
+04 нояб. 12:12:44.181
+"{}"
+
+04 нояб. 12:12:44.181
+"X-Serverless-Certificate-Ids": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"9bdef01e-a15f-40aa-b2a3-86780b9ead7d"
+
+04 нояб. 12:12:44.181
+"X-Request-Id": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"176.59.49.253:59232"
+
+04 нояб. 12:12:44.181
+"X-Real-Remote-Address": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"https"
+
+04 нояб. 12:12:44.181
+"X-Forwarded-Proto": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"176.59.49.253"
+
+04 нояб. 12:12:44.181
+"X-Forwarded-For": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"/categories/accessories"
+
+04 нояб. 12:12:44.181
+"X-Envoy-Original-Path": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"176.59.49.253"
+
+04 нояб. 12:12:44.181
+"X-Envoy-External-Address": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"d4eo70h7u5qevjl70hup"
+
+04 нояб. 12:12:44.181
+"X-Api-Gateway-Function-Id": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 12:12:44.181
+"User-Agent": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"c3390390c5b7cffe:62959a0b035d3909:27f0f4ea3637ca9c:1"
+
+04 нояб. 12:12:44.181
+"Uber-Trace-Id": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"cross-site"
+
+04 нояб. 12:12:44.181
+"Sec-Fetch-Site": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"cors"
+
+04 нояб. 12:12:44.181
+"Sec-Fetch-Mode": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"empty"
+
+04 нояб. 12:12:44.181
+"Sec-Fetch-Dest": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"\"Windows\""
+
+04 нояб. 12:12:44.181
+"Sec-Ch-Ua-Platform": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"?0"
+
+04 нояб. 12:12:44.181
+"Sec-Ch-Ua-Mobile": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"\"Google Chrome\";v=\"141\", \"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"141\""
+
+04 нояб. 12:12:44.181
+"Sec-Ch-Ua": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"https://sweetdelights.store/"
+
+04 нояб. 12:12:44.181
+"Referer": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"u=1, i"
+
+04 нояб. 12:12:44.181
+"Priority": [
+
+04 нояб. 12:12:44.181
+],
+
+04 нояб. 12:12:44.181
+"https://sweetdelights.store"
+
+04 нояб. 12:12:44.181
+"Origin": [
+
+04 нояб. 12:12:44.180
+],
+
+04 нояб. 12:12:44.180
+"d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net"
+
+04 нояб. 12:12:44.180
+"Host": [
+
+04 нояб. 12:12:44.180
+],
+
+04 нояб. 12:12:44.180
+"ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+
+04 нояб. 12:12:44.180
+"Accept-Language": [
+
+04 нояб. 12:12:44.180
+],
+
+04 нояб. 12:12:44.180
+"gzip, deflate, br, zstd"
+
+04 нояб. 12:12:44.180
+"Accept-Encoding": [
+
+04 нояб. 12:12:44.180
+],
+
+04 нояб. 12:12:44.180
+"*/*"
+
+04 нояб. 12:12:44.180
+"Accept": [
+
+04 нояб. 12:12:44.180
+"multiValueHeaders": {
+
+04 нояб. 12:12:44.180
+},
+
+04 нояб. 12:12:44.180
+"id": "accessories"
+
+04 нояб. 12:12:44.180
+"pathParams": {
+
+04 нояб. 12:12:44.180
+},
+
+04 нояб. 12:12:44.180
+]
+
+04 нояб. 12:12:44.180
+"accessories"
+
+04 нояб. 12:12:44.180
+"id": [
+
+04 нояб. 12:12:44.180
+"multiValueParams": {
+
+04 нояб. 12:12:44.180
+},
+
+04 нояб. 12:12:44.180
+"id": "accessories"
+
+04 нояб. 12:12:44.180
+"params": {
+
+04 нояб. 12:12:44.180
+"url": "/categories/accessories?",
+
+04 нояб. 12:12:44.180
+},
+
+04 нояб. 12:12:44.180
+"X-Trace-Id": "a2c55e4e-e3b5-481e-8a6a-71232e99116b"
+
+04 нояб. 12:12:44.180
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+04 нояб. 12:12:44.180
+"X-Serverless-Certificate-Ids": "{}",
+
+04 нояб. 12:12:44.180
+"X-Request-Id": "9bdef01e-a15f-40aa-b2a3-86780b9ead7d",
+
+04 нояб. 12:12:44.180
+"X-Real-Remote-Address": "176.59.49.253:59232",
+
+04 нояб. 12:12:44.180
+"X-Forwarded-Proto": "https",
+
+04 нояб. 12:12:44.180
+"X-Forwarded-For": "176.59.49.253",
+
+04 нояб. 12:12:44.180
+"X-Envoy-Original-Path": "/categories/accessories",
+
+04 нояб. 12:12:44.180
+"X-Envoy-External-Address": "176.59.49.253",
+
+04 нояб. 12:12:44.180
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+04 нояб. 12:12:44.180
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+
+04 нояб. 12:12:44.180
+"Uber-Trace-Id": "c3390390c5b7cffe:62959a0b035d3909:27f0f4ea3637ca9c:1",
+
+04 нояб. 12:12:44.180
+"Sec-Fetch-Site": "cross-site",
+
+04 нояб. 12:12:44.180
+"Sec-Fetch-Mode": "cors",
+
+04 нояб. 12:12:44.180
+"Sec-Fetch-Dest": "empty",
+
+04 нояб. 12:12:44.180
+"Sec-Ch-Ua-Platform": "\"Windows\"",
+
+04 нояб. 12:12:44.180
+"Sec-Ch-Ua-Mobile": "?0",
+
+04 нояб. 12:12:44.180
+"Sec-Ch-Ua": "\"Google Chrome\";v=\"141\", \"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"141\"",
+
+04 нояб. 12:12:44.180
+"Referer": "https://sweetdelights.store/",
+
+04 нояб. 12:12:44.180
+"Priority": "u=1, i",
+
+04 нояб. 12:12:44.180
+"Origin": "https://sweetdelights.store",
+
+04 нояб. 12:12:44.180
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+04 нояб. 12:12:44.180
+"Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+
+04 нояб. 12:12:44.180
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+04 нояб. 12:12:44.180
+"Accept": "*/*",
+
+04 нояб. 12:12:44.180
+"headers": {
+
+04 нояб. 12:12:44.180
+"httpMethod": "DELETE",
+
+04 нояб. 12:12:44.180
+Event received: {
+
+04 нояб. 12:12:44.010
+START RequestID: 572bb07d-5949-4945-b471-2f9087b15b4c Version: d4edljk0v8uuogiutqh9
+START RequestID: 572bb07d-5949-4945-b471-2f9087b15b4c Version: d4edljk0v8uuogiutqh9
