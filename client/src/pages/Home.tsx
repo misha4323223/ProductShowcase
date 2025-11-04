@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCategories } from "@/api/categories";
+import { getAllCategories } from "@/services/api-client";
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
 import heroImage1WebP from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.webp';
