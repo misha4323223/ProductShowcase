@@ -211,9 +211,6 @@ paths:
           'Access-Control-Allow-Origin': '*'
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
           'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      responses:
-        '200':
-          description: OK
 
   # ========== PROMO CODES ==========
   /promocodes/validate:
