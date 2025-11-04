@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { auth } from "@/lib/firebase";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { getAllProducts, getAllCategories, createProduct, updateProduct, deleteProduct, createCategory, deleteCategory } from "@/services/api-client";
+import { getAllProducts, getAllCategories, createProduct, updateProduct, deleteProduct, createCategory, updateCategory, deleteCategory } from "@/services/api-client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send, Edit } from "lucide-react";
 import { getUserOrders, updateOrderStatus, getAllOrders, deleteOrder } from "@/services/yandex-orders";
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
@@ -90,6 +90,7 @@ export default function AdminPage() {
   const [categoryImageFile, setCategoryImageFile] = useState<File | null>(null);
   const [categoryImagePreview, setCategoryImagePreview] = useState<string>("");
   const [isUploadingCategoryImage, setIsUploadingCategoryImage] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -208,6 +209,30 @@ export default function AdminPage() {
       categoryForm.reset();
       setCategoryImageFile(null);
       setCategoryImagePreview("");
+      setEditingCategory(null);
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
+  const updateCategoryMutation = useMutation({
+    mutationFn: async (data: Category) => {
+      if (!editingCategory) return;
+      console.log("📤 Обновляем категорию:", editingCategory.id, data);
+      await updateCategory(editingCategory.id, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
+      toast({ title: "Категория обновлена!" });
+      categoryForm.reset();
+      setCategoryImageFile(null);
+      setCategoryImagePreview("");
+      setEditingCategory(null);
     },
     onError: (error: any) => {
       toast({ 
@@ -600,6 +625,34 @@ export default function AdminPage() {
     setCategoryImageFile(null);
     setCategoryImagePreview("");
     categoryForm.setValue('image', '');
+  };
+
+  const handleEditCategory = (category: Category) => {
+    setEditingCategory(category);
+    categoryForm.reset({
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      image: category.image || "",
+    });
+    if (category.image) {
+      setCategoryImagePreview(category.image);
+    }
+  };
+
+  const handleCancelEditCategory = () => {
+    setEditingCategory(null);
+    categoryForm.reset();
+    setCategoryImageFile(null);
+    setCategoryImagePreview("");
+  };
+
+  const handleCategorySubmit = (data: Category) => {
+    if (editingCategory) {
+      updateCategoryMutation.mutate(data);
+    } else {
+      addCategoryMutation.mutate(data);
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -1354,12 +1407,12 @@ export default function AdminPage() {
         <TabsContent value="categories" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Добавить категорию</CardTitle>
-              <CardDescription>Создайте новую категорию товаров</CardDescription>
+              <CardTitle>{editingCategory ? "Редактировать категорию" : "Добавить категорию"}</CardTitle>
+              <CardDescription>{editingCategory ? "Обновите данные категории" : "Создайте новую категорию товаров"}</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...categoryForm}>
-                <form onSubmit={categoryForm.handleSubmit((data) => addCategoryMutation.mutate(data))} className="space-y-4">
+                <form onSubmit={categoryForm.handleSubmit(handleCategorySubmit)} className="space-y-4">
                   <FormField
                     control={categoryForm.control}
                     name="id"
@@ -1367,7 +1420,7 @@ export default function AdminPage() {
                       <FormItem>
                         <FormLabel>ID категории</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="chocolates" data-testid="input-category-id" />
+                          <Input {...field} placeholder="chocolates" disabled={!!editingCategory} data-testid="input-category-id" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1475,10 +1528,29 @@ export default function AdminPage() {
                     )}
                   />
                   
-                  <Button type="submit" disabled={addCategoryMutation.isPending} data-testid="button-add-category">
-                    <Plus className="w-4 h-4 mr-2" />
-                    {addCategoryMutation.isPending ? "Добавление..." : "Добавить категорию"}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      type="submit" 
+                      disabled={addCategoryMutation.isPending || updateCategoryMutation.isPending} 
+                      data-testid="button-add-category"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      {editingCategory 
+                        ? (updateCategoryMutation.isPending ? "Сохранение..." : "Сохранить изменения")
+                        : (addCategoryMutation.isPending ? "Добавление..." : "Добавить категорию")
+                      }
+                    </Button>
+                    {editingCategory && (
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={handleCancelEditCategory}
+                        data-testid="button-cancel-edit-category"
+                      >
+                        Отменить
+                      </Button>
+                    )}
+                  </div>
                 </form>
               </Form>
             </CardContent>
@@ -1515,15 +1587,25 @@ export default function AdminPage() {
                           )}
                         </div>
                       </div>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => deleteCategoryMutation.mutate(cat.id)}
-                        disabled={deleteCategoryMutation.isPending}
-                        data-testid={`button-delete-category-${cat.id}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditCategory(cat)}
+                          data-testid={`button-edit-category-${cat.id}`}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteCategoryMutation.mutate(cat.id)}
+                          disabled={deleteCategoryMutation.isPending}
+                          data-testid={`button-delete-category-${cat.id}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
