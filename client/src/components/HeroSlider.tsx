@@ -111,8 +111,8 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-            <div className={`absolute inset-0 flex items-center ${slide.id === 2 ? 'justify-end pr-8 md:pr-16' : 'justify-center'}`}>
-              <div className={`${slide.id === 2 ? 'text-right' : 'text-center'} text-white max-w-3xl px-4`}>
+            <div className={`absolute inset-0 flex items-center ${slide.id === 2 ? 'justify-end' : 'justify-center'}`}>
+              <div className={`${slide.id === 2 ? 'text-right pr-4 md:pr-16' : 'text-center px-4'} text-white max-w-3xl`}>
                 <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 drop-shadow-2xl text-candy" data-testid={`text-slide-title-${index}`}>
                   {slide.title}
                 </h1>
