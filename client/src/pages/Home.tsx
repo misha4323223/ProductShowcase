@@ -111,7 +111,7 @@ export default function Home() {
     },
   ];
 
-  // Маппинг изображений для категорий
+  // Маппинг дефолтных изображений для категорий без загруженных изображений
   const categoryImages: Record<string, { image: string; webpImage: string }> = {
     'chocolates': { image: chocolateImage, webpImage: chocolateImageWebP },
     'candies': { image: candiesImage, webpImage: candiesImageWebP },
@@ -120,14 +120,28 @@ export default function Home() {
     'sale': { image: saleImage, webpImage: saleImageWebP },
   };
 
-  // Используем категории из API с соответствующими изображениями
-  const categoriesWithImages = categories.map(cat => ({
-    name: cat.name,
-    slug: cat.slug,
-    image: categoryImages[cat.slug]?.image || chocolateImage,
-    webpImage: categoryImages[cat.slug]?.webpImage || chocolateImageWebP,
-    id: cat.id, // Добавляем id для CategoryCard
-  }));
+  // Используем категории из API с их изображениями или дефолтными
+  const categoriesWithImages = categories.map(cat => {
+    // Если у категории есть изображение в базе данных - используем его
+    if (cat.image) {
+      return {
+        name: cat.name,
+        slug: cat.slug,
+        image: cat.image, // Используем изображение из БД
+        webpImage: cat.image, // WebP формат уже загружен в Yandex Storage
+        id: cat.id,
+      };
+    }
+    
+    // Иначе используем дефолтное изображение
+    return {
+      name: cat.name,
+      slug: cat.slug,
+      image: categoryImages[cat.slug]?.image || chocolateImage,
+      webpImage: categoryImages[cat.slug]?.webpImage || chocolateImageWebP,
+      id: cat.id,
+    };
+  });
 
   const handleAddToCart = (productId: string) => {
     const product = products.find(p => p.id === productId);
