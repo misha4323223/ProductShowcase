@@ -1,0 +1,434 @@
+Время (UTC +3)
+Сообщение
+
+04 нояб. 13:26:51.469
+REPORT RequestID: e6956573-0f84-4221-91c3-80401e063ed1 Duration: 303.914 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 106 MB Queuing Duration: 0.063 ms Function Init Duration: 128.044 ms CPU Usage: 12.988 %
+REPORT RequestID: e6956573-0f84-4221-91c3-80401e063ed1 Duration: 303.914 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 106 MB Queuing Duration: 0.063 ms Function Init Duration: 128.044 ms CPU Usage: 12.988 %
+"request_id""e6956573-0f84-4221-91c3-80401e063ed1"
+"source""system"
+"version_id""d4ekum7m2j60cjdp6prd"
+
+04 нояб. 13:26:51.469
+END RequestID: e6956573-0f84-4221-91c3-80401e063ed1
+END RequestID: e6956573-0f84-4221-91c3-80401e063ed1
+"request_id""e6956573-0f84-4221-91c3-80401e063ed1"
+"source""system"
+"version_id""d4ekum7m2j60cjdp6prd"
+
+04 нояб. 13:26:51.467
+Category deleted successfully
+
+04 нояб. 13:26:51.297
+Attempting to delete category with ID: mhkfbji41oedco6jjtmi
+
+04 нояб. 13:26:51.297
+Extracted category ID: mhkfbji41oedco6jjtmi
+
+04 нояб. 13:26:51.296
+}
+
+04 нояб. 13:26:51.296
+"path": "/categories/{id}"
+
+04 нояб. 13:26:51.296
+"isBase64Encoded": true,
+
+04 нояб. 13:26:51.296
+"body": "",
+
+04 нояб. 13:26:51.296
+},
+
+04 нояб. 13:26:51.296
+"requestTimeEpoch": 1762252011
+
+04 нояб. 13:26:51.296
+"requestTime": "4/Nov/2025:10:26:51 +0000",
+
+04 нояб. 13:26:51.296
+"requestId": "549994e8-85f8-470a-9449-58418f8588fb",
+
+04 нояб. 13:26:51.296
+"httpMethod": "DELETE",
+
+04 нояб. 13:26:51.296
+},
+
+04 нояб. 13:26:51.296
+"userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 13:26:51.296
+"sourceIp": "176.59.49.253",
+
+04 нояб. 13:26:51.296
+"identity": {
+
+04 нояб. 13:26:51.296
+"requestContext": {
+
+04 нояб. 13:26:51.296
+"multiValueQueryStringParameters": {},
+
+04 нояб. 13:26:51.296
+"queryStringParameters": {},
+
+04 нояб. 13:26:51.296
+},
+
+04 нояб. 13:26:51.296
+]
+
+04 нояб. 13:26:51.296
+"9c6bcf5b-6e13-4f7c-8721-67dee11fd980"
+
+04 нояб. 13:26:51.296
+"X-Trace-Id": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"d5dimdj7itkijbl4s0g4"
+
+04 нояб. 13:26:51.296
+"X-Serverless-Gateway-Id": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"{}"
+
+04 нояб. 13:26:51.296
+"X-Serverless-Certificate-Ids": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"549994e8-85f8-470a-9449-58418f8588fb"
+
+04 нояб. 13:26:51.296
+"X-Request-Id": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"176.59.49.253:64059"
+
+04 нояб. 13:26:51.296
+"X-Real-Remote-Address": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"https"
+
+04 нояб. 13:26:51.296
+"X-Forwarded-Proto": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"176.59.49.253"
+
+04 нояб. 13:26:51.296
+"X-Forwarded-For": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"/categories/mhkfbji41oedco6jjtmi"
+
+04 нояб. 13:26:51.296
+"X-Envoy-Original-Path": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"176.59.49.253"
+
+04 нояб. 13:26:51.296
+"X-Envoy-External-Address": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"d4eo70h7u5qevjl70hup"
+
+04 нояб. 13:26:51.296
+"X-Api-Gateway-Function-Id": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 13:26:51.296
+"User-Agent": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"387e3b96f2f48f4f:db4926c1820c4e0c:12e3f6371853c0c1:1"
+
+04 нояб. 13:26:51.296
+"Uber-Trace-Id": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"cross-site"
+
+04 нояб. 13:26:51.296
+"Sec-Fetch-Site": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"cors"
+
+04 нояб. 13:26:51.296
+"Sec-Fetch-Mode": [
+
+04 нояб. 13:26:51.296
+],
+
+04 нояб. 13:26:51.296
+"empty"
+
+04 нояб. 13:26:51.296
+"Sec-Fetch-Dest": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"\"Windows\""
+
+04 нояб. 13:26:51.295
+"Sec-Ch-Ua-Platform": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"?0"
+
+04 нояб. 13:26:51.295
+"Sec-Ch-Ua-Mobile": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"\"Google Chrome\";v=\"141\", \"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"141\""
+
+04 нояб. 13:26:51.295
+"Sec-Ch-Ua": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"https://e7f1dfe7-751c-4695-838b-38f1036f3962-00-27oagjlp817fa.pike.replit.dev/"
+
+04 нояб. 13:26:51.295
+"Referer": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"u=1, i"
+
+04 нояб. 13:26:51.295
+"Priority": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"https://e7f1dfe7-751c-4695-838b-38f1036f3962-00-27oagjlp817fa.pike.replit.dev"
+
+04 нояб. 13:26:51.295
+"Origin": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net"
+
+04 нояб. 13:26:51.295
+"Host": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+
+04 нояб. 13:26:51.295
+"Accept-Language": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"gzip, deflate, br, zstd"
+
+04 нояб. 13:26:51.295
+"Accept-Encoding": [
+
+04 нояб. 13:26:51.295
+],
+
+04 нояб. 13:26:51.295
+"*/*"
+
+04 нояб. 13:26:51.295
+"Accept": [
+
+04 нояб. 13:26:51.295
+"multiValueHeaders": {
+
+04 нояб. 13:26:51.295
+},
+
+04 нояб. 13:26:51.295
+"id": "mhkfbji41oedco6jjtmi"
+
+04 нояб. 13:26:51.295
+"pathParams": {
+
+04 нояб. 13:26:51.295
+},
+
+04 нояб. 13:26:51.295
+]
+
+04 нояб. 13:26:51.295
+"mhkfbji41oedco6jjtmi"
+
+04 нояб. 13:26:51.295
+"id": [
+
+04 нояб. 13:26:51.295
+"multiValueParams": {
+
+04 нояб. 13:26:51.295
+},
+
+04 нояб. 13:26:51.295
+"id": "mhkfbji41oedco6jjtmi"
+
+04 нояб. 13:26:51.295
+"params": {
+
+04 нояб. 13:26:51.295
+"url": "/categories/mhkfbji41oedco6jjtmi?",
+
+04 нояб. 13:26:51.295
+},
+
+04 нояб. 13:26:51.295
+"X-Trace-Id": "9c6bcf5b-6e13-4f7c-8721-67dee11fd980"
+
+04 нояб. 13:26:51.295
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+04 нояб. 13:26:51.295
+"X-Serverless-Certificate-Ids": "{}",
+
+04 нояб. 13:26:51.295
+"X-Request-Id": "549994e8-85f8-470a-9449-58418f8588fb",
+
+04 нояб. 13:26:51.295
+"X-Real-Remote-Address": "176.59.49.253:64059",
+
+04 нояб. 13:26:51.295
+"X-Forwarded-Proto": "https",
+
+04 нояб. 13:26:51.295
+"X-Forwarded-For": "176.59.49.253",
+
+04 нояб. 13:26:51.295
+"X-Envoy-Original-Path": "/categories/mhkfbji41oedco6jjtmi",
+
+04 нояб. 13:26:51.295
+"X-Envoy-External-Address": "176.59.49.253",
+
+04 нояб. 13:26:51.295
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+04 нояб. 13:26:51.295
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+
+04 нояб. 13:26:51.295
+"Uber-Trace-Id": "387e3b96f2f48f4f:db4926c1820c4e0c:12e3f6371853c0c1:1",
+
+04 нояб. 13:26:51.295
+"Sec-Fetch-Site": "cross-site",
+
+04 нояб. 13:26:51.295
+"Sec-Fetch-Mode": "cors",
+
+04 нояб. 13:26:51.295
+"Sec-Fetch-Dest": "empty",
+
+04 нояб. 13:26:51.295
+"Sec-Ch-Ua-Platform": "\"Windows\"",
+
+04 нояб. 13:26:51.295
+"Sec-Ch-Ua-Mobile": "?0",
+
+04 нояб. 13:26:51.295
+"Sec-Ch-Ua": "\"Google Chrome\";v=\"141\", \"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"141\"",
+
+04 нояб. 13:26:51.295
+"Referer": "https://e7f1dfe7-751c-4695-838b-38f1036f3962-00-27oagjlp817fa.pike.replit.dev/",
+
+04 нояб. 13:26:51.294
+"Priority": "u=1, i",
+
+04 нояб. 13:26:51.294
+"Origin": "https://e7f1dfe7-751c-4695-838b-38f1036f3962-00-27oagjlp817fa.pike.replit.dev",
+
+04 нояб. 13:26:51.294
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+04 нояб. 13:26:51.294
+"Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+
+04 нояб. 13:26:51.294
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+04 нояб. 13:26:51.294
+"Accept": "*/*",
+
+04 нояб. 13:26:51.294
+"headers": {
+
+04 нояб. 13:26:51.294
+"httpMethod": "DELETE",
+
+04 нояб. 13:26:51.294
+Event received: {
+
+04 нояб. 13:26:51.126
+START RequestID: e6956573-0f84-4221-91c3-80401e063ed1 Version: d4ekum7m2j60cjdp6prd
+START RequestID: e6956573-0f84-4221-91c3-80401e063ed1 Version: d4ekum7m2j60cjdp6prd
+"request_id""e6956573-0f84-4221-91c3-80401e063ed1"
+"source""system"
+"version_id""d4ekum7m2j60cjdp6prd"
