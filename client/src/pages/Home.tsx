@@ -12,6 +12,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
+import type { Category } from "@/types/firebase-types";
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
 import heroImage1WebP from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.webp';
@@ -30,7 +31,7 @@ import cookiesImageWebP from '@assets/generated_images/Cookies_and_biscuits_imag
 import saleImage from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.png';
 import saleImageWebP from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.webp';
 
-interface Category {
+interface CategoryWithImages {
   id: string;
   name: string;
   slug: string;
@@ -123,7 +124,7 @@ export default function Home() {
   };
 
   // Используем категории из API с их изображениями или дефолтными
-  const categoriesWithImages = categories.map(cat => {
+  const categoriesWithImages: CategoryWithImages[] = categories.map((cat: Category) => {
     // Если у категории есть изображение в базе данных - используем его
     if (cat.image) {
       // Добавляем timestamp для обхода кэша браузера
@@ -283,7 +284,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                {categoriesWithImages.map((category) => (
+                {categoriesWithImages.map((category: CategoryWithImages) => (
                   <CategoryCard
                     key={category.id}
                     name={category.name}
