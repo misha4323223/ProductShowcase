@@ -24,6 +24,8 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
 
+    console.log("📥 Получены данные категории:", JSON.stringify(body));
+
     if (!body.id || !body.name || !body.slug) {
       return {
         statusCode: 400,
@@ -32,10 +34,19 @@ exports.handler = async (event) => {
       };
     }
 
+    // Убираем пустую строку из image, если она пустая
+    if (body.image === "") {
+      delete body.image;
+    }
+
+    console.log("💾 Сохраняем в YDB:", JSON.stringify(body));
+
     await docClient.send(new PutCommand({
       TableName: "categories",
       Item: body,
     }));
+
+    console.log("✅ Категория успешно сохранена:", body.id);
 
     return {
       statusCode: 200,
@@ -43,7 +54,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ success: true, category: body }),
     };
   } catch (error) {
-    console.error("Error:", error);
+    console.error("❌ Ошибка создания категории:", error);
     return {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
