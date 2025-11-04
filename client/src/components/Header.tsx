@@ -33,13 +33,13 @@ const getCategoryStyle = (slug: string) => {
       emoji: "🥤"
     },
     marmalade: {
-      gradient: "from-rose-400 via-pink-500 to-rose-600",
-      shadow: "0 4px 0 rgba(225, 29, 72, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      gradient: "from-lime-400 via-green-500 to-lime-600",
+      shadow: "0 4px 0 rgba(132, 204, 22, 0.4), 0 6px 12px rgba(34, 197, 94, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
       emoji: "🍬"
     },
     "gift-box": {
-      gradient: "from-fuchsia-400 via-purple-500 to-fuchsia-600",
-      shadow: "0 4px 0 rgba(192, 38, 211, 0.4), 0 6px 12px rgba(168, 85, 247, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      gradient: "from-red-400 via-rose-500 to-red-600",
+      shadow: "0 4px 0 rgba(220, 38, 38, 0.4), 0 6px 12px rgba(244, 63, 94, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
       emoji: "🎁"
     },
     "cookies-pastries": {
