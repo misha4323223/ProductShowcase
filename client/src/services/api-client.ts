@@ -4,14 +4,14 @@ const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
 async function fetchJSON<T>(endpoint: string): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
-  
+
   try {
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error);
@@ -34,11 +34,11 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 export async function getProductsByCategory(categorySlug: string): Promise<Product[]> {
   const allProducts = await getAllProducts();
-  
+
   if (categorySlug === 'sale') {
     return allProducts.filter(p => p.salePrice != null);
   }
-  
+
   return allProducts.filter(p => p.category === categorySlug);
 }
 
@@ -49,7 +49,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
 
 export async function getProductsSorted(sortBy: 'price-asc' | 'price-desc' | 'popularity' | 'newest'): Promise<Product[]> {
   const allProducts = await getAllProducts();
-  
+
   switch (sortBy) {
     case 'price-asc':
       return [...allProducts].sort((a, b) => a.price - b.price);
@@ -69,7 +69,37 @@ export async function getProductsSorted(sortBy: 'price-asc' | 'price-desc' | 'po
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  return fetchJSON<Category[]>('/categories');
+  try {
+    const response = await fetch(`${API_BASE_URL}/categories`, {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('❌ Ошибка получения категорий:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: text.substring(0, 200)
+      });
+      throw new Error(`Failed to get categories: ${response.status} ${response.statusText}`);
+    }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('❌ Получен не JSON:', text.substring(0, 200));
+      throw new Error('Server returned non-JSON response');
+    }
+
+    const data = await response.json();
+    console.log('✅ Категории успешно получены:', data.length, 'шт');
+    return data;
+  } catch (error: any) {
+    console.error('❌ Ошибка в getAllCategories:', error);
+    throw error;
+  }
 }
 
 // ========== ADMIN API: PRODUCTS ==========
@@ -80,7 +110,7 @@ export async function createProduct(product: any): Promise<void> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(product),
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to create product: ${response.status}`);
   }
@@ -92,7 +122,7 @@ export async function updateProduct(id: string, updates: any): Promise<void> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updates),
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to update product: ${response.status}`);
   }
@@ -102,7 +132,7 @@ export async function deleteProduct(id: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/products/${id}`, {
     method: 'DELETE',
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to delete product: ${response.status}`);
   }
@@ -116,7 +146,7 @@ export async function createCategory(category: any): Promise<void> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(category),
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to create category: ${response.status}`);
   }
@@ -126,7 +156,7 @@ export async function deleteCategory(id: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
     method: 'DELETE',
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to delete category: ${response.status}`);
   }
@@ -159,7 +189,7 @@ export async function createReview(review: {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(review),
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to create review: ${response.status}`);
   }
@@ -169,7 +199,7 @@ export async function deleteReview(id: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/reviews/${id}`, {
     method: 'DELETE',
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to delete review: ${response.status}`);
   }
@@ -190,10 +220,10 @@ export async function validatePromoCode(code: string, orderTotal: number): Promi
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code, orderTotal }),
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to validate promo code: ${response.status}`);
   }
-  
+
   return response.json();
 }

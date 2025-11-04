@@ -10,6 +10,8 @@ import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCategories } from "@/api/categories";
 
 import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
 import heroImage1WebP from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.webp';
@@ -28,17 +30,42 @@ import cookiesImageWebP from '@assets/generated_images/Cookies_and_biscuits_imag
 import saleImage from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.png';
 import saleImageWebP from '@assets/generated_images/Sale_promotion_banner_image_d14d30e1.webp';
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  image: string;
+  webpImage: string;
+}
+
 export default function Home() {
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
   const { toast } = useToast();
-  const { products, categories: apiCategories, isLoading } = useProducts();
+  const { products, isLoading: productsLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
 
+  const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useQuery<Category[]>({
+    queryKey: ["/api/categories"],
+    queryFn: async () => {
+      try {
+        const cats = await getAllCategories();
+        console.log("✅ Категории загружены:", cats);
+        return cats;
+      } catch (error) {
+        console.error("❌ Ошибка загрузки категорий:", error);
+        throw error;
+      }
+    },
+    retry: 3,
+    staleTime: 0, // Всегда запрашивать свежие данные
+    refetchOnMount: true,
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     const preloadLink = document.createElement('link');
     preloadLink.rel = 'preload';
     preloadLink.as = 'image';
@@ -46,14 +73,14 @@ export default function Home() {
     preloadLink.href = heroImage1WebP;
     preloadLink.fetchPriority = 'high';
     document.head.appendChild(preloadLink);
-    
+
     const preloadLinkFallback = document.createElement('link');
     preloadLinkFallback.rel = 'preload';
     preloadLinkFallback.as = 'image';
     preloadLinkFallback.type = 'image/png';
     preloadLinkFallback.href = heroImage1;
     document.head.appendChild(preloadLinkFallback);
-    
+
     return () => {
       document.head.removeChild(preloadLink);
       document.head.removeChild(preloadLinkFallback);
@@ -94,11 +121,12 @@ export default function Home() {
   };
 
   // Используем категории из API с соответствующими изображениями
-  const categories = apiCategories.map(cat => ({
+  const categoriesWithImages = categories.map(cat => ({
     name: cat.name,
     slug: cat.slug,
     image: categoryImages[cat.slug]?.image || chocolateImage,
     webpImage: categoryImages[cat.slug]?.webpImage || chocolateImageWebP,
+    id: cat.id, // Добавляем id для CategoryCard
   }));
 
   const handleAddToCart = (productId: string) => {
@@ -134,7 +162,7 @@ export default function Home() {
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
     const product = products.find(p => p.id === id);
-    
+
     // Проверка наличия на складе при увеличении количества
     if (product && product.stock !== undefined && product.stock < quantity) {
       toast({
@@ -144,7 +172,7 @@ export default function Home() {
       });
       return;
     }
-    
+
     updateQuantity(id, quantity);
   };
 
@@ -163,12 +191,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative candy-pattern">
-      <Header 
+      <Header
         cartCount={cartCount}
         wishlistCount={wishlistCount}
         onCartClick={() => setCartOpen(true)}
       />
-      
+
       <main className="flex-1 relative z-10">
         {/* Coming Soon Banner */}
         <div className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 py-4 sm:py-6 md:py-8 animate-gradient backdrop-blur-sm">
@@ -176,7 +204,7 @@ export default function Home() {
           <div className="absolute inset-0 opacity-30">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNCIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')] animate-pulse-slow"></div>
           </div>
-          
+
           <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
             {/* Main heading */}
             <div className="space-y-2 sm:space-y-3">
@@ -198,7 +226,7 @@ export default function Home() {
               </h1>
             </div>
           </div>
-          
+
           {/* Bottom wave decoration */}
           <div className="absolute bottom-0 left-0 right-0 h-6 sm:h-8">
             <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full">
@@ -206,9 +234,9 @@ export default function Home() {
             </svg>
           </div>
         </div>
-        
+
         <HeroSlider slides={slides} />
-        
+
         <section className="py-16 candy-stripe">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
@@ -217,17 +245,35 @@ export default function Home() {
               </h2>
               <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mx-auto shadow-lg shadow-pink-200" />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.map((category, index) => (
-                <CategoryCard
-                  key={index}
-                  name={category.name}
-                  image={category.image}
-                  webpImage={category.webpImage}
-                  onClick={() => setLocation(`/category/${category.slug}`)}
-                />
-              ))}
-            </div>
+
+            {categoriesError ? (
+              <div className="text-center py-8">
+                <p className="text-red-500 mb-4">❌ Ошибка загрузки категорий</p>
+                <p className="text-sm text-muted-foreground">{String(categoriesError)}</p>
+              </div>
+            ) : categoriesLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="aspect-square bg-muted animate-pulse rounded-3xl" />
+                ))}
+              </div>
+            ) : categories.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">Категории не найдены</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                {categoriesWithImages.map((category) => (
+                  <CategoryCard
+                    key={category.id}
+                    name={category.name}
+                    image={category.image}
+                    webpImage={category.webpImage}
+                    onClick={() => setLocation(`/category/${category.slug}`)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
@@ -239,7 +285,7 @@ export default function Home() {
               </h2>
               <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mx-auto shadow-lg shadow-pink-200" />
             </div>
-            {isLoading ? (
+            {productsLoading ? (
               <div className="text-center py-8">
                 <p className="text-muted-foreground">Загрузка товаров...</p>
               </div>
