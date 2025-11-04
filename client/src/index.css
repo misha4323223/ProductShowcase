@@ -1341,5 +1341,37 @@
       animation: none !important;
     }
   }
+
+  /* ========================================
+     ОПТИМИЗАЦИЯ: ПАУЗА АНИМАЦИЙ ПРИ СКРОЛЛЕ
+     Автоматически отключает все тяжелые анимации во время прокрутки
+     Класс 'is-scrolling' добавляется хуком useScrollPause
+     ======================================== */
+  body.is-scrolling {
+    /* Отключаем все бесконечные анимации при скролле */
+    .glossy-card::before,
+    .glossy-card::after,
+    .holographic-foil::before,
+    .holographic-foil::after,
+    .holographic-foil .sparkle-dots,
+    .candy-wrapper,
+    .lollipop-swirl,
+    .lollipop-swirl-badge,
+    .sugar-crystals::before,
+    .sweet-pulse,
+    .sugar-glow,
+    .pulse-glow,
+    .animate-float,
+    .animate-wiggle,
+    .animate-sparkle,
+    .logo-switching {
+      animation-play-state: paused !important;
+    }
+
+    /* Отключаем transitions для hover эффектов при скролле */
+    * {
+      transition-duration: 0ms !important;
+    }
+  }
   
 }
