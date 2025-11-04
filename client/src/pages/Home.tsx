@@ -14,8 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
 
-import heroImage1 from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.png';
-import heroImage1WebP from '@assets/generated_images/Colorful_macarons_hero_image_11795c3a.webp';
+import heroImage1 from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.png';
 import heroImage2 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
 import heroImage2WebP from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.webp';
 import heroImage3 from '@assets/generated_images/Candy_store_display_image_21d1d54f.png';
@@ -72,21 +71,13 @@ export default function Home() {
     const preloadLink = document.createElement('link');
     preloadLink.rel = 'preload';
     preloadLink.as = 'image';
-    preloadLink.type = 'image/webp';
-    preloadLink.href = heroImage1WebP;
+    preloadLink.type = 'image/png';
+    preloadLink.href = heroImage1;
     preloadLink.fetchPriority = 'high';
     document.head.appendChild(preloadLink);
 
-    const preloadLinkFallback = document.createElement('link');
-    preloadLinkFallback.rel = 'preload';
-    preloadLinkFallback.as = 'image';
-    preloadLinkFallback.type = 'image/png';
-    preloadLinkFallback.href = heroImage1;
-    document.head.appendChild(preloadLinkFallback);
-
     return () => {
       document.head.removeChild(preloadLink);
-      document.head.removeChild(preloadLinkFallback);
     };
   }, []);
 
@@ -94,9 +85,9 @@ export default function Home() {
     {
       id: 1,
       image: heroImage1,
-      webpImage: heroImage1WebP,
-      title: 'Французские Макаронс',
-      subtitle: 'Изысканные пирожные ручной работы',
+      webpImage: heroImage1,
+      title: 'Sweet Delights',
+      subtitle: 'Мир сладостей и радости',
     },
     {
       id: 2,
