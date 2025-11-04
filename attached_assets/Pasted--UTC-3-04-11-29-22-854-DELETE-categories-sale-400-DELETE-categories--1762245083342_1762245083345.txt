@@ -1,0 +1,77 @@
+Время (UTC +3)
+Сообщение
+
+04 нояб. 11:29:22.854
+DELETE /categories/sale 400
+DELETE /categories/sale 400
+"code"400
+"duration_seconds"0.053983155
+"operation""DELETE"
+"path""/categories/{id}"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""899bf4ed-7232-49d5-b064-7aa74de4a485"
+"request_uri""/categories/sale"
+"response_length_bytes"35
+"source_ip""176.59.49.253"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 11:29:22.794
+OPTIONS /categories/sale 200
+OPTIONS /categories/sale 200
+"code"200
+"duration_seconds"0.015614867
+"operation""OPTIONS"
+"path""/categories/{id}"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""207037b0-4580-4fe7-bddf-4406b2bfc64d"
+"request_uri""/categories/sale"
+"response_length_bytes"28
+"source_ip""176.59.49.253"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 11:29:22.065
+DELETE /categories/accessories 400
+DELETE /categories/accessories 400
+"code"400
+"duration_seconds"0.044316586
+"operation""DELETE"
+"path""/categories/{id}"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""1f183711-ad52-4da4-b3d9-3c6660ba1997"
+"request_uri""/categories/accessories"
+"response_length_bytes"35
+"source_ip""176.59.49.253"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 11:29:21.286
+DELETE /categories/accessories 400
+DELETE /categories/accessories 400
+"code"400
+"duration_seconds"0.047534848
+"operation""DELETE"
+"path""/categories/{id}"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""8b188965-05c3-48b7-8da8-28ca119a06ff"
+"request_uri""/categories/accessories"
+"response_length_bytes"35
+"source_ip""176.59.49.253"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 11:29:21.223
+OPTIONS /categories/accessories 200
+OPTIONS /categories/accessories 200
+"code"200
+"duration_seconds"0.036896636
+"operation""OPTIONS"
+"path""/categories/{id}"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""a6f99594-327a-4547-b886-42bda46fc2ce"
+"request_uri""/categories/accessories"
+"response_length_bytes"28
+"source_ip""176.59.49.253"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
