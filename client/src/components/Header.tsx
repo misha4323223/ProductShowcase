@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface HeaderProps {
   cartCount: number;
@@ -191,6 +192,8 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
                 <Search className="h-4 w-4 text-white drop-shadow-lg" />
               </button>
             )}
+            
+            <ThemeToggle />
             
             {user ? (
               <Link href="/account">
