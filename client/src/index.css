@@ -1290,5 +1290,56 @@
     user-select: none;
   }
 
+  /* ========================================
+     ОПТИМИЗАЦИЯ ПРОИЗВОДИТЕЛЬНОСТИ ДЛЯ МОБИЛЬНЫХ
+     Отключаем тяжелые бесконечные анимации на мобильных устройствах
+     ======================================== */
+  @media (hover: none) and (pointer: coarse) {
+    /* Отключаем glossy-shine анимацию на карточках */
+    .glossy-card::before {
+      animation: none !important;
+    }
+
+    /* Отключаем rainbow-shift на holographic-foil */
+    .holographic-foil::after {
+      animation: none !important;
+    }
+
+    /* Отключаем sparkle-pop анимацию */
+    .holographic-foil .sparkle-dots {
+      animation: none !important;
+    }
+
+    /* Отключаем shimmer на candy-wrapper */
+    .candy-wrapper {
+      animation: none !important;
+      background-position: 0% 50% !important;
+    }
+
+    /* Отключаем lollipop-spin */
+    .lollipop-swirl {
+      animation: none !important;
+    }
+
+    /* Отключаем sparkle-drift на sugar-crystals */
+    .sugar-crystals::before {
+      animation: none !important;
+    }
+
+    /* Отключаем sweet-pulse */
+    .sweet-pulse {
+      animation: none !important;
+    }
+
+    /* Отключаем sugar-glow */
+    .sugar-glow {
+      animation: none !important;
+    }
+
+    /* Отключаем pulse-glow */
+    .pulse-glow {
+      animation: none !important;
+    }
+  }
   
 }
