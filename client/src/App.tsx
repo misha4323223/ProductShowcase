@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import CookieBanner from "@/components/CookieBanner";
 import { useScrollPause } from "@/hooks/use-scroll-pause";
@@ -78,19 +79,21 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <AdminAuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <TooltipProvider>
-                <Toaster />
-                <CookieBanner />
-                <Router />
-              </TooltipProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AdminAuthProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AdminAuthProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  <CookieBanner />
+                  <Router />
+                </TooltipProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </AdminAuthProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
