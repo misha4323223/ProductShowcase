@@ -152,6 +152,18 @@ export async function createCategory(category: any): Promise<void> {
   }
 }
 
+export async function updateCategory(id: string, updates: any): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update category: ${response.status}`);
+  }
+}
+
 export async function deleteCategory(id: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
     method: 'DELETE',
