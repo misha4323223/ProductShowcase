@@ -108,7 +108,9 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               loading={index === 0 ? "eager" : "lazy"}
               decoding="async"
               fetchPriority={index === 0 ? "high" : "low"}
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover ${
+                slide.id === 2 ? 'object-left' : 'object-center'
+              }`}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             <div className={`absolute inset-0 flex items-center ${slide.id === 2 ? 'justify-end' : 'justify-center'}`}>
