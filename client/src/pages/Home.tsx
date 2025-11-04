@@ -16,10 +16,12 @@ import type { Category } from "@/types/firebase-types";
 
 import heroImage1 from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.png';
 import heroImage1WebP from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.webp';
-import heroImage2 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
-import heroImage2WebP from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.webp';
-import heroImage3 from '@assets/generated_images/Candy_store_display_image_21d1d54f.png';
-import heroImage3WebP from '@assets/generated_images/Candy_store_display_image_21d1d54f.webp';
+import heroImage2 from '@assets/generated_images/Candy_delivery_happiness_scene_fb271190.png';
+import heroImage2WebP from '@assets/generated_images/Candy_delivery_happiness_scene_fb271190.webp';
+import heroImage3 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
+import heroImage3WebP from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.webp';
+import heroImage4 from '@assets/generated_images/Candy_store_display_image_21d1d54f.png';
+import heroImage4WebP from '@assets/generated_images/Candy_store_display_image_21d1d54f.webp';
 import chocolateImage from '@assets/generated_images/Artisanal_chocolate_category_image_35f087de.png';
 import chocolateImageWebP from '@assets/generated_images/Artisanal_chocolate_category_image_35f087de.webp';
 import candiesImage from '@assets/generated_images/Assorted_candies_category_image_ce151d27.png';
