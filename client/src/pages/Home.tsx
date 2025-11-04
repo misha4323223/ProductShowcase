@@ -60,7 +60,9 @@ export default function Home() {
     },
     retry: 3,
     staleTime: 0, // Всегда запрашивать свежие данные
+    gcTime: 0, // Не кэшировать данные вообще
     refetchOnMount: true,
+    refetchOnWindowFocus: true, // Обновлять при возврате на вкладку
   });
 
   useEffect(() => {
@@ -124,11 +126,15 @@ export default function Home() {
   const categoriesWithImages = categories.map(cat => {
     // Если у категории есть изображение в базе данных - используем его
     if (cat.image) {
+      // Добавляем timestamp для обхода кэша браузера
+      const timestamp = new Date().getTime();
+      const imageWithCacheBust = `${cat.image}?v=${timestamp}`;
+      
       return {
         name: cat.name,
         slug: cat.slug,
-        image: cat.image, // Используем изображение из БД
-        webpImage: cat.image, // WebP формат уже загружен в Yandex Storage
+        image: imageWithCacheBust, // Используем изображение из БД с cache busting
+        webpImage: imageWithCacheBust, // WebP формат уже загружен в Yandex Storage
         id: cat.id,
       };
     }
