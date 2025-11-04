@@ -1,0 +1,119 @@
+04 нояб. 14:25:48.103
+GET /categories 200
+GET /categories 200
+"code"200
+"duration_seconds"0.189541395
+"operation""GET"
+"path""/categories"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""bdb4931e-9db5-4c22-8919-543c71958308"
+"request_uri""/categories"
+"response_length_bytes"226
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 14:25:47.950
+POST /auth/verify-token 200
+POST /auth/verify-token 200
+"code"200
+"duration_seconds"0.230204394
+"operation""POST"
+"path""/auth/verify-token"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""9d5bfa41-3067-4c6d-a96c-6b454d86a691"
+"request_uri""/auth/verify-token"
+"response_length_bytes"113
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 14:25:47.829
+OPTIONS /auth/verify-token 200
+OPTIONS /auth/verify-token 200
+"code"200
+"duration_seconds"0.08013369
+"operation""OPTIONS"
+"path""/auth/verify-token"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""3a619f27-426c-4737-9151-9c262d72ea9b"
+"request_uri""/auth/verify-token"
+"response_length_bytes"28
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 14:25:47.828
+GET /categories 200
+GET /categories 200
+"code"200
+"duration_seconds"0.1885422
+"operation""GET"
+"path""/categories"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""9eb19f2f-b8b7-4859-949c-c682caf23edc"
+"request_uri""/categories"
+"response_length_bytes"226
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 14:25:47.828
+GET /products 200
+GET /products 200
+"code"200
+"duration_seconds"0.201380694
+"operation""GET"
+"path""/products"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""1d8d9ed8-12e2-4513-a685-bbd79b75cb66"
+"request_uri""/products"
+"response_length_bytes"1052
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 14:25:17.091
+GET /categories 200
+GET /categories 200
+"code"200
+"duration_seconds"0.181977966
+"operation""GET"
+"path""/categories"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""482c8145-c5b1-49fe-8876-83d37482258d"
+"request_uri""/categories"
+"response_length_bytes"226
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 14:25:15.284
+POST /categories 201
+POST /categories 201
+"code"201
+"duration_seconds"1.781671319
+"operation""POST"
+"path""/categories"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""ac0ee126-740b-49dd-b3cd-dfadbbad3f73"
+"request_uri""/categories"
+"response_length_bytes"28
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+
+04 нояб. 14:25:14.979
+OPTIONS /categories 200
+OPTIONS /categories 200
+"code"200
+"duration_seconds"0.213096271
+"operation""OPTIONS"
+"path""/categories"
+"protocol""HTTP/2"
+"release""stable"
+"request_id""bfba9839-6fe5-4c37-8c29-27581d713b64"
+"request_uri""/categories"
+"response_length_bytes"28
+"source_ip""62.141.68.106"
+"user_agent""Mozilla/5.0 (Windows NT 10.0; W
