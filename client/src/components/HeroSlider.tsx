@@ -129,15 +129,15 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         ))}
 
         {/* Кнопка подписки */}
-        <div className="absolute inset-0 flex items-end md:items-center justify-center pointer-events-none z-20 pb-20 md:pb-0">
-          <div className="text-center max-w-3xl px-4 md:mt-40 pointer-events-auto">
+        <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-20 pb-20 md:pb-12">
+          <div className="text-center max-w-3xl px-4 pointer-events-auto">
             <Button 
               size="default"
               onClick={handleSubscribeClick}
-              className="bg-gradient-to-r from-primary via-pink-500 to-accent text-white shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all duration-300 glossy relative overflow-hidden sprinkles text-sm md:text-lg px-4 py-2 md:px-8 md:py-6"
+              className="bg-gradient-to-r from-primary via-pink-500 to-accent text-white shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all duration-300 glossy relative overflow-hidden sprinkles text-sm md:text-base px-4 py-2 md:px-6 md:py-3"
               data-testid="button-subscribe"
             >
-              <Mail className="mr-1 md:mr-2 h-4 w-4 md:h-5 md:w-5" />
+              <Mail className="mr-1 md:mr-2 h-4 w-4 md:h-4 md:w-4" />
               Узнать об открытии
             </Button>
           </div>
