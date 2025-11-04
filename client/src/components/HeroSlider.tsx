@@ -109,14 +109,14 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               decoding="async"
               fetchPriority={index === 0 ? "high" : "low"}
               className={`w-full h-full object-cover ${
-                slide.id === 2 ? 'object-left' : 'object-center'
+                slide.id === 2 ? 'object-left' : slide.id === 3 ? 'object-bottom' : 'object-center'
               }`}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             <div className={`absolute inset-0 flex ${
-              slide.id === 1 ? 'items-start pt-12 md:pt-16' : 'items-center'
-            } ${slide.id === 2 ? 'justify-end' : 'justify-center'}`}>
-              <div className={`${slide.id === 2 ? 'text-right pr-4 md:pr-16' : 'text-center px-4'} text-white max-w-3xl`}>
+              slide.id === 1 || slide.id === 3 ? 'items-start pt-8 md:pt-12' : 'items-center'
+            } ${slide.id === 2 ? 'justify-end' : slide.id === 3 ? 'justify-start' : 'justify-center'}`}>
+              <div className={`${slide.id === 2 ? 'text-right pr-4 md:pr-16' : slide.id === 3 ? 'text-left pl-4 md:pl-16' : 'text-center px-4'} text-white max-w-3xl`}>
                 <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 drop-shadow-2xl text-candy" data-testid={`text-slide-title-${index}`}>
                   {slide.title}
                 </h1>
@@ -129,7 +129,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         ))}
 
         {/* Кнопка подписки */}
-        <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-20 pb-20 md:pb-12">
+        <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-20 pb-16 md:pb-16">
           <div className="text-center max-w-3xl px-4 pointer-events-auto">
             <Button 
               size="default"
