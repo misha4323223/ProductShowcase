@@ -199,6 +199,7 @@ export default function AdminPage() {
 
   const addCategoryMutation = useMutation({
     mutationFn: async (data: Category) => {
+      console.log("📤 Отправляем категорию в БД:", data);
       await createCategory(data);
     },
     onSuccess: () => {
@@ -570,11 +571,15 @@ export default function AdminPage() {
     try {
       const imageUrl = await uploadImageToYandexStorage(categoryImageFile, 'categories');
       
+      console.log("✅ Изображение категории загружено в Yandex Storage:", imageUrl);
+      
       categoryForm.setValue('image', imageUrl, { 
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true
       });
+      
+      console.log("✅ Поле image в форме установлено:", categoryForm.getValues('image'));
       
       toast({ 
         title: "Изображение загружено!", 

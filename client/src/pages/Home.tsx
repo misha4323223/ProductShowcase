@@ -114,19 +114,10 @@ export default function Home() {
     },
   ];
 
-  // Маппинг дефолтных изображений для категорий без загруженных изображений
-  const categoryImages: Record<string, { image: string; webpImage: string }> = {
-    'chocolates': { image: chocolateImage, webpImage: chocolateImageWebP },
-    'candies': { image: candiesImage, webpImage: candiesImageWebP },
-    'cookies': { image: cookiesImage, webpImage: cookiesImageWebP },
-    'accessories': { image: accessoriesImage, webpImage: accessoriesImageWebP },
-    'sale': { image: saleImage, webpImage: saleImageWebP },
-  };
-
-  // Используем категории из API с их изображениями или дефолтными
-  const categoriesWithImages: CategoryWithImages[] = categories.map((cat: Category) => {
-    // Если у категории есть изображение в базе данных - используем его
-    if (cat.image) {
+  // Используем ТОЛЬКО категории с изображениями из базы данных
+  const categoriesWithImages: CategoryWithImages[] = categories
+    .filter((cat: Category) => cat.image) // Показываем только категории с загруженными изображениями
+    .map((cat: Category) => {
       // Добавляем timestamp для обхода кэша браузера
       const timestamp = new Date().getTime();
       const imageWithCacheBust = `${cat.image}?v=${timestamp}`;
@@ -134,21 +125,11 @@ export default function Home() {
       return {
         name: cat.name,
         slug: cat.slug,
-        image: imageWithCacheBust, // Используем изображение из БД с cache busting
+        image: imageWithCacheBust,
         webpImage: imageWithCacheBust, // WebP формат уже загружен в Yandex Storage
         id: cat.id,
       };
-    }
-    
-    // Иначе используем дефолтное изображение
-    return {
-      name: cat.name,
-      slug: cat.slug,
-      image: categoryImages[cat.slug]?.image || chocolateImage,
-      webpImage: categoryImages[cat.slug]?.webpImage || chocolateImageWebP,
-      id: cat.id,
-    };
-  });
+    });
 
   const handleAddToCart = (productId: string) => {
     const product = products.find(p => p.id === productId);
