@@ -27,9 +27,10 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const { toast } = useToast();
 
   useEffect(() => {
+    // ОПТИМИЗАЦИЯ: Увеличен интервал с 5 до 10 секунд для снижения нагрузки
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(timer);
   }, [slides.length]);
 
