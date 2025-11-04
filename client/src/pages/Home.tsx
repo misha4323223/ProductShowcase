@@ -32,7 +32,7 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
   const { toast } = useToast();
-  const { products, isLoading } = useProducts();
+  const { products, categories: apiCategories, isLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
 
@@ -84,13 +84,22 @@ export default function Home() {
     },
   ];
 
-  const categories = [
-    { name: 'Шоколад', image: chocolateImage, webpImage: chocolateImageWebP, slug: 'chocolates' },
-    { name: 'Конфеты', image: candiesImage, webpImage: candiesImageWebP, slug: 'candies' },
-    { name: 'Печенье', image: cookiesImage, webpImage: cookiesImageWebP, slug: 'cookies' },
-    { name: 'Аксессуары', image: accessoriesImage, webpImage: accessoriesImageWebP, slug: 'accessories' },
-    { name: 'SALE', image: saleImage, webpImage: saleImageWebP, slug: 'sale' },
-  ];
+  // Маппинг изображений для категорий
+  const categoryImages: Record<string, { image: string; webpImage: string }> = {
+    'chocolates': { image: chocolateImage, webpImage: chocolateImageWebP },
+    'candies': { image: candiesImage, webpImage: candiesImageWebP },
+    'cookies': { image: cookiesImage, webpImage: cookiesImageWebP },
+    'accessories': { image: accessoriesImage, webpImage: accessoriesImageWebP },
+    'sale': { image: saleImage, webpImage: saleImageWebP },
+  };
+
+  // Используем категории из API с соответствующими изображениями
+  const categories = apiCategories.map(cat => ({
+    name: cat.name,
+    slug: cat.slug,
+    image: categoryImages[cat.slug]?.image || chocolateImage,
+    webpImage: categoryImages[cat.slug]?.webpImage || chocolateImageWebP,
+  }));
 
   const handleAddToCart = (productId: string) => {
     const product = products.find(p => p.id === productId);
