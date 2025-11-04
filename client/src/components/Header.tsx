@@ -4,12 +4,48 @@ import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCategories } from "@/services/api-client";
+import type { Category } from "@/types/firebase-types";
 
 interface HeaderProps {
   cartCount: number;
   wishlistCount?: number;
   onCartClick: () => void;
 }
+
+// Цветовые схемы для категорий
+const getCategoryStyle = (slug: string) => {
+  const styles: Record<string, { gradient: string; shadow: string; emoji: string }> = {
+    chocolates: {
+      gradient: "from-amber-600 via-orange-500 to-amber-700",
+      shadow: "0 4px 0 rgba(180, 83, 9, 0.4), 0 6px 12px rgba(217, 119, 6, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🍫"
+    },
+    candies: {
+      gradient: "from-purple-400 via-purple-500 to-purple-600",
+      shadow: "0 4px 0 rgba(126, 34, 206, 0.4), 0 6px 12px rgba(147, 51, 234, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🍭"
+    },
+    accessories: {
+      gradient: "from-cyan-400 via-blue-500 to-cyan-600",
+      shadow: "0 4px 0 rgba(8, 145, 178, 0.4), 0 6px 12px rgba(14, 165, 233, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🎀"
+    },
+    sale: {
+      gradient: "from-red-500 via-orange-500 to-yellow-400",
+      shadow: "0 4px 0 rgba(239, 68, 68, 0.4), 0 6px 12px rgba(249, 115, 22, 0.4), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.6)",
+      emoji: "🔥"
+    }
+  };
+
+  // Если категория известна, возвращаем её стиль, иначе дефолтный
+  return styles[slug] || {
+    gradient: "from-pink-400 via-pink-500 to-pink-600",
+    shadow: "0 4px 0 rgba(219, 39, 119, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+    emoji: "✨"
+  };
+};
 
 export default function Header({ cartCount, wishlistCount = 0, onCartClick }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,6 +57,13 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
   const prevWishlistCount = useRef(wishlistCount);
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+
+  // Загрузка категорий из API
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: getAllCategories,
+    staleTime: 1000 * 60 * 5, // Кэшировать на 5 минут
+  });
 
   useEffect(() => {
     if (cartCount > prevCartCount.current) {
@@ -85,46 +128,6 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
               }}
               data-testid="link-catalog">
               Каталог
-            </Link>
-            <Link 
-              href="/category/chocolates" 
-              className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble" 
-              style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                boxShadow: '0 4px 0 rgba(180, 83, 9, 0.4), 0 6px 12px rgba(217, 119, 6, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-              }}
-              data-testid="link-chocolates">
-              Шоколад
-            </Link>
-            <Link 
-              href="/category/candies" 
-              className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble" 
-              style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                boxShadow: '0 4px 0 rgba(126, 34, 206, 0.4), 0 6px 12px rgba(147, 51, 234, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-              }}
-              data-testid="link-candies">
-              Конфеты
-            </Link>
-            <Link 
-              href="/category/accessories" 
-              className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-cyan-400 via-blue-500 to-cyan-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble" 
-              style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                boxShadow: '0 4px 0 rgba(8, 145, 178, 0.4), 0 6px 12px rgba(14, 165, 233, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-              }}
-              data-testid="link-accessories">
-              Аксессуары
-            </Link>
-            <Link 
-              href="/category/sale" 
-              className="px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-br from-red-500 via-orange-500 to-yellow-400 hover:scale-110 transition-all shadow-lg hover:shadow-xl animate-pulse-soft jelly-wobble" 
-              style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                boxShadow: '0 4px 0 rgba(239, 68, 68, 0.4), 0 6px 12px rgba(249, 115, 22, 0.4), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.6)'
-              }}
-              data-testid="link-sale">
-              SALE 🔥
             </Link>
           </nav>
 
@@ -263,57 +266,24 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
                 </button>
               </Link>
               
-              <Link href="/category/chocolates" onClick={() => setMobileMenuOpen(false)}>
-                <button 
-                  className="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 active:scale-95 transition-all shadow-lg jelly-wobble text-left"
-                  style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                    boxShadow: '0 4px 0 rgba(180, 83, 9, 0.4), 0 6px 12px rgba(217, 119, 6, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                  }}
-                  data-testid="link-mobile-chocolates"
-                >
-                  🍫 Шоколад
-                </button>
-              </Link>
-              
-              <Link href="/category/candies" onClick={() => setMobileMenuOpen(false)}>
-                <button 
-                  className="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 active:scale-95 transition-all shadow-lg jelly-wobble text-left"
-                  style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                    boxShadow: '0 4px 0 rgba(126, 34, 206, 0.4), 0 6px 12px rgba(147, 51, 234, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                  }}
-                  data-testid="link-mobile-candies"
-                >
-                  🍭 Конфеты
-                </button>
-              </Link>
-              
-              <Link href="/category/accessories" onClick={() => setMobileMenuOpen(false)}>
-                <button 
-                  className="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-cyan-400 via-blue-500 to-cyan-600 active:scale-95 transition-all shadow-lg jelly-wobble text-left"
-                  style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                    boxShadow: '0 4px 0 rgba(8, 145, 178, 0.4), 0 6px 12px rgba(14, 165, 233, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                  }}
-                  data-testid="link-mobile-accessories"
-                >
-                  🎀 Аксессуары
-                </button>
-              </Link>
-              
-              <Link href="/category/sale" onClick={() => setMobileMenuOpen(false)}>
-                <button 
-                  className="w-full px-4 py-3 rounded-full text-sm font-bold text-white bg-gradient-to-br from-red-500 via-orange-500 to-yellow-400 active:scale-95 transition-all shadow-lg animate-pulse-soft jelly-wobble text-left"
-                  style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                    boxShadow: '0 4px 0 rgba(239, 68, 68, 0.4), 0 6px 12px rgba(249, 115, 22, 0.4), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.6)'
-                  }}
-                  data-testid="link-mobile-sale"
-                >
-                  🔥 SALE
-                </button>
-              </Link>
+              {categories.map((category) => {
+                const style = getCategoryStyle(category.slug);
+                const isSale = category.slug === 'sale';
+                return (
+                  <Link key={category.id} href={`/category/${category.slug}`} onClick={() => setMobileMenuOpen(false)}>
+                    <button 
+                      className={`w-full px-4 py-3 rounded-full text-sm ${isSale ? 'font-bold' : 'font-semibold'} text-white bg-gradient-to-br ${style.gradient} active:scale-95 transition-all shadow-lg ${isSale ? 'animate-pulse-soft' : ''} jelly-wobble text-left`}
+                      style={{
+                        textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                        boxShadow: style.shadow
+                      }}
+                      data-testid={`link-mobile-${category.slug}`}
+                    >
+                      {style.emoji} {category.name}
+                    </button>
+                  </Link>
+                );
+              })}
               
               {user && (
                 <>
