@@ -16,8 +16,8 @@ import type { Category } from "@/types/firebase-types";
 
 import heroImage1 from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.png';
 import heroImage1WebP from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.webp';
-import heroImage2 from '@assets/generated_images/Candy_delivery_happiness_scene_fb271190.png';
-import heroImage2WebP from '@assets/generated_images/Candy_delivery_happiness_scene_fb271190.webp';
+import heroImage2 from '@assets/generated_images/Lollipop_delivery_character_scene_9b1fad01.png';
+import heroImage2WebP from '@assets/generated_images/Lollipop_delivery_character_scene_9b1fad01.webp';
 import heroImage3 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
 import heroImage3WebP from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.webp';
 import heroImage4 from '@assets/generated_images/Candy_store_display_image_21d1d54f.png';
@@ -96,8 +96,8 @@ export default function Home() {
       id: 2,
       image: heroImage2,
       webpImage: heroImage2WebP,
-      title: 'Премиум Шоколад',
-      subtitle: 'Бельгийское качество в каждом кусочке',
+      title: 'Доставка сладостей',
+      subtitle: 'Доставим сладость в каждый дом',
     },
     {
       id: 3,
