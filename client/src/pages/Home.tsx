@@ -96,8 +96,8 @@ export default function Home() {
       id: 2,
       image: heroImage2,
       webpImage: heroImage2WebP,
-      title: 'Доставка сладостей',
-      subtitle: 'Доставим сладость в каждый дом',
+      title: 'Доставим сладость в каждый дом',
+      subtitle: '',
     },
     {
       id: 3,
