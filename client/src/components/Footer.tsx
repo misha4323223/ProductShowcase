@@ -82,7 +82,7 @@ export default function Footer() {
               Sweet Delights
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Лучшие сладости и аксессуары с доставкой по всей России. Качество и вкус в каждом продукте.
+              Лучшие сладости с доставкой по всей России.
             </p>
             <div className="flex gap-3">
               <a 
@@ -112,18 +112,7 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Контакты</h4>
             <div className="space-y-3 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
-                <span data-testid="text-phone">+7 (999) 123-45-67</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <span data-testid="text-email">info@sweetdelights.ru</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                <span data-testid="text-address">Москва, ул. Сладкая, 10</span>
-              </div>
+              <p data-testid="text-contacts">Будет добавлено позже</p>
             </div>
           </div>
 
@@ -205,7 +194,7 @@ export default function Footer() {
 
           <div className="mt-6 pt-6 border-t border-border/50">
             <p className="text-xs text-muted-foreground text-center">
-              <strong>Реквизиты:</strong> [Будут добавлены после регистрации ИП/ООО]
+              Будет добавлено позже
             </p>
           </div>
         </div>

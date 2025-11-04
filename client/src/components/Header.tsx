@@ -27,6 +27,31 @@ const getCategoryStyle = (slug: string) => {
       shadow: "0 4px 0 rgba(126, 34, 206, 0.4), 0 6px 12px rgba(147, 51, 234, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
       emoji: "🍭"
     },
+    napitki: {
+      gradient: "from-teal-400 via-cyan-500 to-teal-600",
+      shadow: "0 4px 0 rgba(13, 148, 136, 0.4), 0 6px 12px rgba(20, 184, 166, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🥤"
+    },
+    marmalade: {
+      gradient: "from-rose-400 via-pink-500 to-rose-600",
+      shadow: "0 4px 0 rgba(225, 29, 72, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🍬"
+    },
+    "gift-box": {
+      gradient: "from-fuchsia-400 via-purple-500 to-fuchsia-600",
+      shadow: "0 4px 0 rgba(192, 38, 211, 0.4), 0 6px 12px rgba(168, 85, 247, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🎁"
+    },
+    "cookies-pastries": {
+      gradient: "from-yellow-400 via-amber-500 to-yellow-600",
+      shadow: "0 4px 0 rgba(234, 179, 8, 0.4), 0 6px 12px rgba(245, 158, 11, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🍪"
+    },
+    "mochi-marshmallow": {
+      gradient: "from-indigo-400 via-blue-500 to-indigo-600",
+      shadow: "0 4px 0 rgba(79, 70, 229, 0.4), 0 6px 12px rgba(59, 130, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+      emoji: "🧁"
+    },
     accessories: {
       gradient: "from-cyan-400 via-blue-500 to-cyan-600",
       shadow: "0 4px 0 rgba(8, 145, 178, 0.4), 0 6px 12px rgba(14, 165, 233, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
@@ -41,8 +66,8 @@ const getCategoryStyle = (slug: string) => {
 
   // Если категория известна, возвращаем её стиль, иначе дефолтный
   return styles[slug] || {
-    gradient: "from-pink-400 via-pink-500 to-pink-600",
-    shadow: "0 4px 0 rgba(219, 39, 119, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
+    gradient: "from-emerald-400 via-green-500 to-emerald-600",
+    shadow: "0 4px 0 rgba(5, 150, 105, 0.4), 0 6px 12px rgba(34, 197, 94, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)",
     emoji: "✨"
   };
 };
