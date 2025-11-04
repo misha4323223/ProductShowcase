@@ -10,6 +10,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import CookieBanner from "@/components/CookieBanner";
+import { useScrollPause } from "@/hooks/use-scroll-pause";
 
 // Главная страница загружается сразу (критичная для первого отображения)
 import Home from "@/pages/Home";
@@ -72,6 +73,9 @@ function Router() {
 }
 
 function App() {
+  // ОПТИМИЗАЦИЯ: Автоматическая пауза анимаций при скролле
+  useScrollPause();
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
