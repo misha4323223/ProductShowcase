@@ -31,6 +31,7 @@ const categorySchema = z.object({
   id: z.string().trim().min(1, "ID обязателен"),
   name: z.string().trim().min(1, "Название обязательно"),
   slug: z.string().trim().min(1, "Slug обязателен"),
+  image: z.string().trim().optional(),
 });
 
 const productSchema = z.object({
@@ -85,6 +86,10 @@ export default function AdminPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  
+  const [categoryImageFile, setCategoryImageFile] = useState<File | null>(null);
+  const [categoryImagePreview, setCategoryImagePreview] = useState<string>("");
+  const [isUploadingCategoryImage, setIsUploadingCategoryImage] = useState(false);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -151,6 +156,7 @@ export default function AdminPage() {
       id: "",
       name: "",
       slug: "",
+      image: "",
     },
   });
 
@@ -199,6 +205,8 @@ export default function AdminPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
       toast({ title: "Категория добавлена!" });
       categoryForm.reset();
+      setCategoryImageFile(null);
+      setCategoryImagePreview("");
     },
     onError: (error: any) => {
       toast({ 
@@ -530,6 +538,63 @@ export default function AdminPage() {
     setSelectedFile(null);
     setImagePreview("");
     productForm.setValue('image', '');
+  };
+
+  const handleCategoryFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const error = validateImageFile(file);
+    if (error) {
+      toast({ 
+        title: "Ошибка", 
+        description: error,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCategoryImageFile(file);
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCategoryImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUploadCategoryImage = async () => {
+    if (!categoryImageFile) return;
+
+    setIsUploadingCategoryImage(true);
+    try {
+      const imageUrl = await uploadImageToYandexStorage(categoryImageFile, 'categories');
+      
+      categoryForm.setValue('image', imageUrl, { 
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+      });
+      
+      toast({ 
+        title: "Изображение загружено!", 
+        description: `URL: ${imageUrl.substring(0, 50)}...` 
+      });
+    } catch (error: any) {
+      toast({ 
+        title: "Ошибка загрузки", 
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploadingCategoryImage(false);
+    }
+  };
+
+  const handleClearCategoryImage = () => {
+    setCategoryImageFile(null);
+    setCategoryImagePreview("");
+    categoryForm.setValue('image', '');
   };
 
   const renderStars = (rating: number) => {
@@ -1329,6 +1394,82 @@ export default function AdminPage() {
                       </FormItem>
                     )}
                   />
+                  
+                  <FormField
+                    control={categoryForm.control}
+                    name="image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Изображение категории (опционально)</FormLabel>
+                        <div className="space-y-4">
+                          <div className="flex gap-2">
+                            <div className="flex-1">
+                              <Input 
+                                type="file" 
+                                accept="image/*"
+                                onChange={handleCategoryFileChange}
+                                className="cursor-pointer"
+                                data-testid="input-category-image-file"
+                              />
+                            </div>
+                            {categoryImageFile && (
+                              <Button
+                                type="button"
+                                onClick={handleUploadCategoryImage}
+                                disabled={isUploadingCategoryImage}
+                                data-testid="button-upload-category-image"
+                              >
+                                <Upload className="w-4 h-4 mr-2" />
+                                {isUploadingCategoryImage ? "Загрузка..." : "Загрузить"}
+                              </Button>
+                            )}
+                          </div>
+
+                          {categoryImagePreview && (
+                            <div className="relative inline-block">
+                              <img 
+                                src={categoryImagePreview} 
+                                alt="Preview" 
+                                className="max-w-xs max-h-48 rounded-lg border"
+                                data-testid="category-image-preview"
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-2 right-2"
+                                onClick={handleClearCategoryImage}
+                                data-testid="button-clear-category-image"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          )}
+
+                          <div className="text-sm text-muted-foreground">
+                            или введите URL изображения вручную:
+                          </div>
+
+                          <FormControl>
+                            <Input {...field} placeholder="https://example.com/category-image.jpg" data-testid="input-category-image-url" />
+                          </FormControl>
+
+                          {field.value && field.value.trim() !== "" && (
+                            <div className="text-sm space-y-1">
+                              <div className="text-green-600 font-semibold">
+                                ✓ URL изображения установлен
+                              </div>
+                              <div className="text-xs text-muted-foreground break-all bg-muted/50 p-2 rounded">
+                                {field.value}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
                   <Button type="submit" disabled={addCategoryMutation.isPending} data-testid="button-add-category">
                     <Plus className="w-4 h-4 mr-2" />
                     {addCategoryMutation.isPending ? "Добавление..." : "Добавить категорию"}
@@ -1350,10 +1491,24 @@ export default function AdminPage() {
               ) : (
                 <div className="space-y-2">
                   {categories.map((cat) => (
-                    <div key={cat.id} className="flex items-center justify-between p-3 border rounded-md" data-testid={`category-${cat.id}`}>
-                      <div>
-                        <p className="font-medium">{cat.name}</p>
-                        <p className="text-sm text-muted-foreground">ID: {cat.id} • Slug: {cat.slug}</p>
+                    <div key={cat.id} className="flex items-center justify-between gap-3 p-3 border rounded-md" data-testid={`category-${cat.id}`}>
+                      <div className="flex items-center gap-3 flex-1">
+                        {cat.image && (
+                          <img 
+                            src={cat.image} 
+                            alt={cat.name}
+                            className="w-16 h-16 object-cover rounded-md border"
+                          />
+                        )}
+                        <div>
+                          <p className="font-medium">{cat.name}</p>
+                          <p className="text-sm text-muted-foreground">ID: {cat.id} • Slug: {cat.slug}</p>
+                          {cat.image && (
+                            <p className="text-xs text-muted-foreground mt-1 truncate max-w-[300px]">
+                              Изображение: {cat.image}
+                            </p>
+                          )}
+                        </div>
                       </div>
                       <Button
                         variant="destructive"
