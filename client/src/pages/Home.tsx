@@ -15,6 +15,7 @@ import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
 
 import heroImage1 from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.png';
+import heroImage1WebP from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.webp';
 import heroImage2 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
 import heroImage2WebP from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.webp';
 import heroImage3 from '@assets/generated_images/Candy_store_display_image_21d1d54f.png';
@@ -71,8 +72,8 @@ export default function Home() {
     const preloadLink = document.createElement('link');
     preloadLink.rel = 'preload';
     preloadLink.as = 'image';
-    preloadLink.type = 'image/png';
-    preloadLink.href = heroImage1;
+    preloadLink.type = 'image/webp';
+    preloadLink.href = heroImage1WebP;
     preloadLink.fetchPriority = 'high';
     document.head.appendChild(preloadLink);
 
@@ -85,7 +86,7 @@ export default function Home() {
     {
       id: 1,
       image: heroImage1,
-      webpImage: heroImage1,
+      webpImage: heroImage1WebP,
       title: 'Sweet Delights',
       subtitle: 'Мир сладостей и радости',
     },
