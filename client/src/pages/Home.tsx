@@ -18,8 +18,8 @@ import heroImage1 from '@assets/generated_images/Candy_characters_big_gift_box_7
 import heroImage1WebP from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.webp';
 import heroImage2 from '@assets/generated_images/Lollipop_delivery_character_scene_9b1fad01.png';
 import heroImage2WebP from '@assets/generated_images/Lollipop_delivery_character_scene_9b1fad01.webp';
-import heroImage3 from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.png';
-import heroImage3WebP from '@assets/generated_images/Chocolate_gift_box_image_b558d06a.webp';
+import heroImage3 from '@assets/generated_images/Candy_box_explosion_celebration_bbc9c118.png';
+import heroImage3WebP from '@assets/generated_images/Candy_box_explosion_celebration_bbc9c118.webp';
 import heroImage4 from '@assets/generated_images/Candy_store_display_image_21d1d54f.png';
 import heroImage4WebP from '@assets/generated_images/Candy_store_display_image_21d1d54f.webp';
 import chocolateImage from '@assets/generated_images/Artisanal_chocolate_category_image_35f087de.png';
@@ -103,8 +103,8 @@ export default function Home() {
       id: 3,
       image: heroImage3,
       webpImage: heroImage3WebP,
-      title: 'Яркие Сладости',
-      subtitle: 'Радуга вкусов для всей семьи',
+      title: 'Ваши улыбки — наша награда!',
+      subtitle: '',
     },
   ];
 
