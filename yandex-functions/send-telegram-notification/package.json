@@ -1,0 +1,7 @@
+{
+  "name": "send-telegram-notification",
+  "version": "1.0.0",
+  "description": "Yandex Cloud Function для отправки уведомлений о заказах в Telegram",
+  "main": "index.js",
+  "dependencies": {}
+}
