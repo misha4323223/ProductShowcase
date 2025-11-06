@@ -1,0 +1,64 @@
+
+
+07 нояб. 00:04:07.489
+at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""user"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:07.489
+at endReadableNT (node:internal/streams/readable:1698:12)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""user"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:07.489
+at IncomingMessage.emit (node:events:530:35)
+    at IncomingMessage.emit (node:events:530:35)
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""user"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:07.489
+at IncomingMessage.<anonymous> (/function/code/index.js:104:18)
+    at IncomingMessage.<anonymous> (/function/code/index.js:104:18)
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""user"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:07.489
+Failed to send Telegram notification: Error: Telegram API error: 400
+Failed to send Telegram notification: Error: Telegram API error: 400
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""user"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:07.488
+Telegram API error: 400 - {"ok":false,"error_code":400,"description":"Bad Request: chat not found"}
+Telegram API error: 400 - {"ok":false,"error_code":400,"description":"Bad Request: chat not found"}
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""user"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:03.938
+REPORT RequestID: 9efcda55-e592-476d-891e-3a12ae597586 Duration: 386.938 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.073 ms Function Init Duration: 139.155 ms CPU Usage: 8.887 %
+REPORT RequestID: 9efcda55-e592-476d-891e-3a12ae597586 Duration: 386.938 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.073 ms Function Init Duration: 139.155 ms CPU Usage: 8.887 %
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""system"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:03.938
+END RequestID: 9efcda55-e592-476d-891e-3a12ae597586
+END RequestID: 9efcda55-e592-476d-891e-3a12ae597586
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""system"
+"version_id""d4ep4g12s4a0aig53tuh"
+
+07 нояб. 00:04:03.548
+START RequestID: 9efcda55-e592-476d-891e-3a12ae597586 Version: d4ep4g12s4a0aig53tuh
+START RequestID: 9efcda55-e592-476d-891e-3a12ae597586 Version: d4ep4g12s4a0aig53tuh
+"request_id""9efcda55-e592-476d-891e-3a12ae597586"
+"source""system"
+"version_id""d4ep4g12s4a0aig53tuh"
