@@ -134,6 +134,20 @@ export default function CategoryPage() {
     setLocation('/checkout');
   };
 
+  // Move hooks before conditional returns
+  const breadcrumbItems = useMemo(() => 
+    category ? [{ name: category.name, url: `/category/${category.slug}` }] : [],
+    [category?.name, category?.slug]
+  );
+
+  const breadcrumbSchema = useMemo(() => 
+    category ? createBreadcrumbSchema([
+      { name: 'Главная', url: 'https://sweetdelights.store' },
+      { name: category.name, url: `https://sweetdelights.store/category/${category.slug}` }
+    ]) : null,
+    [category?.name, category?.slug]
+  );
+
   if (!category) {
     return (
       <div className="min-h-screen flex flex-col candy-pattern">
@@ -157,15 +171,6 @@ export default function CategoryPage() {
     );
   }
 
-  const breadcrumbItems = useMemo(() => [
-    { name: category.name, url: `/category/${category.slug}` }
-  ], [category.name, category.slug]);
-
-  const breadcrumbSchema = useMemo(() => createBreadcrumbSchema([
-    { name: 'Главная', url: 'https://sweetdelights.store' },
-    { name: category.name, url: `https://sweetdelights.store/category/${category.slug}` }
-  ]), [category.name, category.slug]);
-
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
       <SEO
@@ -174,7 +179,7 @@ export default function CategoryPage() {
         keywords={`${category.name}, купить ${category.name.toLowerCase()}, интернет-магазин сладостей, Sweet Delights`}
         image={category.image || '/default-category.jpg'}
         type="website"
-        structuredData={breadcrumbSchema}
+        structuredData={breadcrumbSchema || undefined}
       />
       <Header 
         cartCount={cartCount}
