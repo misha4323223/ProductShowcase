@@ -1,0 +1,33 @@
+# robots.txt для Sweet Delights
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /account
+Disallow: /checkout
+Disallow: /wishlist
+
+# Sitemap
+Sitemap: https://sweetdelights.store/sitemap.xml
+
+# Основные правила для поисковых роботов
+User-agent: Yandex
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /account
+Disallow: /checkout
+Disallow: /wishlist
+Clean-param: utm_source&utm_medium&utm_campaign&fbclid
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /account
+Disallow: /checkout
+Disallow: /wishlist
+
+# Краулинг частота
+Crawl-delay: 1

@@ -1,5 +1,5 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import CookieBanner from "@/components/CookieBanner";
 import { useScrollPause } from "@/hooks/use-scroll-pause";
+import { initAnalytics } from "@/lib/analytics";
 
 // Главная страница загружается сразу (критичная для первого отображения)
 import Home from "@/pages/Home";
@@ -76,6 +77,11 @@ function Router() {
 function App() {
   // ОПТИМИЗАЦИЯ: Автоматическая пауза анимаций при скролле
   useScrollPause();
+
+  // Инициализация аналитики при монтировании
+  useEffect(() => {
+    initAnalytics();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

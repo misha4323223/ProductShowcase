@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import HeroSlider from "@/components/HeroSlider";
@@ -6,6 +6,7 @@ import CategoryCard from "@/components/CategoryCard";
 import ProductCard from "@/components/ProductCard";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
+import SEO, { createWebsiteSchema, createOrganizationSchema } from "@/components/SEO";
 import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
@@ -185,8 +186,20 @@ export default function Home() {
     setLocation('/checkout');
   };
 
+  const homeStructuredData = useMemo(() => 
+    [createWebsiteSchema(), createOrganizationSchema()],
+    []
+  );
+
   return (
     <div className="min-h-screen flex flex-col relative candy-pattern">
+      <SEO
+        title="Sweet Delights - Магазин сладостей и аксессуаров | Доставка по России"
+        description="Откройте для себя широкий ассортимент вкусных сладостей, премиального шоколада, конфет и стильных аксессуаров. Быстрая доставка по всей России. Скидки до 50%!"
+        keywords="сладости купить, шоколад премиум, конфеты доставка, печенье купить, аксессуары для сладостей, подарочные наборы сладостей, Sweet Delights"
+        type="website"
+        structuredData={homeStructuredData}
+      />
       <Header
         cartCount={cartCount}
         wishlistCount={wishlistCount}
