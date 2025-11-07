@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { trackPageView } from '@/lib/analytics';
 
@@ -33,16 +33,28 @@ export default function SEO({
   const siteUrl = 'https://sweetdelights.store';
   const fullUrl = canonical || `${siteUrl}${location}`;
   const fullImageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
+  
+  // Ref для отслеживания последнего tracked location
+  const lastTrackedLocation = useRef<string>(location);
+  const hasTrackedInitial = useRef<boolean>(false);
 
-  // Отдельный эффект для analytics - срабатывает только при изменении location/title
+  // Отдельный эффект для analytics - срабатывает только при изменении location
   useEffect(() => {
     document.title = title;
     
-    const timeoutId = setTimeout(() => {
-      trackPageView(location, title);
-    }, 0);
+    // Отправляем analytics при первой загрузке или при изменении location
+    const shouldTrack = !hasTrackedInitial.current || location !== lastTrackedLocation.current;
     
-    return () => clearTimeout(timeoutId);
+    if (shouldTrack) {
+      hasTrackedInitial.current = true;
+      lastTrackedLocation.current = location;
+      
+      const timeoutId = setTimeout(() => {
+        trackPageView(location, title);
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
+    }
   }, [location, title]);
 
   // Эффект для обновления meta-тегов и structured data
@@ -120,96 +132,4 @@ export default function SEO({
   }, [description, keywords, image, type, price, currency, availability, fullUrl, fullImageUrl, noindex, JSON.stringify(structuredData)]);
 
   return null;
-}
-
-// Хелперы для создания структурированных данных Schema.org
-
-export function createProductSchema(product: {
-  name: string;
-  description: string;
-  image: string;
-  price: number;
-  currency?: string;
-  availability?: 'instock' | 'outofstock' | 'preorder';
-  rating?: number;
-  reviewCount?: number;
-  brand?: string;
-  sku?: string;
-}) {
-  const availabilityMap = {
-    instock: 'https://schema.org/InStock',
-    outofstock: 'https://schema.org/OutOfStock',
-    preorder: 'https://schema.org/PreOrder',
-  };
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: product.description,
-    image: product.image,
-    brand: product.brand ? {
-      '@type': 'Brand',
-      name: product.brand,
-    } : undefined,
-    sku: product.sku,
-    offers: {
-      '@type': 'Offer',
-      price: product.price,
-      priceCurrency: product.currency || 'RUB',
-      availability: product.availability ? availabilityMap[product.availability] : availabilityMap.instock,
-      url: window.location.href,
-    },
-    aggregateRating: product.rating && product.reviewCount ? {
-      '@type': 'AggregateRating',
-      ratingValue: product.rating,
-      reviewCount: product.reviewCount,
-    } : undefined,
-  };
-}
-
-export function createBreadcrumbSchema(items: { name: string; url: string }[]) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      item: item.url,
-    })),
-  };
-}
-
-export function createOrganizationSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'Sweet Delights',
-    url: 'https://sweetdelights.store',
-    logo: 'https://sweetdelights.store/logo.png',
-    description: 'Магазин сладостей и аксессуаров с доставкой по всей России',
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'Customer Service',
-      email: 'info@sweetdelights.store',
-    },
-    sameAs: [
-      // Добавьте ссылки на соцсети когда будут
-    ],
-  };
-}
-
-export function createWebsiteSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Sweet Delights',
-    url: 'https://sweetdelights.store',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://sweetdelights.store/search?q={search_term_string}',
-      'query-input': 'required name=search_term_string',
-    },
-  };
 }

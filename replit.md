@@ -229,9 +229,59 @@ Configured in both TypeScript and Vite:
 - Admin panel integration for bulk email sending and subscriber management
 - Configuration: See YANDEX_POSTBOX_SETUP.md for setup instructions
 
+### SEO Optimization (November 2025)
+
+**Technical SEO Foundation**:
+- **SEO Component**: Universal SEO component (`client/src/components/SEO.tsx`) with support for:
+  - Dynamic meta tags (title, description, keywords)
+  - Open Graph tags for social media sharing
+  - Twitter Card tags
+  - Schema.org structured data (JSON-LD)
+  - Canonical URLs
+  - Product-specific meta tags (price, availability)
+- **Schema.org Helpers**: Separated helper functions (`client/src/lib/seo-helpers.ts`) for:
+  - Product schema with reviews and ratings
+  - Website schema with search action
+  - Organization schema with contact info
+  - Breadcrumb navigation schema
+- **Analytics Integration**:
+  - Yandex.Metrika with ecommerce tracking
+  - Google Analytics 4 integration
+  - Single pageview tracking per navigation (duplicate prevention via refs)
+  - Analytics initialized in App.tsx on mount
+- **Breadcrumbs Navigation**: Component with Schema.org markup on Product and Category pages
+- **robots.txt**: Configured for Yandex and Googlebot with sitemap reference
+- **sitemap.xml**: Automated generator script (`scripts/generate-sitemap.js`) with:
+  - Static pages (Home, FAQ, Privacy, Terms)
+  - Dynamic category pages
+  - Priority and frequency settings
+  - Note: Needs API connection for live product URLs
+
+**Performance Optimizations**:
+- Lazy loading of route components (React.lazy)
+- Image optimization with WebP format and fallbacks
+- Memoization of structured data to prevent unnecessary re-renders
+- Separation of analytics and meta-tag effects for optimal timing
+
+**SEO Best Practices**:
+- Unique title and description for each page
+- Keyword optimization for Russian market
+- Product pages include price, availability, and ratings in structured data
+- Breadcrumb navigation for improved UX and SEO
+- Mobile-friendly responsive design
+- Fast load times with code splitting
+
+**Environment Variables Needed**:
+- `VITE_YANDEX_METRIKA_ID`: Yandex.Metrika counter ID
+- `VITE_GOOGLE_ANALYTICS_ID`: Google Analytics measurement ID
+
 ### Notes
 - Image assets stored in `attached_assets/generated_images/`
 - Application designed for Russian language market (content in Russian)
 - Firebase project ID: sweetweb-3543f
 - GitHub repository: misha4323223/ProductShowcase
+- **Deployment**: Automated deployment via GitHub Actions on push to main branch
+  - Static site builds to `dist/public` directory
+  - Deployed to GitHub Pages at https://misha4323223.github.io/ProductShowcase
+  - Sitemap should be regenerated after deployment with live data
 - Deployment instructions: See `DEPLOY_INSTRUCTIONS.md`
