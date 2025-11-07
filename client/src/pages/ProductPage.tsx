@@ -99,6 +99,54 @@ export default function ProductPage() {
     setLocation('/checkout');
   };
 
+  // Always call hooks before any conditional returns
+  const relatedProducts = useMemo(() => {
+    if (!product) return [];
+    return products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+  }, [product, products]);
+
+  const breadcrumbItems = useMemo(() => {
+    if (!product) return [];
+    return [
+      ...(category ? [{ name: category.name, url: `/category/${category.slug}` }] : []),
+      { name: product.name, url: `/product/${product.id}` }
+    ];
+  }, [category, product]);
+
+  const productSchema = useMemo(() => {
+    if (!product) return null;
+    return createProductSchema({
+      name: product.name,
+      description: product.description || `${product.name} - купить в интернет-магазине Sweet Delights`,
+      image: product.image || '/default-product.jpg',
+      price: product.salePrice || product.price,
+      currency: 'RUB',
+      availability: product.stock && product.stock > 0 ? 'instock' : 'outofstock',
+      rating: rating.averageRating > 0 ? rating.averageRating : undefined,
+      reviewCount: rating.totalReviews > 0 ? rating.totalReviews : undefined,
+      brand: 'Sweet Delights',
+      sku: product.id,
+    });
+  }, [product, rating]);
+
+  const breadcrumbSchema = useMemo(() => {
+    if (breadcrumbItems.length === 0) return null;
+    return createBreadcrumbSchema([
+      { name: 'Главная', url: 'https://sweetdelights.store' },
+      ...breadcrumbItems.map(item => ({
+        name: item.name,
+        url: `https://sweetdelights.store${item.url}`
+      }))
+    ]);
+  }, [breadcrumbItems]);
+
+  const structuredData = useMemo(() => {
+    const data = [];
+    if (productSchema) data.push(productSchema);
+    if (breadcrumbSchema) data.push(breadcrumbSchema);
+    return data.length > 0 ? data : undefined;
+  }, [productSchema, breadcrumbSchema]);
+
   const handleToggleWishlist = async () => {
     if (!user) {
       toast({
@@ -169,35 +217,6 @@ export default function ProductPage() {
 
   const hasDiscount = product.salePrice && product.salePrice < product.price;
   const discount = hasDiscount && product.salePrice ? Math.round(((product.price - product.salePrice) / product.price) * 100) : 0;
-  const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
-
-  const breadcrumbItems = useMemo(() => [
-    ...(category ? [{ name: category.name, url: `/category/${category.slug}` }] : []),
-    { name: product.name, url: `/product/${product.id}` }
-  ], [category?.name, category?.slug, product.name, product.id]);
-
-  const productSchema = useMemo(() => createProductSchema({
-    name: product.name,
-    description: product.description || `${product.name} - купить в интернет-магазине Sweet Delights`,
-    image: product.image || '/default-product.jpg',
-    price: product.salePrice || product.price,
-    currency: 'RUB',
-    availability: product.stock && product.stock > 0 ? 'instock' : 'outofstock',
-    rating: rating.averageRating > 0 ? rating.averageRating : undefined,
-    reviewCount: rating.totalReviews > 0 ? rating.totalReviews : undefined,
-    brand: 'Sweet Delights',
-    sku: product.id,
-  }), [product.name, product.description, product.image, product.salePrice, product.price, product.stock, product.id, rating.averageRating, rating.totalReviews]);
-
-  const breadcrumbSchema = useMemo(() => createBreadcrumbSchema([
-    { name: 'Главная', url: 'https://sweetdelights.store' },
-    ...breadcrumbItems.map(item => ({
-      name: item.name,
-      url: `https://sweetdelights.store${item.url}`
-    }))
-  ]), [breadcrumbItems]);
-
-  const structuredData = useMemo(() => [productSchema, breadcrumbSchema], [productSchema, breadcrumbSchema]);
 
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
@@ -210,7 +229,7 @@ export default function ProductPage() {
         price={product.salePrice || product.price}
         currency="RUB"
         availability={product.stock && product.stock > 0 ? 'instock' : 'outofstock'}
-        structuredData={structuredData}
+        structuredData={structuredData || undefined}
       />
       <Header 
         cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
