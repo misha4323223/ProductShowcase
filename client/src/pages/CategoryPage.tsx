@@ -5,11 +5,12 @@ import ProductCard from "@/components/ProductCard";
 import ProductFilters from "@/components/ProductFilters";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import SEO, { createBreadcrumbSchema } from "@/components/SEO";
 import { useProducts, useProductsByCategory } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 
 export default function CategoryPage() {
@@ -155,8 +156,25 @@ export default function CategoryPage() {
     );
   }
 
+  const breadcrumbItems = useMemo(() => [
+    { name: category.name, url: `/category/${category.slug}` }
+  ], [category.name, category.slug]);
+
+  const breadcrumbSchema = useMemo(() => createBreadcrumbSchema([
+    { name: 'Главная', url: 'https://sweetdelights.store' },
+    { name: category.name, url: `https://sweetdelights.store/category/${category.slug}` }
+  ]), [category.name, category.slug]);
+
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
+      <SEO
+        title={`${category.name} - купить в интернет-магазине Sweet Delights`}
+        description={`Широкий выбор ${category.name.toLowerCase()} в интернет-магазине Sweet Delights. ${categoryProducts.length} товаров с быстрой доставкой по России. Скидки и акции!`}
+        keywords={`${category.name}, купить ${category.name.toLowerCase()}, интернет-магазин сладостей, Sweet Delights`}
+        image={category.image || '/default-category.jpg'}
+        type="website"
+        structuredData={breadcrumbSchema}
+      />
       <Header 
         cartCount={cartCount}
         wishlistCount={wishlistCount}
@@ -166,30 +184,8 @@ export default function CategoryPage() {
       <main className="flex-1 relative z-10">
         <div className="bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 py-12 candy-stripe">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <div className="flex items-center gap-2 mb-4">
-              <Link 
-                href="/" 
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600 hover:scale-110 transition-all shadow-md hover:shadow-lg jelly-wobble" 
-                style={{
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                  boxShadow: '0 3px 0 rgba(219, 39, 119, 0.4), 0 4px 8px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                }}
-                data-testid="breadcrumb-home"
-              >
-                Главная
-              </Link>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-              <span className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 shadow-md" 
-                style={{
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                  boxShadow: '0 3px 0 rgba(126, 34, 206, 0.4), 0 4px 8px rgba(147, 51, 234, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                }}
-                data-testid="breadcrumb-category"
-              >
-                {category.name}
-              </span>
-            </div>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid="text-category-title">
+            <Breadcrumbs items={breadcrumbItems} />
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm mt-4" data-testid="text-category-title">
               {category.name}
             </h1>
             <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mt-4 shadow-lg shadow-pink-200" />

@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRoute, useLocation, Link } from "wouter";
 import Header from "@/components/Header";
 import ShoppingCart from "@/components/ShoppingCart";
 import Footer from "@/components/Footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import SEO, { createProductSchema, createBreadcrumbSchema } from "@/components/SEO";
 import ReviewsList from "@/components/ReviewsList";
 import AddReviewForm from "@/components/AddReviewForm";
 import StarRating from "@/components/StarRating";
@@ -42,7 +44,8 @@ export default function ProductPage() {
   const productId = params?.id || '';
   const { product, isLoading } = useProduct(productId);
   const { products, categories } = useProducts();
-  const { reviews, rating, refetch: refetchReviews } = useReviews(productId);
+  const { reviews, rating: productRating, refetch: refetchReviews } = useReviews(productId);
+  const rating = typeof productRating === 'object' ? productRating : { averageRating: 0, totalReviews: 0 };
   const category = product ? categories.find(c => c.id === product.category) : null;
 
   const handleAddToCart = () => {
@@ -167,8 +170,47 @@ export default function ProductPage() {
   const discount = hasDiscount && product.salePrice ? Math.round(((product.price - product.salePrice) / product.price) * 100) : 0;
   const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
 
+  const breadcrumbItems = useMemo(() => [
+    ...(category ? [{ name: category.name, url: `/category/${category.slug}` }] : []),
+    { name: product.name, url: `/product/${product.id}` }
+  ], [category?.name, category?.slug, product.name, product.id]);
+
+  const productSchema = useMemo(() => createProductSchema({
+    name: product.name,
+    description: product.description || `${product.name} - купить в интернет-магазине Sweet Delights`,
+    image: product.image || '/default-product.jpg',
+    price: product.salePrice || product.price,
+    currency: 'RUB',
+    availability: product.stock && product.stock > 0 ? 'instock' : 'outofstock',
+    rating: rating.averageRating > 0 ? rating.averageRating : undefined,
+    reviewCount: rating.totalReviews > 0 ? rating.totalReviews : undefined,
+    brand: 'Sweet Delights',
+    sku: product.id,
+  }), [product.name, product.description, product.image, product.salePrice, product.price, product.stock, product.id, rating.averageRating, rating.totalReviews]);
+
+  const breadcrumbSchema = useMemo(() => createBreadcrumbSchema([
+    { name: 'Главная', url: 'https://sweetdelights.store' },
+    ...breadcrumbItems.map(item => ({
+      name: item.name,
+      url: `https://sweetdelights.store${item.url}`
+    }))
+  ]), [breadcrumbItems]);
+
+  const structuredData = useMemo(() => [productSchema, breadcrumbSchema], [productSchema, breadcrumbSchema]);
+
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
+      <SEO
+        title={`${product.name} - купить в Sweet Delights | Цена ${product.salePrice || product.price}₽`}
+        description={product.description || `Купить ${product.name} в интернет-магазине Sweet Delights. ${hasDiscount ? `Скидка ${discount}%! ` : ''}Цена ${product.salePrice || product.price}₽. Быстрая доставка по России.`}
+        keywords={`${product.name}, купить ${product.name}, ${category?.name || 'сладости'}, Sweet Delights`}
+        image={product.image}
+        type="product"
+        price={product.salePrice || product.price}
+        currency="RUB"
+        availability={product.stock && product.stock > 0 ? 'instock' : 'outofstock'}
+        structuredData={structuredData}
+      />
       <Header 
         cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
         onCartClick={() => setCartOpen(true)}
@@ -176,45 +218,7 @@ export default function ProductPage() {
       
       <main className="flex-1 relative z-10 py-8">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex items-center gap-2 mb-6">
-            <Link 
-              href="/" 
-              className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600 hover:scale-110 transition-all shadow-md hover:shadow-lg jelly-wobble" 
-              style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                boxShadow: '0 3px 0 rgba(219, 39, 119, 0.4), 0 4px 8px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-              }}
-              data-testid="breadcrumb-home"
-            >
-              Главная
-            </Link>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            {category && (
-              <>
-                <Link 
-                  href={`/category/${category.slug}`} 
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 hover:scale-110 transition-all shadow-md hover:shadow-lg jelly-wobble" 
-                  style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                    boxShadow: '0 3px 0 rgba(126, 34, 206, 0.4), 0 4px 8px rgba(147, 51, 234, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                  }}
-                  data-testid="breadcrumb-category"
-                >
-                  {category.name}
-                </Link>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
-              </>
-            )}
-            <span className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 shadow-md" 
-              style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                boxShadow: '0 3px 0 rgba(217, 119, 6, 0.4), 0 4px 8px rgba(251, 146, 60, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-              }}
-              data-testid="breadcrumb-product"
-            >
-              {product.name}
-            </span>
-          </div>
+          <Breadcrumbs items={breadcrumbItems} />
 
           <div className="grid md:grid-cols-2 gap-8 mb-16">
             <div className="relative aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 shadow-2xl candy-wrapper sugar-crystals" data-testid="product-image-container">
