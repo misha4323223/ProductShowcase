@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { WheelProvider } from "@/contexts/WheelContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import CookieBanner from "@/components/CookieBanner";
@@ -90,11 +91,13 @@ function App() {
           <AdminAuthProvider>
             <CartProvider>
               <WishlistProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <CookieBanner />
-                  <Router />
-                </TooltipProvider>
+                <WheelProvider>
+                  <TooltipProvider>
+                    <Toaster />
+                    <CookieBanner />
+                    <Router />
+                  </TooltipProvider>
+                </WheelProvider>
               </WishlistProvider>
             </CartProvider>
           </AdminAuthProvider>
