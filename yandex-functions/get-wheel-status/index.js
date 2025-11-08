@@ -135,10 +135,12 @@ exports.handler = async (event) => {
         console.log('History loaded via Scan:', historyItems.length);
       } catch (scanError) {
         console.error('History Scan also failed:', scanError.message);
-        // Таблица может ещё не существовать
+        // Таблица может ещё не существовать - продолжаем с пустым массивом
         historyItems = [];
       }
     }
+
+    console.log('Final historyItems count:', historyItems.length);
 
     // Рассчитать статистику
 

@@ -67,11 +67,15 @@ export function WheelProvider({ children }: { children: ReactNode }) {
       setTotalSpinsEarned(status.totalSpinsEarned || 0);
       setTotalWheelSpins(status.totalWheelSpins || 0);
       setLoyaltyPoints(status.loyaltyPoints || 0);
-      setActivePrizes(status.activePrizes || []);
+      // Убедимся, что activePrizes - массив
+      setActivePrizes(Array.isArray(status.activePrizes) ? status.activePrizes : []);
       setStats(status.stats || null);
     } catch (err: any) {
       console.error("Ошибка загрузки статуса рулетки:", err);
       setError(err.message || "Не удалось загрузить данные рулетки");
+      // Устанавливаем безопасные значения по умолчанию
+      setActivePrizes([]);
+      setStats(null);
     } finally {
       setIsLoading(false);
     }
@@ -82,9 +86,11 @@ export function WheelProvider({ children }: { children: ReactNode }) {
 
     try {
       const historyData = await getWheelHistory(user.userId);
-      setHistory(historyData || []);
+      // Убедимся, что history - массив
+      setHistory(Array.isArray(historyData) ? historyData : []);
     } catch (err: any) {
       console.error("Ошибка загрузки истории:", err);
+      setHistory([]);
     }
   };
 
