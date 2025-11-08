@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWheel } from "@/contexts/WheelContext";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -20,9 +21,203 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
-import type { Order } from "@/types/firebase-types";
-import { Package, User, LogOut, Trash2, ArrowLeft } from "lucide-react";
+import type { Order, WheelPrize } from "@/types/firebase-types";
+import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+function WheelTab() {
+  const { spins, history, activePrizes, stats, isLoading, totalWheelSpins, loyaltyPoints } = useWheel();
+
+  const getPrizeIcon = (type: string) => {
+    switch (type) {
+      case 'discount_10': return <Percent className="h-5 w-5 text-purple-500" />;
+      case 'discount_20': return <Gift className="h-5 w-5 text-pink-500" />;
+      case 'points': return <Coins className="h-5 w-5 text-amber-500" />;
+      case 'delivery': return <Truck className="h-5 w-5 text-blue-500" />;
+      case 'free_item': return <Star className="h-5 w-5 text-green-500" />;
+      case 'jackpot': return <Trophy className="h-5 w-5 text-orange-500" />;
+      default: return <Gift className="h-5 w-5" />;
+    }
+  };
+
+  const getPrizeLabel = (type: string) => {
+    switch (type) {
+      case 'discount_10': return 'Скидка 10%';
+      case 'discount_20': return 'Товар -20%';
+      case 'points': return '+200 баллов';
+      case 'delivery': return 'Бесплатная доставка';
+      case 'free_item': return 'Подарок';
+      case 'jackpot': return 'ДЖЕКПОТ!';
+      default: return type;
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <TabsContent value="wheel">
+        <div className="text-center py-12">
+          <Sparkles className="h-12 w-12 mx-auto mb-4 text-primary animate-spin" />
+          <p className="text-muted-foreground">Загрузка данных рулетки...</p>
+        </div>
+      </TabsContent>
+    );
+  }
+
+  return (
+    <TabsContent value="wheel" className="space-y-6">
+      {/* Статистика */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Доступно спинов</p>
+                <p className="text-3xl font-bold text-primary" data-testid="text-available-spins">{spins}</p>
+              </div>
+              <Sparkles className="h-10 w-10 text-primary" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Всего прокручено</p>
+                <p className="text-3xl font-bold text-purple-500" data-testid="text-total-spins">{totalWheelSpins}</p>
+              </div>
+              <Trophy className="h-10 w-10 text-purple-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Бонусные баллы</p>
+                <p className="text-3xl font-bold text-amber-500" data-testid="text-loyalty-points">{loyaltyPoints}</p>
+              </div>
+              <Coins className="h-10 w-10 text-amber-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Активные призы */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Gift className="h-5 w-5" />
+            Активные призы
+          </CardTitle>
+          <CardDescription>Ваши доступные промокоды и призы</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {activePrizes.length === 0 ? (
+            <div className="text-center py-8">
+              <Gift className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+              <p className="text-muted-foreground" data-testid="text-no-active-prizes">
+                У вас пока нет активных призов
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Покрутите рулетку, чтобы получить призы!
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {activePrizes.map((prize) => (
+                <div 
+                  key={prize.id} 
+                  className="flex items-center justify-between p-4 border rounded-lg hover-elevate"
+                  data-testid={`prize-card-${prize.id}`}
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    {getPrizeIcon(prize.prizeType)}
+                    <div className="flex-1">
+                      <p className="font-medium">{getPrizeLabel(prize.prizeType)}</p>
+                      {prize.productName && (
+                        <p className="text-sm text-muted-foreground">Товар: {prize.productName}</p>
+                      )}
+                      <div className="flex items-center gap-4 mt-1">
+                        <p className="text-sm font-mono text-primary font-bold">{prize.promoCode}</p>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="h-3 w-3" />
+                          до {new Date(prize.expiresAt).toLocaleDateString('ru-RU')}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <Badge variant={prize.used ? "secondary" : "default"}>
+                    {prize.used ? "Использован" : "Активен"}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* История выигрышей */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="h-5 w-5" />
+            История выигрышей
+          </CardTitle>
+          <CardDescription>Все ваши призы за всё время</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {history.length === 0 ? (
+            <div className="text-center py-8">
+              <Trophy className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+              <p className="text-muted-foreground" data-testid="text-no-history">
+                История пуста
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Ваши выигрыши будут отображаться здесь
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {history.map((item) => (
+                <div 
+                  key={item.id} 
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                  data-testid={`history-item-${item.id}`}
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    {getPrizeIcon(item.prizeType)}
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">{item.prizeValue}</p>
+                      {item.prizeDetails?.productName && (
+                        <p className="text-xs text-muted-foreground">Товар: {item.prizeDetails.productName}</p>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(item.createdAt).toLocaleDateString('ru-RU', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  {item.prizeDetails?.savedAmount && (
+                    <Badge variant="secondary">
+                      Экономия: {item.prizeDetails.savedAmount}₽
+                    </Badge>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </TabsContent>
+  );
+}
 
 export default function AccountPage() {
   const { user, signOut, loading } = useAuth();
@@ -54,7 +249,7 @@ export default function AccountPage() {
     
     setLoadingOrders(true);
     try {
-      const userOrders = await getUserOrders(user.uid);
+      const userOrders = await getUserOrders(user.userId);
       console.log('Загруженные заказы:', userOrders);
       setOrders(userOrders);
     } catch (error: any) {
@@ -178,6 +373,10 @@ export default function AccountPage() {
               <Package className="h-4 w-4 mr-2" />
               Мои заказы
             </TabsTrigger>
+            <TabsTrigger value="wheel" data-testid="tab-wheel">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Рулетка
+            </TabsTrigger>
             <TabsTrigger value="profile" data-testid="tab-profile">
               <User className="h-4 w-4 mr-2" />
               Профиль
@@ -273,6 +472,8 @@ export default function AccountPage() {
             )}
           </TabsContent>
 
+          <WheelTab />
+
           <TabsContent value="profile">
             <Card>
               <CardHeader>
@@ -287,7 +488,7 @@ export default function AccountPage() {
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">ID пользователя</label>
                   <p className="text-sm font-mono bg-muted px-2 py-1 rounded" data-testid="text-profile-uid">
-                    {user.uid}
+                    {user.userId}
                   </p>
                 </div>
               </CardContent>
