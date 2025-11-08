@@ -12,6 +12,8 @@ import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useWheel } from "@/contexts/WheelContext";
+import WheelModal from "@/components/WheelModal";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
@@ -46,10 +48,12 @@ interface CategoryWithImages {
 export default function Home() {
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
+  const [wheelOpen, setWheelOpen] = useState(false);
   const { toast } = useToast();
   const { products, isLoading: productsLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const { spins } = useWheel();
 
   const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -204,7 +208,9 @@ export default function Home() {
       <Header
         cartCount={cartCount}
         wishlistCount={wishlistCount}
+        wheelSpins={spins}
         onCartClick={() => setCartOpen(true)}
+        onWheelClick={() => setWheelOpen(true)}
       />
 
       <main className="flex-1 relative z-10">
@@ -329,6 +335,11 @@ export default function Home() {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
         onCheckout={handleCheckout}
+      />
+      
+      <WheelModal
+        open={wheelOpen}
+        onClose={() => setWheelOpen(false)}
       />
     </div>
   );
