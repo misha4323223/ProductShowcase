@@ -8,8 +8,8 @@ const benefits = [
   },
   {
     icon: ShieldCheck,
-    title: 'Бесплатная примерка',
-    description: 'Несколько размеров на выбор',
+    title: 'Гарантия качества',
+    description: 'Только свежая продукция',
   },
   {
     icon: CreditCard,
