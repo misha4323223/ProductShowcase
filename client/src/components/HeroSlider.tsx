@@ -131,6 +131,9 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         {/* Кнопка подписки */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-20 pb-16 md:pb-16">
           <div className="text-center max-w-3xl px-4 pointer-events-auto">
+            <p className="text-white text-base md:text-lg font-medium mb-2 drop-shadow-lg">
+              Первым покупателям - скидка 10% ✨
+            </p>
             <Button 
               size="default"
               onClick={handleSubscribeClick}
@@ -177,9 +180,9 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
       <Dialog open={showSubscribeDialog} onOpenChange={setShowSubscribeDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Подпишитесь на новости 📬</DialogTitle>
+            <DialogTitle>Эксклюзивное предложение 🎁</DialogTitle>
             <DialogDescription>
-              Узнайте первыми об открытии магазина и получайте эксклюзивные предложения
+              Подпишитесь на уведомление об открытии и получите промокод на скидку 10% для первого заказа
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubscribe} className="space-y-4">
