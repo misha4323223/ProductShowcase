@@ -611,6 +611,10 @@
     pointer-events: none;
   }
 
+  .dark .glossy::after {
+    background: transparent;
+  }
+
   /* Sugar sparkle */
   @keyframes sugar-sparkle {
     0%, 100% { 
@@ -869,6 +873,10 @@
     border-radius: 50% 50% 0 0;
   }
 
+  .dark .donut-shape::after {
+    background: transparent;
+  }
+
   /* Sprinkles on Donut */
   .donut-sprinkles {
     position: relative;
@@ -954,6 +962,10 @@
     pointer-events: none;
     border-radius: inherit;
     animation: sparkle-drift 10s linear infinite;
+  }
+
+  .dark .sugar-crystals::before {
+    background-image: none;
   }
 
   @keyframes sparkle-drift {
@@ -1103,6 +1115,10 @@
     animation: glossy-shine 6s infinite;
   }
 
+  .dark .glossy-card::before {
+    background: transparent;
+  }
+
   .glossy-card::after {
     content: '';
     position: absolute;
@@ -1119,6 +1135,10 @@
     border-radius: 1.5rem 1.5rem 0 0;
     z-index: 5;
     pointer-events: none;
+  }
+
+  .dark .glossy-card::after {
+    background: transparent;
   }
 
   /* Holographic Foil Effect - голографическая фольга */
@@ -1217,6 +1237,10 @@
     z-index: 20;
     pointer-events: none;
     border-radius: inherit;
+  }
+
+  .dark .holographic-foil .sparkle-dots {
+    opacity: 0 !important;
   }
 
   .holographic-foil:hover .sparkle-dots {
