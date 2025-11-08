@@ -735,7 +735,7 @@
     right: 0;
     height: 40%;
     background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
-    border-radius: inherit;
+    border-radius: 9999px;
     pointer-events: none;
   }
 
