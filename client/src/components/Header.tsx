@@ -121,7 +121,7 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="flex h-16 items-center justify-between gap-1.5 pt-2">
           <button 
-            className="lg:hidden hover-elevate rounded-full p-1.5 gummy-button bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-600 dark:to-purple-600 cursor-pointer active:scale-95"
+            className="lg:hidden rounded-full p-1.5 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-600 dark:to-purple-600 cursor-pointer active:scale-95 transition-all shadow-md hover:shadow-lg active:shadow-sm"
             onClick={() => setMobileMenuOpen(prev => !prev)}
             onTouchEnd={(e) => {
               e.preventDefault();
