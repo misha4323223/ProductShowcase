@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Mail } from "lucide-react";
+import { ChevronLeft, ChevronRight, Mail, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -22,6 +22,7 @@ interface HeroSliderProps {
 export default function HeroSlider({ slides }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
+  const [showPromoDialog, setShowPromoDialog] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { toast } = useToast();
@@ -74,12 +75,12 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
     setIsSubscribing(true);
     try {
       await subscribeToNewsletter(email);
-      toast({
-        title: "Спасибо за подписку! 🎉",
-        description: "Мы сообщим вам об открытии магазина и эксклюзивных предложениях",
-      });
       setEmail("");
       setShowSubscribeDialog(false);
+      // Показываем окно с промокодом после успешной подписки
+      setTimeout(() => {
+        setShowPromoDialog(true);
+      }, 300);
     } catch (error: any) {
       toast({
         title: "Ошибка подписки",
@@ -176,6 +177,68 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         </div>
       </div>
 
+
+
+// Компонент диалога с промокодом
+function PromoCodeDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  const [copied, setCopied] = useState(false);
+  const promoCode = "OPENSWEET";
+
+  const copyPromoCode = () => {
+    navigator.clipboard.writeText(promoCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-2xl text-center">Ура! Вы с нами! 🎊</DialogTitle>
+          <DialogDescription className="text-center pt-2">
+            Держите ваш приветственный промокод. Не потеряйте его — скидка 10% ждёт вас при первом заказе!
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-4 py-4">
+          {/* Промокод */}
+          <div className="bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-primary rounded-lg p-6 text-center">
+            <p className="text-sm text-muted-foreground mb-2">Ваш промокод:</p>
+            <p className="text-3xl font-bold text-primary tracking-wider" data-testid="text-promo-code">
+              {promoCode}
+            </p>
+          </div>
+
+          {/* Кнопка копирования */}
+          <Button 
+            onClick={copyPromoCode}
+            className="w-full"
+            variant={copied ? "outline" : "default"}
+            data-testid="button-copy-promo"
+          >
+            {copied ? (
+              <>
+                <Check className="mr-2 h-4 w-4" />
+                Скопировано!
+              </>
+            ) : (
+              <>
+                <Copy className="mr-2 h-4 w-4" />
+                Скопировать промокод
+              </>
+            )}
+          </Button>
+
+          {/* Дополнительный текст */}
+          <p className="text-sm text-center text-muted-foreground">
+            Скопируйте промокод или сохраните скриншот 📸
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
       {/* Dialog для подписки */}
       <Dialog open={showSubscribeDialog} onOpenChange={setShowSubscribeDialog}>
         <DialogContent className="sm:max-w-md">
@@ -205,6 +268,12 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog с промокодом */}
+      <PromoCodeDialog 
+        open={showPromoDialog} 
+        onOpenChange={setShowPromoDialog}
+      />
     </>
   );
 }
