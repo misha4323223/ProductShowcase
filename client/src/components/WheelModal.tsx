@@ -193,7 +193,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
 
               {/* Колесо рулетки - леденец */}
               <div 
-                className="w-full h-full rounded-full shadow-2xl relative"
+                className="w-full h-full rounded-full shadow-2xl relative overflow-hidden"
                 style={{
                   transform: `rotate(${rotation}deg)`,
                   transition: isSpinning ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none',
@@ -208,8 +208,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                   const middleAngle = startAngle + (degreesPerSector / 2);
                   const Icon = sector.icon;
                   
-                  // Вычисляем позицию текста (70% от центра к краю)
-                  const radius = 70; // процент от радиуса
+                  // Позиция текста ближе к краю (60% от центра)
+                  const radius = 35; // процент от радиуса (половина, т.к. элемент 100% width/height)
                   const angleInRadians = (middleAngle - 90) * (Math.PI / 180);
                   const x = 50 + radius * Math.cos(angleInRadians);
                   const y = 50 + radius * Math.sin(angleInRadians);
@@ -217,7 +217,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                   return (
                     <div
                       key={sector.type}
-                      className="absolute"
+                      className="absolute pointer-events-none"
                       style={{
                         left: `${x}%`,
                         top: `${y}%`,
@@ -225,9 +225,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                       }}
                     >
                       <div className="flex flex-col items-center gap-0.5">
-                        <Icon className="w-6 h-6 text-white drop-shadow-lg" />
-                        <p className="text-[10px] font-bold text-white drop-shadow-lg whitespace-nowrap">{sector.label}</p>
-                        <p className="text-[9px] text-white/90 drop-shadow-lg">{sector.chance}%</p>
+                        <Icon className="w-5 h-5 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                        <p className="text-[9px] font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] whitespace-nowrap">{sector.label}</p>
                       </div>
                     </div>
                   );
