@@ -48,16 +48,16 @@ export default function CookieBanner() {
       data-testid="cookie-banner"
     >
       <div className="max-w-5xl mx-auto pointer-events-auto">
-        <Card className="shadow-2xl border-2 border-pink-200/50 bg-gradient-to-br from-white via-pink-50/30 to-purple-50/30 backdrop-blur-sm">
+        <Card className="shadow-2xl border-2 border-pink-200/50 dark:border-pink-700/50 bg-gradient-to-br from-white via-pink-50/30 to-purple-50/30 dark:from-gray-900 dark:via-pink-950/40 dark:to-purple-950/40 backdrop-blur-sm">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-start gap-3 md:gap-4">
-              <div className="flex-shrink-0 p-2 md:p-3 rounded-full bg-gradient-to-br from-pink-100 to-purple-100">
-                <Cookie className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              <div className="flex-shrink-0 p-2 md:p-3 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-600 dark:to-purple-600">
+                <Cookie className="h-5 w-5 md:h-6 md:w-6 text-primary dark:text-white" />
               </div>
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-serif text-lg md:text-xl font-bold text-primary leading-tight">
+                  <h3 className="font-serif text-lg md:text-xl font-bold text-primary dark:text-pink-400 leading-tight">
                     🍪 Мы используем cookies
                   </h3>
                   <button
@@ -66,16 +66,16 @@ export default function CookieBanner() {
                     data-testid="button-close-banner"
                     aria-label="Закрыть"
                   >
-                    <X className="h-4 w-4 text-muted-foreground" />
+                    <X className="h-4 w-4 text-muted-foreground dark:text-gray-300" />
                   </button>
                 </div>
                 
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                   Мы используем файлы cookie для улучшения работы сайта, анализа трафика и персонализации контента. 
                   Продолжая использовать наш сайт, вы соглашаетесь с использованием cookie-файлов в соответствии с нашей{" "}
                   <Link 
                     href="/privacy" 
-                    className="text-primary hover:underline font-medium"
+                    className="text-primary dark:text-pink-400 hover:underline font-medium"
                     data-testid="link-privacy-policy"
                     onClick={() => setIsVisible(false)}
                   >

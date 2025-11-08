@@ -121,7 +121,7 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="flex h-16 items-center justify-between gap-1.5 pt-2">
           <button 
-            className="lg:hidden hover-elevate rounded-full p-1.5 gummy-button bg-gradient-to-r from-pink-100 to-purple-100 cursor-pointer active:scale-95"
+            className="lg:hidden hover-elevate rounded-full p-1.5 gummy-button bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-600 dark:to-purple-600 cursor-pointer active:scale-95"
             onClick={() => setMobileMenuOpen(prev => !prev)}
             onTouchEnd={(e) => {
               e.preventDefault();
@@ -130,7 +130,7 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
             data-testid="button-mobile-menu"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileMenuOpen ? <X className="h-5 w-5 text-gray-800 dark:text-white" /> : <Menu className="h-5 w-5 text-gray-800 dark:text-white" />}
           </button>
 
           <Link href="/" className="logo-container-flex font-serif text-base md:text-xl lg:text-2xl font-bold cursor-pointer" data-testid="link-logo">
