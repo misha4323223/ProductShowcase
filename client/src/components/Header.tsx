@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -12,7 +12,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 interface HeaderProps {
   cartCount: number;
   wishlistCount?: number;
+  wheelSpins?: number;
   onCartClick: () => void;
+  onWheelClick?: () => void;
 }
 
 // Цветовые схемы для категорий
@@ -73,14 +75,16 @@ const getCategoryStyle = (slug: string) => {
   };
 };
 
-export default function Header({ cartCount, wishlistCount = 0, onCartClick }: HeaderProps) {
+export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, onCartClick, onWheelClick }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [cartBounce, setCartBounce] = useState(false);
   const [wishlistBounce, setWishlistBounce] = useState(false);
+  const [wheelBounce, setWheelBounce] = useState(false);
   const prevCartCount = useRef(cartCount);
   const prevWishlistCount = useRef(wishlistCount);
+  const prevWheelSpins = useRef(wheelSpins);
   const [, setLocation] = useLocation();
   const { user } = useAuth();
 
@@ -106,6 +110,14 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
     }
     prevWishlistCount.current = wishlistCount;
   }, [wishlistCount]);
+
+  useEffect(() => {
+    if (wheelSpins > prevWheelSpins.current) {
+      setWheelBounce(true);
+      setTimeout(() => setWheelBounce(false), 700);
+    }
+    prevWheelSpins.current = wheelSpins;
+  }, [wheelSpins]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,6 +206,26 @@ export default function Header({ cartCount, wishlistCount = 0, onCartClick }: He
             )}
             
             <ThemeToggle />
+            
+            {user && onWheelClick && (
+              <button
+                onClick={onWheelClick}
+                className="relative w-9 h-9 rounded-full hover:scale-110 transition-all jelly-wobble cursor-pointer bg-gradient-to-br from-yellow-400 via-amber-500 to-yellow-600 shadow-lg flex items-center justify-center"
+                style={{
+                  boxShadow: '0 4px 0 rgba(234, 179, 8, 0.4), 0 6px 12px rgba(245, 158, 11, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)',
+                  animation: wheelSpins > 0 ? 'pulse-soft 2s infinite' : 'none'
+                }}
+                data-testid="button-wheel"
+                title="Рулетка Желаний"
+              >
+                <Sparkles className={`h-4 w-4 text-white z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
+                {wheelSpins > 0 && (
+                  <span className={`absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${wheelBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-wheel-spins">
+                    {wheelSpins}
+                  </span>
+                )}
+              </button>
+            )}
             
             {user ? (
               <Link href="/account">
