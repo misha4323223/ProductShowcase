@@ -165,7 +165,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   return (
     <>
       <Dialog open={open && !showPrizeModal} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl" data-testid="dialog-wheel">
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto" data-testid="dialog-wheel">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
               <Sparkles className="w-6 h-6 text-primary" />
@@ -174,70 +174,79 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="py-6">
+          <div className="py-4">
             {/* Счетчик спинов */}
-            <div className="text-center mb-6">
-              <p className="text-muted-foreground mb-2">У вас:</p>
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 px-6 py-3 rounded-full">
-                <span className="text-3xl">🎰</span>
-                <span className="text-3xl font-bold text-primary">× {spins}</span>
+            <div className="text-center mb-4">
+              <p className="text-sm text-muted-foreground mb-2">У вас:</p>
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 px-5 py-2 rounded-full">
+                <span className="text-2xl">🎰</span>
+                <span className="text-2xl font-bold text-primary">× {spins}</span>
               </div>
             </div>
 
             {/* Рулетка */}
-            <div className="relative w-full max-w-md mx-auto aspect-square mb-6">
+            <div className="relative w-full max-w-sm mx-auto aspect-square mb-4">
               {/* Указатель */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
-                <div className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[30px] border-t-primary drop-shadow-lg" />
+                <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-primary drop-shadow-lg" />
               </div>
 
-              {/* Колесо рулетки */}
+              {/* Колесо рулетки - леденец */}
               <div 
-                className="w-full h-full rounded-full overflow-hidden shadow-2xl relative border-4 border-primary"
+                className="w-full h-full rounded-full shadow-2xl relative"
                 style={{
                   transform: `rotate(${rotation}deg)`,
                   transition: isSpinning ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none',
+                  background: 'conic-gradient(from 0deg, #9333ea 0deg 60deg, #ec4899 60deg 120deg, #f59e0b 120deg 180deg, #3b82f6 180deg 240deg, #10b981 240deg 300deg, #f97316 300deg 360deg)',
+                  border: '6px solid white',
+                  boxShadow: '0 0 0 3px #ec4899, 0 20px 50px rgba(0,0,0,0.3)',
                 }}
               >
                 {WHEEL_SECTORS.map((sector, index) => {
-                  const angle = (360 / WHEEL_SECTORS.length) * index;
+                  const degreesPerSector = 360 / WHEEL_SECTORS.length;
+                  const startAngle = index * degreesPerSector;
+                  const middleAngle = startAngle + (degreesPerSector / 2);
                   const Icon = sector.icon;
+                  
+                  // Вычисляем позицию текста (70% от центра к краю)
+                  const radius = 70; // процент от радиуса
+                  const angleInRadians = (middleAngle - 90) * (Math.PI / 180);
+                  const x = 50 + radius * Math.cos(angleInRadians);
+                  const y = 50 + radius * Math.sin(angleInRadians);
                   
                   return (
                     <div
                       key={sector.type}
-                      className={`absolute w-full h-full bg-gradient-to-br ${sector.color}`}
+                      className="absolute"
                       style={{
-                        transform: `rotate(${angle}deg)`,
-                        clipPath: `polygon(50% 50%, 50% 0%, ${50 + 50 * Math.sin((Math.PI * 2) / WHEEL_SECTORS.length)}% ${50 - 50 * Math.cos((Math.PI * 2) / WHEEL_SECTORS.length)}%)`,
+                        left: `${x}%`,
+                        top: `${y}%`,
+                        transform: `translate(-50%, -50%) rotate(${middleAngle}deg)`,
                       }}
                     >
-                      <div 
-                        className="absolute top-[25%] left-1/2 -translate-x-1/2 text-center"
-                        style={{ transform: `translateX(-50%) rotate(${30}deg)` }}
-                      >
-                        <Icon className="w-8 h-8 text-white mx-auto mb-1" />
-                        <p className="text-xs font-bold text-white whitespace-nowrap">{sector.label}</p>
-                        <p className="text-xs text-white/80">{sector.chance}%</p>
+                      <div className="flex flex-col items-center gap-0.5">
+                        <Icon className="w-6 h-6 text-white drop-shadow-lg" />
+                        <p className="text-[10px] font-bold text-white drop-shadow-lg whitespace-nowrap">{sector.label}</p>
+                        <p className="text-[9px] text-white/90 drop-shadow-lg">{sector.chance}%</p>
                       </div>
                     </div>
                   );
                 })}
 
-                {/* Центр */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white dark:bg-gray-800 border-4 border-primary flex items-center justify-center shadow-lg">
-                  <Sparkles className="w-10 h-10 text-primary" />
+                {/* Центр леденца */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white dark:bg-gray-800 border-4 border-pink-400 flex items-center justify-center shadow-lg">
+                  <Sparkles className="w-8 h-8 text-primary" />
                 </div>
               </div>
             </div>
 
             {/* Кнопка вращения */}
-            <div className="text-center">
+            <div className="text-center mb-4">
               <Button
                 size="lg"
                 onClick={handleSpin}
                 disabled={isSpinning || isLoading || spins < 1}
-                className="px-8 py-6 text-lg font-bold"
+                className="px-6 py-5 text-base font-bold"
                 data-testid="button-spin-wheel"
               >
                 {isSpinning ? (
@@ -250,14 +259,14 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5 mr-2" />
-                    Крутить рулетку (1 спин)
+                    Крутить рулетку
                   </>
                 )}
               </Button>
               
               {spins < 1 && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  Делайте заказы, чтобы получить спины! <br />
+                <p className="text-xs text-muted-foreground mt-2">
+                  Делайте заказы, чтобы получить спины!<br />
                   1000₽ = 1 спин
                 </p>
               )}
@@ -265,24 +274,24 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
 
             {/* Вишлист */}
             {wishlistCount > 0 && (
-              <div className="mt-6 pt-6 border-t">
-                <p className="text-sm text-muted-foreground text-center mb-3">
+              <div className="pt-4 border-t">
+                <p className="text-xs text-muted-foreground text-center mb-2">
                   Ваш вишлист ({wishlistCount} товаров):
                 </p>
                 <div className="flex gap-2 justify-center flex-wrap">
-                  {wishlistItems.slice(0, 8).map((item) => (
+                  {wishlistItems.slice(0, 6).map((item) => (
                     <div 
                       key={item.productId}
-                      className="w-12 h-12 rounded-lg overflow-hidden border-2 border-muted"
+                      className="w-10 h-10 rounded-lg overflow-hidden border-2 border-muted"
                     >
                       <div className="w-full h-full bg-muted flex items-center justify-center text-xs">
                         🍬
                       </div>
                     </div>
                   ))}
-                  {wishlistCount > 8 && (
-                    <div className="w-12 h-12 rounded-lg border-2 border-muted flex items-center justify-center text-xs text-muted-foreground">
-                      +{wishlistCount - 8}
+                  {wishlistCount > 6 && (
+                    <div className="w-10 h-10 rounded-lg border-2 border-muted flex items-center justify-center text-xs text-muted-foreground">
+                      +{wishlistCount - 6}
                     </div>
                   )}
                 </div>
