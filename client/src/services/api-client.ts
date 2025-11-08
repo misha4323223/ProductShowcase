@@ -321,7 +321,9 @@ export async function getWheelHistory(userId: string): Promise<WheelHistory[]> {
     throw new Error(`Failed to get wheel history: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  // API может вернуть объект с полем items или массив напрямую
+  return Array.isArray(data) ? data : (data.items || []);
 }
 
 // Получить активные призы пользователя
