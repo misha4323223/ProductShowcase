@@ -12,7 +12,10 @@ export interface UICartItem {
 
 export interface FirebaseCartItem {
   productId: string;
+  name: string;
+  image: string;
   quantity: number;
+  price: number;
 }
 
 export function saveCartToLocalStorage(items: UICartItem[]): void {
