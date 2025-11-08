@@ -739,6 +739,12 @@
     pointer-events: none;
   }
 
+  /* Убираем полупрозрачный эффект в тёмной теме */
+  .dark .gummy-button::before {
+    background: transparent;
+    box-shadow: none;
+  }
+
   /* Lollipop Swirl - закрученный леденец */
   @keyframes lollipop-spin {
     from { transform: rotate(0deg); }
