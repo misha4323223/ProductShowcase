@@ -64,15 +64,26 @@ export async function hideOrderForUser(orderId: string): Promise<void> {
 }
 
 export async function getAllOrders(): Promise<Order[]> {
-  const response = await fetch(`${API_GATEWAY_URL}/orders`);
+  const response = await fetch(`${API_GATEWAY_URL}/orders/all`);
   
   if (!response.ok) {
     throw new Error('Failed to get all orders');
   }
   
   const data = await response.json();
-  return data.map((order: any) => ({
-    ...order,
-    createdAt: new Date(order.createdAt),
-  }));
+  console.log('📦 Сырые данные заказов из API:', data);
+  
+  return data.map((order: any) => {
+    const mappedOrder = {
+      ...order,
+      createdAt: order.createdAt ? new Date(order.createdAt) : new Date(),
+      promoCode: order.promoCode ? {
+        ...order.promoCode,
+        startDate: order.promoCode.startDate ? new Date(order.promoCode.startDate) : undefined,
+        endDate: order.promoCode.endDate ? new Date(order.promoCode.endDate) : undefined,
+      } : undefined,
+    };
+    console.log('✅ Обработанный заказ:', mappedOrder.id, mappedOrder.createdAt);
+    return mappedOrder;
+  });
 }
