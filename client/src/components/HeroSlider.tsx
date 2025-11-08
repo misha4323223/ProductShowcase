@@ -177,7 +177,44 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         </div>
       </div>
 
+      {/* Dialog для подписки */}
+      <Dialog open={showSubscribeDialog} onOpenChange={setShowSubscribeDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Эксклюзивное предложение 🎁</DialogTitle>
+            <DialogDescription>
+              Подпишитесь на уведомление об открытии и получите промокод на скидку 10% для первого заказа
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubscribe} className="space-y-4">
+            <Input
+              type="email"
+              placeholder="Ваш email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubscribing}
+              data-testid="input-subscribe-email"
+            />
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isSubscribing}
+              data-testid="button-submit-subscribe"
+            >
+              {isSubscribing ? "Подписываемся..." : "Подписаться"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
 
+      {/* Dialog с промокодом */}
+      <PromoCodeDialog 
+        open={showPromoDialog} 
+        onOpenChange={setShowPromoDialog}
+      />
+    </>
+  );
+}
 
 // Компонент диалога с промокодом
 function PromoCodeDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -236,44 +273,5 @@ function PromoCodeDialog({ open, onOpenChange }: { open: boolean; onOpenChange: 
         </div>
       </DialogContent>
     </Dialog>
-  );
-}
-
-      {/* Dialog для подписки */}
-      <Dialog open={showSubscribeDialog} onOpenChange={setShowSubscribeDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Эксклюзивное предложение 🎁</DialogTitle>
-            <DialogDescription>
-              Подпишитесь на уведомление об открытии и получите промокод на скидку 10% для первого заказа
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSubscribe} className="space-y-4">
-            <Input
-              type="email"
-              placeholder="Ваш email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isSubscribing}
-              data-testid="input-subscribe-email"
-            />
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isSubscribing}
-              data-testid="button-submit-subscribe"
-            >
-              {isSubscribing ? "Подписываемся..." : "Подписаться"}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog с промокодом */}
-      <PromoCodeDialog 
-        open={showPromoDialog} 
-        onOpenChange={setShowPromoDialog}
-      />
-    </>
   );
 }
