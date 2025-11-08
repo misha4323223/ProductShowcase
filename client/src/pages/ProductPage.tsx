@@ -294,7 +294,7 @@ export default function ProductPage() {
                 </div>
               )}
 
-              <Card className="p-6 mb-6 bg-gradient-to-br from-pink-50/50 to-purple-50/50 border-2 border-pink-100">
+              <Card className="p-6 mb-6 bg-gradient-to-br from-pink-50/50 to-purple-50/50 border-2 border-pink-100 dark:from-gray-800 dark:to-gray-800 dark:border-gray-700">
                 <div className="flex items-baseline gap-3 mb-6">
                   {hasDiscount ? (
                     <>
