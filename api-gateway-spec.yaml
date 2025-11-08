@@ -742,3 +742,92 @@ paths:
       responses:
         '200':
           description: OK
+
+  # ========== WHEEL (Рулетка Желаний) ==========
+  /wheel/spin:
+    post:
+      summary: Крутить рулетку
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: REPLACE_WITH_SPIN_WHEEL_FUNCTION_ID  # После деплоя spin-wheel функции
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Результат вращения рулетки
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /wheel/status:
+    get:
+      summary: Получить статус рулетки
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: REPLACE_WITH_GET_WHEEL_STATUS_FUNCTION_ID  # После деплоя get-wheel-status функции
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Статус рулетки
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /wheel/history:
+    get:
+      summary: Получить историю выигрышей
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: REPLACE_WITH_GET_WHEEL_HISTORY_FUNCTION_ID  # После деплоя get-wheel-history функции
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: История выигрышей
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
