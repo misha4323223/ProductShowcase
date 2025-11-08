@@ -1,0 +1,44 @@
+Время (UTC +3)
+Сообщение
+
+09 нояб. 00:29:45.048
+REPORT RequestID: 2f4ebd41-aac4-4ef2-b22c-756bb5f1151b Duration: 246.710 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 100 MB Queuing Duration: 0.024 ms Function Init Duration: 243.023 ms CPU Usage: 16.016 %
+REPORT RequestID: 2f4ebd41-aac4-4ef2-b22c-756bb5f1151b Duration: 246.710 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 100 MB Queuing Duration: 0.024 ms Function Init Duration: 243.023 ms CPU Usage: 16.016 %
+"request_id""2f4ebd41-aac4-4ef2-b22c-756bb5f1151b"
+"source""system"
+"version_id""d4e1ho6hi3lijpd01r8a"
+
+09 нояб. 00:29:45.048
+END RequestID: 2f4ebd41-aac4-4ef2-b22c-756bb5f1151b
+END RequestID: 2f4ebd41-aac4-4ef2-b22c-756bb5f1151b
+"request_id""2f4ebd41-aac4-4ef2-b22c-756bb5f1151b"
+"source""system"
+"version_id""d4e1ho6hi3lijpd01r8a"
+
+09 нояб. 00:29:44.593
+START RequestID: 2f4ebd41-aac4-4ef2-b22c-756bb5f1151b Version: d4e1ho6hi3lijpd01r8a
+START RequestID: 2f4ebd41-aac4-4ef2-b22c-756bb5f1151b Version: d4e1ho6hi3lijpd01r8a
+"request_id""2f4ebd41-aac4-4ef2-b22c-756bb5f1151b"
+"source""system"
+"version_id""d4e1ho6hi3lijpd01r8a"
+
+09 нояб. 00:29:40.646
+REPORT RequestID: beca6e5f-a6f0-4daf-b6c6-bea5600041ec Duration: 173.413 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 103 MB Queuing Duration: 0.040 ms Function Init Duration: 170.722 ms CPU Usage: 15.918 %
+REPORT RequestID: beca6e5f-a6f0-4daf-b6c6-bea5600041ec Duration: 173.413 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 103 MB Queuing Duration: 0.040 ms Function Init Duration: 170.722 ms CPU Usage: 15.918 %
+"request_id""beca6e5f-a6f0-4daf-b6c6-bea5600041ec"
+"source""system"
+"version_id""d4e1ho6hi3lijpd01r8a"
+
+09 нояб. 00:29:40.646
+END RequestID: beca6e5f-a6f0-4daf-b6c6-bea5600041ec
+END RequestID: beca6e5f-a6f0-4daf-b6c6-bea5600041ec
+"request_id""beca6e5f-a6f0-4daf-b6c6-bea5600041ec"
+"source""system"
+"version_id""d4e1ho6hi3lijpd01r8a"
+
+09 нояб. 00:29:40.386
+START RequestID: beca6e5f-a6f0-4daf-b6c6-bea5600041ec Version: d4e1ho6hi3lijpd01r8a
+START RequestID: beca6e5f-a6f0-4daf-b6c6-bea5600041ec Version: d4e1ho6hi3lijpd01r8a
+"request_id""beca6e5f-a6f0-4daf-b6c6-bea5600041ec"
+"source""system"
+"version_id""d4e1ho6hi3lijpd01r8a"
