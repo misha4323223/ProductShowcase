@@ -39,7 +39,17 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
     return allProducts.filter(p => p.salePrice != null);
   }
 
-  return allProducts.filter(p => p.category === categorySlug);
+  // Находим категорию по slug
+  const categories = await getAllCategories();
+  const category = categories.find(c => c.slug === categorySlug);
+  
+  if (!category) {
+    console.warn(`Категория со slug "${categorySlug}" не найдена`);
+    return [];
+  }
+
+  // Фильтруем товары по ID категории
+  return allProducts.filter(p => p.category === category.id);
 }
 
 export async function getFeaturedProducts(): Promise<Product[]> {
