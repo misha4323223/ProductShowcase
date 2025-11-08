@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useWheel } from "@/contexts/WheelContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { Sparkles, Gift, Percent, Coins, Truck, Star, Trophy } from "lucide-react";
 import type { WheelPrize, PrizeType } from "@/types/firebase-types";
@@ -69,6 +70,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   const { user } = useAuth();
   const { spins, spin, isLoading } = useWheel();
   const { wishlistItems, wishlistCount } = useWishlist();
+  const { toast } = useToast();
   const [, setLocation] = useLocation();
   
   const [isSpinning, setIsSpinning] = useState(false);
@@ -96,32 +98,56 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
     }
 
     if (wishlistCount === 0) {
-      alert("Добавьте товары в избранное, чтобы получить персонализированные призы!");
+      toast({
+        title: "Пустой вишлист",
+        description: "Добавьте товары в избранное, чтобы получить персонализированные призы!",
+        variant: "destructive",
+      });
       return;
     }
 
     setIsSpinning(true);
 
     try {
-      // Анимация вращения
-      const spins = 5 + Math.random() * 3; // 5-8 полных оборотов
-      const randomAngle = Math.random() * 360;
-      const finalRotation = rotation + (360 * spins) + randomAngle;
-      
-      setRotation(finalRotation);
-
-      // Запрос к API
+      // Сначала получаем приз от API
       const prize = await spin();
+
+      if (!prize) {
+        toast({
+          title: "Ошибка",
+          description: "Не удалось получить приз. Попробуйте еще раз.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Вычисляем угол на основе типа приза
+      const sectorIndex = WHEEL_SECTORS.findIndex(s => s.type === prize.prizeType);
+      const degreesPerSector = 360 / WHEEL_SECTORS.length; // 60 градусов
+      const sectorCenterAngle = sectorIndex * degreesPerSector + (degreesPerSector / 2); // центр сектора
+      
+      // 5-8 полных оборотов + угол до нужного сектора
+      const fullSpins = 5 + Math.random() * 3;
+      // Инвертируем направление, так как указатель сверху, а рулетка вращается
+      const targetAngle = 360 - sectorCenterAngle;
+      const finalRotation = rotation + (360 * fullSpins) + targetAngle;
+      
+      // Запускаем анимацию к нужному сектору
+      setRotation(finalRotation);
 
       // Ждем окончания анимации
       await new Promise(resolve => setTimeout(resolve, 4000));
 
-      if (prize) {
-        setWonPrize(prize);
-        setShowPrizeModal(true);
-      }
+      // Показываем результат
+      setWonPrize(prize);
+      setShowPrizeModal(true);
     } catch (error) {
       console.error("Ошибка вращения:", error);
+      toast({
+        title: "Ошибка",
+        description: "Произошла ошибка при вращении рулетки",
+        variant: "destructive",
+      });
     } finally {
       setIsSpinning(false);
     }

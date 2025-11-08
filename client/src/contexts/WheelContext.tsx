@@ -106,7 +106,7 @@ export function WheelProvider({ children }: { children: ReactNode }) {
       const response: SpinWheelResponse = await spinWheel();
       
       if (response.success && response.prize) {
-        // Обновляем локальное состояние
+        // Обновляем локальное состояние немедленно для быстрой обратной связи
         setSpins(prev => prev - 1);
         setTotalWheelSpins(prev => prev + 1);
         
@@ -120,8 +120,11 @@ export function WheelProvider({ children }: { children: ReactNode }) {
           setLoyaltyPoints(prev => prev + response.prize.pointsAmount!);
         }
         
-        // Перезагружаем историю
-        await loadWheelHistory();
+        // Обновляем полное состояние с сервера для синхронизации
+        // Делаем это в фоне, чтобы не блокировать UI
+        refreshStatus().catch(err => {
+          console.error("Ошибка обновления статуса после выигрыша:", err);
+        });
         
         return response.prize;
       }
