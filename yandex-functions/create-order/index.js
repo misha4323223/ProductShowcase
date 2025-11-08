@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -47,10 +47,50 @@ exports.handler = async (event) => {
       status: 'pending',
     };
 
+    // Сохранить заказ
     await docClient.send(new PutCommand({
       TableName: "orders",
       Item: order,
     }));
+
+    // Начислить спины за заказ (1 спин за каждые 1000₽)
+    const spinsToAdd = Math.floor(orderData.total / 1000);
+    let actualSpinsAdded = 0;
+    
+    if (spinsToAdd > 0 && orderData.userEmail) {
+      console.log(`Adding ${spinsToAdd} spins for order total ${orderData.total}₽`);
+      
+      try {
+        // Получить email пользователя
+        const userResult = await docClient.send(new GetCommand({
+          TableName: "users",
+          Key: { email: orderData.userEmail }
+        }));
+
+        if (userResult.Item) {
+          // Обновить спины пользователя
+          await docClient.send(new UpdateCommand({
+            TableName: "users",
+            Key: { email: orderData.userEmail },
+            UpdateExpression: "SET spins = if_not_exists(spins, :zero) + :spinsToAdd, totalSpinsEarned = if_not_exists(totalSpinsEarned, :zero) + :spinsToAdd",
+            ExpressionAttributeValues: {
+              ":spinsToAdd": spinsToAdd,
+              ":zero": 0
+            }
+          }));
+          
+          actualSpinsAdded = spinsToAdd;
+          console.log(`Successfully added ${spinsToAdd} spins to user ${orderData.userEmail}`);
+        } else {
+          console.warn(`User not found: ${orderData.userEmail}`);
+        }
+      } catch (error) {
+        console.error("Error adding spins:", error);
+        // Не прерываем создание заказа, если начисление спинов не удалось
+      }
+    } else if (spinsToAdd > 0 && !orderData.userEmail) {
+      console.warn("Cannot add spins: userEmail not provided");
+    }
     
     return {
       statusCode: 200,
@@ -60,7 +100,12 @@ exports.handler = async (event) => {
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ success: true, id, orderId: id }),
+      body: JSON.stringify({ 
+        success: true, 
+        id, 
+        orderId: id,
+        spinsAdded: actualSpinsAdded 
+      }),
     };
   } catch (error) {
     console.error("Error:", error);
