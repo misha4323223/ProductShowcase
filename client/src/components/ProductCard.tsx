@@ -22,15 +22,15 @@ interface ProductCardProps {
   onClick: (id: string) => void;
 }
 
-export default function ProductCard({ 
-  id, 
-  name, 
-  price, 
-  salePrice, 
+export default function ProductCard({
+  id,
+  name,
+  price,
+  salePrice,
   image,
   stock,
   onAddToCart,
-  onClick 
+  onClick
 }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [showNotifyDialog, setShowNotifyDialog] = useState(false);
@@ -50,18 +50,18 @@ export default function ProductCard({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     if ('ontouchstart' in window) return;
-    
+
     const rect = cardRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
+
     cardRef.current.style.setProperty('--mouse-x', `${x}%`);
     cardRef.current.style.setProperty('--mouse-y', `${y}%`);
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (isOutOfStock) {
       toast({
         title: "Нет в наличии",
@@ -70,7 +70,7 @@ export default function ProductCard({
       });
       return;
     }
-    
+
     setIsAdding(true);
     onAddToCart(id);
     setTimeout(() => setIsAdding(false), 500);
@@ -78,7 +78,7 @@ export default function ProductCard({
 
   const handleToggleWishlist = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (!user) {
       toast({
         title: "Требуется авторизация",
@@ -144,14 +144,13 @@ export default function ProductCard({
 
   return (
     <>
-    <div 
+    <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className="holographic-foil"
       style={{ WebkitTapHighlightColor: 'transparent' }}
     >
-      <Card 
-        className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100 relative glossy-card active:scale-[0.98]" 
+      <Card
+        className="group overflow-visible cursor-pointer rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-pink-200/50 candy-wrapper jelly-wobble border-2 border-pink-100 relative glossy-card active:scale-[0.98]"
         data-testid={`card-product-${id}`}
       >
         <div className="sparkle-dots"></div>
@@ -160,8 +159,8 @@ export default function ProductCard({
           size="icon"
           variant="ghost"
           className={`absolute top-3 left-3 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
-            inWishlist 
-              ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50' 
+            inWishlist
+              ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
               : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
           }`}
           onClick={handleToggleWishlist}
@@ -183,7 +182,7 @@ export default function ProductCard({
             <ShoppingCart className="h-16 w-16" />
           </div>
         )}
-        
+
         {hasDiscount && (
           <div className="absolute top-3 right-3 w-16 h-16 lollipop-swirl-badge rounded-full flex items-center justify-center shadow-2xl shadow-red-500/50 animate-rotate-slow border-4 border-white" data-testid={`badge-discount-${id}`}>
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent"></div>
@@ -237,8 +236,8 @@ export default function ProductCard({
           )}
         </div>
         {isOutOfStock ? (
-          <Button 
-            className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold text-sm py-6" 
+          <Button
+            className="w-full rounded-full gummy-button squish-active bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white font-semibold text-sm py-6"
             onClick={handleNotifyClick}
             data-testid={`button-notify-${id}`}
           >
@@ -246,7 +245,7 @@ export default function ProductCard({
             Уведомить меня
           </Button>
         ) : (
-          <Button 
+          <Button
             className={`w-full rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold text-sm py-6 ${isAdding ? 'jelly-add-animation' : ''}`}
             onClick={handleAddToCart}
             data-testid={`button-add-to-cart-${id}`}
