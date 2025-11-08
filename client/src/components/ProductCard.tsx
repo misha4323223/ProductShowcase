@@ -197,7 +197,7 @@ export default function ProductCard({
         )}
         </div>
       </div>
-      <div className="p-4 space-y-3 bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900/80 dark:to-gray-800 relative caramel-drip">
+      <div className="p-4 space-y-3 bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 relative caramel-drip">
         <h3 className="font-medium text-sm line-clamp-2 min-h-[2.5rem] text-gray-900 dark:text-white" data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
