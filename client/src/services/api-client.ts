@@ -1,4 +1,4 @@
-import type { Product, Category } from "@/types/firebase-types";
+import type { Product, Category, WheelPrize, WheelHistory, WheelStats } from "@/types/firebase-types";
 
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
@@ -245,6 +245,99 @@ export async function validatePromoCode(code: string, orderTotal: number): Promi
 
   if (!response.ok) {
     throw new Error(`Failed to validate promo code: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// ========== WHEEL (РУЛЕТКА) API ==========
+
+export interface WheelStatusResponse {
+  spins: number;                    // доступные спины
+  totalSpinsEarned: number;         // всего заработано
+  totalWheelSpins: number;          // всего прокручено
+  loyaltyPoints: number;            // бонусные баллы
+  activePrizes: WheelPrize[];       // активные призы
+  stats: WheelStats;                // статистика
+}
+
+export interface SpinWheelResponse {
+  success: boolean;
+  prize: WheelPrize;
+}
+
+// Получить статус рулетки пользователя
+export async function getWheelStatus(userId: string): Promise<WheelStatusResponse> {
+  const token = localStorage.getItem('authToken');
+  
+  const response = await fetch(`${API_BASE_URL}/wheel/status`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to get wheel status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Крутить рулетку
+export async function spinWheel(): Promise<SpinWheelResponse> {
+  const token = localStorage.getItem('authToken');
+  
+  const response = await fetch(`${API_BASE_URL}/wheel/spin`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || `Failed to spin wheel: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Получить историю выигрышей
+export async function getWheelHistory(userId: string): Promise<WheelHistory[]> {
+  const token = localStorage.getItem('authToken');
+  
+  const response = await fetch(`${API_BASE_URL}/wheel/history`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to get wheel history: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Получить активные призы пользователя
+export async function getActivePrizes(userId: string): Promise<WheelPrize[]> {
+  const token = localStorage.getItem('authToken');
+  
+  const response = await fetch(`${API_BASE_URL}/wheel/prizes`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to get active prizes: ${response.status}`);
   }
 
   return response.json();
