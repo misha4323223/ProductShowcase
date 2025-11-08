@@ -320,7 +320,7 @@ export default function ProductPage() {
                       variant="outline"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1}
-                      className="rounded-full gummy-button"
+                      className="rounded-full shadow-md hover:shadow-lg transition-all active:shadow-sm"
                       data-testid="button-decrease-quantity"
                     >
                       <Minus className="h-4 w-4" />
@@ -332,7 +332,7 @@ export default function ProductPage() {
                       size="icon"
                       variant="outline"
                       onClick={() => setQuantity(quantity + 1)}
-                      className="rounded-full gummy-button"
+                      className="rounded-full shadow-md hover:shadow-lg transition-all active:shadow-sm"
                       data-testid="button-increase-quantity"
                     >
                       <Plus className="h-4 w-4" />
@@ -352,7 +352,7 @@ export default function ProductPage() {
                   <Button
                     size="icon"
                     variant="outline"
-                    className={`rounded-full gummy-button squish-active min-h-[56px] min-w-[56px] ${
+                    className={`rounded-full shadow-lg hover:shadow-xl transition-all active:shadow-md min-h-[56px] min-w-[56px] ${
                       isInWishlist(productId)
                         ? 'bg-pink-500 hover:bg-pink-600 text-white border-pink-500'
                         : 'bg-white hover:bg-pink-50 text-pink-500 border-pink-200'
