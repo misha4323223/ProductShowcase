@@ -204,6 +204,7 @@ export default function CheckoutPage() {
 
       const orderData: any = {
         userId: user?.uid || 'guest',
+        userEmail: user?.email || data.email,
         items: cartItems.map(item => ({
           productId: item.id,
           name: item.name,
