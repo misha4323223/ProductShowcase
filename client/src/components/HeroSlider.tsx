@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Mail, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletter } from "@/services/yandex-newsletter";
 import OptimizedImage from "@/components/OptimizedImage";
+import LegalDialog from "@/components/LegalDialog";
 
 interface Slide {
   id: number;
@@ -25,6 +27,8 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const [showPromoDialog, setShowPromoDialog] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubscribing, setIsSubscribing] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -72,10 +76,20 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
       return;
     }
 
+    if (!agreedToTerms) {
+      toast({
+        title: "Требуется согласие",
+        description: "Пожалуйста, дайте согласие на обработку данных и рассылку",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubscribing(true);
     try {
       await subscribeToNewsletter(email);
       setEmail("");
+      setAgreedToTerms(false);
       setShowSubscribeDialog(false);
       // Показываем окно с промокодом после успешной подписки
       setTimeout(() => {
@@ -195,10 +209,39 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               disabled={isSubscribing}
               data-testid="input-subscribe-email"
             />
+            
+            <div className="flex items-start gap-2">
+              <Checkbox
+                id="terms"
+                checked={agreedToTerms}
+                onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                disabled={isSubscribing}
+                data-testid="checkbox-terms"
+              />
+              <label
+                htmlFor="terms"
+                className="text-sm text-muted-foreground leading-tight cursor-pointer"
+              >
+                Я согласен с{" "}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowPrivacyDialog(true);
+                  }}
+                  className="text-primary hover:underline font-medium"
+                  data-testid="button-privacy-policy"
+                >
+                  политикой конфиденциальности
+                </button>
+                {" "}и на получение рассылки
+              </label>
+            </div>
+
             <Button 
               type="submit" 
               className="w-full"
-              disabled={isSubscribing}
+              disabled={isSubscribing || !agreedToTerms}
               data-testid="button-submit-subscribe"
             >
               {isSubscribing ? "Подписываемся..." : "Подписаться"}
@@ -211,6 +254,13 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
       <PromoCodeDialog 
         open={showPromoDialog} 
         onOpenChange={setShowPromoDialog}
+      />
+
+      {/* Dialog с политикой конфиденциальности */}
+      <LegalDialog
+        isOpen={showPrivacyDialog}
+        onClose={() => setShowPrivacyDialog(false)}
+        type="privacy"
       />
     </>
   );
