@@ -71,7 +71,7 @@ function WheelTab() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Доступно спинов</p>
+                <p className="text-sm text-muted-foreground">Кристаллы желаний 💎</p>
                 <p className="text-3xl font-bold text-primary" data-testid="text-available-spins">{spins}</p>
               </div>
               <Sparkles className="h-10 w-10 text-primary" />

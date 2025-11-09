@@ -214,10 +214,10 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                     <div>
                       <p className="font-semibold mb-0.5 flex items-center gap-1">
                         <Gift className="w-3 h-3" />
-                        КАК ПОЛУЧИТЬ СПИНЫ:
+                        КАК ПОЛУЧИТЬ КРИСТАЛЛЫ:
                       </p>
                       <p className="text-muted-foreground ml-4">
-                        Каждая покупка на 1000₽ = 1 спин рулетки
+                        Каждая покупка на 1000₽ = 1 кристалл желаний
                       </p>
                     </div>
 
@@ -228,27 +228,27 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                       </p>
                       <div className="space-y-0.5 ml-1.5">
                         <div className="flex items-start gap-1.5">
-                          <span className="text-purple-500 font-bold min-w-[50px] text-[11px]">1 спин</span>
+                          <span className="text-purple-500 font-bold min-w-[60px] text-[11px]">1 кристалл</span>
                           <span className="text-muted-foreground">→ Скидка 10%</span>
                         </div>
                         <div className="flex items-start gap-1.5">
-                          <span className="text-pink-500 font-bold min-w-[50px] text-[11px]">2 спина</span>
+                          <span className="text-pink-500 font-bold min-w-[60px] text-[11px]">2 кристалла</span>
                           <span className="text-muted-foreground">→ + Товар -20%</span>
                         </div>
                         <div className="flex items-start gap-1.5">
-                          <span className="text-amber-500 font-bold min-w-[50px] text-[11px]">3 спина</span>
+                          <span className="text-amber-500 font-bold min-w-[60px] text-[11px]">3 кристалла</span>
                           <span className="text-muted-foreground">→ + 200 баллов</span>
                         </div>
                         <div className="flex items-start gap-1.5">
-                          <span className="text-blue-500 font-bold min-w-[50px] text-[11px]">4 спина</span>
+                          <span className="text-blue-500 font-bold min-w-[60px] text-[11px]">4 кристалла</span>
                           <span className="text-muted-foreground">→ + Доставка</span>
                         </div>
                         <div className="flex items-start gap-1.5">
-                          <span className="text-green-500 font-bold min-w-[50px] text-[11px]">5 спинов</span>
+                          <span className="text-green-500 font-bold min-w-[60px] text-[11px]">5 кристаллов</span>
                           <span className="text-muted-foreground">→ + Подарок</span>
                         </div>
                         <div className="flex items-start gap-1.5 bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-950/50 dark:to-yellow-950/50 -mx-1.5 px-1.5 py-0.5 rounded">
-                          <span className="text-orange-500 font-bold min-w-[50px] text-[11px]">6+ спинов</span>
+                          <span className="text-orange-500 font-bold min-w-[60px] text-[11px]">6+ кристаллов</span>
                           <span className="font-semibold">→ 🏆 ДЖЕКПОТ 40%!</span>
                         </div>
                       </div>
@@ -267,11 +267,11 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                   </div>
                 </div>
 
-                {/* Счетчик спинов */}
+                {/* Счетчик кристаллов */}
                 <div className="text-center">
                   <p className="text-xs text-muted-foreground mb-1">У вас:</p>
                   <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 px-4 py-1.5 rounded-full">
-                    <span className="text-xl">🎰</span>
+                    <span className="text-xl">💎</span>
                     <span className="text-xl font-bold text-primary">× {spins}</span>
                   </div>
                 </div>
@@ -349,7 +349,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                     Крутится...
                   </>
                 ) : spins < 1 ? (
-                  "Нет спинов"
+                  "Нет кристаллов"
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2" />
@@ -360,8 +360,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
               
               {spins < 1 && (
                 <p className="text-[11px] text-muted-foreground mt-1.5">
-                  Делайте заказы, чтобы получить спины!<br />
-                  1000₽ = 1 спин
+                  Делайте заказы, чтобы получить кристаллы!<br />
+                  1000₽ = 1 кристалл 💎
                 </p>
               )}
             </div>
