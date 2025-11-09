@@ -1,0 +1,121 @@
+Время (UTC +3)
+Сообщение
+
+09 нояб. 10:59:15.042
+REPORT RequestID: aaf1d365-ea2c-41aa-97f2-9b48c7158e80 Duration: 625.248 ms Billed Duration: 700 ms Memory Size: 256 MB Max Memory Used: 128 MB Queuing Duration: 0.060 ms Function Init Duration: 127.387 ms CPU Usage: 8.594 %
+REPORT RequestID: aaf1d365-ea2c-41aa-97f2-9b48c7158e80 Duration: 625.248 ms Billed Duration: 700 ms Memory Size: 256 MB Max Memory Used: 128 MB Queuing Duration: 0.060 ms Function Init Duration: 127.387 ms CPU Usage: 8.594 %
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""system"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 10:59:15.042
+END RequestID: aaf1d365-ea2c-41aa-97f2-9b48c7158e80
+END RequestID: aaf1d365-ea2c-41aa-97f2-9b48c7158e80
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""system"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 10:59:15.040
+⚠️ Cannot add spins: userEmail not provided (order total >= 1000₽ but no email)
+⚠️ Cannot add spins: userEmail not provided (order total >= 1000₽ but no email)
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 10:59:15.040
+🎰 Calculated spins to add: 1
+🎰 Calculated spins to add: 1
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 10:59:15.040
+Telegram notification sent successfully ✅
+Telegram notification sent successfully ✅
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 10:59:14.768
+Chat ID: -1003128706313
+Chat ID: -1003128706313
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 10:59:14.768
+Sending Telegram notification...
+Sending Telegram notification...
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 10:59:14.549
+📧 customerEmail: pimashin2015@gmail.com
+
+09 нояб. 10:59:14.549
+📧 userEmail: undefined
+
+09 нояб. 10:59:14.549
+💰 Order total: 1800
+
+09 нояб. 10:59:14.549
+}
+
+09 нояб. 10:59:14.549
+"shippingAddress": "Ул Кирова 16А, Донской, 35323"
+
+09 нояб. 10:59:14.549
+"customerPhone": "+79531814136",
+
+09 нояб. 10:59:14.549
+"customerEmail": "pimashin2015@gmail.com",
+
+09 нояб. 10:59:14.549
+"customerName": "Миша Пимашин",
+
+09 нояб. 10:59:14.549
+"status": "pending",
+
+09 нояб. 10:59:14.549
+"total": 1800,
+
+09 нояб. 10:59:14.549
+],
+
+09 нояб. 10:59:14.549
+}
+
+09 нояб. 10:59:14.549
+"image": "https://storage.yandexcloud.net/sweetdelights-images/products/1762611736617-pj2frg.webp"
+
+09 нояб. 10:59:14.549
+"quantity": 10,
+
+09 нояб. 10:59:14.549
+"price": 150,
+
+09 нояб. 10:59:14.549
+"name": "Леденец - Карусель",
+
+09 нояб. 10:59:14.549
+"productId": "mhqdiqzfrj9t76dhhp",
+
+09 нояб. 10:59:14.549
+{
+
+09 нояб. 10:59:14.549
+"items": [
+
+09 нояб. 10:59:14.549
+"userId": "guest",
+
+09 нояб. 10:59:14.549
+📦 Received orderData: {
+
+09 нояб. 10:59:14.414
+START RequestID: aaf1d365-ea2c-41aa-97f2-9b48c7158e80 Version: d4eolri4fop1lhr2lcn8
+START RequestID: aaf1d365-ea2c-41aa-97f2-9b48c7158e80 Version: d4eolri4fop1lhr2lcn8
+"request_id""aaf1d365-ea2c-41aa-97f2-9b48c7158e80"
+"source""system"
+"version_id""d4eolri4fop1lhr2lcn8"

@@ -31,6 +31,7 @@ export interface CartItem {
 export interface Order {
   id: string;
   userId: string;
+  userEmail?: string;
   items: {
     productId: string;
     name: string;
