@@ -191,8 +191,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   return (
     <>
       <Dialog open={open && !showPrizeModal} onOpenChange={onClose}>
-        <DialogContent className="max-w-3xl p-4" data-testid="dialog-wheel">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl p-4 max-h-[90vh] overflow-y-auto" data-testid="dialog-wheel">
+          <DialogHeader className="sticky top-0 bg-background z-10 pb-2">
             <DialogTitle className="text-xl font-bold text-center flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
               Рулетка Желаний
@@ -200,7 +200,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="py-2">
+          <div className="py-2 pb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Левая колонка - Инструкция */}
               <div className="space-y-3">
@@ -280,7 +280,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
               {/* Правая колонка - Рулетка */}
               <div className="space-y-3">
                 {/* Рулетка */}
-                <div className="relative w-60 h-60 mx-auto">
+                <div className="relative w-48 h-48 sm:w-60 sm:h-60 mx-auto">
               {/* Указатель */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
                 <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-primary drop-shadow-lg" />
