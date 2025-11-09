@@ -90,14 +90,14 @@ exports.handler = async (event) => {
       return errorResponse(400, 'Добавьте товары в избранное для участия в рулетке');
     }
 
-    // 4. Генерация приза
+    // 4. Генерация приза с учетом прогрессивной системы
     const randomValue = getSecureRandom();
-    const prizeType = determinePrize(randomValue);
+    const prizeType = determinePrize(randomValue, currentSpins);
     const promoCode = generatePromoCode(prizeType);
     const expiresAt = calculateExpiryDate(prizeType);
     const prizeId = generatePrizeId();
 
-    console.log('Prize generated:', { prizeType, randomValue });
+    console.log('Prize generated:', { prizeType, randomValue, currentSpins });
 
     // 5. Подготовка данных приза
     let prize = {

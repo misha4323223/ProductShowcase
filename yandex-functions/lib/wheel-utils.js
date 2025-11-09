@@ -20,22 +20,102 @@ function generatePromoCode(prizeType) {
 }
 
 /**
- * Определение приза по случайному числу (0-100)
- * Распределение шансов:
- * - 0-30: discount_10 (30%)
- * - 30-55: discount_20 (25%)
- * - 55-75: points (20%)
- * - 75-90: delivery (15%)
- * - 90-98: free_item (8%)
- * - 98-100: jackpot (2%)
+ * Получение списка доступных призов на основе текущего количества спинов
+ * Прогрессивная система: больше спинов = доступ к лучшим призам
+ * @param {number} currentSpins - текущее количество спинов у пользователя
+ * @returns {Array<string>} - массив доступных типов призов
  */
-function determinePrize(randomValue) {
-  if (randomValue < 30) return 'discount_10';
-  if (randomValue < 55) return 'discount_20';
-  if (randomValue < 75) return 'points';
-  if (randomValue < 90) return 'delivery';
-  if (randomValue < 98) return 'free_item';
-  return 'jackpot';
+function getAvailablePrizes(currentSpins) {
+  // Защита от невалидных значений
+  if (!currentSpins || currentSpins < 1 || typeof currentSpins !== 'number') {
+    // Если спинов нет или значение невалидно, возвращаем минимальный уровень
+    return ['discount_10'];
+  }
+  
+  // Клампинг к целому числу и разумному максимуму
+  const spins = Math.floor(Math.min(Math.max(currentSpins, 1), 9999));
+  
+  // Уровень 1: 1 спин
+  if (spins === 1) {
+    return ['discount_10'];
+  }
+  
+  // Уровень 2: 2 спина
+  if (spins === 2) {
+    return ['discount_10', 'discount_20'];
+  }
+  
+  // Уровень 3: 3 спина
+  if (spins === 3) {
+    return ['discount_10', 'discount_20', 'points'];
+  }
+  
+  // Уровень 4: 4 спина
+  if (spins === 4) {
+    return ['discount_10', 'discount_20', 'points', 'delivery'];
+  }
+  
+  // Уровень 5: 5 спинов
+  if (spins === 5) {
+    return ['discount_10', 'discount_20', 'points', 'delivery', 'free_item'];
+  }
+  
+  // Уровень 6: 6+ спинов - доступны ВСЕ призы, включая джекпот
+  return ['discount_10', 'discount_20', 'points', 'delivery', 'free_item', 'jackpot'];
+}
+
+/**
+ * Определение приза по случайному числу с учетом доступных призов
+ * Оригинальные веса призов:
+ * - discount_10: 30%
+ * - discount_20: 25%
+ * - points: 20%
+ * - delivery: 15%
+ * - free_item: 8%
+ * - jackpot: 2%
+ * 
+ * Функция автоматически ренормализует вероятности на основе доступных призов
+ * @param {number} randomValue - случайное число (0-100)
+ * @param {number} currentSpins - текущее количество спинов у пользователя
+ * @returns {string} - тип выигранного приза
+ */
+function determinePrize(randomValue, currentSpins) {
+  // Получаем список доступных призов на основе уровня пользователя
+  const availablePrizes = getAvailablePrizes(currentSpins);
+  
+  // Оригинальные веса призов
+  const prizeWeights = {
+    'discount_10': 30,
+    'discount_20': 25,
+    'points': 20,
+    'delivery': 15,
+    'free_item': 8,
+    'jackpot': 2
+  };
+  
+  // Фильтруем только доступные призы и их веса
+  const availableWeights = {};
+  let totalWeight = 0;
+  
+  for (const prize of availablePrizes) {
+    availableWeights[prize] = prizeWeights[prize];
+    totalWeight += prizeWeights[prize];
+  }
+  
+  // Ренормализуем случайное значение под общий вес доступных призов
+  const normalizedRandom = (randomValue / 100) * totalWeight;
+  
+  // Определяем приз на основе ренормализованных вероятностей
+  let cumulative = 0;
+  for (const prize of availablePrizes) {
+    cumulative += availableWeights[prize];
+    if (normalizedRandom < cumulative) {
+      return prize;
+    }
+  }
+  
+  // Fallback на последний доступный приз (не должно произойти)
+  return availablePrizes[availablePrizes.length - 1];
 }
 
 /**
@@ -109,6 +189,7 @@ function calculateSpinsFromOrder(orderTotal) {
 module.exports = {
   generatePromoCode,
   determinePrize,
+  getAvailablePrizes,
   calculateExpiryDate,
   getSecureRandom,
   generatePrizeId,
