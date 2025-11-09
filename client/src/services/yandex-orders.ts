@@ -64,7 +64,7 @@ export async function hideOrderForUser(orderId: string): Promise<void> {
 }
 
 export async function getAllOrders(): Promise<Order[]> {
-  const response = await fetch(`${API_GATEWAY_URL}/orders`);
+  const response = await fetch(`${API_GATEWAY_URL}/orders/all`);
   
   if (!response.ok) {
     throw new Error('Failed to get all orders');
