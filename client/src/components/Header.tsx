@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart, Sparkles, Lollipop } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles, CircleDashed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -218,7 +218,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 data-testid="button-wheel"
                 title="Рулетка Желаний"
               >
-                <Lollipop className={`h-4 w-4 text-white z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
+                <CircleDashed className={`h-4 w-4 text-white z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
                 {wheelSpins > 0 && (
                   <span className={`absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${wheelBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-wheel-spins">
                     {wheelSpins}
