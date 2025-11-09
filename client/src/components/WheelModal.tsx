@@ -146,13 +146,15 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       // 5-7 ЦЕЛЫХ полных оборотов для эффекта (важно: целое число!)
       const extraSpins = 5 + Math.floor(Math.random() * 3);
       
-      // ИСПРАВЛЕНИЕ: Учитываем центр сектора + offset для указателя сверху
-      const offset = 90;
-      const targetAngle = sectorCenter + offset;
-      const finalRotation = (360 * extraSpins) + (360 - targetAngle);
+      // ИСПРАВЛЕНИЕ: Стрелка изначально между джекпотом (300-360°) и скидкой 10% (0-60°)
+      // То есть при rotation=0 под стрелкой позиция 0° градиента
+      // Стрелка на 270° мировых координатах, под ней 0° градиента
+      // Чтобы под стрелкой оказался центр нужного сектора, нужно повернуть так:
+      // (sectorCenter + rotation) % 360 = 0  =>  rotation = -sectorCenter = 360 - sectorCenter
+      const finalRotation = (360 * extraSpins) + (360 - sectorCenter);
       
-      console.log('🎯 Target angle:', targetAngle);
       console.log('🎯 Final rotation:', finalRotation);
+      console.log('🎯 Extra spins (integer):', extraSpins);
       
       // Запускаем анимацию к нужному сектору
       setRotation(finalRotation);
