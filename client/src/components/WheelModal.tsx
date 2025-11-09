@@ -123,14 +123,45 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
 
       // Вычисляем угол на основе типа приза
       const sectorIndex = WHEEL_SECTORS.findIndex(s => s.type === prize.prizeType);
-      const degreesPerSector = 360 / WHEEL_SECTORS.length; // 60 градусов
-      const sectorCenterAngle = sectorIndex * degreesPerSector + (degreesPerSector / 2); // центр сектора
       
-      // 5-8 полных оборотов + угол до нужного сектора
+      if (sectorIndex === -1) {
+        console.error('Prize type not found in sectors:', prize.prizeType);
+        toast({
+          title: "Ошибка",
+          description: "Неизвестный тип приза",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const degreesPerSector = 360 / WHEEL_SECTORS.length; // 60 градусов для 6 секторов
+      const sectorStartAngle = sectorIndex * degreesPerSector;
+      const sectorCenterAngle = sectorStartAngle + (degreesPerSector / 2);
+      
+      console.log('🎯 Prize type:', prize.prizeType);
+      console.log('🎯 Sector index:', sectorIndex);
+      console.log('🎯 Sector center angle:', sectorCenterAngle);
+      
+      // 5-8 полных оборотов для эффекта
       const fullSpins = 5 + Math.random() * 3;
-      // Инвертируем направление, так как указатель сверху, а рулетка вращается
+      
+      // Указатель находится сверху (0 градусов), поэтому инвертируем угол
+      // Рулетка вращается по часовой стрелке, но визуально кажется что против
       const targetAngle = 360 - sectorCenterAngle;
-      const finalRotation = rotation + (360 * fullSpins) + targetAngle;
+      
+      // Нормализуем текущий угол (где рулетка сейчас находится)
+      const normalizedCurrent = ((rotation % 360) + 360) % 360;
+      
+      // Вычисляем относительное смещение от текущей позиции до целевого сектора
+      const relativeDelta = ((targetAngle - normalizedCurrent + 360) % 360);
+      
+      // Итоговый угол = текущий + полные обороты + смещение до целевого сектора
+      const finalRotation = rotation + (360 * fullSpins) + relativeDelta;
+      
+      console.log('🎯 Current normalized:', normalizedCurrent);
+      console.log('🎯 Target angle:', targetAngle);
+      console.log('🎯 Relative delta:', relativeDelta);
+      console.log('🎯 Final rotation:', finalRotation);
       
       // Запускаем анимацию к нужному сектору
       setRotation(finalRotation);
