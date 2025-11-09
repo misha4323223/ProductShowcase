@@ -1,0 +1,219 @@
+Время (UTC +3)
+Сообщение
+
+09 нояб. 11:22:36.577
+REPORT RequestID: d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2 Duration: 1082.706 ms Billed Duration: 1100 ms Memory Size: 256 MB Max Memory Used: 128 MB Queuing Duration: 0.032 ms Function Init Duration: 176.195 ms CPU Usage: 52.930 %
+REPORT RequestID: d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2 Duration: 1082.706 ms Billed Duration: 1100 ms Memory Size: 256 MB Max Memory Used: 128 MB Queuing Duration: 0.032 ms Function Init Duration: 176.195 ms CPU Usage: 52.930 %
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""system"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:36.577
+END RequestID: d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2
+END RequestID: d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""system"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:36.575
+✅ Successfully added 1 spins to user pimashin2015@gmail.com
+✅ Successfully added 1 spins to user pimashin2015@gmail.com
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:36.483
+✅ User found: pimashin2015@gmail.com
+✅ User found: pimashin2015@gmail.com
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:36.395
+Adding 1 spins for order total 1800₽
+Adding 1 spins for order total 1800₽
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:36.395
+🎰 Calculated spins to add: 1
+🎰 Calculated spins to add: 1
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:36.395
+Telegram notification sent successfully ✅
+Telegram notification sent successfully ✅
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.913
+Chat ID: -1003128706313
+Chat ID: -1003128706313
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.913
+Sending Telegram notification...
+Sending Telegram notification...
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.677
+📧 customerEmail: pimashin2015@gmail.com
+📧 customerEmail: pimashin2015@gmail.com
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+📧 userEmail: pimashin2015@gmail.com
+📧 userEmail: pimashin2015@gmail.com
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+💰 Order total: 1800
+💰 Order total: 1800
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+}
+}
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"shippingAddress": "Ул Кирова 16А, Донской, 35323"
+  "shippingAddress": "Ул Кирова 16А, Донской, 35323"
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"customerPhone": "+79531814136",
+  "customerPhone": "+79531814136",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"customerEmail": "pimashin2015@gmail.com",
+  "customerEmail": "pimashin2015@gmail.com",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"customerName": "Миша Пимашин",
+  "customerName": "Миша Пимашин",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"status": "pending",
+  "status": "pending",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"total": 1800,
+  "total": 1800,
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+],
+  ],
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+}
+    }
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"image": "https://storage.yandexcloud.net/sweetdelights-images/products/1762611736617-pj2frg.webp"
+      "image": "https://storage.yandexcloud.net/sweetdelights-images/products/1762611736617-pj2frg.webp"
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"quantity": 10,
+      "quantity": 10,
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"price": 150,
+      "price": 150,
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"name": "Леденец - Карусель",
+      "name": "Леденец - Карусель",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"productId": "mhqdiqzfrj9t76dhhp",
+      "productId": "mhqdiqzfrj9t76dhhp",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+{
+    {
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"items": [
+  "items": [
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"userEmail": "pimashin2015@gmail.com",
+  "userEmail": "pimashin2015@gmail.com",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+"userId": "guest",
+  "userId": "guest",
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
+
+09 нояб. 11:22:35.676
+📦 Received orderData: {
+📦 Received orderData: {
+"request_id""d385817b-f9c4-4dd2-8fd7-9b2c8dd563f2"
+"source""user"
+"version_id""d4eolri4fop1lhr2lcn8"
