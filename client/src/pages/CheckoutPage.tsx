@@ -226,6 +226,15 @@ export default function CheckoutPage() {
         orderData.promoCode = validatedPromoCode;
       }
 
+      console.log('🔍 CheckoutPage - Creating order with data:', {
+        userId: orderData.userId,
+        userEmail: orderData.userEmail,
+        customerEmail: orderData.customerEmail,
+        total: orderData.total,
+        user_email: user?.email,
+        data_email: data.email,
+      });
+
       const orderId = await createOrder(orderData);
 
       try {
