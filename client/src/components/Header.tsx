@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart, Sparkles, Disc3 } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -8,6 +8,27 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
 import ThemeToggle from "@/components/ThemeToggle";
+
+// Кастомная иконка рулетки
+const WheelIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <circle cx="12" cy="12" r="10" fill="url(#gradient1)" />
+    <path d="M 12 12 L 12 2 A 10 10 0 0 1 22 12 Z" fill="#9333ea" />
+    <path d="M 12 12 L 22 12 A 10 10 0 0 1 17.07 19.07 Z" fill="#ec4899" />
+    <path d="M 12 12 L 17.07 19.07 A 10 10 0 0 1 12 22 Z" fill="#f59e0b" />
+    <path d="M 12 12 L 12 22 A 10 10 0 0 1 6.93 19.07 Z" fill="#3b82f6" />
+    <path d="M 12 12 L 6.93 19.07 A 10 10 0 0 1 2 12 Z" fill="#22c55e" />
+    <path d="M 12 12 L 2 12 A 10 10 0 0 1 6.93 4.93 Z" fill="#ef4444" />
+    <path d="M 12 12 L 6.93 4.93 A 10 10 0 0 1 12 2 Z" fill="#f97316" />
+    <circle cx="12" cy="12" r="2" fill="white" stroke="#fbbf24" strokeWidth="1" />
+    <defs>
+      <linearGradient id="gradient1">
+        <stop offset="0%" stopColor="#fbbf24" />
+        <stop offset="100%" stopColor="#f59e0b" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
 
 interface HeaderProps {
   cartCount: number;
@@ -218,7 +239,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 data-testid="button-wheel"
                 title="Рулетка Желаний"
               >
-                <Disc3 className={`h-4 w-4 text-white z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
+                <WheelIcon className={`h-5 w-5 z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
                 {wheelSpins > 0 && (
                   <span className={`absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${wheelBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-wheel-spins">
                     {wheelSpins}
