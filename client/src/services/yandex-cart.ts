@@ -1,6 +1,4 @@
-
 const API_GATEWAY_URL = 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
-const CART_STORAGE_KEY = 'sweet-delights-cart';
 
 export interface UICartItem {
   id: string;
@@ -16,26 +14,6 @@ export interface FirebaseCartItem {
   image: string;
   quantity: number;
   price: number;
-}
-
-export function saveCartToLocalStorage(items: UICartItem[]): void {
-  console.log('Сохранение в localStorage:', items);
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-}
-
-export function loadCartFromLocalStorage(): UICartItem[] {
-  const stored = localStorage.getItem(CART_STORAGE_KEY);
-  console.log('Загрузка из localStorage (raw):', stored);
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-      console.log('Загрузка из localStorage (parsed):', parsed);
-      return parsed;
-    } catch {
-      return [];
-    }
-  }
-  return [];
 }
 
 export async function saveCartToYDB(userId: string, items: FirebaseCartItem[]): Promise<void> {
@@ -59,23 +37,4 @@ export async function loadCartFromYDB(userId: string): Promise<FirebaseCartItem[
   
   const data = await response.json();
   return data.items || [];
-}
-
-export async function mergeCartsOnLogin(userId: string, localCart: FirebaseCartItem[]): Promise<FirebaseCartItem[]> {
-  const ydbCart = await loadCartFromYDB(userId);
-  
-  const merged = [...ydbCart];
-  
-  for (const localItem of localCart) {
-    const existingIndex = merged.findIndex(item => item.productId === localItem.productId);
-    if (existingIndex >= 0) {
-      merged[existingIndex].quantity += localItem.quantity;
-    } else {
-      merged.push(localItem);
-    }
-  }
-  
-  await saveCartToYDB(userId, merged);
-  
-  return merged;
 }

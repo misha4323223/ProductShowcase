@@ -27,6 +27,7 @@ import {
 import { createOrder } from "@/services/yandex-orders";
 import { validatePromoCode } from "@/services/yandex-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { sendOrderConfirmation } from "@/services/postbox-client";
 import { getAllProducts } from "@/services/api-client";
 
@@ -66,13 +67,12 @@ export default function CheckoutPage() {
   const [validatedPromoCode, setValidatedPromoCode] = useState<{ code: string; discountAmount: number; discountType: 'percentage' | 'fixed' } | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { cartItems, clearCart } = useCart();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const cartItemsStr = localStorage.getItem('cartItems');
-  const cartItems: CartItem[] = cartItemsStr ? JSON.parse(cartItemsStr) : [];
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const form = useForm<CheckoutFormData>({
@@ -257,7 +257,7 @@ export default function CheckoutPage() {
         description: `Номер заказа: ${orderId.substring(0, 8).toUpperCase()}. Мы свяжемся с вами в ближайшее время.`,
       });
       
-      localStorage.removeItem('cartItems');
+      clearCart();
       
       setTimeout(() => setLocation('/'), 2000);
     } catch (error: any) {

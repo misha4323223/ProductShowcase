@@ -1,11 +1,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { 
   saveCartToYDB,
   loadCartFromYDB,
-  saveCartToLocalStorage,
-  loadCartFromLocalStorage,
-  mergeCartsOnLogin,
   type FirebaseCartItem
 } from '@/services/yandex-cart';
 
@@ -34,84 +32,47 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { user, loading: authLoading } = useAuth();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [previousUserId, setPreviousUserId] = useState<string | null>(null);
 
-  // Загрузка корзины при первой загрузке или смене пользователя
+  // Загрузка корзины только для авторизованных пользователей
   useEffect(() => {
     if (!authLoading) {
       const currentUserId = user?.userId || null;
       
-      // Проверяем, изменился ли пользователь
-      if (currentUserId !== previousUserId) {
+      // Проверяем смену пользователя ИЛИ первую загрузку
+      const userChanged = currentUserId !== previousUserId;
+      const isFirstLoad = previousUserId === null && currentUserId === null;
+      
+      if (userChanged || isFirstLoad) {
         setIsLoading(true);
         
         if (user) {
-          // Пользователь вошел в систему
-          console.log('Пользователь авторизован, загружаем и объединяем корзины');
-          
-          const localCart = loadCartFromLocalStorage();
-          const localFirebaseCart: FirebaseCartItem[] = localCart.map(item => ({
-            productId: item.id,
-            name: item.name,
-            image: item.image,
-            quantity: item.quantity,
-            price: item.price,
-          }));
-
-          if (localFirebaseCart.length > 0) {
-            // Есть товары в localStorage - объединяем с YDB
-            mergeCartsOnLogin(user.userId, localFirebaseCart)
-              .then(mergedCart => {
-                console.log('Корзины объединены:', mergedCart);
-                const uiCart: CartItem[] = mergedCart.map(item => ({
-                  id: item.productId,
-                  name: item.name,
-                  image: item.image,
-                  quantity: item.quantity,
-                  price: item.price,
-                }));
-                setCartItems(uiCart);
-                localStorage.removeItem('sweet-delights-cart'); // Очищаем localStorage
-                setIsLoading(false);
-              })
-              .catch(err => {
-                console.error('Ошибка объединения корзин:', err);
-                setCartItems([]);
-                setIsLoading(false);
-              });
-          } else {
-            // localStorage пуст - просто загружаем из YDB
-            loadCartFromYDB(user.userId)
-              .then(firebaseCart => {
-                console.log('Корзина из YDB:', firebaseCart);
-                const uiCart: CartItem[] = firebaseCart.map(item => ({
-                  id: item.productId,
-                  name: item.name,
-                  image: item.image,
-                  quantity: item.quantity,
-                  price: item.price,
-                }));
-                setCartItems(uiCart);
-                setIsLoading(false);
-              })
-              .catch(err => {
-                console.error('Ошибка загрузки из YDB:', err);
-                setCartItems([]);
-                setIsLoading(false);
-              });
-          }
-        } else if (previousUserId !== null) {
-          // Пользователь вышел из системы - сохраняем в localStorage
-          console.log('Пользователь вышел, сохраняем корзину в localStorage');
-          saveCartToLocalStorage(cartItems);
-          setCartItems([]);
-          setIsLoading(false);
+          // Пользователь авторизован - загружаем из YDB
+          console.log('Загрузка корзины из YDB для пользователя:', user.userId);
+          loadCartFromYDB(user.userId)
+            .then(firebaseCart => {
+              console.log('Корзина из YDB:', firebaseCart);
+              const uiCart: CartItem[] = firebaseCart.map(item => ({
+                id: item.productId,
+                name: item.name,
+                image: item.image,
+                quantity: item.quantity,
+                price: item.price,
+              }));
+              setCartItems(uiCart);
+              setIsLoading(false);
+            })
+            .catch(err => {
+              console.error('Ошибка загрузки из YDB:', err);
+              setCartItems([]);
+              setIsLoading(false);
+            });
         } else {
-          // Первая загрузка без авторизации - загружаем из localStorage
-          console.log('Загрузка из localStorage (неавторизован)');
-          const localCart = loadCartFromLocalStorage();
-          setCartItems(localCart);
+          // Пользователь не авторизован - пустая корзина
+          console.log('Пользователь не авторизован - корзина пуста');
+          setCartItems([]);
           setIsLoading(false);
         }
         
@@ -120,33 +81,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [user, authLoading, previousUserId]);
 
-  // Автосохранение корзины при изменениях
+  // Автосохранение корзины в YDB для авторизованных пользователей
   useEffect(() => {
-    if (!authLoading && !isLoading) {
-      if (user) {
-        // Авторизованный пользователь - сохраняем в YDB
-        const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
-          productId: item.id,
-          name: item.name,
-          image: item.image,
-          quantity: item.quantity,
-          price: item.price,
-        }));
+    if (!authLoading && !isLoading && user) {
+      const firebaseCartItems: FirebaseCartItem[] = cartItems.map(item => ({
+        productId: item.id,
+        name: item.name,
+        image: item.image,
+        quantity: item.quantity,
+        price: item.price,
+      }));
 
-        console.log('Сохранение корзины в YDB:', firebaseCartItems);
+      console.log('Сохранение корзины в YDB:', firebaseCartItems);
 
-        saveCartToYDB(user.userId, firebaseCartItems).catch(err => {
-          console.error('Ошибка сохранения в YDB:', err);
-        });
-      } else {
-        // Неавторизованный пользователь - сохраняем в localStorage
-        console.log('Сохранение корзины в localStorage');
-        saveCartToLocalStorage(cartItems);
-      }
+      saveCartToYDB(user.userId, firebaseCartItems).catch(err => {
+        console.error('Ошибка сохранения в YDB:', err);
+      });
     }
   }, [cartItems, user, authLoading, isLoading]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+    // Проверяем авторизацию
+    if (!user) {
+      toast({
+        title: "Требуется авторизация",
+        description: "Войдите в аккаунт, чтобы добавлять товары в корзину",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const quantity = item.quantity || 1;
     console.log('Добавление товара в корзину:', item);
     setCartItems(prev => {
