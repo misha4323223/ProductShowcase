@@ -25,24 +25,119 @@ exports.handler = async (event) => {
       };
     }
 
-    // Получаем промокод
+    // Нормализуем входящий код (удаляем пробелы, приводим к верхнему регистру)
+    const normalizedInputCode = code.trim().toUpperCase();
+
+    // 1. Сначала проверяем обычные промокоды в таблице promocodes
     const promoResult = await docClient.send(new ScanCommand({
       TableName: "promocodes",
     }));
-    // Нормализуем входящий код (удаляем пробелы, приводим к верхнему регистру)
-    const normalizedInputCode = code.trim().toUpperCase();
-    // Ищем промокод с нечувствительным к регистру сравнением
-    const promoCode = (promoResult.Items || []).find(p => 
+    
+    let promoCode = (promoResult.Items || []).find(p => 
       p.code && p.code.trim().toUpperCase() === normalizedInputCode
     );
 
+    // 2. Если не найден в promocodes, проверяем промокоды рулетки в wheelPrizes
     if (!promoCode) {
+      const wheelPrizesResult = await docClient.send(new ScanCommand({
+        TableName: "wheelPrizes",
+      }));
+      
+      const wheelPrize = (wheelPrizesResult.Items || []).find(p => 
+        p.promoCode && p.promoCode.trim().toUpperCase() === normalizedInputCode
+      );
+
+      if (wheelPrize) {
+        // Проверяем, не использован ли приз
+        if (wheelPrize.used) {
+          return {
+            statusCode: 200,
+            headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ valid: false, message: "Промокод уже использован" }),
+          };
+        }
+
+        // Проверяем срок действия
+        const now = new Date();
+        if (wheelPrize.expiresAt && now > new Date(wheelPrize.expiresAt)) {
+          return {
+            statusCode: 200,
+            headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ valid: false, message: "Промокод истек" }),
+          };
+        }
+
+        // Преобразуем wheelPrize в формат promoCode для дальнейшей обработки
+        let discountAmount = 0;
+        let discountType = 'percentage';
+        let discountValue = 0;
+
+        // Рассчитываем скидку в зависимости от типа приза
+        if (wheelPrize.prizeType === 'discount_10') {
+          discountType = 'percentage';
+          discountValue = 10;
+          discountAmount = orderTotal * 0.10;
+        } else if (wheelPrize.prizeType === 'discount_20') {
+          discountType = 'percentage';
+          discountValue = 20;
+          discountAmount = orderTotal * 0.20;
+        } else if (wheelPrize.prizeType === 'jackpot') {
+          discountType = 'percentage';
+          discountValue = 40;
+          discountAmount = orderTotal * 0.40;
+        } else if (wheelPrize.prizeType === 'free_item') {
+          // Бесплатный товар - скидка 100% на конкретный товар
+          // Здесь нужна дополнительная логика на фронтенде
+          discountType = 'percentage';
+          discountValue = 100;
+          discountAmount = 0; // Будет рассчитано на основе конкретного товара
+        } else if (wheelPrize.prizeType === 'delivery') {
+          // Бесплатная доставка - фиксированная скидка
+          discountType = 'fixed';
+          discountValue = 300; // Примерная стоимость доставки
+          discountAmount = 300;
+        } else if (wheelPrize.prizeType === 'points') {
+          // Баллы не дают скидку на заказ
+          return {
+            statusCode: 200,
+            headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              valid: false, 
+              message: "Этот промокод для начисления баллов, не для скидки" 
+            }),
+          };
+        }
+
+        // Возвращаем результат для промокода рулетки
+        return {
+          statusCode: 200,
+          headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            valid: true,
+            promoCode: {
+              code: wheelPrize.promoCode,
+              discountType,
+              discountValue,
+              active: true,
+              wheelPrize: true, // Флаг, что это промокод из рулетки
+              prizeId: wheelPrize.id,
+              prizeType: wheelPrize.prizeType,
+              productId: wheelPrize.productId, // Для free_item и discount_20
+            },
+            discountAmount
+          }),
+        };
+      }
+
+      // Промокод не найден ни в одной таблице
       return {
         statusCode: 200,
         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
         body: JSON.stringify({ valid: false, message: "Промокод не найден" }),
       };
     }
+
+    // === ОБРАБОТКА ОБЫЧНЫХ ПРОМОКОДОВ (из таблицы promocodes) ===
 
     if (!promoCode.active) {
       return {
