@@ -189,100 +189,96 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   return (
     <>
       <Dialog open={open && !showPrizeModal} onOpenChange={onClose}>
-        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto" data-testid="dialog-wheel">
+        <DialogContent className="max-w-3xl p-4" data-testid="dialog-wheel">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
-              <Sparkles className="w-6 h-6 text-primary" />
+            <DialogTitle className="text-xl font-bold text-center flex items-center justify-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
               Рулетка Желаний
-              <Sparkles className="w-6 h-6 text-primary" />
+              <Sparkles className="w-5 h-5 text-primary" />
             </DialogTitle>
           </DialogHeader>
 
-          <div className="py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="py-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Левая колонка - Инструкция */}
-              <div className="space-y-4">
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-xl p-5 border border-purple-200 dark:border-purple-800">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Sparkles className="w-5 h-5 text-primary" />
-                    <h3 className="font-bold text-lg">Как работает рулетка?</h3>
+              <div className="space-y-3">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-lg p-3 border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <h3 className="font-bold text-base">Как работает рулетка?</h3>
                   </div>
                   
-                  <div className="space-y-3 text-sm">
+                  <div className="space-y-2 text-xs">
                     <div>
-                      <p className="font-semibold mb-1 flex items-center gap-1">
-                        <Gift className="w-4 h-4" />
+                      <p className="font-semibold mb-0.5 flex items-center gap-1">
+                        <Gift className="w-3 h-3" />
                         КАК ПОЛУЧИТЬ СПИНЫ:
                       </p>
-                      <p className="text-muted-foreground ml-5">
+                      <p className="text-muted-foreground ml-4">
                         Каждая покупка на 1000₽ = 1 спин рулетки
                       </p>
                     </div>
 
                     <div>
-                      <p className="font-semibold mb-2 flex items-center gap-1">
-                        <Trophy className="w-4 h-4" />
+                      <p className="font-semibold mb-1 flex items-center gap-1">
+                        <Trophy className="w-3 h-3" />
                         ПРОГРЕССИВНАЯ СИСТЕМА:
                       </p>
-                      <div className="space-y-1.5 ml-2">
-                        <div className="flex items-start gap-2">
-                          <span className="text-purple-500 font-bold min-w-[60px]">1 спин</span>
+                      <div className="space-y-0.5 ml-1.5">
+                        <div className="flex items-start gap-1.5">
+                          <span className="text-purple-500 font-bold min-w-[50px] text-[11px]">1 спин</span>
                           <span className="text-muted-foreground">→ Скидка 10%</span>
                         </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-pink-500 font-bold min-w-[60px]">2 спина</span>
+                        <div className="flex items-start gap-1.5">
+                          <span className="text-pink-500 font-bold min-w-[50px] text-[11px]">2 спина</span>
                           <span className="text-muted-foreground">→ + Товар -20%</span>
                         </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-amber-500 font-bold min-w-[60px]">3 спина</span>
+                        <div className="flex items-start gap-1.5">
+                          <span className="text-amber-500 font-bold min-w-[50px] text-[11px]">3 спина</span>
                           <span className="text-muted-foreground">→ + 200 баллов</span>
                         </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-blue-500 font-bold min-w-[60px]">4 спина</span>
+                        <div className="flex items-start gap-1.5">
+                          <span className="text-blue-500 font-bold min-w-[50px] text-[11px]">4 спина</span>
                           <span className="text-muted-foreground">→ + Доставка</span>
                         </div>
-                        <div className="flex items-start gap-2">
-                          <span className="text-green-500 font-bold min-w-[60px]">5 спинов</span>
+                        <div className="flex items-start gap-1.5">
+                          <span className="text-green-500 font-bold min-w-[50px] text-[11px]">5 спинов</span>
                           <span className="text-muted-foreground">→ + Подарок</span>
                         </div>
-                        <div className="flex items-start gap-2 bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-950/50 dark:to-yellow-950/50 -mx-2 px-2 py-1 rounded">
-                          <span className="text-orange-500 font-bold min-w-[60px]">6+ спинов</span>
+                        <div className="flex items-start gap-1.5 bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-950/50 dark:to-yellow-950/50 -mx-1.5 px-1.5 py-0.5 rounded">
+                          <span className="text-orange-500 font-bold min-w-[50px] text-[11px]">6+ спинов</span>
                           <span className="font-semibold">→ 🏆 ДЖЕКПОТ 40%!</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mt-3">
-                      <p className="font-semibold mb-1 text-xs flex items-center gap-1">
+                    <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-md p-2 mt-2">
+                      <p className="font-semibold mb-0.5 text-[11px] flex items-center gap-1">
                         <span className="text-blue-600 dark:text-blue-400">💡 ВАЖНО:</span>
                       </p>
-                      <ul className="text-xs text-muted-foreground space-y-1 ml-4 list-disc">
+                      <ul className="text-[11px] text-muted-foreground space-y-0.5 ml-3 list-disc">
                         <li>Добавьте товары в избранное ❤️</li>
                         <li>Призы имеют срок действия</li>
                         <li>Промокоды в личном кабинете</li>
                       </ul>
-                    </div>
-
-                    <div className="text-center text-xs text-muted-foreground italic mt-2">
-                      💎 Накопите 6 спинов для шанса на ДЖЕКПОТ!
                     </div>
                   </div>
                 </div>
 
                 {/* Счетчик спинов */}
                 <div className="text-center">
-                  <p className="text-sm text-muted-foreground mb-2">У вас:</p>
-                  <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 px-5 py-2 rounded-full">
-                    <span className="text-2xl">🎰</span>
-                    <span className="text-2xl font-bold text-primary">× {spins}</span>
+                  <p className="text-xs text-muted-foreground mb-1">У вас:</p>
+                  <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 px-4 py-1.5 rounded-full">
+                    <span className="text-xl">🎰</span>
+                    <span className="text-xl font-bold text-primary">× {spins}</span>
                   </div>
                 </div>
               </div>
 
               {/* Правая колонка - Рулетка */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {/* Рулетка */}
-                <div className="relative w-full max-w-sm mx-auto aspect-square">
+                <div className="relative w-60 h-60 mx-auto">
               {/* Указатель */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
                 <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-primary drop-shadow-lg" />
@@ -337,31 +333,31 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
             </div>
 
             {/* Кнопка вращения */}
-            <div className="text-center mb-4">
+            <div className="text-center mb-2">
               <Button
-                size="lg"
+                size="default"
                 onClick={handleSpin}
                 disabled={isSpinning || isLoading || spins < 1}
-                className="px-6 py-5 text-base font-bold"
+                className="px-5 text-sm font-bold"
                 data-testid="button-spin-wheel"
               >
                 {isSpinning ? (
                   <>
-                    <Sparkles className="w-5 h-5 mr-2 animate-spin" />
+                    <Sparkles className="w-4 h-4 mr-2 animate-spin" />
                     Крутится...
                   </>
                 ) : spins < 1 ? (
                   "Нет спинов"
                 ) : (
                   <>
-                    <Sparkles className="w-5 h-5 mr-2" />
+                    <Sparkles className="w-4 h-4 mr-2" />
                     Крутить рулетку
                   </>
                 )}
               </Button>
               
               {spins < 1 && (
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-[11px] text-muted-foreground mt-1.5">
                   Делайте заказы, чтобы получить спины!<br />
                   1000₽ = 1 спин
                 </p>
@@ -370,15 +366,15 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
 
             {/* Вишлист */}
                 {wishlistCount > 0 && (
-                  <div className="pt-4 border-t">
-                    <p className="text-xs text-muted-foreground text-center mb-2">
+                  <div className="pt-2 border-t">
+                    <p className="text-[11px] text-muted-foreground text-center mb-1.5">
                       Ваш вишлист ({wishlistCount} товаров):
                     </p>
-                    <div className="flex gap-2 justify-center flex-wrap">
+                    <div className="flex gap-1.5 justify-center flex-wrap">
                       {wishlistItems.slice(0, 6).map((item) => (
                         <div 
                           key={item.productId}
-                          className="w-10 h-10 rounded-lg overflow-hidden border-2 border-muted"
+                          className="w-8 h-8 rounded-md overflow-hidden border-2 border-muted"
                         >
                           <div className="w-full h-full bg-muted flex items-center justify-center text-xs">
                             🍬
@@ -386,7 +382,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                         </div>
                       ))}
                       {wishlistCount > 6 && (
-                        <div className="w-10 h-10 rounded-lg border-2 border-muted flex items-center justify-center text-xs text-muted-foreground">
+                        <div className="w-8 h-8 rounded-md border-2 border-muted flex items-center justify-center text-[10px] text-muted-foreground">
                           +{wishlistCount - 6}
                         </div>
                       )}
