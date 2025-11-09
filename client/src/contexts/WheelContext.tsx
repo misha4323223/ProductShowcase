@@ -61,7 +61,12 @@ export function WheelProvider({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
+      console.log('🎰 Загрузка статуса рулетки для:', user.email, 'userId:', user.userId);
       const status: WheelStatusResponse = await getWheelStatus(user.userId);
+      
+      console.log('🎰 Получен статус рулетки:', status);
+      console.log('🎯 Доступные спины:', status.spins);
+      console.log('📊 Всего заработано:', status.totalSpinsEarned);
       
       setSpins(status.spins || 0);
       setTotalSpinsEarned(status.totalSpinsEarned || 0);
@@ -71,7 +76,7 @@ export function WheelProvider({ children }: { children: ReactNode }) {
       setActivePrizes(Array.isArray(status.activePrizes) ? status.activePrizes : []);
       setStats(status.stats || null);
     } catch (err: any) {
-      console.error("Ошибка загрузки статуса рулетки:", err);
+      console.error("❌ Ошибка загрузки статуса рулетки:", err);
       setError(err.message || "Не удалось загрузить данные рулетки");
       // Устанавливаем безопасные значения по умолчанию
       setActivePrizes([]);
