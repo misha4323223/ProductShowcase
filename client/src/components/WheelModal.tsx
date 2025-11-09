@@ -260,7 +260,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                       </p>
                       <ul className="text-[11px] text-muted-foreground space-y-0.5 ml-3 list-disc">
                         <li>Добавьте товары в избранное ❤️</li>
-                        <li>Призы имеют срок действия</li>
+                        <li>Скидки на товары и подарки работают с избранным</li>
+                        <li>Общие призы (баллы, доставка) - на весь заказ</li>
                         <li>Промокоды в личном кабинете</li>
                       </ul>
                     </div>
