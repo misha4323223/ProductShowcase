@@ -12,21 +12,14 @@ import ThemeToggle from "@/components/ThemeToggle";
 // Кастомная иконка рулетки
 const WheelIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className}>
-    <circle cx="12" cy="12" r="10" fill="url(#gradient1)" />
-    <path d="M 12 12 L 12 2 A 10 10 0 0 1 22 12 Z" fill="#9333ea" />
-    <path d="M 12 12 L 22 12 A 10 10 0 0 1 17.07 19.07 Z" fill="#ec4899" />
-    <path d="M 12 12 L 17.07 19.07 A 10 10 0 0 1 12 22 Z" fill="#f59e0b" />
-    <path d="M 12 12 L 12 22 A 10 10 0 0 1 6.93 19.07 Z" fill="#3b82f6" />
-    <path d="M 12 12 L 6.93 19.07 A 10 10 0 0 1 2 12 Z" fill="#22c55e" />
-    <path d="M 12 12 L 2 12 A 10 10 0 0 1 6.93 4.93 Z" fill="#ef4444" />
-    <path d="M 12 12 L 6.93 4.93 A 10 10 0 0 1 12 2 Z" fill="#f97316" />
-    <circle cx="12" cy="12" r="2" fill="white" stroke="#fbbf24" strokeWidth="1" />
-    <defs>
-      <linearGradient id="gradient1">
-        <stop offset="0%" stopColor="#fbbf24" />
-        <stop offset="100%" stopColor="#f59e0b" />
-      </linearGradient>
-    </defs>
+    <circle cx="12" cy="12" r="11" fill="#fbbf24" />
+    <path d="M 12 12 L 12 1 A 11 11 0 0 1 23 12 Z" fill="#9333ea" />
+    <path d="M 12 12 L 23 12 A 11 11 0 0 1 19.78 19.78 Z" fill="#ec4899" />
+    <path d="M 12 12 L 19.78 19.78 A 11 11 0 0 1 12 23 Z" fill="#f59e0b" />
+    <path d="M 12 12 L 12 23 A 11 11 0 0 1 4.22 19.78 Z" fill="#3b82f6" />
+    <path d="M 12 12 L 4.22 19.78 A 11 11 0 0 1 1 12 Z" fill="#22c55e" />
+    <path d="M 12 12 L 1 12 A 11 11 0 0 1 4.22 4.22 Z" fill="#ef4444" />
+    <path d="M 12 12 L 4.22 4.22 A 11 11 0 0 1 12 1 Z" fill="#f97316" />
   </svg>
 );
 
