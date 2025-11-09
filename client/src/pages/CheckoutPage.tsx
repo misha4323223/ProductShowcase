@@ -203,7 +203,7 @@ export default function CheckoutPage() {
       }
 
       const orderData: any = {
-        userId: user?.uid || 'guest',
+        userId: user?.userId || 'guest',
         userEmail: user?.email || data.email,
         items: cartItems.map(item => ({
           productId: item.id,

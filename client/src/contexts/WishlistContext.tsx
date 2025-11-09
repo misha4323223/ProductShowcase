@@ -30,7 +30,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     
     try {
-      const items = await getWishlist(user.uid);
+      const items = await getWishlist(user.userId);
       setWishlistItems(items);
     } catch (error) {
       console.error("Ошибка загрузки избранного:", error);
@@ -44,7 +44,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      await addToWishlist(user.uid, productId);
+      await addToWishlist(user.userId, productId);
       await loadWishlist();
     } catch (error) {
       console.error("Ошибка добавления в избранное:", error);
@@ -56,7 +56,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     if (!user) return;
 
     try {
-      await removeFromWishlist(user.uid, productId);
+      await removeFromWishlist(user.userId, productId);
       await loadWishlist();
     } catch (error) {
       console.error("Ошибка удаления из избранного:", error);

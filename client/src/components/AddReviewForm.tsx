@@ -55,7 +55,7 @@ export default function AddReviewForm({ productId, onReviewAdded }: AddReviewFor
     try {
       await createReview({
         productId,
-        userId: user.uid,
+        userId: user.userId,
         userName: user.email?.split('@')[0] || 'Пользователь',
         rating,
         comment: comment.trim(),
