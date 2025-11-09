@@ -135,36 +135,32 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       }
 
       const degreesPerSector = 360 / WHEEL_SECTORS.length; // 60 градусов для 6 секторов
-      const sectorStartAngle = sectorIndex * degreesPerSector;
-      const sectorCenterAngle = sectorStartAngle + (degreesPerSector / 2);
       
       console.log('🎯 Prize type:', prize.prizeType);
       console.log('🎯 Sector index:', sectorIndex);
-      console.log('🎯 Sector center angle:', sectorCenterAngle);
       
       // 5-8 полных оборотов для эффекта
-      const fullSpins = 5 + Math.random() * 3;
+      const extraSpins = 5 + Math.random() * 3;
       
-      // ИСПРАВЛЕНИЕ: Добавляем смещение -90° для компенсации позиции указателя
-      // conic-gradient начинается справа (0°), но указатель сверху (270°)
-      const targetAngle = (270 - sectorCenterAngle + 360) % 360;
+      // ПРАВИЛЬНАЯ ФОРМУЛА из интернета:
+      // Сбрасываем в 0, затем крутим до нужного сектора
+      // Указатель сверху = offset 90° для выравнивания с conic-gradient
+      const offset = 90;
+      const targetAngle = (sectorIndex * degreesPerSector) + offset;
       
-      // Нормализуем текущий угол (где рулетка сейчас находится)
-      const normalizedCurrent = ((rotation % 360) + 360) % 360;
+      // Сначала сбрасываем колесо в 0 (без анимации)
+      setRotation(0);
       
-      // Вычисляем относительное смещение от текущей позиции до целевого сектора
-      const relativeDelta = ((targetAngle - normalizedCurrent + 360) % 360);
-      
-      // Итоговый угол = текущий + полные обороты + смещение до целевого сектора
-      const finalRotation = rotation + (360 * fullSpins) + relativeDelta;
-      
-      console.log('🎯 Current normalized:', normalizedCurrent);
-      console.log('🎯 Target angle:', targetAngle);
-      console.log('🎯 Relative delta:', relativeDelta);
-      console.log('🎯 Final rotation:', finalRotation);
-      
-      // Запускаем анимацию к нужному сектору
-      setRotation(finalRotation);
+      // Затем через небольшую задержку запускаем вращение
+      setTimeout(() => {
+        const finalRotation = (360 * extraSpins) + (360 - targetAngle);
+        
+        console.log('🎯 Degrees per sector:', degreesPerSector);
+        console.log('🎯 Target angle:', targetAngle);
+        console.log('🎯 Final rotation:', finalRotation);
+        
+        setRotation(finalRotation);
+      }, 50);
 
       // Ждем окончания анимации
       await new Promise(resolve => setTimeout(resolve, 4000));
