@@ -505,6 +505,23 @@ export default function AdminPage() {
     },
   });
 
+  const deleteNewsletterSubscriptionMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await unsubscribeFromNewsletter(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/newsletter-subscriptions"] });
+      toast({ title: "Подписчик удален" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка удаления подписки", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -1306,19 +1323,8 @@ export default function AdminPage() {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={async () => {
-                          try {
-                            await unsubscribeFromNewsletter(subscription.id);
-                            queryClient.invalidateQueries({ queryKey: ["/api/admin/newsletter-subscriptions"] });
-                            toast({ title: "Подписчик удален" });
-                          } catch (error: any) {
-                            toast({
-                              title: "Ошибка",
-                              description: error.message,
-                              variant: "destructive",
-                            });
-                          }
-                        }}
+                        onClick={() => deleteNewsletterSubscriptionMutation.mutate(subscription.id)}
+                        disabled={deleteNewsletterSubscriptionMutation.isPending}
                         data-testid={`button-delete-newsletter-${subscription.id}`}
                       >
                         <Trash2 className="w-4 h-4" />
