@@ -136,31 +136,26 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
 
       const degreesPerSector = 360 / WHEEL_SECTORS.length; // 60 градусов для 6 секторов
       
+      // Вычисляем ЦЕНТР нужного сектора (а не начало!)
+      const sectorCenter = (sectorIndex * degreesPerSector) + (degreesPerSector / 2);
+      
       console.log('🎯 Prize type:', prize.prizeType);
       console.log('🎯 Sector index:', sectorIndex);
+      console.log('🎯 Sector center:', sectorCenter);
       
       // 5-8 полных оборотов для эффекта
       const extraSpins = 5 + Math.random() * 3;
       
-      // ПРАВИЛЬНАЯ ФОРМУЛА из интернета:
-      // Сбрасываем в 0, затем крутим до нужного сектора
-      // Указатель сверху = offset 90° для выравнивания с conic-gradient
+      // ИСПРАВЛЕНИЕ: Учитываем центр сектора + offset для указателя сверху
       const offset = 90;
-      const targetAngle = (sectorIndex * degreesPerSector) + offset;
+      const targetAngle = sectorCenter + offset;
+      const finalRotation = (360 * extraSpins) + (360 - targetAngle);
       
-      // Сначала сбрасываем колесо в 0 (без анимации)
-      setRotation(0);
+      console.log('🎯 Target angle:', targetAngle);
+      console.log('🎯 Final rotation:', finalRotation);
       
-      // Затем через небольшую задержку запускаем вращение
-      setTimeout(() => {
-        const finalRotation = (360 * extraSpins) + (360 - targetAngle);
-        
-        console.log('🎯 Degrees per sector:', degreesPerSector);
-        console.log('🎯 Target angle:', targetAngle);
-        console.log('🎯 Final rotation:', finalRotation);
-        
-        setRotation(finalRotation);
-      }, 50);
+      // Запускаем анимацию к нужному сектору
+      setRotation(finalRotation);
 
       // Ждем окончания анимации
       await new Promise(resolve => setTimeout(resolve, 4000));
