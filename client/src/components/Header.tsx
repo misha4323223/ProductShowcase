@@ -12,14 +12,13 @@ import ThemeToggle from "@/components/ThemeToggle";
 // Кастомная иконка рулетки
 const WheelIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className}>
-    <circle cx="12" cy="12" r="11" fill="#fbbf24" />
     <path d="M 12 12 L 12 1 A 11 11 0 0 1 23 12 Z" fill="#9333ea" />
     <path d="M 12 12 L 23 12 A 11 11 0 0 1 19.78 19.78 Z" fill="#ec4899" />
     <path d="M 12 12 L 19.78 19.78 A 11 11 0 0 1 12 23 Z" fill="#f59e0b" />
     <path d="M 12 12 L 12 23 A 11 11 0 0 1 4.22 19.78 Z" fill="#3b82f6" />
     <path d="M 12 12 L 4.22 19.78 A 11 11 0 0 1 1 12 Z" fill="#22c55e" />
     <path d="M 12 12 L 1 12 A 11 11 0 0 1 4.22 4.22 Z" fill="#ef4444" />
-    <path d="M 12 12 L 4.22 4.22 A 11 11 0 0 1 12 1 Z" fill="#f97316" />
+    <path d="M 12 12 L 4.22 4.22 A 11 11 0 0 1 12 1 Z" fill="#fbbf24" />
   </svg>
 );
 
