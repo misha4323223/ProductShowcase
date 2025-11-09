@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const https = require('https');
 
 const client = new DynamoDBClient({
@@ -147,6 +147,38 @@ exports.handler = async (event) => {
       TableName: "orders",
       Item: order,
     }));
+
+    // Если использован промокод рулетки, помечаем его как использованный
+    if (orderData.promoCode) {
+      try {
+        const wheelPrizesResult = await docClient.send(new ScanCommand({
+          TableName: "wheelPrizes",
+        }));
+        
+        const normalizedPromoCode = orderData.promoCode.trim().toUpperCase();
+        const wheelPrize = (wheelPrizesResult.Items || []).find(p => 
+          p.promoCode && p.promoCode.trim().toUpperCase() === normalizedPromoCode
+        );
+
+        if (wheelPrize && !wheelPrize.used) {
+          // Помечаем приз как использованный
+          await docClient.send(new UpdateCommand({
+            TableName: "wheelPrizes",
+            Key: { id: wheelPrize.id },
+            UpdateExpression: "SET used = :true, usedAt = :usedAt, orderId = :orderId",
+            ExpressionAttributeValues: {
+              ":true": true,
+              ":usedAt": new Date().toISOString(),
+              ":orderId": id
+            }
+          }));
+          console.log(`Wheel prize ${wheelPrize.id} marked as used for order ${id}`);
+        }
+      } catch (error) {
+        console.error('Error marking wheel prize as used:', error);
+        // Не прерываем выполнение, если не удалось пометить приз
+      }
+    }
 
     // Отправляем уведомление в Telegram (неблокирующая операция)
     sendTelegramNotification(order).catch(error => {
