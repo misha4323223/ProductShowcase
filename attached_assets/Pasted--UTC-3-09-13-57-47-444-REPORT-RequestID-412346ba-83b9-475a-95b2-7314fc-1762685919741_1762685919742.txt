@@ -1,0 +1,162 @@
+Время (UTC +3)
+Сообщение
+
+09 нояб. 13:57:47.444
+REPORT RequestID: 412346ba-83b9-475a-95b2-7314fcdfdc36 Duration: 194.854 ms Billed Duration: 200 ms Memory Size: 256 MB Max Memory Used: 107 MB Queuing Duration: 0.067 ms CPU Usage: 14.844 %
+
+09 нояб. 13:57:47.444
+ERROR RequestID: 412346ba-83b9-475a-95b2-7314fcdfdc36 Code: 502 Message: Error during function invocation
+ERROR RequestID: 412346ba-83b9-475a-95b2-7314fcdfdc36 Code: 502 Message: Error during function invocation
+"request_id""412346ba-83b9-475a-95b2-7314fcdfdc36"
+"source""system"
+"version_id""d4ecq3bohaahuba3i340"
+
+09 нояб. 13:57:47.444
+END RequestID: 412346ba-83b9-475a-95b2-7314fcdfdc36
+
+09 нояб. 13:57:47.443
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+09 нояб. 13:57:47.441
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'
+Require stack:
+- /function/code/index.js
+Stack: Require stack:
+- /function/code/index.js
+    at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""412346ba-83b9-475a-95b2-7314fcdfdc36"
+"source""user"
+"version_id""d4ecq3bohaahuba3i340"
+
+09 нояб. 13:57:47.246
+START RequestID: 412346ba-83b9-475a-95b2-7314fcdfdc36 Version: d4ecq3bohaahuba3i340
+
+09 нояб. 13:56:54.862
+REPORT RequestID: 9f656e86-259b-4c8f-987d-d2436a246283 Duration: 490.072 ms Billed Duration: 500 ms Memory Size: 256 MB Max Memory Used: 55 MB Queuing Duration: 0.078 ms CPU Usage: 14.258 %
+
+09 нояб. 13:56:54.862
+ERROR RequestID: 9f656e86-259b-4c8f-987d-d2436a246283 Code: 502 Message: Error during function invocation
+ERROR RequestID: 9f656e86-259b-4c8f-987d-d2436a246283 Code: 502 Message: Error during function invocation
+"request_id""9f656e86-259b-4c8f-987d-d2436a246283"
+"source""system"
+"version_id""d4edok50bic257v8lo4q"
+
+09 нояб. 13:56:54.862
+END RequestID: 9f656e86-259b-4c8f-987d-d2436a246283
+
+09 нояб. 13:56:54.862
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+09 нояб. 13:56:54.850
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'
+Require stack:
+- /function/code/index.js
+Stack: Require stack:
+- /function/code/index.js
+    at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""9f656e86-259b-4c8f-987d-d2436a246283"
+"source""user"
+"version_id""d4edok50bic257v8lo4q"
+
+09 нояб. 13:56:54.362
+START RequestID: 9f656e86-259b-4c8f-987d-d2436a246283 Version: d4edok50bic257v8lo4q
+
+09 нояб. 13:56:40.582
+REPORT RequestID: a8966b83-793c-4a2a-b895-e15a4c7474b1 Duration: 485.191 ms Billed Duration: 500 ms Memory Size: 256 MB Max Memory Used: 55 MB Queuing Duration: 0.070 ms CPU Usage: 14.258 %
+
+09 нояб. 13:56:40.582
+ERROR RequestID: a8966b83-793c-4a2a-b895-e15a4c7474b1 Code: 502 Message: Error during function invocation
+ERROR RequestID: a8966b83-793c-4a2a-b895-e15a4c7474b1 Code: 502 Message: Error during function invocation
+"request_id""a8966b83-793c-4a2a-b895-e15a4c7474b1"
+"source""system"
+"version_id""d4edok50bic257v8lo4q"
+
+09 нояб. 13:56:40.582
+END RequestID: a8966b83-793c-4a2a-b895-e15a4c7474b1
+
+09 нояб. 13:56:40.581
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+09 нояб. 13:56:40.570
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'
+Require stack:
+- /function/code/index.js
+Stack: Require stack:
+- /function/code/index.js
+    at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""a8966b83-793c-4a2a-b895-e15a4c7474b1"
+"source""user"
+"version_id""d4edok50bic257v8lo4q"
+
+09 нояб. 13:56:40.093
+START RequestID: a8966b83-793c-4a2a-b895-e15a4c7474b1 Version: d4edok50bic257v8lo4q
+
+09 нояб. 13:56:33.189
+Initialization exited with code: 1 Stack: at process.exit (/function/runtime/bootstrap:176:47) at ve.terminate (/function/runtime/bootstrap:1250:57) at ve.<anonymous> (/function/runtime/bootstrap:192:40) at Generator.next (<anonymous>) at i (/function/runtime/bootstrap:158:133) at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Initialization exited with code: 1
+Stack:     at process.exit (/function/runtime/bootstrap:176:47)
+    at ve.terminate (/function/runtime/bootstrap:1250:57)
+    at ve.<anonymous> (/function/runtime/bootstrap:192:40)
+    at Generator.next (<anonymous>)
+    at i (/function/runtime/bootstrap:158:133)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+"category""default"
+"request_id""9c207cae-a003-45be-8a15-1829d890e477"
+"source""user"
+"version_id""d4edok50bic257v8lo4q"
+
+09 нояб. 13:56:33.189
+REPORT RequestID: 9c207cae-a003-45be-8a15-1829d890e477 Duration: 186.918 ms Billed Duration: 200 ms Memory Size: 256 MB Max Memory Used: 106 MB Queuing Duration: 0.088 ms CPU Usage: 13.965 %
+
+09 нояб. 13:56:33.189
+ERROR RequestID: 9c207cae-a003-45be-8a15-1829d890e477 Code: 502 Message: Error during function invocation
+ERROR RequestID: 9c207cae-a003-45be-8a15-1829d890e477 Code: 502 Message: Error during function invocation
+"request_id""9c207cae-a003-45be-8a15-1829d890e477"
+"source""system"
+"version_id""d4edok50bic257v8lo4q"
+
+09 нояб. 13:56:33.189
+END RequestID: 9c207cae-a003-45be-8a15-1829d890e477
+
+09 нояб. 13:56:33.188
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+09 нояб. 13:56:33.185
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'
+Require stack:
+- /function/code/index.js
+Stack: Require stack:
+- /function/code/index.js
+    at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""9c207cae-a003-45be-8a15-1829d890e477"
+"source""user"
+"version_id""d4edok50bic257v8lo4q"
+
+09 нояб. 13:56:32.998
+START RequestID: 9c207cae-a003-45be-8a15-1829d890e477 Version: d4edok50bic257v8lo4q
+
+09 нояб. 13:51:33.588
+REPORT RequestID: a0132826-1bd2-426b-a491-35d0b86c3182 Duration: 528.363 ms Billed Duration: 600 ms Memory Size: 256 MB Max Memory Used: 51 MB Queuing Duration: 0.049 ms CPU Usage: 14.746 %
+
+09 нояб. 13:51:33.588
+ERROR RequestID: a0132826-1bd2-426b-a491-35d0b86c3182 Code: 502 Message: Error during function invocation
+ERROR RequestID: a0132826-1bd2-426b-a491-35d0b86c3182 Code: 502 Message: Error during function invocation
+"request_id""a0132826-1bd2-426b-a491-35d0b86c3182"
+"source""system"
+"version_id""d4e7k4j7g0373ge10m18"
