@@ -53,6 +53,12 @@ exports.handler = async (event) => {
     const userEmail = verification.payload.email;
     console.log('User ID:', userId, 'Email:', userEmail);
 
+    // Проверка наличия email в токене
+    if (!userEmail) {
+      console.error('❌ Email отсутствует в JWT payload. Токен устарел или поврежден.');
+      return errorResponse(401, 'Ваша сессия устарела. Пожалуйста, выйдите и войдите заново.');
+    }
+
     // 2. Получить пользователя и проверить спины
     const userResult = await docClient.send(new GetCommand({
       TableName: "users",
