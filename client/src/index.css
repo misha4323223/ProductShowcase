@@ -1421,5 +1421,11 @@
       transition-duration: 0ms !important;
     }
   }
+
+  /* Исправление обрезания букв в заголовках с градиентом */
+  .text-transparent.bg-clip-text {
+    padding-bottom: 0.625rem;
+    line-height: 1.4;
+  }
   
 }
