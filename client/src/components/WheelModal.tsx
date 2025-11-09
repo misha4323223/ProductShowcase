@@ -199,17 +199,90 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
           </DialogHeader>
 
           <div className="py-4">
-            {/* Счетчик спинов */}
-            <div className="text-center mb-4">
-              <p className="text-sm text-muted-foreground mb-2">У вас:</p>
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 px-5 py-2 rounded-full">
-                <span className="text-2xl">🎰</span>
-                <span className="text-2xl font-bold text-primary">× {spins}</span>
-              </div>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Левая колонка - Инструкция */}
+              <div className="space-y-4">
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-xl p-5 border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    <h3 className="font-bold text-lg">Как работает рулетка?</h3>
+                  </div>
+                  
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <p className="font-semibold mb-1 flex items-center gap-1">
+                        <Gift className="w-4 h-4" />
+                        КАК ПОЛУЧИТЬ СПИНЫ:
+                      </p>
+                      <p className="text-muted-foreground ml-5">
+                        Каждая покупка на 1000₽ = 1 спин рулетки
+                      </p>
+                    </div>
 
-            {/* Рулетка */}
-            <div className="relative w-full max-w-sm mx-auto aspect-square mb-4">
+                    <div>
+                      <p className="font-semibold mb-2 flex items-center gap-1">
+                        <Trophy className="w-4 h-4" />
+                        ПРОГРЕССИВНАЯ СИСТЕМА:
+                      </p>
+                      <div className="space-y-1.5 ml-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-purple-500 font-bold min-w-[60px]">1 спин</span>
+                          <span className="text-muted-foreground">→ Скидка 10%</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-pink-500 font-bold min-w-[60px]">2 спина</span>
+                          <span className="text-muted-foreground">→ + Товар -20%</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-500 font-bold min-w-[60px]">3 спина</span>
+                          <span className="text-muted-foreground">→ + 200 баллов</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-500 font-bold min-w-[60px]">4 спина</span>
+                          <span className="text-muted-foreground">→ + Доставка</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-green-500 font-bold min-w-[60px]">5 спинов</span>
+                          <span className="text-muted-foreground">→ + Подарок</span>
+                        </div>
+                        <div className="flex items-start gap-2 bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-950/50 dark:to-yellow-950/50 -mx-2 px-2 py-1 rounded">
+                          <span className="text-orange-500 font-bold min-w-[60px]">6+ спинов</span>
+                          <span className="font-semibold">→ 🏆 ДЖЕКПОТ 40%!</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mt-3">
+                      <p className="font-semibold mb-1 text-xs flex items-center gap-1">
+                        <span className="text-blue-600 dark:text-blue-400">💡 ВАЖНО:</span>
+                      </p>
+                      <ul className="text-xs text-muted-foreground space-y-1 ml-4 list-disc">
+                        <li>Добавьте товары в избранное ❤️</li>
+                        <li>Призы имеют срок действия</li>
+                        <li>Промокоды в личном кабинете</li>
+                      </ul>
+                    </div>
+
+                    <div className="text-center text-xs text-muted-foreground italic mt-2">
+                      💎 Накопите 6 спинов для шанса на ДЖЕКПОТ!
+                    </div>
+                  </div>
+                </div>
+
+                {/* Счетчик спинов */}
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground mb-2">У вас:</p>
+                  <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900 dark:to-purple-900 px-5 py-2 rounded-full">
+                    <span className="text-2xl">🎰</span>
+                    <span className="text-2xl font-bold text-primary">× {spins}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Правая колонка - Рулетка */}
+              <div className="space-y-4">
+                {/* Рулетка */}
+                <div className="relative w-full max-w-sm mx-auto aspect-square">
               {/* Указатель */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
                 <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-primary drop-shadow-lg" />
@@ -296,30 +369,32 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
             </div>
 
             {/* Вишлист */}
-            {wishlistCount > 0 && (
-              <div className="pt-4 border-t">
-                <p className="text-xs text-muted-foreground text-center mb-2">
-                  Ваш вишлист ({wishlistCount} товаров):
-                </p>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  {wishlistItems.slice(0, 6).map((item) => (
-                    <div 
-                      key={item.productId}
-                      className="w-10 h-10 rounded-lg overflow-hidden border-2 border-muted"
-                    >
-                      <div className="w-full h-full bg-muted flex items-center justify-center text-xs">
-                        🍬
-                      </div>
+                {wishlistCount > 0 && (
+                  <div className="pt-4 border-t">
+                    <p className="text-xs text-muted-foreground text-center mb-2">
+                      Ваш вишлист ({wishlistCount} товаров):
+                    </p>
+                    <div className="flex gap-2 justify-center flex-wrap">
+                      {wishlistItems.slice(0, 6).map((item) => (
+                        <div 
+                          key={item.productId}
+                          className="w-10 h-10 rounded-lg overflow-hidden border-2 border-muted"
+                        >
+                          <div className="w-full h-full bg-muted flex items-center justify-center text-xs">
+                            🍬
+                          </div>
+                        </div>
+                      ))}
+                      {wishlistCount > 6 && (
+                        <div className="w-10 h-10 rounded-lg border-2 border-muted flex items-center justify-center text-xs text-muted-foreground">
+                          +{wishlistCount - 6}
+                        </div>
+                      )}
                     </div>
-                  ))}
-                  {wishlistCount > 6 && (
-                    <div className="w-10 h-10 rounded-lg border-2 border-muted flex items-center justify-center text-xs text-muted-foreground">
-                      +{wishlistCount - 6}
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
