@@ -64,14 +64,20 @@ export async function hideOrderForUser(orderId: string): Promise<void> {
 }
 
 export async function getAllOrders(): Promise<Order[]> {
+  console.log('🔍 Запрос всех заказов к:', `${API_GATEWAY_URL}/orders`);
   const response = await fetch(`${API_GATEWAY_URL}/orders`);
   
+  console.log('📡 Статус ответа:', response.status, response.statusText);
+  
   if (!response.ok) {
+    const errorText = await response.text();
+    console.error('❌ Ошибка получения заказов:', errorText);
     throw new Error('Failed to get all orders');
   }
   
   const data = await response.json();
   console.log('📦 Сырые данные заказов из API:', data);
+  console.log('📊 Количество заказов:', data.length);
   
   return data.map((order: any) => {
     const mappedOrder = {
