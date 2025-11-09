@@ -145,9 +145,9 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       // 5-8 полных оборотов для эффекта
       const fullSpins = 5 + Math.random() * 3;
       
-      // Указатель находится сверху (0 градусов), поэтому инвертируем угол
-      // Рулетка вращается по часовой стрелке, но визуально кажется что против
-      const targetAngle = 360 - sectorCenterAngle;
+      // ИСПРАВЛЕНИЕ: Добавляем смещение -90° для компенсации позиции указателя
+      // conic-gradient начинается справа (0°), но указатель сверху (270°)
+      const targetAngle = (270 - sectorCenterAngle + 360) % 360;
       
       // Нормализуем текущий угол (где рулетка сейчас находится)
       const normalizedCurrent = ((rotation % 360) + 360) % 360;
