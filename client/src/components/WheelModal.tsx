@@ -143,8 +143,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       console.log('🎯 Sector index:', sectorIndex);
       console.log('🎯 Sector center:', sectorCenter);
       
-      // 5-8 полных оборотов для эффекта
-      const extraSpins = 5 + Math.random() * 3;
+      // 5-7 ЦЕЛЫХ полных оборотов для эффекта (важно: целое число!)
+      const extraSpins = 5 + Math.floor(Math.random() * 3);
       
       // ИСПРАВЛЕНИЕ: Учитываем центр сектора + offset для указателя сверху
       const offset = 90;
