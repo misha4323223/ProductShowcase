@@ -151,10 +151,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       // Стрелка на 270° мировых координатах, под ней 0° градиента
       // Чтобы под стрелкой оказался центр нужного сектора, нужно повернуть так:
       // (sectorCenter + rotation) % 360 = 0  =>  rotation = -sectorCenter = 360 - sectorCenter
-      // ВАЖНО: Добавляем к текущему углу, чтобы рулетка продолжала крутиться вперед
-      const finalRotation = rotation + (360 * extraSpins) + (360 - sectorCenter);
+      const finalRotation = (360 * extraSpins) + (360 - sectorCenter);
       
-      console.log('🎯 Current rotation:', rotation);
       console.log('🎯 Final rotation:', finalRotation);
       console.log('🎯 Extra spins (integer):', extraSpins);
       
@@ -186,6 +184,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   const closePrizeModal = () => {
     setShowPrizeModal(false);
     setWonPrize(null);
+    // Сбрасываем положение рулетки для следующего вращения
+    setRotation(0);
   };
 
   return (
