@@ -356,10 +356,17 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    font-size: 16px; /* Увеличиваем базовый размер шрифта */
-    font-weight: 500; /* Делаем шрифт толще везде (как на iPhone) */
+    font-size: 16px;
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Увеличенный шрифт только для iOS устройств (iPhone, iPad) */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      font-size: 18px;
+    }
   }
 }
 
