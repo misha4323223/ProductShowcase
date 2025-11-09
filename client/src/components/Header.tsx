@@ -231,7 +231,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 data-testid="button-wheel"
                 title="Рулетка Желаний"
               >
-                <WheelIcon className={`h-7 w-7 z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
+                <WheelIcon className={`h-8.5 w-8.5 z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
                 {wheelSpins > 0 && (
                   <span className={`absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${wheelBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-wheel-spins">
                     {wheelSpins}
