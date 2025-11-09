@@ -1,0 +1,236 @@
+Время (UTC +3)
+Сообщение
+
+09 нояб. 13:40:05.815
+REPORT RequestID: e1b314ae-8a6d-4b5c-b135-62fd6dfecef0 Duration: 384.641 ms Billed Duration: 400 ms Memory Size: 256 MB Max Memory Used: 107 MB Queuing Duration: 0.042 ms Function Init Duration: 198.633 ms CPU Usage: 16.602 %
+REPORT RequestID: e1b314ae-8a6d-4b5c-b135-62fd6dfecef0 Duration: 384.641 ms Billed Duration: 400 ms Memory Size: 256 MB Max Memory Used: 107 MB Queuing Duration: 0.042 ms Function Init Duration: 198.633 ms CPU Usage: 16.602 %
+"request_id""e1b314ae-8a6d-4b5c-b135-62fd6dfecef0"
+"source""system"
+"version_id""d4e29cpepadvp1uc3f7n"
+
+09 нояб. 13:40:05.815
+END RequestID: e1b314ae-8a6d-4b5c-b135-62fd6dfecef0
+END RequestID: e1b314ae-8a6d-4b5c-b135-62fd6dfecef0
+"request_id""e1b314ae-8a6d-4b5c-b135-62fd6dfecef0"
+"source""system"
+"version_id""d4e29cpepadvp1uc3f7n"
+
+09 нояб. 13:40:05.812
+}
+
+09 нояб. 13:40:05.812
+__type: 'ru.yandex.docapi.v20120810#ValidationException'
+
+09 нояб. 13:40:05.812
+},
+
+09 нояб. 13:40:05.812
+totalRetryDelay: 0
+
+09 нояб. 13:40:05.812
+attempts: 1,
+
+09 нояб. 13:40:05.812
+cfId: undefined,
+
+09 нояб. 13:40:05.812
+extendedRequestId: undefined,
+
+09 нояб. 13:40:05.812
+requestId: '2952bdf8-8741-494a-b9b1-5f3a7c1440ef',
+
+09 нояб. 13:40:05.812
+httpStatusCode: 400,
+
+09 нояб. 13:40:05.812
+'$metadata': {
+
+09 нояб. 13:40:05.812
+'$retryable': undefined,
+
+09 нояб. 13:40:05.812
+},
+
+09 нояб. 13:40:05.812
+}
+
+09 нояб. 13:40:05.812
+[Symbol(kTrailersCount)]: 0
+
+09 нояб. 13:40:05.812
+[Symbol(kTrailers)]: null,
+
+09 нояб. 13:40:05.812
+[Symbol(kHeadersCount)]: 24,
+
+09 нояб. 13:40:05.812
+[Symbol(kHeaders)]: [Object],
+
+09 нояб. 13:40:05.812
+[Symbol(kCapture)]: false,
+
+09 нояб. 13:40:05.812
+[Symbol(shapeMode)]: true,
+
+09 нояб. 13:40:05.812
+_eventsCount: 2,
+
+09 нояб. 13:40:05.812
+req: [ClientRequest],
+
+09 нояб. 13:40:05.812
+_dumped: false,
+
+09 нояб. 13:40:05.812
+_consuming: false,
+
+09 нояб. 13:40:05.812
+client: [TLSSocket],
+
+09 нояб. 13:40:05.812
+statusMessage: 'Bad Request',
+
+09 нояб. 13:40:05.812
+statusCode: 400,
+
+09 нояб. 13:40:05.812
+method: null,
+
+09 нояб. 13:40:05.812
+url: '',
+
+09 нояб. 13:40:05.812
+upgrade: false,
+
+09 нояб. 13:40:05.812
+aborted: false,
+
+09 нояб. 13:40:05.812
+joinDuplicateHeaders: undefined,
+
+09 нояб. 13:40:05.812
+rawTrailers: [],
+
+09 нояб. 13:40:05.812
+rawHeaders: [Array],
+
+09 нояб. 13:40:05.812
+complete: true,
+
+09 нояб. 13:40:05.812
+httpVersion: '1.1',
+
+09 нояб. 13:40:05.811
+httpVersionMinor: 1,
+
+09 нояб. 13:40:05.811
+httpVersionMajor: 1,
+
+09 нояб. 13:40:05.811
+socket: null,
+
+09 нояб. 13:40:05.811
+_maxListeners: undefined,
+
+09 нояб. 13:40:05.811
+_readableState: [ReadableState],
+
+09 нояб. 13:40:05.811
+_events: [Object],
+
+09 нояб. 13:40:05.811
+body: IncomingMessage {
+
+09 нояб. 13:40:05.811
+},
+
+09 нояб. 13:40:05.811
+'content-length': '118'
+
+09 нояб. 13:40:05.811
+date: 'Sun, 09 Nov 2025 10:40:05 GMT',
+
+09 нояб. 13:40:05.811
+'x-xss-protection': '1; mode=block',
+
+09 нояб. 13:40:05.811
+'x-request-id': '2952bdf8-8741-494a-b9b1-5f3a7c1440ef',
+
+09 нояб. 13:40:05.811
+'x-frame-options': 'DENY',
+
+09 нояб. 13:40:05.811
+'x-content-type-options': 'nosniff',
+
+09 нояб. 13:40:05.811
+'x-amzn-requestid': '2952bdf8-8741-494a-b9b1-5f3a7c1440ef',
+
+09 нояб. 13:40:05.811
+'x-amz-crc32': '275745258',
+
+09 нояб. 13:40:05.811
+'strict-transport-security': 'max-age=31536000; includeSubDomains',
+
+09 нояб. 13:40:05.811
+server: 'YDB Document API (d3b8f7081cb)',
+
+09 нояб. 13:40:05.811
+'content-type': 'application/x-amz-json-1.0',
+
+09 нояб. 13:40:05.811
+'content-security-policy': "default-src 'none'; base-uri 'none'",
+
+09 нояб. 13:40:05.811
+headers: {
+
+09 нояб. 13:40:05.811
+reason: 'Bad Request',
+
+09 нояб. 13:40:05.811
+statusCode: 400,
+
+09 нояб. 13:40:05.811
+'$response': HttpResponse {
+
+09 нояб. 13:40:05.811
+'$fault': 'client',
+
+09 нояб. 13:40:05.811
+at async exports.handler [as handlerFn] (/function/code/index.js:90:24) {
+
+09 нояб. 13:40:05.811
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+09 нояб. 13:40:05.811
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+09 нояб. 13:40:05.811
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+09 нояб. 13:40:05.811
+at async /function/code/node_modules/@aws-sdk/lib-dynamodb/dist-cjs/index.js:107:34
+
+09 нояб. 13:40:05.811
+at async /function/code/node_modules/@smithy/middleware-serde/dist-cjs/index.js:8:24
+
+09 нояб. 13:40:05.811
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+09 нояб. 13:40:05.811
+at de_CommandError (/function/code/node_modules/@aws-sdk/client-dynamodb/dist-cjs/index.js:1944:20)
+
+09 нояб. 13:40:05.811
+at /function/code/node_modules/@smithy/smithy-client/dist-cjs/index.js:297:9
+
+09 нояб. 13:40:05.811
+at throwDefaultError (/function/code/node_modules/@smithy/smithy-client/dist-cjs/index.js:288:22)
+
+09 нояб. 13:40:05.811
+Error: ValidationException: Missing value for required parameter "email"
+
+09 нояб. 13:40:05.345
+START RequestID: e1b314ae-8a6d-4b5c-b135-62fd6dfecef0 Version: d4e29cpepadvp1uc3f7n
+START RequestID: e1b314ae-8a6d-4b5c-b135-62fd6dfecef0 Version: d4e29cpepadvp1uc3f7n
+"request_id""e1b314ae-8a6d-4b5c-b135-62fd6dfecef0"
+"source""system"
+"version_id""d4e29cpepadvp1uc3f7n"
