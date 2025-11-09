@@ -348,6 +348,24 @@
     @apply border-border;
   }
 
+  html {
+    font-size: 16px;
+  }
+
+  /* Увеличенный базовый размер для ВСЕХ мобильных устройств */
+  @media only screen and (max-width: 768px) {
+    html {
+      font-size: 18px;
+    }
+  }
+
+  /* Ещё больше для очень маленьких экранов (телефоны) */
+  @media only screen and (max-width: 430px) {
+    html {
+      font-size: 20px;
+    }
+  }
+
   html,
   body {
     overflow-x: hidden;
@@ -356,24 +374,9 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    font-size: 16px;
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Увеличенный шрифт для мобильных устройств (включая все iPhone и Android) */
-  @media only screen and (max-width: 768px) {
-    body {
-      font-size: 18px;
-    }
-    
-    /* Ещё больше для очень маленьких экранов */
-    @media (max-width: 430px) {
-      body {
-        font-size: 19px;
-      }
-    }
   }
 }
 
