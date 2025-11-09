@@ -1,287 +1,80 @@
 # Sweet Delights E-commerce Platform
 
 ## Overview
-
-Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. The application features a visually appealing interface with a warm, playful aesthetic inspired by confectionery design. Built as a static React TypeScript application deployed on GitHub Pages with Yandex Cloud backend services, it provides a modern shopping experience with product browsing, cart management, automated email notifications, and responsive design.
+Sweet Delights is an e-commerce platform specializing in sweets (chocolates, candies, cookies) and accessories. It offers a modern, visually appealing shopping experience with features like product browsing, cart management, and automated email notifications. The platform is built as a static React TypeScript application deployed on GitHub Pages, utilizing Yandex Cloud for backend services. The project aims to provide a delightful and efficient online shopping experience, targeting the Russian market with localized content and legal compliance.
 
 ## User Preferences
-
 Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
-### Frontend Architecture
+### Frontend
+- **Framework**: React 18 with TypeScript.
+- **Routing**: Wouter for lightweight client-side navigation.
+- **State Management**: TanStack React Query for server state, local React state for UI.
+- **UI/Styling**: Shadcn UI (Radix UI + Tailwind CSS) with a custom design system featuring a warm, playful color palette, Playfair Display and Inter fonts, and responsive design with iOS Safari compatibility.
+- **Key Components**: Includes sticky header, auto-rotating hero slider, animated product cards, side-panel shopping cart, category navigation, feature highlights bar, and a footer with legal links.
 
-**Framework**: React 18 with TypeScript
-- **Rationale**: Provides type safety and component-based architecture for building interactive UI
-- **Router**: Wouter (lightweight client-side routing)
-- **State Management**: TanStack React Query for server state, local React state for UI
-- **UI Components**: Shadcn UI (Radix UI primitives with Tailwind CSS styling)
-- **Styling**: Tailwind CSS with custom design system
-
-**Design System**:
-- Color palette optimized for e-commerce with warm, appetizing tones (raspberry pink, caramel, mint green)
-- Typography: Playfair Display (headings) + Inter (body text) via Google Fonts
-- Custom animations and effects (candy-wrapper, lollipop-swirl, sugar-crystals, etc.)
-- Light/dark mode support with HSL color variables
-- Responsive breakpoints for mobile-first design
-- **iOS Safari Compatibility**: Touch event handlers for mobile menu, disabled mouse-move parallax on touch devices, WebKit-specific CSS fixes for tap highlights and sticky positioning
-
-**Key Components**:
-- `Header`: Sticky navigation with cart, search, and mobile menu (with iOS touch event support)
-- `HeroSlider`: Auto-rotating image carousel for promotions with email subscription dialog
-- `ProductCard`: Animated product display with add-to-cart (parallax disabled on touch devices)
-- `ShoppingCart`: Side-panel cart with quantity management
-- `CategoryCard`: Visual category navigation
-- `BenefitsBar`: Feature highlights (shipping, returns, etc.)
-- `Footer`: Contact info, newsletter signup (email-based), social links, legal document links (modal + full pages)
-- `LegalDialog`: Modal component for quick preview of legal documents (Privacy/Terms)
-
-### Backend Architecture
-
-**Framework**: Express.js with TypeScript
-- **Rationale**: Lightweight, flexible HTTP server for REST API
-- **Build Tool**: esbuild for production bundling
-- **Development**: tsx for hot-reloading during development
-
-**API Structure**:
-- Routes registered in `server/routes.ts`
-- All API endpoints prefixed with `/api`
-- Storage interface abstraction in `server/storage.ts`
-- Currently implements in-memory storage (MemStorage class)
-- Interface designed for easy migration to database implementation
-
-**Development Setup**:
-- Vite dev server for frontend with HMR
-- Express middleware for API routes
-- Custom logging for API requests with response capture
-- Error handling middleware with status code mapping
+### Backend
+- **Framework**: Express.js with TypeScript for a flexible REST API.
+- **API Structure**: Endpoints prefixed with `/api`, using an abstract storage interface (currently in-memory, designed for database migration).
+- **Build**: esbuild for production bundling, tsx for development hot-reloading.
 
 ### Data Layer
-
-**ORM**: Drizzle ORM
-- **Rationale**: Type-safe SQL query builder with excellent TypeScript integration
-- **Database**: PostgreSQL (via @neondatabase/serverless)
-- **Schema Location**: `shared/schema.ts`
-- **Migrations**: Generated in `/migrations` directory
-
-**Current Schema**:
-- `users` table: id (UUID), username (unique), password
-- Zod validation schemas for type-safe inserts
-- Schema designed for extension with products, orders, cart tables
-
-**Storage Abstraction**:
-- `IStorage` interface defines CRUD operations
-- `MemStorage` provides in-memory implementation
-- Ready for database storage implementation
-- User management (getUser, getUserByUsername, createUser)
+- **ORM**: Drizzle ORM for type-safe SQL queries.
+- **Database**: PostgreSQL (Neon Database) for core data, with schema defined in `shared/schema.ts`.
+- **Storage Abstraction**: `IStorage` interface for CRUD operations, allowing easy switching between in-memory and database implementations.
 
 ### Build and Deployment
+- **Build Process**: Frontend built with Vite to `dist/public`, backend with esbuild to `dist/index.js`.
+- **Deployment**: Static frontend hosted on GitHub Pages via GitHub Actions. Backend services utilize Yandex Cloud.
 
-**Build Process**:
-- Frontend: Vite builds React app to `dist/public`
-- Backend: esbuild bundles server to `dist/index.js`
-- TypeScript compilation check via `tsc --noEmit`
+### SEO and Performance
+- **SEO Component**: Universal `SEO.tsx` component supporting dynamic meta tags, Open Graph, Twitter Cards, and Schema.org structured data.
+- **Analytics**: Integrated Yandex.Metrika and Google Analytics 4 with ecommerce tracking.
+- **Performance**: Lazy loading, image optimization (WebP), memoization, and code splitting.
+- **Compliance**: `robots.txt` and `sitemap.xml` configured for search engines.
 
-**Scripts**:
-- `dev`: Development mode with tsx hot-reloading
-- `build`: Production build (Vite + esbuild)
-- `start`: Production server
-- `db:push`: Push schema changes to database
+### Email Notification System
+- **Primary Method**: All user notifications via Yandex Cloud Postbox (AWS SES-compatible).
+- **Notifications**: Order confirmations, stock availability, newsletter subscriptions, welcome emails.
+- **Architecture**: Browser → API Gateway → Yandex Cloud Function → YDB + Postbox.
 
-**Module System**: ES Modules (type: "module" in package.json)
-
-### Path Aliases
-
-Configured in both TypeScript and Vite:
-- `@/`: Maps to `client/src/`
-- `@shared/`: Maps to `shared/`
-- `@assets/`: Maps to `attached_assets/`
+### Legal Compliance
+- Dedicated Privacy Policy and Terms of Service pages (in Russian, compliant with Russian consumer laws).
+- Modal component (`LegalDialog.tsx`) for quick previews of legal documents.
 
 ## External Dependencies
 
 ### UI and Styling
-- **Radix UI**: Unstyled, accessible component primitives (dialogs, dropdowns, tooltips, etc.)
-- **Tailwind CSS**: Utility-first CSS framework with PostCSS
-- **shadcn/ui**: Pre-built component library built on Radix + Tailwind
-- **Google Fonts**: Playfair Display and Inter typefaces
-- **Lucide React**: Icon library
-- **React Icons**: Additional icons (social media)
+- Radix UI, Tailwind CSS, shadcn/ui
+- Google Fonts (Playfair Display, Inter)
+- Lucide React, React Icons
 
 ### State Management and Data Fetching
-- **TanStack React Query**: Server state management and caching
-- **React Hook Form**: Form state management
-- **Zod**: Runtime type validation and schema definition
+- TanStack React Query
+- React Hook Form
+- Zod (validation)
 
 ### Database and ORM
-- **Drizzle ORM**: Type-safe SQL queries and migrations
-- **Neon Database**: Serverless PostgreSQL (@neondatabase/serverless)
-- **drizzle-kit**: Migration generation and schema management
-- **drizzle-zod**: Zod schema generation from Drizzle schemas
+- Drizzle ORM, Neon Database (@neondatabase/serverless)
+- drizzle-kit, drizzle-zod
 
 ### Frontend Libraries
-- **wouter**: Lightweight routing (alternative to React Router)
-- **embla-carousel-react**: Carousel/slider component
-- **date-fns**: Date manipulation and formatting
-- **class-variance-authority**: Variant-based component styling
-- **clsx + tailwind-merge**: Conditional CSS class merging
+- wouter (routing)
+- embla-carousel-react
+- date-fns
+- class-variance-authority, clsx, tailwind-merge
 
 ### Development Tools
-- **Vite**: Frontend build tool and dev server
-- **tsx**: TypeScript execution for development
-- **esbuild**: Fast JavaScript bundler for production
-- **TypeScript**: Type checking and compilation
-- **Replit Plugins**: Dev tooling for Replit environment
+- Vite, tsx, esbuild, TypeScript
+- Replit Plugins
 
-### Session Management
-- **express-session**: Session middleware (ready for implementation)
-- **connect-pg-simple**: PostgreSQL session store (ready for implementation)
+### Session Management (Planned)
+- express-session, connect-pg-simple
 
-### Database Migration Status (November 2025)
-
-**✅ Migrated to Yandex Cloud YDB:**
-- Products and categories (yandex-products.ts)
-- Shopping cart (yandex-cart.ts)
-- Wishlist/favorites (yandex-wishlist.ts)
-- Orders (yandex-orders.ts)
-- Reviews (yandex-reviews.ts)
-- Promo codes (yandex-promocodes.ts)
-- Stock notifications (yandex-stock-notifications.ts)
-- Newsletter subscriptions (yandex-newsletter.ts)
-
-**⚠️ Still using Firebase:**
-- Authentication (Firebase Auth with email/password)
-- Admin email: pimashin2015@gmail.com (lowercase enforced by AuthContext)
-- Email normalization: All emails converted to lowercase on sign-in/sign-up
-
-**Legacy Firebase Services:**
-- Old service files (firebase-*.ts) kept for reference but no longer used
-- Types still in firebase-types.ts for compatibility
-
-**Promo Code System**:
-- Full CRUD interface in admin panel
-- Support for percentage and fixed amount discounts
-- Optional features: min order amount, usage limits, start/end dates, active/inactive toggle
-- Real-time validation during checkout with discount calculation
-- Automatic usage tracking (currentUses incremented on order creation)
-- Orders store promo code info: code, discount amount, original subtotal
-- Service layer: `client/src/services/yandex-promocodes.ts`
-- Types: `client/src/types/firebase-types.ts` (PromoCode interface)
-
-**Common Issues**:
-- "Missing or insufficient permissions" error: Verify admin email case matches exactly (lowercase)
-- Firebase Auth always lowercases emails in tokens, ensure rules match
-- Promo code rules update needed: See FIREBASE_RULES_UPDATE.md for instructions
-
-**Email Notification System** (November 2025):
-- **PRIMARY NOTIFICATION METHOD**: All user notifications via Yandex Cloud Postbox (AWS SES-compatible email service)
-- Order confirmations sent to customers after checkout
-- Stock availability notifications when out-of-stock items return
-- Newsletter subscriptions for updates and promotions
-- Welcome emails sent automatically upon newsletter subscription
-- Admin panel includes bulk email functionality for newsletter campaigns
-- Service layer: `client/src/services/postbox-client.ts`, `client/src/services/yandex-newsletter.ts`
-- Cloud Functions: 
-  - `send-email` (index.js) - serves as proxy to Postbox API
-  - `subscribe-newsletter` (d4eib9soupsav59r8ctj) - handles newsletter subscriptions with YDB integration
-- Architecture: Browser → API Gateway → Cloud Function → YDB + Postbox
-- Newsletter subscription flow: Users subscribe via Footer/HeroSlider → API Gateway `/subscribe-newsletter` → Cloud Function saves to YDB + sends welcome email
-- Templates: Order confirmation, stock notification, newsletter, and welcome email (all HTML-based)
-- Environment variable needed: VITE_API_GATEWAY_URL (points to API Gateway base URL)
-- Types: `client/src/types/firebase-types.ts` (StockNotification, NewsletterSubscription interfaces)
-- Security: Database credentials NOT exposed to browser - all DB operations via Cloud Functions
-- **Note**: OneSignal push notifications have been completely removed - all notifications now use email-based system
-
-**Legal Compliance**:
-- Privacy Policy page (`/privacy`) - Политика конфиденциальности (152-ФЗ compliance)
-- Terms of Service page (`/terms`) - Договор публичной оферты
-- Compromise UX: Full pages accessible via direct links + modal dialogs from footer
-- Modal component: `LegalDialog.tsx` for quick preview with "Open full version" button
-- Footer updated with legal document links and business requisites placeholder
-- Content in Russian, compliant with Russian consumer protection laws
-- Business requisites section (placeholder for ИП/ООО details after registration)
-
-### Deployment Architecture
-
-**Static Hosting**: GitHub Pages (https://misha4323223.github.io/ProductShowcase)
-- Automatic deployment via GitHub Actions on push to main branch
-- Build process: `npm run build` → deploys to `dist/` directory
-- Environment variables configured as GitHub Secrets
-
-**Backend Services**: 
-- **Yandex Cloud YDB**: Main database for products, orders, reviews, promo codes, stock notifications, wishlists, carts, newsletter subscriptions
-  - Document API mode (DynamoDB-compatible)
-  - Serverless deployment in ru-central1 region
-  - Service files: `client/src/services/yandex-*.ts`
-- **Yandex Object Storage**: Image storage for product photos
-  - S3-compatible API
-  - Public read access for product images
-- **Firebase Authentication**: Email/password auth with admin controls
-  - Admin email: pimashin2015@gmail.com
-  - Authentication state management via Firebase Auth SDK
-
-**Email Service**: Yandex Cloud Postbox
-- AWS SES-compatible email service via Yandex Cloud
-- Sends order confirmations, stock notifications, and newsletters
-- Architecture: Static site → API Gateway → Cloud Function → Postbox API
-- Cloud Function serves as secure proxy (credentials not exposed to client)
-- Newsletter system with YDB storage for subscriber management
-- Admin panel integration for bulk email sending and subscriber management
-- Configuration: See YANDEX_POSTBOX_SETUP.md for setup instructions
-
-### SEO Optimization (November 2025)
-
-**Technical SEO Foundation**:
-- **SEO Component**: Universal SEO component (`client/src/components/SEO.tsx`) with support for:
-  - Dynamic meta tags (title, description, keywords)
-  - Open Graph tags for social media sharing
-  - Twitter Card tags
-  - Schema.org structured data (JSON-LD)
-  - Canonical URLs
-  - Product-specific meta tags (price, availability)
-- **Schema.org Helpers**: Separated helper functions (`client/src/lib/seo-helpers.ts`) for:
-  - Product schema with reviews and ratings
-  - Website schema with search action
-  - Organization schema with contact info
-  - Breadcrumb navigation schema
-- **Analytics Integration**:
-  - Yandex.Metrika with ecommerce tracking
-  - Google Analytics 4 integration
-  - Single pageview tracking per navigation (duplicate prevention via refs)
-  - Analytics initialized in App.tsx on mount
-- **Breadcrumbs Navigation**: Component with Schema.org markup on Product and Category pages
-- **robots.txt**: Configured for Yandex and Googlebot with sitemap reference
-- **sitemap.xml**: Automated generator script (`scripts/generate-sitemap.js`) with:
-  - Static pages (Home, FAQ, Privacy, Terms)
-  - Dynamic category pages
-  - Priority and frequency settings
-  - Note: Needs API connection for live product URLs
-
-**Performance Optimizations**:
-- Lazy loading of route components (React.lazy)
-- Image optimization with WebP format and fallbacks
-- Memoization of structured data to prevent unnecessary re-renders
-- Separation of analytics and meta-tag effects for optimal timing
-
-**SEO Best Practices**:
-- Unique title and description for each page
-- Keyword optimization for Russian market
-- Product pages include price, availability, and ratings in structured data
-- Breadcrumb navigation for improved UX and SEO
-- Mobile-friendly responsive design
-- Fast load times with code splitting
-
-**Environment Variables Needed**:
-- `VITE_YANDEX_METRIKA_ID`: Yandex.Metrika counter ID
-- `VITE_GOOGLE_ANALYTICS_ID`: Google Analytics measurement ID
-
-### Notes
-- Image assets stored in `attached_assets/generated_images/`
-- Application designed for Russian language market (content in Russian)
-- Firebase project ID: sweetweb-3543f
-- GitHub repository: misha4323223/ProductShowcase
-- **Deployment**: Automated deployment via GitHub Actions on push to main branch
-  - Static site builds to `dist/public` directory
-  - Deployed to GitHub Pages at https://misha4323223.github.io/ProductShowcase
-  - Sitemap should be regenerated after deployment with live data
-- Deployment instructions: See `DEPLOY_INSTRUCTIONS.md`
+### Backend Services
+- **Yandex Cloud YDB**: Products, categories, shopping cart, wishlist, orders, reviews, promo codes, stock notifications, newsletter subscriptions.
+- **Yandex Object Storage**: Product images.
+- **Firebase Authentication**: User authentication (email/password).
+- **Yandex Cloud Postbox**: Email notifications.
