@@ -1,0 +1,75 @@
+# ========== NEWSLETTER SUBSCRIPTIONS ==========
+  /subscribe-newsletter:
+    post:
+      summary: Подписаться на рассылку новостей
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eib9soupsav59r8ctj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Подписка успешно оформлена
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /newsletter-subscriptions:
+    get:
+      summary: Получить все подписки на рассылку
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e4ne7d0i4o37m1non7
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список всех email-подписчиков
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
+  /newsletter-subscriptions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: Отписаться от рассылки
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4evtc291foo3u13i78q
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Подписка удалена
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
