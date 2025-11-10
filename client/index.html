@@ -33,8 +33,20 @@
     <meta name="twitter:description" content="Мармелад, маршмелоу, моти, шоколад и другие необычные сладости с доставкой по России" />
     <meta name="twitter:image" content="https://sweetdelights.github.io/og-image.png" />
     
+    <!-- DNS Prefetch & Preconnect для быстрой загрузки -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload критических ресурсов для первой отрисовки страницы -->
+    <!-- Preload Google Fonts CSS для быстрой загрузки шрифтов -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Pacifico&family=Luckiest+Guy&family=Bangers&family=Permanent+Marker&family=Comic+Neue:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&family=Luckiest+Guy&family=Bangers&family=Permanent+Marker&family=Comic+Neue:wght@400;700&display=swap"></noscript>
+    
+    <!-- Hero-изображение preload-ится динамически через JavaScript на главной странице (Home.tsx) -->
+    
+    <!-- Fallback для браузеров без JS -->
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Luckiest+Guy&family=Bangers&family=Permanent+Marker&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Schema.org разметка для Google и Яндекс -->
