@@ -18,6 +18,9 @@ export function createProductSchema(product: {
     preorder: 'https://schema.org/PreOrder',
   };
 
+  const priceValidUntil = new Date();
+  priceValidUntil.setFullYear(priceValidUntil.getFullYear() + 1);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -31,15 +34,22 @@ export function createProductSchema(product: {
     sku: product.sku,
     offers: {
       '@type': 'Offer',
-      price: product.price,
+      price: product.price.toFixed(2),
       priceCurrency: product.currency || 'RUB',
       availability: product.availability ? availabilityMap[product.availability] : availabilityMap.instock,
+      priceValidUntil: priceValidUntil.toISOString().split('T')[0],
       url: typeof window !== 'undefined' ? window.location.href : 'https://sweetdelights.store',
+      seller: {
+        '@type': 'Organization',
+        name: 'Sweet Delights',
+      },
     },
     aggregateRating: product.rating && product.reviewCount ? {
       '@type': 'AggregateRating',
-      ratingValue: product.rating,
+      ratingValue: product.rating.toFixed(1),
       reviewCount: product.reviewCount,
+      bestRating: 5,
+      worstRating: 1,
     } : undefined,
   };
 }
