@@ -79,7 +79,7 @@ export default function TermsPage() {
               <p className="text-muted-foreground leading-relaxed">
                 Настоящий документ является публичной офертой в соответствии со статьей 437 Гражданского кодекса Российской Федерации. 
                 Интернет-магазин <strong>Sweet Delights</strong> (далее — Продавец) предлагает физическим и юридическим лицам 
-                (далее — Покупатель) приобрести товары, представленные на сайте.
+                (далее — Покупатель) приобрести только товары, представленные на сайте, включая сладости.
               </p>
               <p className="text-muted-foreground leading-relaxed mt-2">
                 Оформление заказа означает полное и безоговорочное принятие Покупателем условий настоящего Договора.
@@ -253,9 +253,9 @@ export default function TermsPage() {
               <div className="mt-3 p-4 bg-pink-50/50 rounded-lg border border-pink-200/30">
                 <p className="text-muted-foreground">
                   <strong>Интернет-магазин:</strong> Sweet Delights<br />
-                  <strong>Email:</strong> support@sweetdelights.ru<br />
-                  <strong>Телефон:</strong> +7 (999) 123-45-67<br />
-                  <strong>Время работы:</strong> Пн-Пт 9:00-18:00 (МСК)
+                  <strong>Email:</strong> Storesweeet@gmail.com<br />
+                  <strong>Телефон:</strong> +7 953 181 41 36<br />
+                  <strong>Время работы:</strong> Пн-Пт 11:00-18:00 (МСК)
                 </p>
               </div>
             </section>
