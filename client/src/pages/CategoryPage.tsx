@@ -171,12 +171,21 @@ export default function CategoryPage() {
     );
   }
 
+  const inStockCount = categoryProducts.filter(p => p.stock && p.stock > 0).length;
+  const saleCount = categoryProducts.filter(p => p.salePrice && p.salePrice < p.price).length;
+  
+  const availabilityText = inStockCount > 0 
+    ? `${inStockCount} товаров в наличии` 
+    : `${categoryProducts.length} товаров под заказ`;
+  
+  const categoryDescription = `${category.name} купить в Sweet Delights - ${availabilityText}. ${saleCount > 0 ? `${saleCount} товаров со скидкой! ` : ''}Широкий выбор, лучшие цены, быстрая доставка по России. Заказать ${category.name.toLowerCase()} онлайн с гарантией качества.`;
+
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
       <SEO
-        title={`${category.name} - купить в интернет-магазине Sweet Delights`}
-        description={`Широкий выбор ${category.name.toLowerCase()} в интернет-магазине Sweet Delights. ${categoryProducts.length} товаров с быстрой доставкой по России. Скидки и акции!`}
-        keywords={`${category.name}, купить ${category.name.toLowerCase()}, интернет-магазин сладостей, Sweet Delights`}
+        title={`${category.name} - купить в Sweet Delights | ${availabilityText}`}
+        description={categoryDescription}
+        keywords={`${category.name}, купить ${category.name.toLowerCase()}, ${category.name.toLowerCase()} интернет-магазин, Sweet Delights, сладости доставка`}
         image={category.image || '/default-category.jpg'}
         type="website"
         structuredData={breadcrumbSchema || undefined}
