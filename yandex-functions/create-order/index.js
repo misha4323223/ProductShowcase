@@ -45,6 +45,34 @@ exports.handler = async (event) => {
       id,
       createdAt: new Date().toISOString(),
       status: 'pending',
+      
+      // Данные доставки (поддержка СДЭК и других служб)
+      deliveryService: orderData.deliveryService || null,
+      deliveryType: orderData.deliveryType || null,
+      deliveryStatus: orderData.deliveryStatus || (orderData.deliveryService ? 'PENDING' : null),
+      
+      // Адрес доставки (для курьерской доставки)
+      deliveryAddress: orderData.deliveryAddress || null,
+      deliveryCity: orderData.deliveryCity || null,
+      deliveryPostalCode: orderData.deliveryPostalCode || null,
+      deliveryRecipientName: orderData.deliveryRecipientName || null,
+      deliveryRecipientPhone: orderData.deliveryRecipientPhone || null,
+      
+      // Данные пункта выдачи (для доставки в ПВЗ)
+      deliveryPointCode: orderData.deliveryPointCode || null,
+      deliveryPointName: orderData.deliveryPointName || null,
+      deliveryPointAddress: orderData.deliveryPointAddress || null,
+      
+      // Данные СДЭК
+      cdekOrderUuid: orderData.cdekOrderUuid || null,
+      cdekOrderNumber: orderData.cdekOrderNumber || null,
+      cdekTrackNumber: orderData.cdekTrackNumber || null,
+      cdekTariffCode: orderData.cdekTariffCode || null,
+      cdekDeliveryCost: orderData.cdekDeliveryCost || null,
+      
+      // Расчетная информация
+      estimatedDeliveryDays: orderData.estimatedDeliveryDays || null,
+      deliveryCalculatedAt: orderData.deliveryCalculatedAt || null,
     };
 
     // Сохранить заказ
