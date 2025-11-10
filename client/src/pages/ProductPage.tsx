@@ -217,12 +217,20 @@ export default function ProductPage() {
 
   const hasDiscount = product.salePrice && product.salePrice < product.price;
   const discount = hasDiscount && product.salePrice ? Math.round(((product.price - product.salePrice) / product.price) * 100) : 0;
+  
+  const stockStatus = product.stock && product.stock > 0 
+    ? `В наличии ${product.stock} шт.` 
+    : 'Под заказ';
+  
+  const enhancedDescription = product.description 
+    ? `${product.description} ${hasDiscount ? `Скидка ${discount}%! ` : ''}${stockStatus} Цена ${product.salePrice || product.price}₽. Быстрая доставка по России.`
+    : `Купить ${product.name} в интернет-магазине Sweet Delights. ${hasDiscount ? `Скидка ${discount}%! ` : ''}${stockStatus} Цена ${product.salePrice || product.price}₽. Быстрая доставка по России.`;
 
   return (
     <div className="min-h-screen flex flex-col candy-pattern">
       <SEO
         title={`${product.name} - купить в Sweet Delights | Цена ${product.salePrice || product.price}₽`}
-        description={product.description || `Купить ${product.name} в интернет-магазине Sweet Delights. ${hasDiscount ? `Скидка ${discount}%! ` : ''}Цена ${product.salePrice || product.price}₽. Быстрая доставка по России.`}
+        description={enhancedDescription}
         keywords={`${product.name}, купить ${product.name}, ${category?.name || 'сладости'}, Sweet Delights`}
         image={product.image}
         type="product"
