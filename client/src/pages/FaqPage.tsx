@@ -238,44 +238,7 @@ export default function FaqPage() {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="item-9" className="border rounded-lg px-4" data-testid="faq-gift">
-                <AccordionTrigger className="text-left font-semibold hover:text-primary">
-                  Можно ли оформить подарочную упаковку?
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed pt-2">
-                  <p className="mb-2">
-                    Конечно! Мы предлагаем красивую подарочную упаковку для ваших заказов.
-                  </p>
-                  <ul className="list-disc list-inside space-y-1 ml-2">
-                    <li>Подарочная коробка с лентой - 150₽</li>
-                    <li>Праздничная упаковка с открыткой - 250₽</li>
-                    <li>Премиум-упаковка с персонализацией - 400₽</li>
-                  </ul>
-                  <p className="mt-3 text-sm">
-                    💝 Укажите пожелание по упаковке в комментарии к заказу, и мы всё красиво оформим!
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-10" className="border rounded-lg px-4" data-testid="faq-wholesale">
-                <AccordionTrigger className="text-left font-semibold hover:text-primary">
-                  Есть ли оптовые цены?
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed pt-2">
-                  <p className="mb-2">
-                    Да, мы работаем с оптовыми покупателями! Специальные условия при заказе:
-                  </p>
-                  <ul className="list-disc list-inside space-y-1 ml-2">
-                    <li>От 10 000₽ - скидка 5%</li>
-                    <li>От 30 000₽ - скидка 10%</li>
-                    <li>От 50 000₽ - скидка 15% + индивидуальные условия</li>
-                  </ul>
-                  <p className="mt-3">
-                    Для обсуждения оптовых закупок свяжитесь с нами по email: <strong>opt@sweetdelights.ru</strong>
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+              </Accordion>
 
             <div className="mt-8 p-6 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200/50">
               <p className="text-center text-sm text-muted-foreground">
