@@ -30,6 +30,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { sendOrderConfirmation } from "@/services/postbox-client";
 import { getAllProducts } from "@/services/api-client";
+import { DeliverySelector } from "@/components/DeliverySelector";
+import { CdekPointSelector } from "@/components/CdekPointSelector";
+import { DeliveryCalculator } from "@/components/DeliveryCalculator";
 
 interface CartItem {
   id: string;
@@ -65,6 +68,14 @@ export default function CheckoutPage() {
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [validPromoCodeId, setValidPromoCodeId] = useState<string | null>(null);
   const [validatedPromoCode, setValidatedPromoCode] = useState<{ code: string; discountAmount: number; discountType: 'percentage' | 'fixed' } | null>(null);
+  
+  const [deliveryService, setDeliveryService] = useState<string | null>(null);
+  const [deliveryType, setDeliveryType] = useState<string | null>(null);
+  const [selectedCdekPoint, setSelectedCdekPoint] = useState<any>(null);
+  const [cdekDeliveryCost, setCdekDeliveryCost] = useState<number>(0);
+  const [cdekTariffCode, setCdekTariffCode] = useState<number | null>(null);
+  const [cdekEstimatedDays, setCdekEstimatedDays] = useState<number | null>(null);
+  
   const { toast } = useToast();
   const { user } = useAuth();
   const { cartItems, clearCart } = useCart();
@@ -104,9 +115,17 @@ export default function CheckoutPage() {
   ];
 
   const selectedDelivery = deliveryOptions.find(opt => opt.id === form.watch("delivery"));
-  const deliveryPrice = selectedDelivery?.price || 0;
+  const deliveryPrice = deliveryService === 'CDEK' ? cdekDeliveryCost : (selectedDelivery?.price || 0);
   const subtotal = total + deliveryPrice;
   const finalTotal = Math.max(0, subtotal - promoDiscount);
+  
+  const totalWeight = cartItems.reduce((sum, item) => sum + (item.quantity * 500), 0);
+  const deliveryPackages = [{
+    weight: totalWeight,
+    height: 10,
+    width: 10,
+    length: 10
+  }];
 
   const handleApplyPromoCode = async () => {
     if (!promoCodeInput.trim()) {
@@ -224,6 +243,33 @@ export default function CheckoutPage() {
         orderData.subtotal = subtotal;
         orderData.discount = promoDiscount;
         orderData.promoCode = validatedPromoCode;
+      }
+
+      if (deliveryService === 'CDEK') {
+        orderData.deliveryService = 'CDEK';
+        orderData.deliveryType = deliveryType;
+        orderData.deliveryCalculatedAt = new Date().toISOString();
+        
+        if (selectedCdekPoint) {
+          orderData.deliveryPointCode = selectedCdekPoint.code;
+          orderData.deliveryPointName = selectedCdekPoint.name;
+          orderData.deliveryPointAddress = selectedCdekPoint.location.address_full;
+        }
+        
+        if (cdekTariffCode) {
+          orderData.cdekTariffCode = cdekTariffCode;
+        }
+        
+        if (cdekDeliveryCost) {
+          orderData.cdekDeliveryCost = cdekDeliveryCost;
+        }
+        
+        if (cdekEstimatedDays) {
+          orderData.estimatedDeliveryDays = cdekEstimatedDays;
+        }
+        
+        orderData.deliveryRecipientName = `${data.firstName} ${data.lastName}`;
+        orderData.deliveryRecipientPhone = data.phone;
       }
 
       console.log('🔍 CheckoutPage - Creating order with data:', {
@@ -419,38 +465,70 @@ export default function CheckoutPage() {
                     <CardHeader>
                       <CardTitle>Способ доставки</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <FormField
-                        control={form.control}
-                        name="delivery"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <RadioGroup
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                                className="space-y-3"
-                              >
-                                {deliveryOptions.map((option) => (
-                                  <div key={option.id} className="flex items-center space-x-3 border rounded-lg p-4 hover-elevate">
-                                    <RadioGroupItem value={option.id} id={option.id} data-testid={`radio-delivery-${option.id}`} />
-                                    <Label htmlFor={option.id} className="flex-1 cursor-pointer">
-                                      <div className="flex justify-between items-start">
-                                        <div>
-                                          <div className="font-medium">{option.name}</div>
-                                          <div className="text-sm text-muted-foreground">{option.description}</div>
-                                        </div>
-                                        <div className="font-semibold">{option.price === 0 ? 'Бесплатно' : `${option.price}₽`}</div>
-                                      </div>
-                                    </Label>
-                                  </div>
-                                ))}
-                              </RadioGroup>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                    <CardContent className="space-y-6">
+                      <DeliverySelector
+                        onSelect={(service, type) => {
+                          setDeliveryService(service);
+                          setDeliveryType(type);
+                          setSelectedCdekPoint(null);
+                          setCdekDeliveryCost(0);
+                        }}
                       />
+
+                      {deliveryService === 'CDEK' && deliveryType === 'PICKUP' && (
+                        <>
+                          <CdekPointSelector
+                            cityCode={270}
+                            onSelect={(point) => setSelectedCdekPoint(point)}
+                          />
+
+                          {selectedCdekPoint && (
+                            <DeliveryCalculator
+                              cityCode={selectedCdekPoint.location.city_code}
+                              packages={deliveryPackages}
+                              onCalculated={(cost, days, tariffCode) => {
+                                setCdekDeliveryCost(cost);
+                                setCdekEstimatedDays(days);
+                                setCdekTariffCode(tariffCode);
+                              }}
+                            />
+                          )}
+                        </>
+                      )}
+
+                      {!deliveryService && (
+                        <FormField
+                          control={form.control}
+                          name="delivery"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="space-y-3"
+                                >
+                                  {deliveryOptions.map((option) => (
+                                    <div key={option.id} className="flex items-center space-x-3 border rounded-lg p-4 hover-elevate">
+                                      <RadioGroupItem value={option.id} id={option.id} data-testid={`radio-delivery-${option.id}`} />
+                                      <Label htmlFor={option.id} className="flex-1 cursor-pointer">
+                                        <div className="flex justify-between items-start">
+                                          <div>
+                                            <div className="font-medium">{option.name}</div>
+                                            <div className="text-sm text-muted-foreground">{option.description}</div>
+                                          </div>
+                                          <div className="font-semibold">{option.price === 0 ? 'Бесплатно' : `${option.price}₽`}</div>
+                                        </div>
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
                     </CardContent>
                   </Card>
 
