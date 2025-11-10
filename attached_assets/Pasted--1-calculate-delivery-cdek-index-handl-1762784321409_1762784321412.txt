@@ -1,0 +1,353 @@
+🔧 ФУНКЦИЯ 1: Расчет стоимости доставки
+Название: calculate-delivery-cdek
+Точка входа: index.handler
+Runtime: Node.js 18
+Файл: index.js
+
+const { CdekClient } = require('./lib/cdek-client');
+exports.handler = async (event) => {
+  try {
+    const clientId = process.env.CDEK_CLIENT_ID;
+    const clientSecret = process.env.CDEK_CLIENT_SECRET;
+    const isTest = process.env.CDEK_TEST_MODE === 'true';
+    if (!clientId || !clientSecret) {
+      return {
+        statusCode: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'CDEK API credentials not configured' 
+        }),
+      };
+    }
+    const requestData = JSON.parse(event.body || '{}');
+    const { from_location, to_location, packages, tariff_code } = requestData;
+    if (!to_location || !packages || packages.length === 0) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'Missing required fields: to_location, packages' 
+        }),
+      };
+    }
+    const cdek = new CdekClient(clientId, clientSecret, isTest);
+    const calculationParams = {
+      currency: 1,
+      from_location: from_location || { code: 44 },
+      to_location,
+      packages
+    };
+    let result;
+    if (tariff_code) {
+      calculationParams.tariff_code = tariff_code;
+      result = await cdek.calculateDelivery(calculationParams);
+    } else {
+      calculationParams.type = 1;
+      result = await cdek.calculateDeliveryList(calculationParams);
+    }
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        success: true,
+        data: result
+      }),
+    };
+  } catch (error) {
+    console.error('Error calculating CDEK delivery:', error);
+    
+    const errorResponse = {
+      error: error.message || 'Failed to calculate delivery cost',
+      statusCode: error.statusCode,
+      code: error.code
+    };
+    
+    if (error.errors) {
+      errorResponse.errors = error.errors;
+    }
+    
+    return {
+      statusCode: error.statusCode || 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(errorResponse),
+    };
+  }
+};
+
+Переменные окружения:
+
+CDEK_CLIENT_ID = ваш client_id
+CDEK_CLIENT_SECRET = ваш client_secret
+CDEK_TEST_MODE = true (для тестов) или false (боевой режим)
+🔧 ФУНКЦИЯ 2: Получение пунктов выдачи
+Название: get-pvz-cdek
+Точка входа: index.handler
+Runtime: Node.js 18
+Файл: index.js
+
+const { CdekClient } = require('./lib/cdek-client');
+exports.handler = async (event) => {
+  try {
+    const clientId = process.env.CDEK_CLIENT_ID;
+    const clientSecret = process.env.CDEK_CLIENT_SECRET;
+    const isTest = process.env.CDEK_TEST_MODE === 'true';
+    if (!clientId || !clientSecret) {
+      return {
+        statusCode: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'CDEK API credentials not configured' 
+        }),
+      };
+    }
+    const queryParams = event.queryStringParameters || {};
+    const cdek = new CdekClient(clientId, clientSecret, isTest);
+    const deliveryPoints = await cdek.getDeliveryPoints(queryParams);
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        success: true,
+        data: deliveryPoints
+      }),
+    };
+  } catch (error) {
+    console.error('Error getting CDEK delivery points:', error);
+    
+    const errorResponse = {
+      error: error.message || 'Failed to get delivery points',
+      statusCode: error.statusCode,
+      code: error.code
+    };
+    
+    if (error.errors) {
+      errorResponse.errors = error.errors;
+    }
+    
+    return {
+      statusCode: error.statusCode || 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(errorResponse),
+    };
+  }
+};
+
+Переменные окружения: те же самые 3 переменные
+
+🔧 ФУНКЦИЯ 3: Создание заказа
+Название: create-cdek-order
+Точка входа: index.handler
+Runtime: Node.js 18
+Файл: index.js
+
+const { CdekClient } = require('./lib/cdek-client');
+exports.handler = async (event) => {
+  try {
+    const clientId = process.env.CDEK_CLIENT_ID;
+    const clientSecret = process.env.CDEK_CLIENT_SECRET;
+    const isTest = process.env.CDEK_TEST_MODE === 'true';
+    if (!clientId || !clientSecret) {
+      return {
+        statusCode: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'CDEK API credentials not configured' 
+        }),
+      };
+    }
+    const orderData = JSON.parse(event.body || '{}');
+    const { type, number, tariff_code, recipient, from_location, to_location, packages } = orderData;
+    if (!type || !number || !tariff_code || !recipient || !packages) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'Missing required fields: type, number, tariff_code, recipient, packages' 
+        }),
+      };
+    }
+    if (!Array.isArray(packages) || packages.length === 0) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'packages must be a non-empty array' 
+        }),
+      };
+    }
+    for (const pkg of packages) {
+      if (!pkg.number || !pkg.weight) {
+        return {
+          statusCode: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            error: 'Each package must have number and weight' 
+          }),
+        };
+      }
+    }
+    if (!from_location && !to_location) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'At least one of from_location or to_location is required' 
+        }),
+      };
+    }
+    const cdek = new CdekClient(clientId, clientSecret, isTest);
+    const result = await cdek.createOrder(orderData);
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        success: true,
+        data: result
+      }),
+    };
+  } catch (error) {
+    console.error('Error creating CDEK order:', error);
+    
+    const errorResponse = {
+      error: error.message || 'Failed to create CDEK order',
+      statusCode: error.statusCode,
+      code: error.code
+    };
+    
+    if (error.errors) {
+      errorResponse.errors = error.errors;
+    }
+    
+    return {
+      statusCode: error.statusCode || 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(errorResponse),
+    };
+  }
+};
+
+Переменные окружения: те же самые 3 переменные
+
+🔧 ФУНКЦИЯ 4: Отслеживание заказа
+Название: track-cdek-order
+Точка входа: index.handler
+Runtime: Node.js 18
+Файл: index.js
+
+const { CdekClient } = require('./lib/cdek-client');
+exports.handler = async (event) => {
+  try {
+    const clientId = process.env.CDEK_CLIENT_ID;
+    const clientSecret = process.env.CDEK_CLIENT_SECRET;
+    const isTest = process.env.CDEK_TEST_MODE === 'true';
+    if (!clientId || !clientSecret) {
+      return {
+        statusCode: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'CDEK API credentials not configured' 
+        }),
+      };
+    }
+    const uuid = event.queryStringParameters?.uuid;
+    if (!uuid) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: 'Missing required parameter: uuid' 
+        }),
+      };
+    }
+    const cdek = new CdekClient(clientId, clientSecret, isTest);
+    const result = await cdek.getOrder(uuid);
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        success: true,
+        data: result
+      }),
+    };
+  } catch (error) {
+    console.error('Error tracking CDEK order:', error);
+    
+    const errorResponse = {
+      error: error.message || 'Failed to track CDEK order',
+      statusCode: error.statusCode,
+      code: error.code
+    };
+    
+    if (error.errors) {
+      errorResponse.errors = error.errors;
+    }
+    
+    return {
+      statusCode: error.statusCode || 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(errorResponse),
+    };
+  }
+};
