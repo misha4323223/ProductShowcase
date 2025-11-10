@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Package, Truck } from 'lucide-react';
 
 type DeliveryService = 'CDEK' | 'BOXBERRY' | 'YANDEX' | null;
-type DeliveryType = 'COURIER' | 'PICKUP' | null;
+type DeliveryType = 'DOOR' | 'PICKUP' | null;
 
 interface DeliverySelectorProps {
   onSelect: (service: DeliveryService, type: DeliveryType) => void;
@@ -86,7 +86,7 @@ export function DeliverySelector({ onSelect }: DeliverySelectorProps) {
 
             <Card className="p-4 hover-elevate cursor-pointer" data-testid="card-type-courier">
               <Label className="flex items-center space-x-3 cursor-pointer">
-                <RadioGroupItem value="COURIER" data-testid="radio-courier" />
+                <RadioGroupItem value="DOOR" data-testid="radio-courier" />
                 <Truck className="w-5 h-5" />
                 <div className="flex-1">
                   <div className="font-semibold">Курьером</div>
