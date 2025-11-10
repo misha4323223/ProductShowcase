@@ -1,0 +1,20 @@
+
+/* TEAM */
+Developer: Sweet Delights Team
+Site: https://sweetdelights.store
+Location: Russia
+
+/* THANKS */
+Framework: React + TypeScript
+UI Library: shadcn/ui + Tailwind CSS
+Backend: Yandex Cloud Functions
+Database: Yandex Database (YDB)
+Storage: Yandex Object Storage
+Email: Yandex Postbox
+Analytics: Yandex Metrika, Google Analytics
+
+/* SITE */
+Last update: 2025/01/14
+Standards: HTML5, CSS3, ES2022
+Components: Vite, React Router, React Query
+IDE: Replit
