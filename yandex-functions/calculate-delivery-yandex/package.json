@@ -1,0 +1,7 @@
+{
+  "name": "calculate-delivery-yandex",
+  "version": "1.0.0",
+  "description": "Расчет стоимости доставки Яндекс.Доставка",
+  "main": "index.js",
+  "dependencies": {}
+}
