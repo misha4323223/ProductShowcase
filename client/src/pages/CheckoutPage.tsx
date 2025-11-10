@@ -183,6 +183,35 @@ export default function CheckoutPage() {
   };
 
   const onSubmit = async (data: CheckoutFormData) => {
+    if (deliveryService === 'CDEK') {
+      if (!deliveryType) {
+        toast({
+          title: "Выберите тип доставки",
+          description: "Пожалуйста, выберите способ доставки СДЭК",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (deliveryType === 'PICKUP' && !selectedCdekPoint) {
+        toast({
+          title: "Выберите пункт выдачи",
+          description: "Пожалуйста, выберите пункт выдачи СДЭК",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (!cdekTariffCode || cdekDeliveryCost === 0) {
+        toast({
+          title: "Рассчитайте стоимость доставки",
+          description: "Пожалуйста, нажмите кнопку 'Рассчитать доставку'",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -472,6 +501,8 @@ export default function CheckoutPage() {
                           setDeliveryType(type);
                           setSelectedCdekPoint(null);
                           setCdekDeliveryCost(0);
+                          setCdekTariffCode(null);
+                          setCdekEstimatedDays(null);
                         }}
                       />
 
@@ -479,7 +510,12 @@ export default function CheckoutPage() {
                         <>
                           <CdekPointSelector
                             cityCode={270}
-                            onSelect={(point) => setSelectedCdekPoint(point)}
+                            onSelect={(point) => {
+                              setSelectedCdekPoint(point);
+                              setCdekDeliveryCost(0);
+                              setCdekTariffCode(null);
+                              setCdekEstimatedDays(null);
+                            }}
                           />
 
                           {selectedCdekPoint && (
@@ -494,6 +530,18 @@ export default function CheckoutPage() {
                             />
                           )}
                         </>
+                      )}
+
+                      {deliveryService === 'CDEK' && deliveryType === 'DOOR' && (
+                        <DeliveryCalculator
+                          cityCode={270}
+                          packages={deliveryPackages}
+                          onCalculated={(cost, days, tariffCode) => {
+                            setCdekDeliveryCost(cost);
+                            setCdekEstimatedDays(days);
+                            setCdekTariffCode(tariffCode);
+                          }}
+                        />
                       )}
 
                       {!deliveryService && (
@@ -601,7 +649,22 @@ export default function CheckoutPage() {
                     </CardContent>
                   </Card>
 
-                  <Button type="submit" size="lg" className="w-full" disabled={isSubmitting} data-testid="button-place-order">
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="w-full" 
+                    disabled={
+                      isSubmitting || 
+                      cartItems.length === 0 ||
+                      (deliveryService === 'CDEK' && (
+                        !deliveryType || 
+                        (deliveryType === 'PICKUP' && !selectedCdekPoint) ||
+                        !cdekTariffCode ||
+                        cdekDeliveryCost === 0
+                      ))
+                    } 
+                    data-testid="button-place-order"
+                  >
                     {isSubmitting ? "Обработка..." : "Оформить заказ"}
                   </Button>
                 </form>
