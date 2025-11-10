@@ -223,7 +223,7 @@ export default function FaqPage() {
 
               <AccordionItem value="item-8" className="border rounded-lg px-4" data-testid="faq-contact">
                 <AccordionTrigger className="text-left font-semibold hover:text-primary">
-                  Как с вами связаться?
+                  Как с нами связаться?
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed pt-2">
                   <p className="mb-3">Мы всегда рады помочь! Выберите удобный способ связи:</p>
