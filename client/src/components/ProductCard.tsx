@@ -172,7 +172,7 @@ export default function ProductCard({
         {image ? (
           <img
             src={image}
-            alt={name}
+            alt={`Купить ${name} - цена ${salePrice || price}₽ | Sweet Delights магазин сладостей`}
             loading="lazy"
             decoding="async"
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 group-hover:rotate-1"

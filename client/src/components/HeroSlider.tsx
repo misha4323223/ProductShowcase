@@ -119,7 +119,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             <OptimizedImage
               src={slide.image}
               webpSrc={slide.webpImage}
-              alt={slide.title}
+              alt={`${slide.title} - Sweet Delights интернет-магазин сладостей и подарков с доставкой по России`}
               loading={index === 0 ? "eager" : "lazy"}
               decoding="async"
               fetchPriority={index === 0 ? "high" : "low"}

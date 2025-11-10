@@ -253,7 +253,7 @@ export default function ProductPage() {
               {product.image ? (
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={`Купить ${product.name} - цена ${product.salePrice || product.price}₽ в интернет-магазине Sweet Delights${hasDiscount ? ` со скидкой ${discount}%` : ''} | Доставка по России`}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -426,7 +426,7 @@ export default function ProductPage() {
                       {relatedProduct.image ? (
                         <img
                           src={relatedProduct.image}
-                          alt={relatedProduct.name}
+                          alt={`Купить ${relatedProduct.name} - цена ${relatedProduct.salePrice || relatedProduct.price}₽ | Похожие товары Sweet Delights`}
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                         />
                       ) : (

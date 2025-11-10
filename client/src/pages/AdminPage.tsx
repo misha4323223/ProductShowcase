@@ -1493,7 +1493,7 @@ export default function AdminPage() {
                             <div className="relative inline-block">
                               <img 
                                 src={categoryImagePreview} 
-                                alt="Preview" 
+                                alt="Предпросмотр изображения категории Sweet Delights" 
                                 className="max-w-xs max-h-48 rounded-lg border"
                                 data-testid="category-image-preview"
                               />
@@ -1579,7 +1579,7 @@ export default function AdminPage() {
                         {cat.image && (
                           <img 
                             src={cat.image} 
-                            alt={cat.name}
+                            alt={`Изображение категории ${cat.name} Sweet Delights`}
                             className="w-16 h-16 object-cover rounded-md border"
                           />
                         )}
@@ -1797,7 +1797,7 @@ export default function AdminPage() {
                             <div className="relative inline-block">
                               <img 
                                 src={imagePreview} 
-                                alt="Preview" 
+                                alt="Предпросмотр изображения товара Sweet Delights" 
                                 className="max-w-xs max-h-48 rounded-lg border"
                                 data-testid="image-preview"
                               />
