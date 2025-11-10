@@ -65,7 +65,7 @@ export default function ShoppingCart({
                   <div key={item.id} className="flex gap-4" data-testid={`cart-item-${item.id}`}>
                     <div className="w-20 h-20 rounded-lg bg-muted flex-shrink-0 overflow-hidden">
                       {item.image && (
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                        <img src={item.image} alt={`${item.name} - ${item.price}₽ в корзине Sweet Delights`} className="w-full h-full object-cover" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">

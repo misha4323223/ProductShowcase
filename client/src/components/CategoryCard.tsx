@@ -20,7 +20,7 @@ export default function CategoryCard({ name, image, webpImage, onClick }: Catego
         <OptimizedImage
           src={image}
           webpSrc={webpImage}
-          alt={name}
+          alt={`Купить ${name} в интернет-магазине Sweet Delights - каталог сладостей с доставкой по России`}
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115 group-hover:rotate-2"

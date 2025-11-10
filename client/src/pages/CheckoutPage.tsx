@@ -539,7 +539,7 @@ export default function CheckoutPage() {
                   <div className="space-y-3">
                     {cartItems.map((item) => (
                       <div key={item.id} className="flex gap-3" data-testid={`order-item-${item.id}`}>
-                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                        <img src={item.image} alt={`${item.name} - цена ${item.price}₽ в корзине Sweet Delights`} className="w-16 h-16 object-cover rounded" />
                         <div className="flex-1">
                           <div className="font-medium text-sm">{item.name}</div>
                           <div className="text-sm text-muted-foreground">Количество: {item.quantity}</div>
