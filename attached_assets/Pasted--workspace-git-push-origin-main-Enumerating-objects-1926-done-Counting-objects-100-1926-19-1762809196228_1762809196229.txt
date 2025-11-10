@@ -1,0 +1,38 @@
+~/workspace$ git push origin main
+Enumerating objects: 1926, done.
+Counting objects: 100% (1926/1926), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (551/551), done.
+Writing objects: 100% (1777/1777), 295.39 KiB | 6.03 MiB/s, done.
+Total 1777 (delta 1371), reused 1277 (delta 1221), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (1371/1371), completed with 88 local objects.
+remote: error: GH013: Repository rule violations found for refs/heads/main.
+remote: 
+remote: - GITHUB PUSH PROTECTION
+remote:   —————————————————————————————————————————
+remote:     Resolve the following violations before pushing again
+remote: 
+remote:     - Push cannot contain secrets
+remote: 
+remote:     
+remote:      (?) Learn how to resolve a blocked push
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push
+remote:     
+remote:     
+remote:       —— Yandex.Passport OAuth Token ———————————————————————
+remote:        locations:
+remote:          - commit: bee2ce755ec4c0998cd92dfe0ca586fdc4520a0c
+remote:            path: yandex-functions/ИНСТРУКЦИЯ_СОЗДАНИЯ_ФУНКЦИЙ.md:310
+remote:          - commit: cfa7e4729799b86503da54adbf00f9b73ba92cdd
+remote:            path: yandex-functions/ИНСТРУКЦИЯ_СОЗДАНИЯ_ФУНКЦИЙ.md:329
+remote:          - commit: bee2ce755ec4c0998cd92dfe0ca586fdc4520a0c
+remote:            path: yandex-functions/ЧТО_НУЖНО_СДЕЛАТЬ_ВАМ.md:58
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/misha4323223/ProductShowcase/security/secret-scanning/unblock-secret/35Is9J6pWjaImaZ69MODQTs1sOP
+remote:     
+remote: 
+remote: 
+To https://github.com/misha4323223/ProductShowcase
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/misha4323223/ProductShowcase'
