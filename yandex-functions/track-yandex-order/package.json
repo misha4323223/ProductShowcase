@@ -1,7 +1,0 @@
-{
-  "name": "track-yandex-order",
-  "version": "1.0.0",
-  "description": "Отслеживание заявки в Яндекс.Доставка",
-  "main": "index.js",
-  "dependencies": {}
-}

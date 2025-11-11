@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Package, Truck } from 'lucide-react';
 
-type DeliveryService = 'CDEK' | 'BOXBERRY' | 'YANDEX' | null;
+type DeliveryService = 'CDEK' | null;
 type DeliveryType = 'DOOR' | 'PICKUP' | null;
 
 interface DeliverySelectorProps {
@@ -34,37 +34,15 @@ export function DeliverySelector({ onSelect }: DeliverySelectorProps) {
         value={selectedService || ''} 
         onValueChange={(v) => handleServiceChange(v as DeliveryService)}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="p-4 hover-elevate cursor-pointer" data-testid="card-delivery-cdek">
-            <Label className="flex items-center space-x-3 cursor-pointer">
-              <RadioGroupItem value="CDEK" data-testid="radio-cdek" />
-              <div className="flex-1">
-                <div className="font-semibold">СДЭК</div>
-                <div className="text-sm text-muted-foreground">От 1-3 дней</div>
-              </div>
-            </Label>
-          </Card>
-
-          <Card className="p-4 hover-elevate cursor-pointer opacity-50" data-testid="card-delivery-boxberry">
-            <Label className="flex items-center space-x-3 cursor-pointer">
-              <RadioGroupItem value="BOXBERRY" disabled data-testid="radio-boxberry" />
-              <div className="flex-1">
-                <div className="font-semibold">Boxberry</div>
-                <div className="text-sm text-muted-foreground">Скоро</div>
-              </div>
-            </Label>
-          </Card>
-
-          <Card className="p-4 hover-elevate cursor-pointer opacity-50" data-testid="card-delivery-yandex">
-            <Label className="flex items-center space-x-3 cursor-pointer">
-              <RadioGroupItem value="YANDEX" disabled data-testid="radio-yandex" />
-              <div className="flex-1">
-                <div className="font-semibold">Яндекс Доставка</div>
-                <div className="text-sm text-muted-foreground">Скоро</div>
-              </div>
-            </Label>
-          </Card>
-        </div>
+        <Card className="p-4 hover-elevate cursor-pointer" data-testid="card-delivery-cdek">
+          <Label className="flex items-center space-x-3 cursor-pointer">
+            <RadioGroupItem value="CDEK" data-testid="radio-cdek" />
+            <div className="flex-1">
+              <div className="font-semibold">СДЭК</div>
+              <div className="text-sm text-muted-foreground">Доставка по всей России от 1-3 дней</div>
+            </div>
+          </Label>
+        </Card>
       </RadioGroup>
 
       {selectedService === 'CDEK' && (

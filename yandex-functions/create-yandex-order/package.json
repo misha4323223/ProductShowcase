@@ -1,7 +1,0 @@
-{
-  "name": "create-yandex-order",
-  "version": "1.0.0",
-  "description": "Создание заявки в Яндекс.Доставка",
-  "main": "index.js",
-  "dependencies": {}
-}

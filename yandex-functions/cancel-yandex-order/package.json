@@ -1,7 +1,0 @@
-{
-  "name": "cancel-yandex-order",
-  "version": "1.0.0",
-  "description": "Отмена заявки в Яндекс.Доставка",
-  "main": "index.js",
-  "dependencies": {}
-}
