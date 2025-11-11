@@ -50,7 +50,7 @@ const checkoutSchema = z.object({
   address: z.string().min(5, "Адрес должен содержать минимум 5 символов"),
   city: z.string().min(2, "Город должен содержать минимум 2 символа"),
   postalCode: z.string().min(5, "Некорректный почтовый индекс"),
-  payment: z.enum(["card", "cash", "online"]),
+  payment: z.enum(["card", "online"]),
   privacyConsent: z.boolean().refine((val) => val === true, {
     message: "Необходимо согласие на обработку персональных данных",
   }),
@@ -102,7 +102,6 @@ export default function CheckoutPage() {
 
   const paymentOptions = [
     { id: "card", name: "Банковская карта", description: "Оплата онлайн картой" },
-    { id: "cash", name: "Наличными при получении", description: "Оплата при получении товара" },
     { id: "online", name: "Электронный кошелек", description: "Яндекс.Деньги, QIWI" },
   ];
 

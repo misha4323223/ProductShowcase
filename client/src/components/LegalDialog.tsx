@@ -105,7 +105,7 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
                 <section>
                   <h3 className="text-lg font-semibold text-primary">3. Цены и оплата</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">
-                    Цены указаны в рублях РФ. Оплата наличными при получении или картой онлайн.
+                    Цены указаны в рублях РФ. Оплата картой онлайн или электронным кошельком.
                   </p>
                 </section>
 

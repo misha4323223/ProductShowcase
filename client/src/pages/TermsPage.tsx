@@ -127,9 +127,8 @@ export default function TermsPage() {
                 <strong>Способы оплаты:</strong>
               </p>
               <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
-                <li>Наличными при получении товара</li>
                 <li>Банковской картой онлайн</li>
-                <li>Банковской картой при получении</li>
+                <li>Электронным кошельком (Яндекс.Деньги, QIWI)</li>
               </ul>
             </section>
 
