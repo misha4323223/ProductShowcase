@@ -14,6 +14,8 @@ export interface OrderEmailParams {
   totalAmount: number;
   shippingAddress: string;
   phone: string;
+  deliveryMethod?: string;
+  deliveryCost?: number;
 }
 
 export interface StockNotificationParams {
@@ -59,6 +61,8 @@ export async function sendOrderConfirmation(params: OrderEmailParams): Promise<v
       totalAmount: params.totalAmount,
       shippingAddress: params.shippingAddress,
       phone: params.phone,
+      deliveryMethod: params.deliveryMethod,
+      deliveryCost: params.deliveryCost,
     });
     console.log('Письмо о заказе успешно отправлено:', params.customerEmail);
   } catch (error) {

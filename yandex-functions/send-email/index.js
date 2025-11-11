@@ -115,11 +115,20 @@ exports.handler = async (event) => {
 };
 
 function buildOrderConfirmationEmail(to, data) {
-  const { customerName, orderNumber, orderDate, items, totalAmount, shippingAddress, phone } = data;
+  const { customerName, orderNumber, orderDate, items, totalAmount, shippingAddress, phone, deliveryMethod, deliveryCost } = data;
   
   const itemsList = items
     .map(item => `${item.name} - ${item.quantity} шт. × ${item.price}₽`)
     .join('\n');
+
+  const deliveryInfo = deliveryMethod 
+    ? `
+      <h4 style="color: #333;">Способ доставки:</h4>
+      <p style="background: #fff3e0; padding: 12px; border-radius: 6px; border-left: 4px solid #EC4899;">
+        <strong>${deliveryMethod}</strong>${deliveryCost ? ` - ${deliveryCost}₽` : ''}
+      </p>
+    `
+    : '';
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -133,6 +142,8 @@ function buildOrderConfirmationEmail(to, data) {
       
       <h4 style="color: #333;">Товары:</h4>
       <pre style="background: #f5f5f5; padding: 12px; border-radius: 6px;">${itemsList}</pre>
+      
+      ${deliveryInfo}
       
       <p style="font-size: 18px; font-weight: bold; color: #EC4899;">Итого: ${totalAmount}₽</p>
       
@@ -150,6 +161,10 @@ function buildOrderConfirmationEmail(to, data) {
     </div>
   `;
 
+  const deliveryInfoText = deliveryMethod 
+    ? `\nСпособ доставки: ${deliveryMethod}${deliveryCost ? ` - ${deliveryCost}₽` : ''}\n`
+    : '';
+
   const textBody = `
 Спасибо за ваш заказ!
 
@@ -162,7 +177,7 @@ function buildOrderConfirmationEmail(to, data) {
 
 Товары:
 ${itemsList}
-
+${deliveryInfoText}
 Итого: ${totalAmount}₽
 
 Адрес доставки: ${shippingAddress}

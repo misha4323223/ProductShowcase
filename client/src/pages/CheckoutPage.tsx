@@ -321,6 +321,12 @@ export default function CheckoutPage() {
 
       const orderId = await createOrder(orderData);
 
+      const deliveryMethodText = deliveryService === 'CDEK' 
+        ? `СДЭК (${deliveryType === 'PICKUP' ? 'Пункт выдачи' : 'Доставка до двери'})` 
+        : deliveryService === 'POST' 
+          ? 'Почта России' 
+          : 'Не указано';
+
       try {
         await sendOrderConfirmation({
           customerEmail: data.email,
@@ -331,6 +337,8 @@ export default function CheckoutPage() {
           totalAmount: finalTotal,
           shippingAddress: `${data.address}, ${data.city}, ${data.postalCode}`,
           phone: data.phone,
+          deliveryMethod: deliveryMethodText,
+          deliveryCost: deliveryPrice,
         });
       } catch (emailError) {
         console.error('Не удалось отправить email:', emailError);

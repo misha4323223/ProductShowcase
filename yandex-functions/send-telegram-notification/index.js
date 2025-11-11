@@ -69,6 +69,11 @@ function formatOrderMessage(orderData) {
     promoCode,
     shippingAddress,
     createdAt,
+    deliveryService,
+    deliveryType,
+    cdekDeliveryCost,
+    deliveryCost,
+    deliveryPointName,
   } = orderData;
 
   const orderNumber = id.substring(0, 8).toUpperCase();
@@ -96,8 +101,32 @@ function formatOrderMessage(orderData) {
     message += `📊 <b>Подытог:</b> ${subtotal}₽\n`;
   }
   
-  message += `\n💰 <b>Итого:</b> ${total}₽\n`;
-  message += `📦 <b>Адрес доставки:</b>\n${shippingAddress}\n\n`;
+  message += `\n💰 <b>Итого:</b> ${total}₽\n\n`;
+  
+  // Информация о доставке
+  if (deliveryService === 'CDEK') {
+    message += `🚚 <b>Доставка:</b> СДЭК`;
+    if (deliveryType === 'PICKUP') {
+      message += ` (Пункт выдачи)\n`;
+      if (deliveryPointName) {
+        message += `📍 <b>Пункт выдачи:</b> ${deliveryPointName}\n`;
+      }
+    } else if (deliveryType === 'DOOR') {
+      message += ` (До двери)\n`;
+    } else {
+      message += `\n`;
+    }
+    if (cdekDeliveryCost) {
+      message += `💵 <b>Стоимость доставки:</b> ${cdekDeliveryCost}₽\n`;
+    }
+  } else if (deliveryService === 'POST') {
+    message += `🚚 <b>Доставка:</b> Почта России\n`;
+    if (deliveryCost) {
+      message += `💵 <b>Стоимость доставки:</b> ${deliveryCost}₽\n`;
+    }
+  }
+  
+  message += `\n📦 <b>Адрес доставки:</b>\n${shippingAddress}\n\n`;
   message += `⏰ ${orderDate}`;
 
   return message;
