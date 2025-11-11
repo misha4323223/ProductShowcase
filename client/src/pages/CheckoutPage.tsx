@@ -401,7 +401,7 @@ export default function CheckoutPage() {
                             <FormItem>
                               <FormLabel>Имя</FormLabel>
                               <FormControl>
-                                <Input placeholder="Иван" {...field} data-testid="input-first-name" />
+                                <Input {...field} data-testid="input-first-name" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -414,7 +414,7 @@ export default function CheckoutPage() {
                             <FormItem>
                               <FormLabel>Фамилия</FormLabel>
                               <FormControl>
-                                <Input placeholder="Иванов" {...field} data-testid="input-last-name" />
+                                <Input {...field} data-testid="input-last-name" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -428,7 +428,7 @@ export default function CheckoutPage() {
                           <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                              <Input type="email" placeholder="ivan@example.com" {...field} data-testid="input-email" />
+                              <Input type="email" {...field} data-testid="input-email" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -441,7 +441,7 @@ export default function CheckoutPage() {
                           <FormItem>
                             <FormLabel>Телефон</FormLabel>
                             <FormControl>
-                              <Input placeholder="+7 (999) 123-45-67" {...field} data-testid="input-phone" />
+                              <Input {...field} data-testid="input-phone" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -462,7 +462,7 @@ export default function CheckoutPage() {
                           <FormItem>
                             <FormLabel>Адрес</FormLabel>
                             <FormControl>
-                              <Input placeholder="ул. Пушкина, д. 10, кв. 5" {...field} data-testid="input-address" />
+                              <Input {...field} data-testid="input-address" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -476,7 +476,7 @@ export default function CheckoutPage() {
                             <FormItem>
                               <FormLabel>Город</FormLabel>
                               <FormControl>
-                                <Input placeholder="Москва" {...field} data-testid="input-city" />
+                                <Input {...field} data-testid="input-city" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -489,7 +489,7 @@ export default function CheckoutPage() {
                             <FormItem>
                               <FormLabel>Почтовый индекс</FormLabel>
                               <FormControl>
-                                <Input placeholder="123456" {...field} data-testid="input-postal-code" />
+                                <Input {...field} data-testid="input-postal-code" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
