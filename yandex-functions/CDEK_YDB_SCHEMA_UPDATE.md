@@ -2,7 +2,7 @@
 
 ## Необходимые изменения в таблице `orders`
 
-Чтобы поддержать интеграцию с СДЭК (и в будущем с Boxberry и Яндекс Доставкой), нужно добавить новые поля в таблицу `orders`.
+Чтобы поддержать интеграцию с СДЭК, нужно добавить новые поля в таблицу `orders`.
 
 ---
 
@@ -14,7 +14,7 @@
 
 ```sql
 -- Общие поля доставки
-deliveryService: String        -- Служба доставки: "CDEK" | "BOXBERRY" | "YANDEX" | null
+deliveryService: String        -- Служба доставки: "CDEK" | null
 deliveryType: String           -- Тип доставки: "COURIER" | "PICKUP" | null
 deliveryStatus: String         -- Статус доставки: "PENDING" | "IN_TRANSIT" | "DELIVERED" | null
 
