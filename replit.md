@@ -14,11 +14,12 @@ Preferred communication style: Simple, everyday language.
 - **State Management**: TanStack React Query for server state, local React state for UI.
 - **UI/Styling**: Shadcn UI (Radix UI + Tailwind CSS) with a custom design system featuring a warm, playful color palette, Playfair Display and Inter fonts, and responsive design with iOS Safari compatibility.
 - **Key Components**: Includes sticky header, auto-rotating hero slider, animated product cards, side-panel shopping cart, category navigation, feature highlights bar, and a footer with legal links.
-- **CDEK Integration Components**:
-  - `DeliverySelector`: Multi-service delivery selection (CDEK, Boxberry, Yandex).
+- **CDEK Delivery Integration**:
+  - `DeliverySelector`: Delivery service selector (CDEK only - nationwide coverage).
   - `CdekPointSelector`: Searchable pickup point selector with city filtering.
   - `DeliveryCalculator`: Real-time delivery cost and time calculation.
   - Integrated into `CheckoutPage` with complete validation ensuring all CDEK data (type, point, tariff, cost) is captured before order submission.
+  - Supports two delivery types: PICKUP (to pickup point) and DOOR (courier to door).
 
 ### Backend
 - **Framework**: Express.js with TypeScript for a flexible REST API.
@@ -83,3 +84,4 @@ Preferred communication style: Simple, everyday language.
 - **Yandex Object Storage**: Product images.
 - **Firebase Authentication**: User authentication (email/password).
 - **Yandex Cloud Postbox**: Email notifications.
+- **CDEK API**: Nationwide delivery integration (4 Cloud Functions: calculate, get pickup points, create order, track order).
