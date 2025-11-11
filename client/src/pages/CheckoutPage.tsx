@@ -102,7 +102,7 @@ export default function CheckoutPage() {
 
   const paymentOptions = [
     { id: "card", name: "Банковская карта", description: "Оплата онлайн картой" },
-    { id: "cash", name: "Наличными при получении", description: "Оплата курьеру" },
+    { id: "cash", name: "Наличными при получении", description: "Оплата при получении товара" },
     { id: "online", name: "Электронный кошелек", description: "Яндекс.Деньги, QIWI" },
   ];
 

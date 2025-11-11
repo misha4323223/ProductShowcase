@@ -129,7 +129,7 @@ export default function TermsPage() {
               <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
                 <li>Наличными при получении товара</li>
                 <li>Банковской картой онлайн</li>
-                <li>Банковской картой курьеру при получении</li>
+                <li>Банковской картой при получении</li>
               </ul>
             </section>
 
