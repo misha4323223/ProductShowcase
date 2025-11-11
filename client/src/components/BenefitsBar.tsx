@@ -4,7 +4,7 @@ const benefits = [
   {
     icon: Truck,
     title: 'Доставка по России',
-    description: 'Курьерская доставка в любой город',
+    description: 'СДЭК и Почта России',
   },
   {
     icon: ShieldCheck,

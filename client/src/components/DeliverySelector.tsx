@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Package, Truck } from 'lucide-react';
+import { Package, Truck, Mail } from 'lucide-react';
 
-type DeliveryService = 'CDEK' | null;
+type DeliveryService = 'CDEK' | 'POST' | null;
 type DeliveryType = 'DOOR' | 'PICKUP' | null;
 
 interface DeliverySelectorProps {
@@ -40,6 +40,17 @@ export function DeliverySelector({ onSelect }: DeliverySelectorProps) {
             <div className="flex-1">
               <div className="font-semibold">СДЭК</div>
               <div className="text-sm text-muted-foreground">Доставка по всей России от 1-3 дней</div>
+            </div>
+          </Label>
+        </Card>
+
+        <Card className="p-4 hover-elevate cursor-pointer" data-testid="card-delivery-post">
+          <Label className="flex items-center space-x-3 cursor-pointer">
+            <RadioGroupItem value="POST" data-testid="radio-post" />
+            <Mail className="w-5 h-5" />
+            <div className="flex-1">
+              <div className="font-semibold">Почта России</div>
+              <div className="text-sm text-muted-foreground">Доставка в течение 5-10 дней</div>
             </div>
           </Label>
         </Card>

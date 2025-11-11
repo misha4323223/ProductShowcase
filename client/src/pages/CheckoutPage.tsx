@@ -50,7 +50,6 @@ const checkoutSchema = z.object({
   address: z.string().min(5, "Адрес должен содержать минимум 5 символов"),
   city: z.string().min(2, "Город должен содержать минимум 2 символа"),
   postalCode: z.string().min(5, "Некорректный почтовый индекс"),
-  delivery: z.enum(["courier", "pickup", "post"]),
   payment: z.enum(["card", "cash", "online"]),
   privacyConsent: z.boolean().refine((val) => val === true, {
     message: "Необходимо согласие на обработку персональных данных",
@@ -96,17 +95,10 @@ export default function CheckoutPage() {
       address: "",
       city: "",
       postalCode: "",
-      delivery: "courier",
       payment: "card",
       privacyConsent: false,
     },
   });
-
-  const deliveryOptions = [
-    { id: "courier", name: "Курьерская доставка", price: 300, description: "Доставка в течение 1-3 дней" },
-    { id: "pickup", name: "Самовывоз", price: 0, description: "Бесплатно из нашего магазина" },
-    { id: "post", name: "Почта России", price: 200, description: "Доставка в течение 5-10 дней" },
-  ];
 
   const paymentOptions = [
     { id: "card", name: "Банковская карта", description: "Оплата онлайн картой" },
@@ -114,8 +106,12 @@ export default function CheckoutPage() {
     { id: "online", name: "Электронный кошелек", description: "Яндекс.Деньги, QIWI" },
   ];
 
-  const selectedDelivery = deliveryOptions.find(opt => opt.id === form.watch("delivery"));
-  const deliveryPrice = deliveryService === 'CDEK' ? cdekDeliveryCost : (selectedDelivery?.price || 0);
+  const POST_RUSSIA_PRICE = 200;
+  const deliveryPrice = deliveryService === 'CDEK' 
+    ? cdekDeliveryCost 
+    : deliveryService === 'POST' 
+      ? POST_RUSSIA_PRICE 
+      : 0;
   const subtotal = total + deliveryPrice;
   const finalTotal = Math.max(0, subtotal - promoDiscount);
   
@@ -183,6 +179,15 @@ export default function CheckoutPage() {
   };
 
   const onSubmit = async (data: CheckoutFormData) => {
+    if (!deliveryService) {
+      toast({
+        title: "Выберите способ доставки",
+        description: "Пожалуйста, выберите СДЭК или Почту России",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (deliveryService === 'CDEK') {
       if (!deliveryType) {
         toast({
@@ -299,6 +304,11 @@ export default function CheckoutPage() {
         
         orderData.deliveryRecipientName = `${data.firstName} ${data.lastName}`;
         orderData.deliveryRecipientPhone = data.phone;
+      } else if (deliveryService === 'POST') {
+        orderData.deliveryService = 'POST';
+        orderData.deliveryType = 'POST';
+        orderData.deliveryCost = POST_RUSSIA_PRICE;
+        orderData.estimatedDeliveryDays = 7;
       }
 
       console.log('🔍 CheckoutPage - Creating order with data:', {
@@ -543,40 +553,6 @@ export default function CheckoutPage() {
                           }}
                         />
                       )}
-
-                      {!deliveryService && (
-                        <FormField
-                          control={form.control}
-                          name="delivery"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <RadioGroup
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                  className="space-y-3"
-                                >
-                                  {deliveryOptions.map((option) => (
-                                    <div key={option.id} className="flex items-center space-x-3 border rounded-lg p-4 hover-elevate">
-                                      <RadioGroupItem value={option.id} id={option.id} data-testid={`radio-delivery-${option.id}`} />
-                                      <Label htmlFor={option.id} className="flex-1 cursor-pointer">
-                                        <div className="flex justify-between items-start">
-                                          <div>
-                                            <div className="font-medium">{option.name}</div>
-                                            <div className="text-sm text-muted-foreground">{option.description}</div>
-                                          </div>
-                                          <div className="font-semibold">{option.price === 0 ? 'Бесплатно' : `${option.price}₽`}</div>
-                                        </div>
-                                      </Label>
-                                    </div>
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
                     </CardContent>
                   </Card>
 
@@ -656,6 +632,7 @@ export default function CheckoutPage() {
                     disabled={
                       isSubmitting || 
                       cartItems.length === 0 ||
+                      !deliveryService ||
                       (deliveryService === 'CDEK' && (
                         !deliveryType || 
                         (deliveryType === 'PICKUP' && !selectedCdekPoint) ||

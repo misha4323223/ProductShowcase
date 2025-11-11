@@ -112,9 +112,8 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
                 <section>
                   <h3 className="text-lg font-semibold text-primary">4. Доставка</h3>
                   <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm ml-2">
-                    <li>Курьерская доставка (1-3 дня)</li>
-                    <li>Почта России (5-14 дней)</li>
-                    <li>Самовывоз</li>
+                    <li>СДЭК (1-3 дня) - курьером или пункт выдачи</li>
+                    <li>Почта России (5-10 дней)</li>
                   </ul>
                 </section>
 
