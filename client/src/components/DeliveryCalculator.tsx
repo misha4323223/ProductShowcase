@@ -87,21 +87,35 @@ export function DeliveryCalculator({
         // Фильтруем только нужные режимы доставки для покупателей:
         // delivery_mode: 3 - Склад-Дверь (продавец везет в ПВЗ → СДЭК доставляет до двери)
         // delivery_mode: 4 - Склад-Склад (продавец везет в ПВЗ → покупатель забирает из ПВЗ)
-        // Исключаем:
-        // delivery_mode: 1 - Дверь-Дверь (курьерская у продавца и у покупателя - дорого)
-        // delivery_mode: 2 - Дверь-Склад (курьер забирает у продавца - не нужно)
-        const customerTariffs = tariffs.filter(t => t.delivery_mode === 3 || t.delivery_mode === 4);
+        const customerTariffs = tariffs.filter(t => 
+          (t.delivery_mode === 3 || t.delivery_mode === 4) &&
+          !t.tariff_name.toLowerCase().includes('супер-экспресс') &&
+          !t.tariff_name.toLowerCase().includes('сборный груз')
+        );
         
-        // Оставляем только 3-4 самых выгодных тарифа для покупателя
-        const filteredTariffs = customerTariffs
-          .filter(t => {
-            // Исключаем супер-дорогие супер-экспрессы и сборные грузы
-            const name = t.tariff_name.toLowerCase();
-            return !name.includes('супер-экспресс') && 
-                   !name.includes('сборный груз');
-          })
-          .sort((a, b) => a.delivery_sum - b.delivery_sum) // Сортируем по цене
-          .slice(0, 4); // Берём только 4 самых дешёвых
+        // Берём только 2 варианта - самый дешевый для каждого типа доставки
+        const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4); // Склад-Склад
+        const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3); // Склад-Дверь
+        
+        const filteredTariffs = [];
+        
+        // Добавляем самый дешевый вариант до пункта выдачи
+        if (pickupTariffs.length > 0) {
+          const cheapestPickup = pickupTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
+          // Переименовываем для понятного отображения
+          cheapestPickup.tariff_name = 'До пункта выдачи СДЭК';
+          cheapestPickup.tariff_description = 'Заберите заказ в удобном пункте выдачи';
+          filteredTariffs.push(cheapestPickup);
+        }
+        
+        // Добавляем самый дешевый вариант курьерской доставки
+        if (courierTariffs.length > 0) {
+          const cheapestCourier = courierTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
+          // Переименовываем для понятного отображения
+          cheapestCourier.tariff_name = 'Курьером до двери';
+          cheapestCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
+          filteredTariffs.push(cheapestCourier);
+        }
         
         setAvailableTariffs(filteredTariffs);
         
