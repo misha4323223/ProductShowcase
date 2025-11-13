@@ -114,7 +114,7 @@ export default function CheckoutPage() {
   const subtotal = total + deliveryPrice;
   const finalTotal = Math.max(0, subtotal - promoDiscount);
   
-  const totalWeight = cartItems.reduce((sum, item) => sum + (item.quantity * 500), 0);
+  const totalWeight = cartItems.reduce((sum, item) => sum + (item.quantity * 250), 0);
   const deliveryPackages = [{
     weight: totalWeight,
     height: 10,
