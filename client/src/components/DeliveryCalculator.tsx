@@ -88,11 +88,31 @@ export function DeliveryCalculator({
         // Режим 1 (дверь-дверь) - курьерская доставка
         const pickupTariffs = tariffs.filter(t => t.delivery_mode !== 1);
         
-        setAvailableTariffs(pickupTariffs);
+        // Оставляем только 3-4 самых выгодных тарифа для покупателя
+        // Приоритет: Экономичная посылка, Магистральный экспресс, Посылка, Экспресс
+        const priorityTariffNames = [
+          'Экономичная посылка',
+          'Магистральный экспресс',
+          'Посылка',
+          'Экспресс склад',
+          'Экспресс лайт'
+        ];
+        
+        const filteredTariffs = pickupTariffs
+          .filter(t => {
+            // Исключаем супер-дорогие супер-экспрессы и сборные грузы
+            const name = t.tariff_name.toLowerCase();
+            return !name.includes('супер-экспресс') && 
+                   !name.includes('сборный груз');
+          })
+          .sort((a, b) => a.delivery_sum - b.delivery_sum) // Сортируем по цене
+          .slice(0, 4); // Берём только 4 самых дешёвых
+        
+        setAvailableTariffs(filteredTariffs);
         
         // Автоматически выбираем самый дешёвый тариф
-        if (pickupTariffs.length > 0) {
-          const cheapest = pickupTariffs.reduce((prev, curr) => 
+        if (filteredTariffs.length > 0) {
+          const cheapest = filteredTariffs.reduce((prev, curr) => 
             curr.delivery_sum < prev.delivery_sum ? curr : prev
           );
           setSelectedTariff(cheapest);
@@ -189,7 +209,12 @@ export function DeliveryCalculator({
                         {modeInfo.label}
                       </Badge>
                       {tariff.period_min > 0 && (
-                        <span>• {tariff.period_min} дн.</span>
+                        <span>
+                          • Доставка: {tariff.period_min}
+                          {tariff.period_max && tariff.period_max !== tariff.period_min 
+                            ? `-${tariff.period_max}` 
+                            : ''} дн.
+                        </span>
                       )}
                     </div>
                   </div>
