@@ -1,5 +1,6 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const https = require('https');
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -22,6 +23,129 @@ const docClient = DynamoDBDocumentClient.from(client, {
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
+}
+
+/**
+ * Отправка уведомления в Telegram (встроено в функцию create-order)
+ */
+async function sendTelegramNotification(orderData) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!botToken || !chatId) {
+    console.warn('Telegram credentials not configured, skipping notification');
+    return;
+  }
+
+  const {
+    id,
+    customerName,
+    customerEmail,
+    customerPhone,
+    items,
+    total,
+    subtotal,
+    discount,
+    promoCode,
+    shippingAddress,
+    createdAt,
+    deliveryService,
+    deliveryType,
+    cdekDeliveryCost,
+    deliveryCost,
+    deliveryPointName,
+  } = orderData;
+
+  const orderNumber = id.substring(0, 8).toUpperCase();
+  const orderDate = new Date(createdAt).toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  let message = `🛍️ <b>Новый заказ #${orderNumber}</b>\n\n`;
+  message += `👤 <b>Клиент:</b> ${customerName}\n`;
+  message += `📧 <b>Email:</b> ${customerEmail}\n`;
+  message += `📱 <b>Телефон:</b> ${customerPhone}\n\n`;
+  message += `🛒 <b>Товары:</b>\n`;
+  
+  items.forEach(item => {
+    message += `  • ${item.name} x${item.quantity} - ${item.price * item.quantity}₽\n`;
+  });
+  
+  if (promoCode) {
+    message += `\n💸 <b>Промокод:</b> ${promoCode} (-${discount}₽)\n`;
+    message += `📊 <b>Подытог:</b> ${subtotal}₽\n`;
+  }
+  
+  message += `\n💰 <b>Итого:</b> ${total}₽\n\n`;
+  
+  // Информация о доставке
+  if (deliveryService === 'CDEK') {
+    message += `🚚 <b>Доставка:</b> СДЭК`;
+    if (deliveryType === 'PICKUP') {
+      message += ` (Пункт выдачи)\n`;
+      if (deliveryPointName) {
+        message += `📍 <b>Пункт выдачи:</b> ${deliveryPointName}\n`;
+      }
+    } else if (deliveryType === 'DOOR') {
+      message += ` (До двери)\n`;
+    } else {
+      message += `\n`;
+    }
+    if (cdekDeliveryCost) {
+      message += `💵 <b>Стоимость доставки:</b> ${cdekDeliveryCost}₽\n`;
+    }
+  } else if (deliveryService === 'POST') {
+    message += `🚚 <b>Доставка:</b> Почта России\n`;
+    if (deliveryCost) {
+      message += `💵 <b>Стоимость доставки:</b> ${deliveryCost}₽\n`;
+    }
+  }
+  
+  message += `\n📦 <b>Адрес доставки:</b>\n${shippingAddress}\n\n`;
+  message += `⏰ ${orderDate}`;
+
+  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+  const payload = JSON.stringify({
+    chat_id: chatId,
+    text: message,
+    parse_mode: 'HTML',
+  });
+
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+      },
+    };
+
+    const req = https.request(url, options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          console.log('Telegram notification sent successfully');
+          resolve(JSON.parse(data));
+        } else {
+          console.error(`Telegram API error: ${res.statusCode} - ${data}`);
+          reject(new Error(`Telegram API error: ${res.statusCode}`));
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      console.error('Error sending Telegram notification:', error);
+      reject(error);
+    });
+
+    req.write(payload);
+    req.end();
+  });
 }
 
 exports.handler = async (event) => {
@@ -75,16 +199,48 @@ exports.handler = async (event) => {
       deliveryCalculatedAt: orderData.deliveryCalculatedAt || null,
     };
 
-    // Сохранить заказ
+    // Сохраняем заказ в базу данных
     await docClient.send(new PutCommand({
       TableName: "orders",
       Item: order,
     }));
 
+    // Уменьшаем количество товаров на складе
+    for (const item of orderData.items) {
+      try {
+        // Получаем текущий товар из базы данных
+        const productResult = await docClient.send(new GetCommand({
+          TableName: "products",
+          Key: { id: item.productId }
+        }));
+
+        if (productResult.Item && productResult.Item.stock !== undefined) {
+          // Уменьшаем stock на количество из заказа
+          const newStock = Math.max(0, productResult.Item.stock - item.quantity);
+          
+          await docClient.send(new UpdateCommand({
+            TableName: "products",
+            Key: { id: item.productId },
+            UpdateExpression: "SET stock = :newStock",
+            ExpressionAttributeValues: {
+              ":newStock": newStock
+            }
+          }));
+          
+          console.log(`Updated stock for product ${item.productId}: ${productResult.Item.stock} -> ${newStock}`);
+        } else {
+          console.warn(`Product ${item.productId} not found or has no stock field`);
+        }
+      } catch (error) {
+        console.error(`Error updating stock for product ${item.productId}:`, error);
+        // Продолжаем выполнение, даже если не удалось обновить stock одного товара
+      }
+    }
+
     // Начислить спины за заказ (1 спин за каждые 1000₽)
     const spinsToAdd = Math.floor(orderData.total / 1000);
     let actualSpinsAdded = 0;
-    
+
     if (spinsToAdd > 0 && orderData.userEmail) {
       console.log(`Adding ${spinsToAdd} spins for order total ${orderData.total}₽`);
       
@@ -116,9 +272,45 @@ exports.handler = async (event) => {
         console.error("Error adding spins:", error);
         // Не прерываем создание заказа, если начисление спинов не удалось
       }
-    } else if (spinsToAdd > 0 && !orderData.userEmail) {
-      console.warn("Cannot add spins: userEmail not provided");
     }
+
+    // Если использован промокод рулетки, помечаем его как использованный
+    if (orderData.promoCode) {
+      try {
+        const wheelPrizesResult = await docClient.send(new ScanCommand({
+          TableName: "wheelPrizes",
+        }));
+        
+        const normalizedPromoCode = orderData.promoCode.trim().toUpperCase();
+        const wheelPrize = (wheelPrizesResult.Items || []).find(p => 
+          p.promoCode && p.promoCode.trim().toUpperCase() === normalizedPromoCode
+        );
+
+        if (wheelPrize && !wheelPrize.used) {
+          // Помечаем приз как использованный
+          await docClient.send(new UpdateCommand({
+            TableName: "wheelPrizes",
+            Key: { id: wheelPrize.id },
+            UpdateExpression: "SET used = :true, usedAt = :usedAt, orderId = :orderId",
+            ExpressionAttributeValues: {
+              ":true": true,
+              ":usedAt": new Date().toISOString(),
+              ":orderId": id
+            }
+          }));
+          console.log(`Wheel prize ${wheelPrize.id} marked as used for order ${id}`);
+        }
+      } catch (error) {
+        console.error('Error marking wheel prize as used:', error);
+        // Не прерываем выполнение, если не удалось пометить приз
+      }
+    }
+
+    // Отправляем уведомление в Telegram (неблокирующая операция)
+    sendTelegramNotification(order).catch(error => {
+      console.error('Failed to send Telegram notification:', error);
+      // Не прерываем выполнение, если Telegram недоступен
+    });
     
     return {
       statusCode: 200,
