@@ -54,7 +54,7 @@ exports.handler = async (event) => {
     // Формируем запрос для расчета
     const calculationParams = {
       currency: 1, // RUB
-      from_location: from_location || { code: 44 }, // По умолчанию Москва
+      from_location: from_location || { code: 1959 }, // По умолчанию г. Донской, Тульская область
       to_location,
       packages
     };
