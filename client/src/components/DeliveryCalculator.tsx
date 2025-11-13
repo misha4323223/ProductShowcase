@@ -45,12 +45,25 @@ export function DeliveryCalculator({
       console.log('✅ Успешный ответ от API СДЭК:', data);
       
       if (data.success && data.data) {
-        const tariffs = Array.isArray(data.data) ? data.data : [data.data];
+        // API возвращает либо массив тарифов напрямую, либо объект с tariff_codes
+        let tariffs = [];
+        
+        if (Array.isArray(data.data)) {
+          // Формат: { success: true, data: [...] }
+          tariffs = data.data;
+        } else if (data.data.tariff_codes && Array.isArray(data.data.tariff_codes)) {
+          // Формат: { success: true, data: { tariff_codes: [...] } }
+          tariffs = data.data.tariff_codes;
+        } else {
+          // Формат: { success: true, data: { ... } } - один тариф
+          tariffs = [data.data];
+        }
+        
         console.log('📋 Найдено тарифов:', tariffs.length);
         console.log('📋 Тарифы:', tariffs);
         
-        const tariff = tariffs[0];
-        if (tariff) {
+        if (tariffs.length > 0) {
+          const tariff = tariffs[0];
           console.log('💰 Стоимость:', tariff.delivery_sum);
           console.log('📅 Срок:', tariff.period_min);
           console.log('🏷️ Код тарифа:', tariff.tariff_code);
@@ -59,7 +72,7 @@ export function DeliveryCalculator({
           setDeliveryDays(tariff.period_min);
           onCalculated?.(tariff.delivery_sum, tariff.period_min, tariff.tariff_code);
         } else {
-          console.warn('⚠️ Первый тариф пустой!');
+          console.warn('⚠️ Нет доступных тарифов!');
         }
       } else {
         console.warn('⚠️ Неожиданный формат ответа:', data);
