@@ -28,22 +28,45 @@ export function DeliveryCalculator({
 
   const calculateMutation = useMutation({
     mutationFn: async () => {
+      console.log('🚚 Начинаем расчет доставки СДЭК');
+      console.log('📍 Код города:', cityCode);
+      console.log('📦 Посылки:', packages);
+      
       const res = await apiRequest('POST', '/api/delivery/cdek/calculate', {
         to_location: { code: cityCode },
         packages
       });
-      return await res.json();
+      
+      const data = await res.json();
+      console.log('📥 Ответ от API СДЭК:', data);
+      return data;
     },
     onSuccess: (data: any) => {
+      console.log('✅ Успешный ответ от API СДЭК:', data);
+      
       if (data.success && data.data) {
         const tariffs = Array.isArray(data.data) ? data.data : [data.data];
+        console.log('📋 Найдено тарифов:', tariffs.length);
+        console.log('📋 Тарифы:', tariffs);
+        
         const tariff = tariffs[0];
         if (tariff) {
+          console.log('💰 Стоимость:', tariff.delivery_sum);
+          console.log('📅 Срок:', tariff.period_min);
+          console.log('🏷️ Код тарифа:', tariff.tariff_code);
+          
           setDeliveryCost(tariff.delivery_sum);
           setDeliveryDays(tariff.period_min);
           onCalculated?.(tariff.delivery_sum, tariff.period_min, tariff.tariff_code);
+        } else {
+          console.warn('⚠️ Первый тариф пустой!');
         }
+      } else {
+        console.warn('⚠️ Неожиданный формат ответа:', data);
       }
+    },
+    onError: (error: any) => {
+      console.error('❌ Ошибка расчета доставки СДЭК:', error);
     }
   });
 
