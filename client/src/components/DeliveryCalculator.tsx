@@ -84,21 +84,16 @@ export function DeliveryCalculator({
         console.log('📋 Найдено тарифов:', tariffs.length);
         console.log('📋 Тарифы:', tariffs);
         
-        // Фильтруем тарифы для пунктов выдачи (режимы доставки 2, 3, 4)
-        // Режим 1 (дверь-дверь) - курьерская доставка
-        const pickupTariffs = tariffs.filter(t => t.delivery_mode !== 1);
+        // Фильтруем только нужные режимы доставки для покупателей:
+        // delivery_mode: 3 - Склад-Дверь (продавец везет в ПВЗ → СДЭК доставляет до двери)
+        // delivery_mode: 4 - Склад-Склад (продавец везет в ПВЗ → покупатель забирает из ПВЗ)
+        // Исключаем:
+        // delivery_mode: 1 - Дверь-Дверь (курьерская у продавца и у покупателя - дорого)
+        // delivery_mode: 2 - Дверь-Склад (курьер забирает у продавца - не нужно)
+        const customerTariffs = tariffs.filter(t => t.delivery_mode === 3 || t.delivery_mode === 4);
         
         // Оставляем только 3-4 самых выгодных тарифа для покупателя
-        // Приоритет: Экономичная посылка, Магистральный экспресс, Посылка, Экспресс
-        const priorityTariffNames = [
-          'Экономичная посылка',
-          'Магистральный экспресс',
-          'Посылка',
-          'Экспресс склад',
-          'Экспресс лайт'
-        ];
-        
-        const filteredTariffs = pickupTariffs
+        const filteredTariffs = customerTariffs
           .filter(t => {
             // Исключаем супер-дорогие супер-экспрессы и сборные грузы
             const name = t.tariff_name.toLowerCase();
@@ -223,9 +218,14 @@ export function DeliveryCalculator({
                     <div className="text-xl font-bold" data-testid={`text-tariff-price-${tariff.tariff_code}`}>
                       {tariff.delivery_sum} ₽
                     </div>
-                    {tariff.delivery_date_range && (
+                    {(tariff.period_max || tariff.period_min) && (
                       <div className="text-xs text-muted-foreground mt-1">
-                        до {new Date(tariff.delivery_date_range.max).toLocaleDateString('ru-RU')}
+                        {(() => {
+                          const daysToAdd = tariff.period_max || tariff.period_min;
+                          const deliveryDate = new Date();
+                          deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
+                          return `до ${deliveryDate.toLocaleDateString('ru-RU')}`;
+                        })()}
                       </div>
                     )}
                   </div>
