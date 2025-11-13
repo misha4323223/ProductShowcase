@@ -572,3 +572,116 @@ paths:
       responses:
         '200':
           description: OK
+
+  # ========== CDEK DELIVERY INTEGRATION ==========
+  /api/delivery/cdek/points:
+    get:
+      summary: Получить список пунктов выдачи СДЭК
+      parameters:
+        - name: city_code
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: Код города СДЭК
+        - name: postal_code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Почтовый индекс
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4el2qd1ihlbmguis1iv
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список пунктов выдачи СДЭК
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
+
+  /api/delivery/cdek/calculate:
+    post:
+      summary: Рассчитать стоимость доставки СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e97hu512s5fr3e8j0l
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Стоимость и срок доставки
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
+
+  /api/delivery/cdek/orders:
+    post:
+      summary: Создать заказ в СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eucofr7pvms8rfc9us
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Заказ создан в СДЭК
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
+
+  /api/delivery/cdek/orders/{order_uuid}:
+    parameters:
+      - name: order_uuid
+        in: path
+        required: true
+        schema:
+          type: string
+        description: UUID заказа в СДЭК
+    get:
+      summary: Отследить заказ СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e21ufg8q98n5o0nlti
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Статус заказа СДЭК
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
