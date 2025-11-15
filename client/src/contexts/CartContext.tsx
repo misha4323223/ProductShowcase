@@ -94,9 +94,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       console.log('Сохранение корзины в YDB:', firebaseCartItems);
 
-      saveCartToYDB(user.userId, firebaseCartItems).catch(err => {
-        console.error('Ошибка сохранения в YDB:', err);
-      });
+      saveCartToYDB(user.userId, firebaseCartItems)
+        .then(() => {
+          console.log('✅ Корзина успешно сохранена в YDB');
+        })
+        .catch(err => {
+          console.warn('⚠️ Не удалось сохранить корзину в YDB (это не критично):', err);
+        });
     }
   }, [cartItems, user, authLoading, isLoading]);
 

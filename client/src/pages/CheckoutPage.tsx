@@ -352,12 +352,12 @@ export default function CheckoutPage() {
         );
         
         if (paymentResult.success && paymentResult.paymentUrl) {
+          localStorage.setItem('pendingPaymentOrderId', orderId);
+          
           toast({
             title: "Заказ успешно оформлен!",
             description: `Номер заказа: ${orderId.substring(0, 8).toUpperCase()}. Переадресация на оплату...`,
           });
-          
-          clearCart();
           
           window.location.href = paymentResult.paymentUrl;
         } else {
