@@ -1,6 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
-const https = require('https');
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -23,129 +22,6 @@ const docClient = DynamoDBDocumentClient.from(client, {
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
-}
-
-/**
- * Отправка уведомления в Telegram (встроено в функцию create-order)
- */
-async function sendTelegramNotification(orderData) {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
-  if (!botToken || !chatId) {
-    console.warn('Telegram credentials not configured, skipping notification');
-    return;
-  }
-
-  const {
-    id,
-    customerName,
-    customerEmail,
-    customerPhone,
-    items,
-    total,
-    subtotal,
-    discount,
-    promoCode,
-    shippingAddress,
-    createdAt,
-    deliveryService,
-    deliveryType,
-    cdekDeliveryCost,
-    deliveryCost,
-    deliveryPointName,
-  } = orderData;
-
-  const orderNumber = id.substring(0, 8).toUpperCase();
-  const orderDate = new Date(createdAt).toLocaleString('ru-RU', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-  let message = `🛍️ <b>Новый заказ #${orderNumber}</b>\n\n`;
-  message += `👤 <b>Клиент:</b> ${customerName}\n`;
-  message += `📧 <b>Email:</b> ${customerEmail}\n`;
-  message += `📱 <b>Телефон:</b> ${customerPhone}\n\n`;
-  message += `🛒 <b>Товары:</b>\n`;
-  
-  items.forEach(item => {
-    message += `  • ${item.name} x${item.quantity} - ${item.price * item.quantity}₽\n`;
-  });
-  
-  if (promoCode) {
-    message += `\n💸 <b>Промокод:</b> ${promoCode} (-${discount}₽)\n`;
-    message += `📊 <b>Подытог:</b> ${subtotal}₽\n`;
-  }
-  
-  message += `\n💰 <b>Итого:</b> ${total}₽\n\n`;
-  
-  // Информация о доставке
-  if (deliveryService === 'CDEK') {
-    message += `🚚 <b>Доставка:</b> СДЭК`;
-    if (deliveryType === 'PICKUP') {
-      message += ` (Пункт выдачи)\n`;
-      if (deliveryPointName) {
-        message += `📍 <b>Пункт выдачи:</b> ${deliveryPointName}\n`;
-      }
-    } else if (deliveryType === 'DOOR') {
-      message += ` (До двери)\n`;
-    } else {
-      message += `\n`;
-    }
-    if (cdekDeliveryCost) {
-      message += `💵 <b>Стоимость доставки:</b> ${cdekDeliveryCost}₽\n`;
-    }
-  } else if (deliveryService === 'POST') {
-    message += `🚚 <b>Доставка:</b> Почта России\n`;
-    if (deliveryCost) {
-      message += `💵 <b>Стоимость доставки:</b> ${deliveryCost}₽\n`;
-    }
-  }
-  
-  message += `\n📦 <b>Адрес доставки:</b>\n${shippingAddress}\n\n`;
-  message += `⏰ ${orderDate}`;
-
-  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-  const payload = JSON.stringify({
-    chat_id: chatId,
-    text: message,
-    parse_mode: 'HTML',
-  });
-
-  return new Promise((resolve, reject) => {
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(payload),
-      },
-    };
-
-    const req = https.request(url, options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        if (res.statusCode === 200) {
-          console.log('Telegram notification sent successfully');
-          resolve(JSON.parse(data));
-        } else {
-          console.error(`Telegram API error: ${res.statusCode} - ${data}`);
-          reject(new Error(`Telegram API error: ${res.statusCode}`));
-        }
-      });
-    });
-
-    req.on('error', (error) => {
-      console.error('Error sending Telegram notification:', error);
-      reject(error);
-    });
-
-    req.write(payload);
-    req.end();
-  });
 }
 
 exports.handler = async (event) => {
@@ -204,6 +80,8 @@ exports.handler = async (event) => {
       TableName: "orders",
       Item: order,
     }));
+
+    console.log(`✅ Order created: ${id} (status: pending, awaiting payment)`);
 
     // Уменьшаем количество товаров на складе
     for (const item of orderData.items) {
@@ -306,11 +184,10 @@ exports.handler = async (event) => {
       }
     }
 
-    // Отправляем уведомление в Telegram (неблокирующая операция)
-    sendTelegramNotification(order).catch(error => {
-      console.error('Failed to send Telegram notification:', error);
-      // Не прерываем выполнение, если Telegram недоступен
-    });
+    // ⚠️ ВАЖНО: Уведомления НЕ отправляются при создании заказа!
+    // Email и Telegram будут отправлены ТОЛЬКО ПОСЛЕ успешной оплаты
+    // из функции robokassa-callback после подтверждения платежа от Робокассы
+    console.log('📧 Notifications will be sent AFTER payment confirmation');
     
     return {
       statusCode: 200,
