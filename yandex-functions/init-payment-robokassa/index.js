@@ -21,7 +21,7 @@
  */
 
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 const RobokassaClient = require("../lib/robokassa-client");
 
 // Инициализация YDB клиента
@@ -118,9 +118,68 @@ exports.handler = async (event) => {
       Shp_OrderId: orderId
     };
 
-    // Генерация URL для оплаты
+    // СНАЧАЛА получаем и валидируем заказ
+    let order;
+    let actualAmount;
+    
+    try {
+      const orderResult = await docClient.send(new GetCommand({
+        TableName: "orders",
+        Key: { id: orderId }
+      }));
+
+      if (!orderResult.Item) {
+        return {
+          statusCode: 404,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            error: `Order ${orderId} not found` 
+          }),
+        };
+      }
+
+      order = orderResult.Item;
+      
+      // Для безопасности ВСЕГДА используем сумму из заказа
+      actualAmount = order.total;
+      
+      // Проверяем, что запрошенная сумма совпадает
+      if (amount !== actualAmount) {
+        console.error(`Payment amount mismatch: order.total=${actualAmount}, requested=${amount}`);
+        return {
+          statusCode: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            error: "Payment amount mismatch",
+            details: `Requested amount ${amount} does not match order total ${actualAmount}`,
+            correctAmount: actualAmount
+          }),
+        };
+      }
+    } catch (fetchError) {
+      console.error('Error fetching order:', fetchError);
+      return {
+        statusCode: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          error: "Failed to fetch order",
+          details: fetchError.message
+        }),
+      };
+    }
+
+    // Генерация URL для оплаты с ПРОВЕРЕННОЙ суммой из заказа
     const paymentUrl = robokassa.generatePaymentUrl({
-      outSum: amount,
+      outSum: actualAmount,  // ВСЕГДА используем сумму из заказа
       invId: invId,
       description: description || `Оплата заказа #${orderId.substring(0, 8)}`,
       email: email || undefined,
@@ -130,9 +189,11 @@ exports.handler = async (event) => {
 
     console.log('Payment URL generated:', paymentUrl);
 
-    // Обновление заказа в базе данных
-    // Добавляем информацию о том, что платеж инициирован
+    // Обновление информации о платеже в заказе
     try {
+
+      // Обновляем заказ с условием, что он еще не оплачен
+      // Используем ТОЛЬКО сумму из заказа для безопасности
       await docClient.send(new UpdateCommand({
         TableName: "orders",
         Key: { id: orderId },
@@ -143,20 +204,38 @@ exports.handler = async (event) => {
               robokassaOutSum = :amount,
               paymentInitiatedAt = :initiatedAt
         `,
+        ConditionExpression: "attribute_exists(id) AND (attribute_not_exists(paymentStatus) OR paymentStatus <> :alreadyPaid)",
         ExpressionAttributeValues: {
           ":paymentStatus": "pending",
           ":paymentService": "ROBOKASSA",
           ":invId": invId,
-          ":amount": amount,
-          ":initiatedAt": new Date().toISOString()
+          ":amount": actualAmount,  // ВСЕГДА используем сумму из заказа
+          ":initiatedAt": new Date().toISOString(),
+          ":alreadyPaid": "paid"
         }
       }));
 
       console.log(`Order ${orderId} updated with payment info`);
     } catch (dbError) {
       console.error('Error updating order in database:', dbError);
-      // Не прерываем выполнение, если не удалось обновить БД
+      
+      // Если заказ уже оплачен - возвращаем ошибку
+      if (dbError.name === 'ConditionalCheckFailedException') {
+        return {
+          statusCode: 400,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            error: "Order already paid or payment already initiated" 
+          }),
+        };
+      }
+      
+      // Для других ошибок БД - не прерываем выполнение
       // Платежная ссылка все равно будет создана
+      console.warn('Payment URL will be returned despite database error');
     }
 
     // Возврат успешного результата
@@ -173,7 +252,7 @@ exports.handler = async (event) => {
         paymentUrl,
         orderId,
         invId,
-        amount,
+        amount: actualAmount,  // Возвращаем фактическую сумму из заказа
         isTest
       }),
     };

@@ -27,6 +27,17 @@ class RobokassaClient {
   }
 
   /**
+   * Нормализация суммы платежа (округление до 2 знаков)
+   * 
+   * @param {number} amount - Сумма платежа
+   * @returns {string} Нормализованная сумма
+   * @private
+   */
+  _normalizeAmount(amount) {
+    return Number(amount).toFixed(2);
+  }
+
+  /**
    * Генерация подписи для инициализации платежа
    * Формула: MD5/SHA256(MerchantLogin:OutSum:InvId:Password1)
    * 
@@ -36,8 +47,11 @@ class RobokassaClient {
    * @returns {string} Подпись
    */
   generatePaymentSignature(outSum, invId, additionalParams = {}) {
+    // Нормализуем сумму для подписи
+    const normalizedSum = this._normalizeAmount(outSum);
+    
     // Базовая строка для подписи
-    let signatureString = `${this.merchantLogin}:${outSum}:${invId}:${this.password1}`;
+    let signatureString = `${this.merchantLogin}:${normalizedSum}:${invId}:${this.password1}`;
     
     // Добавляем дополнительные параметры в алфавитном порядке
     const sortedParams = Object.keys(additionalParams)
@@ -63,8 +77,11 @@ class RobokassaClient {
    * @returns {boolean} true если подпись валидна
    */
   verifyResultSignature(outSum, invId, signatureValue, additionalParams = {}) {
+    // Нормализуем сумму для проверки
+    const normalizedSum = this._normalizeAmount(outSum);
+    
     // Базовая строка для проверки
-    let checkString = `${outSum}:${invId}:${this.password2}`;
+    let checkString = `${normalizedSum}:${invId}:${this.password2}`;
     
     // Добавляем дополнительные параметры в алфавитном порядке
     const sortedParams = Object.keys(additionalParams)
@@ -107,10 +124,10 @@ class RobokassaClient {
     // Генерируем подпись
     const signature = this.generatePaymentSignature(outSum, invId, additionalParams);
 
-    // Формируем параметры URL
+    // Формируем параметры URL с нормализованной суммой
     const urlParams = new URLSearchParams({
       MerchantLogin: this.merchantLogin,
-      OutSum: outSum.toString(),
+      OutSum: this._normalizeAmount(outSum),
       InvId: invId.toString(),
       Description: description,
       SignatureValue: signature,
