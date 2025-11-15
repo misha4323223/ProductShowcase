@@ -346,7 +346,10 @@ export async function getActivePrizes(userId: string): Promise<WheelPrize[]> {
 }
 
 export async function initRobokassaPayment(orderId: string, amount: number, email?: string, description?: string): Promise<{ success: boolean; paymentUrl: string; orderId: string; amount: number }> {
-  const response = await fetch(`${API_BASE_URL}/api/payment/robokassa/init`, {
+  const url = `${API_BASE_URL}/api/payment/robokassa/init`;
+  console.log('🔍 Инициализация платежа Робокасса:', { url, orderId, amount, email });
+  
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -359,10 +362,21 @@ export async function initRobokassaPayment(orderId: string, amount: number, emai
     }),
   });
 
+  console.log('📡 Ответ от API:', { status: response.status, statusText: response.statusText });
+
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || `Failed to init Robokassa payment: ${response.status}`);
+    const errorText = await response.text();
+    console.error('❌ Ошибка API:', errorText);
+    
+    try {
+      const error = JSON.parse(errorText);
+      throw new Error(error.error || error.message || `Ошибка инициализации платежа: ${response.status}`);
+    } catch (e) {
+      throw new Error(`Ошибка инициализации платежа: ${response.status} - ${errorText.substring(0, 200)}`);
+    }
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log('✅ Результат инициализации:', data);
+  return data;
 }
