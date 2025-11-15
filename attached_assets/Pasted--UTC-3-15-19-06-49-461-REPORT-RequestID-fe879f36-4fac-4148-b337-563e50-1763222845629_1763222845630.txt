@@ -1,0 +1,48 @@
+Время (UTC +3)
+Сообщение
+
+15 нояб. 19:06:49.461
+REPORT RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff Duration: 202.018 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 102 MB Queuing Duration: 0.055 ms CPU Usage: 16.016 %
+REPORT RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff Duration: 202.018 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 102 MB Queuing Duration: 0.055 ms CPU Usage: 16.016 %
+"request_id""fe879f36-4fac-4148-b337-563e50b2e9ff"
+"source""system"
+"version_id""d4eh2nbja2emehodcb8g"
+
+15 нояб. 19:06:49.461
+ERROR RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff Code: 502 Message: Error during function invocation
+ERROR RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff Code: 502 Message: Error during function invocation
+"request_id""fe879f36-4fac-4148-b337-563e50b2e9ff"
+"source""system"
+"version_id""d4eh2nbja2emehodcb8g"
+
+15 нояб. 19:06:49.461
+END RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff
+END RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff
+"request_id""fe879f36-4fac-4148-b337-563e50b2e9ff"
+"source""system"
+"version_id""d4eh2nbja2emehodcb8g"
+
+15 нояб. 19:06:49.461
+{"errorMessage":"Unable to import index.handler module. Error: RobokassaClien is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+{"errorMessage":"Unable to import index.handler module. Error: RobokassaClien is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+"request_id""fe879f36-4fac-4148-b337-563e50b2e9ff"
+"source""system"
+"version_id""d4eh2nbja2emehodcb8g"
+
+15 нояб. 19:06:49.459
+Unable to import index.handler module. Error: RobokassaClien is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: RobokassaClien is not defined
+Stack:     at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""fe879f36-4fac-4148-b337-563e50b2e9ff"
+"source""user"
+"version_id""d4eh2nbja2emehodcb8g"
+
+15 нояб. 19:06:49.132
+START RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff Version: d4eh2nbja2emehodcb8g
+START RequestID: fe879f36-4fac-4148-b337-563e50b2e9ff Version: d4eh2nbja2emehodcb8g
+"request_id""fe879f36-4fac-4148-b337-563e50b2e9ff"
+"source""system"
+"version_id""d4eh2nbja2emehodcb8g"
