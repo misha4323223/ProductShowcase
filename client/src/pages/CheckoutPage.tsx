@@ -29,7 +29,7 @@ import { validatePromoCode } from "@/services/yandex-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { sendOrderConfirmation } from "@/services/postbox-client";
-import { getAllProducts } from "@/services/api-client";
+import { getAllProducts, initRobokassaPayment } from "@/services/api-client";
 import { DeliverySelector } from "@/components/DeliverySelector";
 import { CdekPointSelector } from "@/components/CdekPointSelector";
 import { DeliveryCalculator } from "@/components/DeliveryCalculator";
@@ -343,14 +343,35 @@ export default function CheckoutPage() {
         console.error('Не удалось отправить email:', emailError);
       }
 
-      toast({
-        title: "Заказ успешно оформлен!",
-        description: `Номер заказа: ${orderId.substring(0, 8).toUpperCase()}. Мы свяжемся с вами в ближайшее время.`,
-      });
-      
-      clearCart();
-      
-      setTimeout(() => setLocation('/'), 2000);
+      try {
+        const paymentResult = await initRobokassaPayment(
+          orderId, 
+          finalTotal, 
+          data.email,
+          `Заказ #${orderId.substring(0, 8).toUpperCase()}`
+        );
+        
+        if (paymentResult.success && paymentResult.paymentUrl) {
+          toast({
+            title: "Заказ успешно оформлен!",
+            description: `Номер заказа: ${orderId.substring(0, 8).toUpperCase()}. Переадресация на оплату...`,
+          });
+          
+          clearCart();
+          
+          window.location.href = paymentResult.paymentUrl;
+        } else {
+          throw new Error('Не удалось получить ссылку на оплату');
+        }
+      } catch (paymentError: any) {
+        console.error('Ошибка инициализации платежа:', paymentError);
+        toast({
+          title: "Ошибка инициализации оплаты",
+          description: paymentError.message || "Не удалось перейти к оплате. Попробуйте еще раз или свяжитесь с поддержкой.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+      }
     } catch (error: any) {
       toast({
         title: "Ошибка оформления заказа",

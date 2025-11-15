@@ -344,3 +344,25 @@ export async function getActivePrizes(userId: string): Promise<WheelPrize[]> {
 
   return response.json();
 }
+
+export async function initRobokassaPayment(orderId: string, amount: number, email?: string, description?: string): Promise<{ success: boolean; paymentUrl: string; orderId: string; amount: number }> {
+  const response = await fetch(`${API_BASE_URL}/api/payment/robokassa/init`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      orderId,
+      amount,
+      email,
+      description: description || `Заказ #${orderId.substring(0, 8).toUpperCase()}`,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || `Failed to init Robokassa payment: ${response.status}`);
+  }
+
+  return response.json();
+}
