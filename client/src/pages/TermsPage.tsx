@@ -264,9 +264,6 @@ export default function TermsPage() {
                   <strong>Время работы:</strong> Пн-Пт 11:00-18:00 (МСК)
                 </p>
               </div>
-              <p className="text-xs text-muted-foreground mt-3 italic">
-                * ОГРНИП не применяется для самозанятых (плательщиков НПД)
-              </p>
             </section>
 
             <section className="border-t pt-6 mt-8">
