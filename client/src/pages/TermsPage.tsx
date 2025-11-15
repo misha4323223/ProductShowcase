@@ -244,15 +244,15 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-primary mb-3">12. Контактная информация</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                По всем вопросам, связанным с настоящим Договором, обращайтесь:
-              </p>
+              <h2 className="text-xl font-semibold text-primary mb-3">12. Реквизиты продавца</h2>
               <div className="mt-3 p-4 bg-pink-50/50 rounded-lg border border-pink-200/30">
-                <p className="text-muted-foreground">
-                  <strong>Интернет-магазин:</strong> Sweet Delights<br />
+                <p className="text-muted-foreground leading-relaxed">
+                  <strong>Самозанятый:</strong> Пимашин Михаил Игоревич<br />
+                  <strong>ИНН:</strong> 711612442203<br />
+                  <strong>Статус:</strong> Плательщик налога на профессиональный доход (НПД)<br />
                   <strong>Email:</strong> Storesweeet@gmail.com<br />
                   <strong>Телефон:</strong> +7 953 181 41 36<br />
+                  <strong>Адрес:</strong> Предоставляется по запросу<br />
                   <strong>Время работы:</strong> Пн-Пт 11:00-18:00 (МСК)
                 </p>
               </div>

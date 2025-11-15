@@ -112,7 +112,22 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Контакты</h4>
             <div className="space-y-3 text-sm text-muted-foreground">
-              <p data-testid="text-contacts">Будет добавлено позже</p>
+              <div className="flex items-start gap-2">
+                <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <a href="mailto:Storesweeet@gmail.com" className="hover:text-foreground transition-colors">
+                  Storesweeet@gmail.com
+                </a>
+              </div>
+              <div className="flex items-start gap-2">
+                <Phone className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <a href="tel:+79531814136" className="hover:text-foreground transition-colors">
+                  +7 953 181 41 36
+                </a>
+              </div>
+              <p className="text-xs">
+                ИНН: 711612442203<br />
+                Пн-Пт 11:00-18:00 (МСК)
+              </p>
             </div>
           </div>
 
@@ -194,7 +209,7 @@ export default function Footer() {
 
           <div className="mt-6 pt-6 border-t border-border/50">
             <p className="text-xs text-muted-foreground text-center">
-              Будет добавлено позже
+              ИП Пимашин Михаил Игоревич | ИНН: 711612442203 | Самозанятый (НПД)
             </p>
           </div>
         </div>
