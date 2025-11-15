@@ -1,0 +1,213 @@
+# ========================================
+# РОБОКАССА МАРШРУТЫ ДЛЯ API GATEWAY
+# ========================================
+# 
+# ИНСТРУКЦИЯ:
+# 1. Скопируйте эти маршруты
+# 2. Вставьте их в ваш основной api-gateway-spec.yaml
+# 3. Замените плейсхолдеры на реальные ID:
+#    - <FUNCTION_ID_INIT_PAYMENT> - ID функции init-payment-robokassa
+#    - <FUNCTION_ID_CALLBACK> - ID функции robokassa-callback
+#    - <FUNCTION_ID_CHECK_STATUS> - ID функции check-payment-status
+#    - <SERVICE_ACCOUNT_ID> - ID вашего сервисного аккаунта
+# 4. Сохраните и обновите API Gateway
+#
+
+paths:
+  # Инициализация платежа
+  /api/payment/robokassa/init:
+    post:
+      summary: Инициализация платежа через Робокассу
+      description: Генерирует ссылку на оплату и возвращает URL для перенаправления пользователя
+      operationId: initPaymentRobokassa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderId
+                - amount
+              properties:
+                orderId:
+                  type: string
+                  description: ID заказа из базы данных
+                  example: "abc123"
+                amount:
+                  type: number
+                  description: Сумма платежа в рублях
+                  example: 5000
+                email:
+                  type: string
+                  format: email
+                  description: Email покупателя (опционально)
+                  example: "user@example.com"
+                description:
+                  type: string
+                  description: Описание платежа
+                  example: "Заказ #ABC123"
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: <FUNCTION_ID_INIT_PAYMENT>
+        service_account_id: <SERVICE_ACCOUNT_ID>
+      responses:
+        '200':
+          description: Ссылка на оплату успешно создана
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  paymentUrl:
+                    type: string
+                    description: URL для перенаправления пользователя
+                  orderId:
+                    type: string
+                  amount:
+                    type: number
+                  isTest:
+                    type: boolean
+        '400':
+          description: Неверные параметры запроса
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: initPaymentRobokassaOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
+
+  # Callback от Робокассы (Result URL)
+  /api/payment/robokassa/callback:
+    post:
+      summary: Callback от Робокассы о подтверждении оплаты
+      description: Принимает уведомление от Робокассы, проверяет подпись и обновляет статус заказа
+      operationId: robokassaCallback
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                OutSum:
+                  type: string
+                  description: Сумма платежа
+                InvId:
+                  type: string
+                  description: ID счета/заказа
+                SignatureValue:
+                  type: string
+                  description: Подпись от Робокассы
+          application/json:
+            schema:
+              type: object
+              properties:
+                OutSum:
+                  type: string
+                InvId:
+                  type: string
+                SignatureValue:
+                  type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: <FUNCTION_ID_CALLBACK>
+        service_account_id: <SERVICE_ACCOUNT_ID>
+      responses:
+        '200':
+          description: Платеж подтвержден
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "OK123456"
+        '400':
+          description: Неверная подпись или параметры
+        '500':
+          description: Ошибка обработки
+    options:
+      summary: CORS preflight
+      operationId: robokassaCallbackOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type'"
+      responses:
+        '200':
+          description: CORS response
+
+  # Проверка статуса платежа
+  /api/payment/robokassa/check:
+    get:
+      summary: Проверка статуса платежа
+      description: Возвращает текущий статус платежа для указанного заказа
+      operationId: checkPaymentStatus
+      parameters:
+        - name: orderId
+          in: query
+          required: true
+          description: ID заказа для проверки
+          schema:
+            type: string
+          example: "abc123"
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: <FUNCTION_ID_CHECK_STATUS>
+        service_account_id: <SERVICE_ACCOUNT_ID>
+      responses:
+        '200':
+          description: Информация о платеже
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                  orderStatus:
+                    type: string
+                  paymentStatus:
+                    type: string
+                    enum: [pending, paid, failed, refunded]
+                  paymentService:
+                    type: string
+                  total:
+                    type: number
+                  isPaid:
+                    type: boolean
+                  paidAt:
+                    type: string
+                    format: date-time
+        '400':
+          description: Отсутствует orderId
+        '404':
+          description: Заказ не найден
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: checkPaymentStatusOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'GET, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
