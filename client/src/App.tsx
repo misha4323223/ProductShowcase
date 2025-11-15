@@ -23,6 +23,7 @@ import Home from "@/pages/Home";
 const CategoryPage = lazy(() => import("@/pages/CategoryPage"));
 const ProductPage = lazy(() => import("@/pages/ProductPage"));
 const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
+const PaymentSuccess = lazy(() => import("@/pages/PaymentSuccess"));
 const SearchPage = lazy(() => import("@/pages/SearchPage"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const AccountPage = lazy(() => import("@/pages/AccountPage"));
@@ -56,6 +57,7 @@ function Router() {
           <Route path="/category/:slug" component={CategoryPage} />
           <Route path="/product/:id" component={ProductPage} />
           <Route path="/checkout" component={CheckoutPage} />
+          <Route path="/payment-success" component={PaymentSuccess} />
           <Route path="/search" component={SearchPage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/account" component={AccountPage} />

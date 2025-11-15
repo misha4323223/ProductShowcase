@@ -82,6 +82,48 @@ export default function CheckoutPage() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Guard: проверка старых pendingPaymentOrderId
+  useEffect(() => {
+    const checkPendingPayment = async () => {
+      const pendingOrderId = localStorage.getItem('pendingPaymentOrderId');
+      
+      if (!pendingOrderId) {
+        return;
+      }
+
+      console.log('🔍 Найден старый pendingPaymentOrderId:', pendingOrderId);
+
+      try {
+        const API_GATEWAY_URL = import.meta.env.VITE_API_GATEWAY_URL;
+        const response = await fetch(
+          `${API_GATEWAY_URL}/api/payment/robokassa/check?orderId=${pendingOrderId}`
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (data.isPaid) {
+            console.log('✅ Старый заказ оплачен, очищаем корзину');
+            clearCart();
+            localStorage.removeItem('pendingPaymentOrderId');
+            
+            toast({
+              title: "Ваш предыдущий заказ оплачен",
+              description: `Заказ #${pendingOrderId.substring(0, 8).toUpperCase()} успешно завершен`,
+            });
+          } else if (data.isFailed) {
+            console.log('❌ Старый заказ не оплачен, удаляем из localStorage');
+            localStorage.removeItem('pendingPaymentOrderId');
+          }
+        }
+      } catch (error) {
+        console.error('Ошибка проверки старого заказа:', error);
+      }
+    };
+
+    checkPendingPayment();
+  }, [clearCart, toast]);
+
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const form = useForm<CheckoutFormData>({
