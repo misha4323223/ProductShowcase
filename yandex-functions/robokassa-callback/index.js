@@ -22,6 +22,7 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 const RobokassaClient = require("./robokassa-client");
+const https = require('https');
 
 // Инициализация YDB клиента
 const client = new DynamoDBClient({
@@ -42,6 +43,100 @@ const docClient = DynamoDBDocumentClient.from(client, {
     wrapNumbers: false,
   },
 });
+
+/**
+ * Отправка уведомления в Telegram после успешной оплаты
+ */
+async function sendTelegramNotification(orderData) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!botToken || !chatId) {
+    console.warn('Telegram credentials not configured, skipping notification');
+    return;
+  }
+
+  const {
+    id,
+    customerName,
+    customerEmail,
+    customerPhone,
+    items,
+    total,
+    subtotal,
+    discount,
+    promoCode,
+    shippingAddress,
+    createdAt,
+  } = orderData;
+
+  const orderNumber = id.substring(0, 8).toUpperCase();
+  const orderDate = new Date(createdAt).toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  let message = `✅ <b>Оплачен заказ #${orderNumber}</b>\n\n`;
+  message += `👤 <b>Клиент:</b> ${customerName}\n`;
+  message += `📧 <b>Email:</b> ${customerEmail}\n`;
+  message += `📱 <b>Телефон:</b> ${customerPhone}\n\n`;
+  message += `🛒 <b>Товары:</b>\n`;
+  
+  items.forEach(item => {
+    message += `  • ${item.name} x${item.quantity} - ${item.price * item.quantity}₽\n`;
+  });
+  
+  if (promoCode) {
+    message += `\n💸 <b>Промокод:</b> ${promoCode} (-${discount}₽)\n`;
+    message += `📊 <b>Подытог:</b> ${subtotal}₽\n`;
+  }
+  
+  message += `\n💰 <b>Итого:</b> ${total}₽\n`;
+  message += `📦 <b>Адрес доставки:</b>\n${shippingAddress}\n\n`;
+  message += `⏰ ${orderDate}`;
+
+  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+  const payload = JSON.stringify({
+    chat_id: chatId,
+    text: message,
+    parse_mode: 'HTML',
+  });
+
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+      },
+    };
+
+    const req = https.request(url, options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          console.log('Telegram notification sent successfully');
+          resolve(JSON.parse(data));
+        } else {
+          console.error(`Telegram API error: ${res.statusCode} - ${data}`);
+          reject(new Error(`Telegram API error: ${res.statusCode}`));
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      console.error('Error sending Telegram notification:', error);
+      reject(error);
+    });
+
+    req.write(payload);
+    req.end();
+  });
+}
 
 exports.handler = async (event) => {
   try {
@@ -174,9 +269,11 @@ exports.handler = async (event) => {
 
       console.log(`✅ Order ${orderId} marked as PAID`);
 
+      // Получаем данные заказа для уведомлений
+      const order = orderResult.Item;
+
       // Отправляем email-подтверждение после успешной оплаты
       try {
-        const order = orderResult.Item;
         
         // Проверяем наличие email у заказа
         if (!order.customerEmail) {
@@ -224,6 +321,15 @@ exports.handler = async (event) => {
       } catch (emailError) {
         console.error('⚠️ Error sending email confirmation:', emailError);
         // Не прерываем выполнение - оплата прошла, email не критичен
+      }
+
+      // Отправляем уведомление в Telegram после успешной оплаты
+      try {
+        await sendTelegramNotification(order);
+        console.log(`✅ Telegram notification sent for order ${orderId}`);
+      } catch (telegramError) {
+        console.error('⚠️ Error sending Telegram notification:', telegramError);
+        // Не прерываем выполнение - оплата прошла, уведомление не критично
       }
 
     } catch (dbError) {

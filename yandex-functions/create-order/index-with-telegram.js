@@ -180,11 +180,11 @@ exports.handler = async (event) => {
       }
     }
 
-    // Отправляем уведомление в Telegram (неблокирующая операция)
-    sendTelegramNotification(order).catch(error => {
-      console.error('Failed to send Telegram notification:', error);
-      // Не прерываем выполнение, если Telegram недоступен
-    });
+    // Уведомление в Telegram НЕ отправляется на этапе создания заказа
+    // Оно будет отправлено ПОСЛЕ успешной оплаты в robokassa-callback
+    // sendTelegramNotification(order).catch(error => {
+    //   console.error('Failed to send Telegram notification:', error);
+    // });
     
     return {
       statusCode: 200,
