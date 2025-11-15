@@ -1,0 +1,10 @@
+{
+  "name": "init-payment-robokassa",
+  "version": "1.0.0",
+  "description": "Yandex Cloud Function для инициализации платежа через Робокассу",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.504.0",
+    "@aws-sdk/lib-dynamodb": "^3.504.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "check-payment-status",
+  "version": "1.0.0",
+  "description": "Yandex Cloud Function для проверки статуса платежа",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.504.0",
+    "@aws-sdk/lib-dynamodb": "^3.504.0"
+  }
+}

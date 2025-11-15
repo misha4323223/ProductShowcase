@@ -1,0 +1,10 @@
+{
+  "name": "robokassa-callback",
+  "version": "1.0.0",
+  "description": "Yandex Cloud Function для обработки callback от Робокассы",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.504.0",
+    "@aws-sdk/lib-dynamodb": "^3.504.0"
+  }
+}
