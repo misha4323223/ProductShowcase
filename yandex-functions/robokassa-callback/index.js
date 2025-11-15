@@ -6,15 +6,17 @@
  * Входные данные (POST от Робокассы):
  * {
  *   "OutSum": "5000.00",
- *   "InvId": "abc123",
+ *   "InvId": "1763214567890123",      // ЧИСЛОВОЙ идентификатор счета
  *   "SignatureValue": "A1B2C3D4...",
- *   "Shp_OrderId": "abc123"
+ *   "Shp_OrderId": "mi0c08v2wevj..."  // Реальный ID заказа из YDB
  * }
  * 
  * Выходные данные (для Робокассы):
  * "OK{InvId}"
  * 
- * ⚠️ ВАЖНО: Робокасса ожидает ответ СТРОГО в формате "OK{InvId}"
+ * ⚠️ ВАЖНО: 
+ * - Робокасса ожидает ответ СТРОГО в формате "OK{InvId}"
+ * - InvId теперь числовой (timestamp-based), а реальный orderId передается в Shp_OrderId
  */
 
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
@@ -125,8 +127,11 @@ exports.handler = async (event) => {
 
     console.log('✅ Signature verified successfully');
 
-    // Извлекаем orderId из дополнительных параметров или используем InvId
+    // Извлекаем orderId из дополнительных параметров
+    // ВАЖНО: InvId теперь числовой (для Robokassa), реальный orderId в Shp_OrderId
     const orderId = parsed.additionalParams.Shp_OrderId || InvId;
+    
+    console.log(`Processing payment: InvId=${InvId}, OrderId=${orderId}`);
 
     // Обновляем заказ в базе данных
     try {

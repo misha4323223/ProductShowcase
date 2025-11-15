@@ -109,11 +109,16 @@ exports.handler = async (event) => {
     });
 
     // Генерация InvId (уникальный номер счета)
-    // Используем orderId из базы данных
-    const invId = orderId;
+    // ВАЖНО: Robokassa требует строго числовой InvId (положительное целое число)
+    // Используем timestamp в миллисекундах + случайное число для уникальности
+    const timestamp = Date.now();
+    const randomSuffix = Math.floor(Math.random() * 1000);
+    const numericInvId = Number(`${timestamp}${randomSuffix}`);
+    
+    console.log(`Generated numeric InvId: ${numericInvId} for order: ${orderId}`);
 
     // Дополнительные параметры (передаются через Shp_*)
-    // Это позволит идентифицировать заказ при callback
+    // Это позволит идентифицировать заказ при callback по реальному orderId
     const additionalParams = {
       Shp_OrderId: orderId
     };
@@ -180,7 +185,7 @@ exports.handler = async (event) => {
     // Генерация URL для оплаты с ПРОВЕРЕННОЙ суммой из заказа
     const paymentUrl = robokassa.generatePaymentUrl({
       outSum: actualAmount,  // ВСЕГДА используем сумму из заказа
-      invId: invId,
+      invId: numericInvId,    // Используем числовой InvId для Robokassa
       description: description || `Оплата заказа #${orderId.substring(0, 8)}`,
       email: email || undefined,
       culture: 'ru',
@@ -188,6 +193,7 @@ exports.handler = async (event) => {
     });
 
     console.log('Payment URL generated:', paymentUrl);
+    console.log('Using numeric InvId:', numericInvId, 'with orderId in Shp_OrderId:', orderId);
 
     // Обновление информации о платеже в заказе
     try {
@@ -200,7 +206,7 @@ exports.handler = async (event) => {
         UpdateExpression: `
           SET paymentStatus = :paymentStatus,
               paymentService = :paymentService,
-              robokassaInvId = :invId,
+              robokassaInvoiceId = :invoiceId,
               robokassaOutSum = :amount,
               paymentInitiatedAt = :initiatedAt
         `,
@@ -208,7 +214,7 @@ exports.handler = async (event) => {
         ExpressionAttributeValues: {
           ":paymentStatus": "pending",
           ":paymentService": "ROBOKASSA",
-          ":invId": invId,
+          ":invoiceId": numericInvId,  // Сохраняем числовой InvId
           ":amount": actualAmount,  // ВСЕГДА используем сумму из заказа
           ":initiatedAt": new Date().toISOString(),
           ":alreadyPaid": "paid"
@@ -251,7 +257,7 @@ exports.handler = async (event) => {
         success: true,
         paymentUrl,
         orderId,
-        invId,
+        invId: numericInvId,  // Возвращаем числовой InvId
         amount: actualAmount,  // Возвращаем фактическую сумму из заказа
         isTest
       }),

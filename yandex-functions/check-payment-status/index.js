@@ -94,7 +94,7 @@ exports.handler = async (event) => {
       paymentService: order.paymentService || null,
       
       // Робокасса специфичные поля
-      robokassaInvId: order.robokassaInvId || null,
+      robokassaInvoiceId: order.robokassaInvoiceId || null,
       robokassaOutSum: order.robokassaOutSum || null,
       
       // Суммы
