@@ -1,0 +1,227 @@
+Время (UTC +3)
+Сообщение
+
+15 нояб. 19:26:08.673
+REPORT RequestID: 543622b7-f1b9-466c-b296-303fc469f82c Duration: 200.165 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.071 ms Function Init Duration: 190.946 ms CPU Usage: 11.328 %
+REPORT RequestID: 543622b7-f1b9-466c-b296-303fc469f82c Duration: 200.165 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.071 ms Function Init Duration: 190.946 ms CPU Usage: 11.328 %
+"request_id""543622b7-f1b9-466c-b296-303fc469f82c"
+"source""system"
+"version_id""d4e5qpjmu879l2a0v3c6"
+
+15 нояб. 19:26:08.673
+END RequestID: 543622b7-f1b9-466c-b296-303fc469f82c
+END RequestID: 543622b7-f1b9-466c-b296-303fc469f82c
+"request_id""543622b7-f1b9-466c-b296-303fc469f82c"
+"source""system"
+"version_id""d4e5qpjmu879l2a0v3c6"
+
+15 нояб. 19:26:08.671
+at /function/runtime/bootstrap:159:108
+
+15 нояб. 19:26:08.671
+at Generator.next (<anonymous>)
+
+15 нояб. 19:26:08.671
+at ve.<anonymous> (/function/runtime/bootstrap:212:136)
+
+15 нояб. 19:26:08.671
+at ve.handler (/function/runtime/bootstrap:194:106)
+
+15 нояб. 19:26:08.671
+at ie (/function/runtime/bootstrap:158:76)
+
+15 нояб. 19:26:08.671
+at new Promise (<anonymous>)
+
+15 нояб. 19:26:08.671
+at /function/runtime/bootstrap:159:108
+
+15 нояб. 19:26:08.671
+at Generator.next (<anonymous>)
+
+15 нояб. 19:26:08.671
+at ve.<anonymous> (/function/runtime/bootstrap:196:14)
+
+15 нояб. 19:26:08.671
+at exports.handler [as handlerFn] (/function/code/index.js:182:5)
+
+15 нояб. 19:26:08.671
+Error in robokassa-callback: ReferenceError: OutSum is not defined
+
+15 нояб. 19:26:08.670
+Decoded base64 body: out_summ=250&OutSum=250&inv_id=1763223920045564&InvId=1763223920045564&crc=357571CE6BDE178103F2830B03DAB66322AD381DC19E327F3D722360EE47D2EE&SignatureValue=357571CE6BDE178103F2830B03DAB66322AD381DC19E327F3D722360EE47D2EE&PaymentMethod=BankCard&IncSum=250&IncCurrLabel=BankCardForeignPSR&IsTest=1&EMail=&Fee=0.0&Shp_OrderId=mi0hzv0nkvxkx1y3fp
+
+15 нояб. 19:26:08.670
+}
+
+15 нояб. 19:26:08.670
+path: '/api/payment/robokassa/callback'
+
+15 нояб. 19:26:08.670
+isBase64Encoded: true,
+
+15 нояб. 19:26:08.670
+body: 'b3V0X3N1bW09MjUwJk91dFN1bT0yNTAmaW52X2lkPTE3NjMyMjM5MjAwNDU1NjQmSW52SWQ9MTc2MzIyMzkyMDA0NTU2NCZjcmM9MzU3NTcxQ0U2QkRFMTc4MTAzRjI4MzBCMDNEQUI2NjMyMkFEMzgxREMxOUUzMjdGM0Q3MjIzNjBFRTQ3RDJFRSZTaWduYXR1cmVWYWx1ZT0zNTc1NzFDRTZCREUxNzgxMDNGMjgzMEIwM0RBQjY2MzIyQUQzODFEQzE5RTMyN0YzRDcyMjM2MEVFNDdEMkVFJlBheW1lbnRNZXRob2Q9QmFua0NhcmQmSW5jU3VtPTI1MCZJbmNDdXJyTGFiZWw9QmFua0NhcmRGb3JlaWduUFNSJklzVGVzdD0xJkVNYWlsPSZGZWU9MC4wJlNocF9PcmRlcklkPW1pMGh6djBua3Z4a3gxeTNmcA==',
+
+15 нояб. 19:26:08.670
+},
+
+15 нояб. 19:26:08.670
+requestTimeEpoch: 1763223968
+
+15 нояб. 19:26:08.670
+requestTime: '15/Nov/2025:16:26:08 +0000',
+
+15 нояб. 19:26:08.670
+requestId: '697b776e-936a-42cd-aa00-936dd4a0c7b4',
+
+15 нояб. 19:26:08.670
+httpMethod: 'POST',
+
+15 нояб. 19:26:08.670
+},
+
+15 нояб. 19:26:08.670
+userAgent: '.NET Framework/v4.0.30319'
+
+15 нояб. 19:26:08.670
+sourceIp: '185.59.216.65',
+
+15 нояб. 19:26:08.670
+identity: {
+
+15 нояб. 19:26:08.670
+requestContext: {
+
+15 нояб. 19:26:08.670
+multiValueQueryStringParameters: {},
+
+15 нояб. 19:26:08.670
+queryStringParameters: {},
+
+15 нояб. 19:26:08.670
+},
+
+15 нояб. 19:26:08.670
+'X-Trace-Id': [ '871c35d7-63f0-4aa7-96e7-1b135dfde5f1' ]
+
+15 нояб. 19:26:08.670
+'X-Serverless-Gateway-Id': [ 'd5dimdj7itkijbl4s0g4' ],
+
+15 нояб. 19:26:08.670
+'X-Serverless-Certificate-Ids': [ '{}' ],
+
+15 нояб. 19:26:08.670
+'X-Request-Id': [ '697b776e-936a-42cd-aa00-936dd4a0c7b4' ],
+
+15 нояб. 19:26:08.670
+'X-Real-Remote-Address': [ '185.59.216.65:16609' ],
+
+15 нояб. 19:26:08.670
+'X-Forwarded-Proto': [ 'https' ],
+
+15 нояб. 19:26:08.670
+'X-Forwarded-For': [ '185.59.216.65' ],
+
+15 нояб. 19:26:08.670
+'X-Envoy-Original-Path': [ '/api/payment/robokassa/callback' ],
+
+15 нояб. 19:26:08.670
+'X-Envoy-External-Address': [ '185.59.216.65' ],
+
+15 нояб. 19:26:08.670
+'X-Api-Gateway-Function-Id': [ 'd4eo70h7u5qevjl70hup' ],
+
+15 нояб. 19:26:08.669
+'User-Agent': [ '.NET Framework/v4.0.30319' ],
+
+15 нояб. 19:26:08.669
+'Uber-Trace-Id': [ '08fdcf12a623b067:f581488e48982850:621c3e610f0c1394:1' ],
+
+15 нояб. 19:26:08.669
+Host: [ 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net' ],
+
+15 нояб. 19:26:08.669
+'Content-Type': [ 'application/x-www-form-urlencoded; charset=utf-8' ],
+
+15 нояб. 19:26:08.669
+'Content-Length': [ '340' ],
+
+15 нояб. 19:26:08.669
+multiValueHeaders: {
+
+15 нояб. 19:26:08.669
+pathParams: {},
+
+15 нояб. 19:26:08.669
+multiValueParams: {},
+
+15 нояб. 19:26:08.669
+params: {},
+
+15 нояб. 19:26:08.669
+url: '/api/payment/robokassa/callback?',
+
+15 нояб. 19:26:08.669
+},
+
+15 нояб. 19:26:08.669
+'X-Trace-Id': '871c35d7-63f0-4aa7-96e7-1b135dfde5f1'
+
+15 нояб. 19:26:08.669
+'X-Serverless-Gateway-Id': 'd5dimdj7itkijbl4s0g4',
+
+15 нояб. 19:26:08.669
+'X-Serverless-Certificate-Ids': '{}',
+
+15 нояб. 19:26:08.669
+'X-Request-Id': '697b776e-936a-42cd-aa00-936dd4a0c7b4',
+
+15 нояб. 19:26:08.669
+'X-Real-Remote-Address': '185.59.216.65:16609',
+
+15 нояб. 19:26:08.669
+'X-Forwarded-Proto': 'https',
+
+15 нояб. 19:26:08.669
+'X-Forwarded-For': '185.59.216.65',
+
+15 нояб. 19:26:08.669
+'X-Envoy-Original-Path': '/api/payment/robokassa/callback',
+
+15 нояб. 19:26:08.669
+'X-Envoy-External-Address': '185.59.216.65',
+
+15 нояб. 19:26:08.669
+'X-Api-Gateway-Function-Id': 'd4eo70h7u5qevjl70hup',
+
+15 нояб. 19:26:08.669
+'User-Agent': '.NET Framework/v4.0.30319',
+
+15 нояб. 19:26:08.669
+'Uber-Trace-Id': '08fdcf12a623b067:f581488e48982850:621c3e610f0c1394:1',
+
+15 нояб. 19:26:08.669
+Host: 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net',
+
+15 нояб. 19:26:08.669
+'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+
+15 нояб. 19:26:08.669
+'Content-Length': '340',
+
+15 нояб. 19:26:08.669
+headers: {
+
+15 нояб. 19:26:08.669
+httpMethod: 'POST',
+
+15 нояб. 19:26:08.669
+Robokassa callback received: {
+
+15 нояб. 19:26:08.469
+START RequestID: 543622b7-f1b9-466c-b296-303fc469f82c Version: d4e5qpjmu879l2a0v3c6
+START RequestID: 543622b7-f1b9-466c-b296-303fc469f82c Version: d4e5qpjmu879l2a0v3c6
+"request_id""543622b7-f1b9-466c-b296-303fc469f82c"
+"source""system"
+"version_id""d4e5qpjmu879l2a0v3c6"
