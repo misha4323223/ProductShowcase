@@ -287,15 +287,10 @@ exports.handler = async (event) => {
               : 'Не указано';
 
           // URL API Gateway с fallback
-          const apiGatewayUrl = process.env.API_GATEWAY_URL || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
+          const apiGatewayBaseUrl = process.env.API_GATEWAY_URL || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
 
-          // Отправляем email через API Gateway
-          const emailResponse = await fetch(`${apiGatewayUrl}/send-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+          // Отправляем email через API Gateway используя https.request
+          const emailPayload = JSON.stringify({
             type: 'order_confirmation',
             to: order.customerEmail,
             data: {
@@ -309,14 +304,49 @@ exports.handler = async (event) => {
               deliveryMethod: deliveryMethodText,
               deliveryCost: order.deliveryCost || order.cdekDeliveryCost || 0,
             },
-          }),
-        });
+          });
 
-          if (emailResponse.ok) {
-            console.log(`✅ Email confirmation sent to ${order.customerEmail}`);
-          } else {
-            console.error(`⚠️ Failed to send email to ${order.customerEmail}:`, await emailResponse.text());
-          }
+          await new Promise((resolve, reject) => {
+            // Правильно строим URL, сохраняя существующие query параметры
+            const baseUrl = new URL(apiGatewayBaseUrl);
+            baseUrl.pathname = baseUrl.pathname.replace(/\/$/, '') + '/send-email';
+            const url = baseUrl;
+            const options = {
+              hostname: url.hostname,
+              port: url.port || 443,
+              path: url.pathname + url.search, // Включаем query параметры
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(emailPayload),
+              },
+            };
+
+            const req = https.request(options, (res) => {
+              let data = '';
+              res.on('data', (chunk) => { data += chunk; });
+              res.on('end', () => {
+                // Принимаем все 2xx статусы как успех
+                if (res.statusCode >= 200 && res.statusCode < 300) {
+                  console.log(`✅ Email confirmation sent to ${order.customerEmail} (status: ${res.statusCode})`);
+                  resolve();
+                } else {
+                  console.warn(`⚠️ Email API returned non-2xx status ${res.statusCode} for ${order.customerEmail}: ${data}`);
+                  // Не прерываем выполнение - продолжаем отправку Telegram
+                  resolve();
+                }
+              });
+            });
+
+            req.on('error', (error) => {
+              console.error('❌ Error sending email request:', error);
+              // Не прерываем выполнение - продолжаем отправку Telegram
+              resolve();
+            });
+
+            req.write(emailPayload);
+            req.end();
+          });
         }
       } catch (emailError) {
         console.error('⚠️ Error sending email confirmation:', emailError);
