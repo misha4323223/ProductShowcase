@@ -149,7 +149,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const clearCart = () => {
+    console.log('🗑️ Очистка корзины (локально + YDB)');
     setCartItems([]);
+    
+    // Также очищаем корзину в YDB для авторизованных пользователей
+    if (user) {
+      saveCartToYDB(user.userId, [])
+        .then(() => {
+          console.log('✅ Корзина успешно очищена в YDB');
+        })
+        .catch(err => {
+          console.warn('⚠️ Не удалось очистить корзину в YDB:', err);
+        });
+    }
   };
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
