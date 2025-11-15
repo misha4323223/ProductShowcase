@@ -174,8 +174,57 @@ exports.handler = async (event) => {
 
       console.log(`✅ Order ${orderId} marked as PAID`);
 
-      // Здесь можно добавить отправку уведомления в Telegram
-      // или email-уведомление о подтверждении оплаты
+      // Отправляем email-подтверждение после успешной оплаты
+      try {
+        const order = orderResult.Item;
+        
+        // Проверяем наличие email у заказа
+        if (!order.customerEmail) {
+          console.warn(`⚠️ Order ${orderId} has no customerEmail, skipping email notification`);
+        } else {
+          // Формируем текст способа доставки
+          const deliveryMethodText = order.deliveryService === 'CDEK' 
+            ? `СДЭК (${order.deliveryType === 'PICKUP' ? 'Пункт выдачи' : 'Доставка до двери'})` 
+            : order.deliveryService === 'POST' 
+              ? 'Почта России' 
+              : 'Не указано';
+
+          // URL API Gateway с fallback
+          const apiGatewayUrl = process.env.API_GATEWAY_URL || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
+
+          // Отправляем email через API Gateway
+          const emailResponse = await fetch(`${apiGatewayUrl}/send-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'order_confirmation',
+            to: order.customerEmail,
+            data: {
+              customerName: order.customerName || 'Покупатель',
+              orderNumber: orderId.substring(0, 8).toUpperCase(),
+              orderDate: new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' }),
+              items: order.items || [],
+              totalAmount: order.total,
+              shippingAddress: order.shippingAddress || '',
+              phone: order.customerPhone || '',
+              deliveryMethod: deliveryMethodText,
+              deliveryCost: order.deliveryCost || order.cdekDeliveryCost || 0,
+            },
+          }),
+        });
+
+          if (emailResponse.ok) {
+            console.log(`✅ Email confirmation sent to ${order.customerEmail}`);
+          } else {
+            console.error(`⚠️ Failed to send email to ${order.customerEmail}:`, await emailResponse.text());
+          }
+        }
+      } catch (emailError) {
+        console.error('⚠️ Error sending email confirmation:', emailError);
+        // Не прерываем выполнение - оплата прошла, email не критичен
+      }
 
     } catch (dbError) {
       console.error('Error updating order in database:', dbError);

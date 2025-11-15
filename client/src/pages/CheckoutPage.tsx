@@ -28,7 +28,6 @@ import { createOrder } from "@/services/yandex-orders";
 import { validatePromoCode } from "@/services/yandex-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
-import { sendOrderConfirmation } from "@/services/postbox-client";
 import { getAllProducts, initRobokassaPayment } from "@/services/api-client";
 import { DeliverySelector } from "@/components/DeliverySelector";
 import { CdekPointSelector } from "@/components/CdekPointSelector";
@@ -320,28 +319,9 @@ export default function CheckoutPage() {
 
       const orderId = await createOrder(orderData);
 
-      const deliveryMethodText = deliveryService === 'CDEK' 
-        ? `СДЭК (${deliveryType === 'PICKUP' ? 'Пункт выдачи' : 'Доставка до двери'})` 
-        : deliveryService === 'POST' 
-          ? 'Почта России' 
-          : 'Не указано';
-
-      try {
-        await sendOrderConfirmation({
-          customerEmail: data.email,
-          customerName: `${data.firstName} ${data.lastName}`,
-          orderNumber: orderId.substring(0, 8).toUpperCase(),
-          orderDate: new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' }),
-          items: cartItems.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
-          totalAmount: finalTotal,
-          shippingAddress: `${data.address}, ${data.city}, ${data.postalCode}`,
-          phone: data.phone,
-          deliveryMethod: deliveryMethodText,
-          deliveryCost: deliveryPrice,
-        });
-      } catch (emailError) {
-        console.error('Не удалось отправить email:', emailError);
-      }
+      // ВАЖНО: Email-подтверждение отправляется ПОСЛЕ успешной оплаты
+      // через robokassa-callback Cloud Function, а не здесь!
+      // Это гарантирует, что письмо придет только если оплата прошла успешно.
 
       try {
         const paymentResult = await initRobokassaPayment(
