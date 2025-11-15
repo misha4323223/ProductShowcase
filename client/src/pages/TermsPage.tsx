@@ -117,7 +117,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-primary mb-3">4. Цены и оплата</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Все цены на сайте указаны в рублях РФ и включают НДС (если применимо).
+                Все цены на сайте указаны в рублях РФ. НДС не облагается в связи с применением упрощенной системы налогообложения (самозанятый, плательщик НПД).
               </p>
               <p className="text-muted-foreground leading-relaxed mt-2">
                 Продавец оставляет за собой право изменять цены на товары без предварительного уведомления. 
@@ -126,10 +126,18 @@ export default function TermsPage() {
               <p className="text-muted-foreground leading-relaxed mt-3 mb-3">
                 <strong>Способы оплаты:</strong>
               </p>
+              <p className="text-muted-foreground leading-relaxed mb-2">
+                Все расчеты по Договору производятся в безналичном порядке следующими способами:
+              </p>
               <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
-                <li>Банковской картой онлайн</li>
-                <li>Электронным кошельком (Яндекс.Деньги, QIWI)</li>
+                <li>Банковской картой онлайн через платежную систему Робокасса (Visa, MasterCard, Мир)</li>
+                <li>Электронными кошельками (при наличии технической возможности)</li>
               </ul>
+              <p className="text-muted-foreground leading-relaxed mt-3">
+                Оплата производится на момент оформления заказа. После успешной оплаты Продавец автоматически формирует 
+                и направляет Покупателю электронный чек в соответствии с требованиями ФЗ-54 "О применении контрольно-кассовой техники". 
+                Чек направляется на адрес электронной почты, указанный Покупателем при оформлении заказа.
+              </p>
             </section>
 
             <section>
@@ -247,15 +255,18 @@ export default function TermsPage() {
               <h2 className="text-xl font-semibold text-primary mb-3">12. Реквизиты продавца</h2>
               <div className="mt-3 p-4 bg-pink-50/50 rounded-lg border border-pink-200/30">
                 <p className="text-muted-foreground leading-relaxed">
-                  <strong>Самозанятый:</strong> Пимашин Михаил Игоревич<br />
+                  <strong>Полное наименование:</strong> Самозанятый Пимашин Михаил Игоревич<br />
                   <strong>ИНН:</strong> 711612442203<br />
                   <strong>Статус:</strong> Плательщик налога на профессиональный доход (НПД)<br />
-                  <strong>Email:</strong> Storesweeet@gmail.com<br />
-                  <strong>Телефон:</strong> +7 953 181 41 36<br />
+                  <strong>Контактный email:</strong> Storesweeet@gmail.com<br />
+                  <strong>Контактный телефон:</strong> +7 953 181 41 36<br />
                   <strong>Адрес:</strong> Предоставляется по запросу<br />
                   <strong>Время работы:</strong> Пн-Пт 11:00-18:00 (МСК)
                 </p>
               </div>
+              <p className="text-xs text-muted-foreground mt-3 italic">
+                * ОГРНИП не применяется для самозанятых (плательщиков НПД)
+              </p>
             </section>
 
             <section className="border-t pt-6 mt-8">
