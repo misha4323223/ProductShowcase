@@ -1,0 +1,190 @@
+
+
+20 нояб. 13:17:13.043
+REPORT RequestID: 2195c39d-a927-40f0-99ba-bea2755d2ddb Duration: 209.092 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 104 MB Queuing Duration: 0.070 ms Function Init Duration: 203.136 ms CPU Usage: 17.578 %
+
+20 нояб. 13:17:13.043
+END RequestID: 2195c39d-a927-40f0-99ba-bea2755d2ddb
+
+20 нояб. 13:17:13.041
+Missing required fields in callback
+
+20 нояб. 13:17:13.041
+}
+
+20 нояб. 13:17:13.041
+b3V0X3N1bW09MjUwJk91dFN1bT0yNTAmaW52X2lkPTE3NjM2MzM2MzYwNjAzNzQmSW52SWQ9MTc2MzYzMzYzNjA2MDM3NCZjcmM9NDZBODZFQ0M2QUI1NThERTVGNzA4NzE5ODVEQTc5MzA4OTY2Q0JENDExRUQ5MTJBMTA0OTQzNTc1OTlFQzAxNCZTaWduYXR1cmVWYWx1ZT00NkE4NkVDQzZBQjU1OERFNUY3MDg3MTk4NURBNzkzMDg5NjZDQkQ0MTFFRDkxMkExMDQ5NDM1NzU5OUVDMDE0JlBheW1lbnRNZXRob2Q9QmFua0NhcmQmSW5jU3VtPTI1MCZJbmNDdXJyTGFiZWw9QmFua0NhcmRGb3JlaWduUFNSJklzVGVzdD0xJkVNYWlsPSZGZWU9MC4wJlNocF9PcmRlcklkPW1pNzl4aHp6YjVmeDhoM2IwcW4: ''
+
+20 нояб. 13:17:13.041
+Parsed callback data: {
+
+20 нояб. 13:17:13.041
+}
+
+20 нояб. 13:17:13.041
+path: '/api/payment/robokassa/callback'
+
+20 нояб. 13:17:13.041
+isBase64Encoded: true,
+
+20 нояб. 13:17:13.041
+body: 'b3V0X3N1bW09MjUwJk91dFN1bT0yNTAmaW52X2lkPTE3NjM2MzM2MzYwNjAzNzQmSW52SWQ9MTc2MzYzMzYzNjA2MDM3NCZjcmM9NDZBODZFQ0M2QUI1NThERTVGNzA4NzE5ODVEQTc5MzA4OTY2Q0JENDExRUQ5MTJBMTA0OTQzNTc1OTlFQzAxNCZTaWduYXR1cmVWYWx1ZT00NkE4NkVDQzZBQjU1OERFNUY3MDg3MTk4NURBNzkzMDg5NjZDQkQ0MTFFRDkxMkExMDQ5NDM1NzU5OUVDMDE0JlBheW1lbnRNZXRob2Q9QmFua0NhcmQmSW5jU3VtPTI1MCZJbmNDdXJyTGFiZWw9QmFua0NhcmRGb3JlaWduUFNSJklzVGVzdD0xJkVNYWlsPSZGZWU9MC4wJlNocF9PcmRlcklkPW1pNzl4aHp6YjVmeDhoM2IwcW4=',
+
+20 нояб. 13:17:13.040
+},
+
+20 нояб. 13:17:13.040
+requestTimeEpoch: 1763633832
+
+20 нояб. 13:17:13.040
+requestTime: '20/Nov/2025:10:17:12 +0000',
+
+20 нояб. 13:17:13.040
+requestId: 'b972af28-b13e-40c9-9960-b488ce9a6b69',
+
+20 нояб. 13:17:13.040
+httpMethod: 'POST',
+
+20 нояб. 13:17:13.040
+},
+
+20 нояб. 13:17:13.040
+userAgent: '.NET Framework/v4.0.30319'
+
+20 нояб. 13:17:13.040
+sourceIp: '185.59.216.65',
+
+20 нояб. 13:17:13.040
+identity: {
+
+20 нояб. 13:17:13.040
+requestContext: {
+
+20 нояб. 13:17:13.040
+multiValueQueryStringParameters: {},
+
+20 нояб. 13:17:13.040
+queryStringParameters: {},
+
+20 нояб. 13:17:13.040
+},
+
+20 нояб. 13:17:13.040
+'X-Trace-Id': [ '2ffbe4f0-0390-42ff-af1f-8bc39089fe27' ]
+
+20 нояб. 13:17:13.040
+'X-Serverless-Gateway-Id': [ 'd5dimdj7itkijbl4s0g4' ],
+
+20 нояб. 13:17:13.040
+'X-Serverless-Certificate-Ids': [ '{}' ],
+
+20 нояб. 13:17:13.040
+'X-Request-Id': [ 'b972af28-b13e-40c9-9960-b488ce9a6b69' ],
+
+20 нояб. 13:17:13.040
+'X-Real-Remote-Address': [ '185.59.216.65:5601' ],
+
+20 нояб. 13:17:13.040
+'X-Forwarded-Proto': [ 'https' ],
+
+20 нояб. 13:17:13.040
+'X-Forwarded-For': [ '185.59.216.65' ],
+
+20 нояб. 13:17:13.040
+'X-Envoy-Original-Path': [ '/api/payment/robokassa/callback' ],
+
+20 нояб. 13:17:13.040
+'X-Envoy-External-Address': [ '185.59.216.65' ],
+
+20 нояб. 13:17:13.040
+'X-Api-Gateway-Function-Id': [ 'd4eo70h7u5qevjl70hup' ],
+
+20 нояб. 13:17:13.040
+'User-Agent': [ '.NET Framework/v4.0.30319' ],
+
+20 нояб. 13:17:13.040
+'Uber-Trace-Id': [ '8f2e3c186bff5693:c250753a5c6e662a:6adb91a33a03a58f:1' ],
+
+20 нояб. 13:17:13.040
+Host: [ 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net' ],
+
+20 нояб. 13:17:13.040
+'Content-Type': [ 'application/x-www-form-urlencoded; charset=utf-8' ],
+
+20 нояб. 13:17:13.040
+'Content-Length': [ '341' ],
+
+20 нояб. 13:17:13.040
+multiValueHeaders: {
+
+20 нояб. 13:17:13.040
+pathParams: {},
+
+20 нояб. 13:17:13.040
+multiValueParams: {},
+
+20 нояб. 13:17:13.040
+params: {},
+
+20 нояб. 13:17:13.040
+url: '/api/payment/robokassa/callback?',
+
+20 нояб. 13:17:13.040
+},
+
+20 нояб. 13:17:13.040
+'X-Trace-Id': '2ffbe4f0-0390-42ff-af1f-8bc39089fe27'
+
+20 нояб. 13:17:13.040
+'X-Serverless-Gateway-Id': 'd5dimdj7itkijbl4s0g4',
+
+20 нояб. 13:17:13.040
+'X-Serverless-Certificate-Ids': '{}',
+
+20 нояб. 13:17:13.040
+'X-Request-Id': 'b972af28-b13e-40c9-9960-b488ce9a6b69',
+
+20 нояб. 13:17:13.040
+'X-Real-Remote-Address': '185.59.216.65:5601',
+
+20 нояб. 13:17:13.040
+'X-Forwarded-Proto': 'https',
+
+20 нояб. 13:17:13.040
+'X-Forwarded-For': '185.59.216.65',
+
+20 нояб. 13:17:13.040
+'X-Envoy-Original-Path': '/api/payment/robokassa/callback',
+
+20 нояб. 13:17:13.040
+'X-Envoy-External-Address': '185.59.216.65',
+
+20 нояб. 13:17:13.040
+'X-Api-Gateway-Function-Id': 'd4eo70h7u5qevjl70hup',
+
+20 нояб. 13:17:13.040
+'User-Agent': '.NET Framework/v4.0.30319',
+
+20 нояб. 13:17:13.040
+'Uber-Trace-Id': '8f2e3c186bff5693:c250753a5c6e662a:6adb91a33a03a58f:1',
+
+20 нояб. 13:17:13.040
+Host: 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net',
+
+20 нояб. 13:17:13.040
+'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+
+20 нояб. 13:17:13.040
+'Content-Length': '341',
+
+20 нояб. 13:17:13.040
+headers: {
+
+20 нояб. 13:17:13.040
+httpMethod: 'POST',
+
+20 нояб. 13:17:13.040
+Robokassa callback received: {
+
+20 нояб. 13:17:12.722
+START RequestID: 2195c39d-a927-40f0-99ba-bea2755d2ddb Version: d4eefo6rsqidu71lfgfu
