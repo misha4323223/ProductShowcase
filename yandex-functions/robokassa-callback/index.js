@@ -226,11 +226,24 @@ exports.handler = async (event) => {
 
     console.log('Parsed callback data:', callbackData);
 
-    const { OutSum, InvId, SignatureValue } = callbackData;
+    // Нормализуем параметры - Робокасса может присылать в разных регистрах
+    // Приводим к стандартному виду с заглавными буквами
+    const OutSum = callbackData.OutSum || callbackData.out_summ || callbackData.outSum;
+    const InvId = callbackData.InvId || callbackData.inv_id || callbackData.invId;
+    const SignatureValue = callbackData.SignatureValue || callbackData.crc;
+    
+    // Создаем нормализованный объект для parseCallback
+    const normalizedData = {
+      ...callbackData,
+      OutSum,
+      InvId,
+      SignatureValue
+    };
 
     // Валидация обязательных полей
     if (!OutSum || !InvId || !SignatureValue) {
       console.error('Missing required fields in callback');
+      console.error('OutSum:', OutSum, 'InvId:', InvId, 'SignatureValue:', SignatureValue);
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'text/plain' },
@@ -260,12 +273,20 @@ exports.handler = async (event) => {
       hashAlgorithm
     });
 
-    // Парсинг и проверка подписи
-    const parsed = robokassa.parseCallback(callbackData);
+    // Парсинг и проверка подписи (используем нормализованные данные)
+    console.log('Verifying signature with:', {
+      OutSum,
+      InvId,
+      SignatureValue,
+      additionalParams: Object.keys(normalizedData).filter(k => k.startsWith('Shp_'))
+    });
+    
+    const parsed = robokassa.parseCallback(normalizedData);
 
     if (!parsed.isValid) {
-      console.error('Invalid signature from Robokassa!');
+      console.error('❌ Invalid signature from Robokassa!');
       console.error('Expected signature verification failed');
+      console.error('Parsed result:', parsed);
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'text/plain' },
@@ -408,10 +429,21 @@ exports.handler = async (event) => {
 
       // Отправляем уведомление в Telegram после успешной оплаты
       try {
+        console.log(`📤 Attempting to send Telegram notification for order ${orderId}...`);
+        console.log(`📋 Order data summary:`, {
+          id: order.id,
+          customerName: order.customerName,
+          total: order.total,
+          deliveryService: order.deliveryService,
+          deliveryType: order.deliveryType,
+          itemsCount: order.items?.length
+        });
+        
         await sendTelegramNotification(order);
-        console.log(`✅ Telegram notification sent for order ${orderId}`);
+        console.log(`✅ Telegram notification sent successfully for order ${orderId}`);
       } catch (telegramError) {
-        console.error('⚠️ Error sending Telegram notification:', telegramError);
+        console.error('❌ Error sending Telegram notification:', telegramError);
+        console.error('Telegram error details:', telegramError.message, telegramError.stack);
         // Не прерываем выполнение - оплата прошла, уведомление не критично
       }
 
