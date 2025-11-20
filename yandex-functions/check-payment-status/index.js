@@ -89,6 +89,9 @@ exports.handler = async (event) => {
       orderId: order.id,
       orderStatus: order.status,
       
+      // Информация о пользователе
+      userId: order.userId || null,
+      
       // Платежная информация
       paymentStatus: order.paymentStatus || 'unknown',
       paymentService: order.paymentService || null,

@@ -14,6 +14,7 @@ interface PaymentInfo {
   orderId: string;
   orderStatus: string;
   paymentStatus: string;
+  userId?: string;
   total: number;
   subtotal?: number;
   discount?: number;
@@ -80,9 +81,35 @@ export default function PaymentSuccess() {
       console.log('📊 Статус платежа:', data);
       setOrderInfo(data);
 
-      // Если оплата успешна - очищаем корзину и localStorage
+      // Если оплата успешна - очищаем корзину в YDB и локально
       if (data.isPaid) {
         console.log('✅ Оплата успешна, очищаем корзину');
+        
+        // Очищаем корзину в YDB через API (используя userId из заказа)
+        // Это гарантирует очистку даже если пользователь не авторизован на фронтенде
+        if (data.userId) {
+          try {
+            console.log('🗑️ Очищаем корзину в YDB для пользователя:', data.userId);
+            const clearResponse = await fetch(`${API_GATEWAY_URL}/cart`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                userId: data.userId, 
+                items: [] 
+              }),
+            });
+            
+            if (clearResponse.ok) {
+              console.log('✅ Корзина успешно очищена в YDB');
+            } else {
+              console.warn('⚠️ Не удалось очистить корзину в YDB');
+            }
+          } catch (clearError) {
+            console.error('❌ Ошибка при очистке корзины в YDB:', clearError);
+          }
+        }
+        
+        // Также очищаем локальное состояние корзины
         clearCart();
         localStorage.removeItem('pendingPaymentOrderId');
         
