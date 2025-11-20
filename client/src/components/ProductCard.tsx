@@ -32,6 +32,7 @@ export default function ProductCard({
   onAddToCart,
   onClick
 }: ProductCardProps) {
+  const PRODUCT_CARD_TOAST_DURATION = 1500;
   const [isAdding, setIsAdding] = useState(false);
   const [showNotifyDialog, setShowNotifyDialog] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState("");
@@ -67,7 +68,7 @@ export default function ProductCard({
         title: "Нет в наличии",
         description: "К сожалению, этот товар закончился",
         variant: "destructive",
-        duration: 30,
+        duration: PRODUCT_CARD_TOAST_DURATION,
       });
       return;
     }
@@ -85,7 +86,7 @@ export default function ProductCard({
         title: "Требуется авторизация",
         description: "Войдите в аккаунт чтобы добавлять товары в избранное",
         variant: "destructive",
-        duration: 30,
+        duration: PRODUCT_CARD_TOAST_DURATION,
       });
       return;
     }
@@ -95,7 +96,7 @@ export default function ProductCard({
       toast({
         title: inWishlist ? "Удалено из избранного" : "Добавлено в избранное",
         description: inWishlist ? `${name} удалён` : `${name} добавлен`,
-        duration: 30,
+        duration: PRODUCT_CARD_TOAST_DURATION,
       });
     } catch (error) {
       console.error("Ошибка wishlist:", error);
@@ -103,7 +104,7 @@ export default function ProductCard({
         title: "Ошибка",
         description: "Не удалось обновить избранное",
         variant: "destructive",
-        duration: 30,
+        duration: PRODUCT_CARD_TOAST_DURATION,
       });
     }
   };
@@ -122,7 +123,7 @@ export default function ProductCard({
         title: "Ошибка",
         description: "Введите корректный email адрес",
         variant: "destructive",
-        duration: 30,
+        duration: PRODUCT_CARD_TOAST_DURATION,
       });
       return;
     }
@@ -133,7 +134,7 @@ export default function ProductCard({
       toast({
         title: "Подписка оформлена! 🔔",
         description: "Мы уведомим вас когда товар появится в наличии",
-        duration: 30,
+        duration: PRODUCT_CARD_TOAST_DURATION,
       });
       setShowNotifyDialog(false);
       setNotifyEmail("");
@@ -142,7 +143,7 @@ export default function ProductCard({
         title: "Ошибка",
         description: error.message || "Не удалось оформить подписку",
         variant: "destructive",
-        duration: 30,
+        duration: PRODUCT_CARD_TOAST_DURATION,
       });
     } finally {
       setIsSubscribing(false);
