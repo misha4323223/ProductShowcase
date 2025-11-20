@@ -6,7 +6,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { Sparkles, Gift, Percent, Coins, Truck, Star, Trophy } from "lucide-react";
+import { Sparkles, Gift, Percent, Coins, Truck, Star, Trophy, Target, HelpCircle } from "lucide-react";
 import type { WheelPrize, PrizeType } from "@/types/firebase-types";
 
 interface WheelModalProps {
@@ -72,7 +72,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   const { wishlistItems, wishlistCount } = useWishlist();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  
+
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [wonPrize, setWonPrize] = useState<WheelPrize | null>(null);
@@ -123,7 +123,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
 
       // Вычисляем угол на основе типа приза
       const sectorIndex = WHEEL_SECTORS.findIndex(s => s.type === prize.prizeType);
-      
+
       if (sectorIndex === -1) {
         console.error('Prize type not found in sectors:', prize.prizeType);
         toast({
@@ -135,27 +135,27 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       }
 
       const degreesPerSector = 360 / WHEEL_SECTORS.length; // 60 градусов для 6 секторов
-      
+
       // Вычисляем ЦЕНТР нужного сектора (а не начало!)
       const sectorCenter = (sectorIndex * degreesPerSector) + (degreesPerSector / 2);
-      
+
       console.log('🎯 Prize type:', prize.prizeType);
       console.log('🎯 Sector index:', sectorIndex);
       console.log('🎯 Sector center:', sectorCenter);
-      
+
       // 5-7 ЦЕЛЫХ полных оборотов для эффекта (важно: целое число!)
       const extraSpins = 5 + Math.floor(Math.random() * 3);
-      
+
       // ИСПРАВЛЕНИЕ: Стрелка изначально между джекпотом (300-360°) и скидкой 10% (0-60°)
       // То есть при rotation=0 под стрелкой позиция 0° градиента
       // Стрелка на 270° мировых координатах, под ней 0° градиента
       // Чтобы под стрелкой оказался центр нужного сектора, нужно повернуть так:
       // (sectorCenter + rotation) % 360 = 0  =>  rotation = -sectorCenter = 360 - sectorCenter
       const finalRotation = (360 * extraSpins) + (360 - sectorCenter);
-      
+
       console.log('🎯 Final rotation:', finalRotation);
       console.log('🎯 Extra spins (integer):', extraSpins);
-      
+
       // Запускаем анимацию к нужному сектору
       setRotation(finalRotation);
 
@@ -209,7 +209,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                     <Sparkles className="w-4 h-4 text-primary" />
                     <h3 className="font-bold text-base">Как работает рулетка?</h3>
                   </div>
-                  
+
                   <div className="space-y-2 text-xs">
                     <div>
                       <p className="font-semibold mb-0.5 flex items-center gap-1">
@@ -288,7 +288,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
               </div>
 
               {/* Колесо рулетки - леденец */}
-              <div 
+              <div
                 className="w-full h-full rounded-full shadow-2xl relative overflow-hidden"
                 style={{
                   transform: `rotate(${rotation}deg)`,
@@ -303,13 +303,13 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                   const startAngle = index * degreesPerSector;
                   const middleAngle = startAngle + (degreesPerSector / 2);
                   const Icon = sector.icon;
-                  
+
                   // Позиция текста ближе к краю (60% от центра)
                   const radius = 35; // процент от радиуса (половина, т.к. элемент 100% width/height)
                   const angleInRadians = (middleAngle - 90) * (Math.PI / 180);
                   const x = 50 + radius * Math.cos(angleInRadians);
                   const y = 50 + radius * Math.sin(angleInRadians);
-                  
+
                   return (
                     <div
                       key={sector.type}
@@ -358,7 +358,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                   </>
                 )}
               </Button>
-              
+
               {spins < 1 && (
                 <p className="text-[11px] text-muted-foreground mt-1.5">
                   Делайте заказы, чтобы получить кристаллы!<br />
@@ -375,7 +375,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                     </p>
                     <div className="flex gap-1.5 justify-center flex-wrap">
                       {wishlistItems.slice(0, 6).map((item) => (
-                        <div 
+                        <div
                           key={item.productId}
                           className="w-8 h-8 rounded-md overflow-hidden border-2 border-muted"
                         >
@@ -413,11 +413,11 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
               <div className="text-6xl mb-4 animate-bounce">
                 {getPrizeInfo(wonPrize.prizeType).emoji}
               </div>
-              
+
               <h2 className="text-2xl font-bold mb-2">
                 Поздравляем! 🎉
               </h2>
-              
+
               <p className="text-lg text-muted-foreground mb-4">
                 {getPrizeInfo(wonPrize.prizeType).label}
               </p>
