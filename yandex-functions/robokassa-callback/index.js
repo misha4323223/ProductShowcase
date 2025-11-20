@@ -68,6 +68,14 @@ async function sendTelegramNotification(orderData) {
     promoCode,
     shippingAddress,
     createdAt,
+    deliveryService,
+    deliveryType,
+    cdekDeliveryCost,
+    deliveryCost,
+    deliveryPointName,
+    deliveryPointAddress,
+    deliveryAddress,
+    deliveryCity,
   } = orderData;
 
   const orderNumber = id.substring(0, 8).toUpperCase();
@@ -94,8 +102,45 @@ async function sendTelegramNotification(orderData) {
     message += `📊 <b>Подытог:</b> ${subtotal}₽\n`;
   }
   
-  message += `\n💰 <b>Итого:</b> ${total}₽\n`;
-  message += `📦 <b>Адрес доставки:</b>\n${shippingAddress}\n\n`;
+  const finalDeliveryCost = cdekDeliveryCost || deliveryCost || 0;
+  message += `\n💰 <b>Итого товары:</b> ${total - finalDeliveryCost}₽\n`;
+  
+  if (deliveryService === 'CDEK') {
+    message += `\n📦 <b>Доставка:</b> СДЭК`;
+    if (deliveryType === 'PICKUP') {
+      message += ` (Пункт выдачи)\n`;
+      if (deliveryPointName) {
+        message += `📍 <b>ПВЗ:</b> ${deliveryPointName}\n`;
+      }
+      if (deliveryPointAddress) {
+        message += `🗺 <b>Адрес ПВЗ:</b> ${deliveryPointAddress}\n`;
+      }
+    } else if (deliveryType === 'COURIER') {
+      message += ` (Доставка до двери)\n`;
+      if (deliveryAddress) {
+        message += `🏠 <b>Адрес доставки:</b> ${deliveryAddress}\n`;
+      } else if (deliveryCity) {
+        message += `🏙 <b>Город доставки:</b> ${deliveryCity}\n`;
+      }
+    }
+    if (finalDeliveryCost > 0) {
+      message += `💵 <b>Стоимость доставки:</b> ${finalDeliveryCost}₽\n`;
+    }
+  } else if (deliveryService === 'POST') {
+    message += `\n📦 <b>Доставка:</b> Почта России\n`;
+    if (shippingAddress) {
+      message += `📍 <b>Адрес:</b> ${shippingAddress}\n`;
+    }
+    if (finalDeliveryCost > 0) {
+      message += `💵 <b>Стоимость доставки:</b> ${finalDeliveryCost}₽\n`;
+    }
+  } else {
+    if (shippingAddress) {
+      message += `\n📦 <b>Адрес доставки:</b>\n${shippingAddress}\n`;
+    }
+  }
+  
+  message += `\n💰 <b>ИТОГО К ОПЛАТЕ:</b> ${total}₽\n`;
   message += `⏰ ${orderDate}`;
 
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
@@ -147,13 +192,21 @@ exports.handler = async (event) => {
     let callbackData;
     
     if (event.body) {
+      // ВАЖНО: Проверяем, закодированы ли данные в base64
+      let bodyString = event.body;
+      if (event.isBase64Encoded) {
+        console.log('Decoding base64 body...');
+        bodyString = Buffer.from(event.body, 'base64').toString('utf-8');
+        console.log('Decoded body:', bodyString);
+      }
+      
       try {
         // Пробуем распарсить как JSON
-        callbackData = JSON.parse(event.body);
+        callbackData = JSON.parse(bodyString);
       } catch (e) {
         // Если не JSON, то это form-data
         // Парсим URLSearchParams
-        const params = new URLSearchParams(event.body);
+        const params = new URLSearchParams(bodyString);
         callbackData = {};
         for (const [key, value] of params.entries()) {
           callbackData[key] = value;
