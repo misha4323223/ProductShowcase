@@ -207,75 +207,128 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-lg p-3 border border-purple-200 dark:border-purple-800">
                   <div className="flex items-center gap-1.5 mb-2">
                     <Sparkles className="w-4 h-4 text-primary" />
-                    <h3 className="font-bold text-sm">🎰 Как работает рулетка?</h3>
+                    <h3 className="font-bold text-sm">🎰 Как работает Рулетка Желаний?</h3>
                   </div>
 
-                  <div className="space-y-2 text-[11px]">
+                  <div className="space-y-2.5 text-[11px]">
                     {/* Что такое кристаллы */}
                     <div>
                       <p className="font-semibold mb-0.5">💎 Что такое кристаллы?</p>
-                      <p className="text-muted-foreground">
-                        Кристаллы — это ваши попытки! Вы получаете <span className="font-semibold text-primary">1 кристалл за каждые 1000₽</span>.
+                      <p className="text-muted-foreground mb-1">
+                        Кристаллы — это ваши попытки покрутить рулетку!
                       </p>
+                      <p className="text-muted-foreground mb-0.5">
+                        Вы получаете <span className="font-semibold text-primary">1 кристалл за каждые 1000₽</span>, потраченные в магазине.
+                      </p>
+                      <div className="text-[10px] text-muted-foreground space-y-0.5 mt-1">
+                        <div>• Купили на 2500₽ → получили <span className="font-semibold">2 кристалла</span> 💎💎</div>
+                        <div>• Купили на 5800₽ → получили <span className="font-semibold">5 кристаллов</span> 💎💎💎💎💎</div>
+                      </div>
                     </div>
 
                     {/* Почему больше кристаллов = больше призов */}
                     <div>
-                      <p className="font-semibold mb-1">🎁 Больше кристаллов = больше призов!</p>
+                      <p className="font-semibold mb-0.5">🎁 Почему больше кристаллов = больше призов?</p>
+                      <p className="text-muted-foreground mb-1.5">
+                        Это наш способ сказать "Спасибо!" постоянным покупателям!
+                      </p>
+                      <p className="text-muted-foreground mb-1">Чем больше у вас кристаллов, тем больше призов доступно:</p>
                       <div className="space-y-0.5">
                         <div className="flex gap-1.5">
                           <span className="text-purple-500 font-bold min-w-[50px]">1 💎</span>
-                          <span className="text-muted-foreground">Скидка 10%</span>
+                          <span className="text-muted-foreground">Можете выиграть только: Скидка 10%</span>
                         </div>
                         <div className="flex gap-1.5">
-                          <span className="text-pink-500 font-bold min-w-[50px]">2 💎</span>
-                          <span className="text-muted-foreground">+ Товар -20%</span>
+                          <span className="text-pink-500 font-bold min-w-[50px]">2 💎💎</span>
+                          <span className="text-muted-foreground">Теперь можете выиграть: Скидка 10% ИЛИ Товар -20%</span>
                         </div>
                         <div className="flex gap-1.5">
-                          <span className="text-amber-500 font-bold min-w-[50px]">3 💎</span>
-                          <span className="text-muted-foreground">+ Бонусы 200₽</span>
+                          <span className="text-amber-500 font-bold min-w-[50px]">3 💎💎💎</span>
+                          <span className="text-muted-foreground">Добавляется возможность выиграть: +200 баллов</span>
                         </div>
                         <div className="flex gap-1.5">
-                          <span className="text-blue-500 font-bold min-w-[50px]">4 💎</span>
-                          <span className="text-muted-foreground">+ Доставка</span>
+                          <span className="text-blue-500 font-bold min-w-[50px]">4 💎💎💎💎</span>
+                          <span className="text-muted-foreground">Теперь можете выиграть: Бесплатную доставку</span>
                         </div>
                         <div className="flex gap-1.5">
-                          <span className="text-green-500 font-bold min-w-[50px]">5 💎</span>
-                          <span className="text-muted-foreground">+ Подарок</span>
+                          <span className="text-green-500 font-bold min-w-[50px]">5 💎💎💎💎💎</span>
+                          <span className="text-muted-foreground">Появляется шанс получить: Товар БЕСПЛАТНО!</span>
                         </div>
                         <div className="flex gap-1.5 bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-950/50 dark:to-yellow-950/50 -mx-1 px-1 py-0.5 rounded">
                           <span className="text-orange-500 font-bold min-w-[50px]">6+ 💎</span>
-                          <span className="font-semibold">🏆 ДЖЕКПОТ 40%!</span>
+                          <span className="font-semibold">🔥 Открывается ДЖЕКПОТ — 40% скидка на ВСЁ из желаний!</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Как работает рулетка */}
                     <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-md p-2">
-                      <p className="font-semibold mb-1">🎯 На рулетке видны все 6 секторов</p>
-                      <p className="text-muted-foreground">
-                        Но выпасть могут <span className="font-semibold text-foreground">только те призы</span>, которые доступны вам по количеству кристаллов!
+                      <p className="font-semibold mb-1">🎯 Как работает рулетка?</p>
+                      <p className="text-muted-foreground mb-1">
+                        <span className="font-semibold">На рулетке всегда видны все 6 секторов с призами:</span>
                       </p>
+                      <div className="text-[10px] text-muted-foreground space-y-0.5">
+                        <div>• Скидка 10% (фиолетовый)</div>
+                        <div>• Товар -20% (розовый)</div>
+                        <div>• +200 баллов (золотой)</div>
+                        <div>• Бесплатная доставка (синий)</div>
+                        <div>• Бесплатный товар (зелёный)</div>
+                        <div>• ДЖЕКПОТ 40% (красно-оранжевый)</div>
+                      </div>
+                      <p className="text-muted-foreground mt-1.5">
+                        <span className="font-semibold text-foreground">НО!</span> Выпасть могут <span className="font-semibold text-foreground">только те призы, которые вам доступны</span> по количеству кристаллов.
+                      </p>
+                      <div className="mt-1.5 pt-1.5 border-t border-blue-200 dark:border-blue-700">
+                        <p className="font-semibold mb-0.5">Пример:</p>
+                        <p className="text-muted-foreground mb-0.5">У вас <span className="font-semibold">3 кристалла</span> → на рулетке показаны все 6 секторов, но выпасть могут только:</p>
+                        <div className="text-[10px] space-y-0.5">
+                          <div className="text-green-600 dark:text-green-400">✅ Скидка 10%</div>
+                          <div className="text-green-600 dark:text-green-400">✅ Скидка 20%</div>
+                          <div className="text-green-600 dark:text-green-400">✅ Бонусы +200₽</div>
+                          <div className="text-red-600 dark:text-red-400">❌ Доставка (нужно 4 кристалла)</div>
+                          <div className="text-red-600 dark:text-red-400">❌ Подарок (нужно 5 кристаллов)</div>
+                          <div className="text-red-600 dark:text-red-400">❌ Джекпот (нужно 6+ кристаллов)</div>
+                        </div>
+                      </div>
                     </div>
 
                     {/* FAQ */}
                     <div className="space-y-1 pt-1">
+                      <p className="font-semibold mb-1">❓ Частые вопросы</p>
                       <details className="group">
-                        <summary className="font-semibold cursor-pointer flex items-center gap-1">
+                        <summary className="font-semibold cursor-pointer flex items-center gap-1 text-[10px]">
                           <HelpCircle className="w-3 h-3" />
                           <span>Я потрачу кристалл, если не выиграю?</span>
                         </summary>
-                        <p className="text-muted-foreground mt-0.5 ml-4">
+                        <p className="text-muted-foreground mt-0.5 ml-4 text-[10px]">
                           Да, каждое вращение использует 1 кристалл, но вы <span className="font-semibold">ВСЕГДА</span> что-то выигрываете!
                         </p>
                       </details>
                       <details className="group">
-                        <summary className="font-semibold cursor-pointer flex items-center gap-1">
+                        <summary className="font-semibold cursor-pointer flex items-center gap-1 text-[10px]">
+                          <HelpCircle className="w-3 h-3" />
+                          <span>Могу ли я копить кристаллы?</span>
+                        </summary>
+                        <p className="text-muted-foreground mt-0.5 ml-4 text-[10px]">
+                          Конечно! Копите до 6+ для доступа к джекпоту! 💎
+                        </p>
+                      </details>
+                      <details className="group">
+                        <summary className="font-semibold cursor-pointer flex items-center gap-1 text-[10px]">
                           <HelpCircle className="w-3 h-3" />
                           <span>Нужен ли список желаний?</span>
                         </summary>
-                        <p className="text-muted-foreground mt-0.5 ml-4">
-                          Да! Скидки на товар, подарок и джекпот работают с вашим списком желаний ❤️
+                        <p className="text-muted-foreground mt-0.5 ml-4 text-[10px]">
+                          Да! Некоторые призы (скидки на товар, бесплатный товар, джекпот) работают с вашим списком желаний ❤️
+                        </p>
+                      </details>
+                      <details className="group">
+                        <summary className="font-semibold cursor-pointer flex items-center gap-1 text-[10px]">
+                          <HelpCircle className="w-3 h-3" />
+                          <span>Почему я вижу все призы, но выигрываю только некоторые?</span>
+                        </summary>
+                        <p className="text-muted-foreground mt-0.5 ml-4 text-[10px]">
+                          Рулетка показывает все возможные призы для наглядности, но система автоматически выбирает только те, которые доступны вам по количеству кристаллов. Это честно и прозрачно!
                         </p>
                       </details>
                     </div>
