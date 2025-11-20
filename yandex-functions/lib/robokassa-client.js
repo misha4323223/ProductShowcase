@@ -70,18 +70,19 @@ class RobokassaClient {
    * Проверка подписи от Робокассы (Result URL callback)
    * Формула: MD5/SHA256(OutSum:InvId:Password2)
    * 
-   * @param {number} outSum - Сумма платежа
+   * @param {number|string} outSum - Сумма платежа (используется как есть, без нормализации)
    * @param {string} invId - ID заказа
    * @param {string} signatureValue - Подпись от Робокассы
    * @param {object} additionalParams - Дополнительные параметры (опционально)
    * @returns {boolean} true если подпись валидна
    */
   verifyResultSignature(outSum, invId, signatureValue, additionalParams = {}) {
-    // Нормализуем сумму для проверки
-    const normalizedSum = this._normalizeAmount(outSum);
+    // ВАЖНО: НЕ нормализуем сумму! Робокасса присылает "295" и вычисляет подпись с "295"
+    // Если мы изменим на "295.00", подпись не совпадет
+    const amountString = String(outSum);
     
     // Базовая строка для проверки
-    let checkString = `${normalizedSum}:${invId}:${this.password2}`;
+    let checkString = `${amountString}:${invId}:${this.password2}`;
     
     // Добавляем дополнительные параметры в алфавитном порядке
     const sortedParams = Object.keys(additionalParams)
@@ -94,6 +95,18 @@ class RobokassaClient {
     }
     
     const expectedSignature = this._hash(checkString);
+    
+    // Логирование для отладки
+    console.log('Signature verification details:', {
+      outSum: amountString,
+      invId,
+      password2: this.password2 ? '***set***' : 'MISSING',
+      additionalParams: sortedParams,
+      checkString: checkString.replace(this.password2, '***PASSWORD***'),
+      expectedSignature,
+      receivedSignature: signatureValue,
+      match: signatureValue.toUpperCase() === expectedSignature.toUpperCase()
+    });
     
     // Сравнение без учета регистра
     return signatureValue.toUpperCase() === expectedSignature.toUpperCase();
