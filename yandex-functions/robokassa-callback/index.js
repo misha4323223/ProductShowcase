@@ -21,8 +21,85 @@
 
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
-const RobokassaClient = require("./lib/robokassa-client");
+const crypto = require('crypto');
 const https = require('https');
+
+// ============================================================================
+// Robokassa Client (встроен в функцию для упрощения деплоя)
+// ============================================================================
+class RobokassaClient {
+  constructor(merchantLogin, password1, password2, options = {}) {
+    this.merchantLogin = merchantLogin;
+    this.password1 = password1;
+    this.password2 = password2;
+    this.isTest = options.isTest || false;
+    this.hashAlgorithm = options.hashAlgorithm || 'sha256';
+    this.paymentUrl = 'https://auth.robokassa.ru/Merchant/Index.aspx';
+  }
+
+  _normalizeAmount(amount) {
+    return Number(amount).toFixed(2);
+  }
+
+  verifyResultSignature(outSum, invId, signatureValue, additionalParams = {}) {
+    // ВАЖНО: НЕ нормализуем сумму! Робокасса присылает "295" и вычисляет подпись с "295"
+    const amountString = String(outSum);
+    let checkString = `${amountString}:${invId}:${this.password2}`;
+    
+    const sortedParams = Object.keys(additionalParams)
+      .filter(key => key.startsWith('Shp_') || key.startsWith('shp_'))
+      .sort()
+      .map(key => `${key}=${additionalParams[key]}`);
+    
+    if (sortedParams.length > 0) {
+      checkString += `:${sortedParams.join(':')}`;
+    }
+    
+    const expectedSignature = this._hash(checkString);
+    
+    console.log('Signature verification details:', {
+      outSum: amountString,
+      invId,
+      password2: this.password2 ? '***set***' : 'MISSING',
+      additionalParams: sortedParams,
+      checkString: checkString.replace(this.password2, '***PASSWORD***'),
+      expectedSignature,
+      receivedSignature: signatureValue,
+      match: signatureValue.toUpperCase() === expectedSignature.toUpperCase()
+    });
+    
+    return signatureValue.toUpperCase() === expectedSignature.toUpperCase();
+  }
+
+  parseCallback(callbackData) {
+    const { OutSum, InvId, SignatureValue, Culture, ...customParams } = callbackData;
+    
+    const additionalParams = {};
+    Object.keys(customParams).forEach(key => {
+      if (key.startsWith('Shp_') || key.startsWith('shp_')) {
+        additionalParams[key] = customParams[key];
+      }
+    });
+
+    return {
+      outSum: parseFloat(OutSum),
+      invId: InvId,
+      signatureValue: SignatureValue,
+      culture: Culture,
+      additionalParams,
+      isValid: this.verifyResultSignature(OutSum, InvId, SignatureValue, additionalParams)
+    };
+  }
+
+  _hash(str) {
+    return crypto.createHash(this.hashAlgorithm).update(str).digest('hex').toUpperCase();
+  }
+
+  generateResultResponse(invId) {
+    return `OK${invId}`;
+  }
+}
+// ============================================================================
 
 // Инициализация YDB клиента
 const client = new DynamoDBClient({
