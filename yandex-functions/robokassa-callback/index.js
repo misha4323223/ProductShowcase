@@ -21,7 +21,7 @@
 
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
-const RobokassaClient = require("./robokassa-client");
+const RobokassaClient = require("./lib/robokassa-client");
 const https = require('https');
 
 // Инициализация YDB клиента
