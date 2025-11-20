@@ -40,13 +40,23 @@ export default function PaymentSuccess() {
   async function checkPayment() {
     try {
       // Получаем orderId из URL параметров (когда ROBOKASSA перенаправляет)
-      // или из localStorage (когда пользователь возвращается на страницу)
       const urlParams = new URLSearchParams(window.location.search);
-      let orderId = urlParams.get('InvId') || urlParams.get('orderId');
       
-      // Если в URL нет orderId, пробуем взять из localStorage
+      // 1. ПРИОРИТЕТ - Shp_OrderId из URL (передается Робокассой обратно)
+      let orderId = urlParams.get('Shp_OrderId');
+      
+      // 2. Если нет в URL, берем из localStorage (fallback для прямого захода на страницу)
       if (!orderId) {
         orderId = localStorage.getItem('pendingPaymentOrderId');
+        console.log('📦 OrderId взят из localStorage:', orderId);
+      } else {
+        console.log('🔗 OrderId получен из URL (Shp_OrderId):', orderId);
+      }
+      
+      // 3. В крайнем случае используем обычный orderId из URL
+      if (!orderId) {
+        orderId = urlParams.get('orderId');
+        console.log('📋 OrderId взят из URL (orderId):', orderId);
       }
 
       if (!orderId) {
@@ -55,6 +65,8 @@ export default function PaymentSuccess() {
         return;
       }
 
+      console.log(`🔍 Проверяем статус платежа для заказа: ${orderId}`);
+      
       // Проверяем статус платежа через API
       const response = await fetch(
         `${API_GATEWAY_URL}/api/payment/robokassa/check?orderId=${orderId}`
@@ -65,6 +77,7 @@ export default function PaymentSuccess() {
       }
 
       const data: PaymentInfo = await response.json();
+      console.log('📊 Статус платежа:', data);
       setOrderInfo(data);
 
       // Если оплата успешна - очищаем корзину и localStorage
