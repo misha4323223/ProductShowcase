@@ -67,7 +67,7 @@ export default function ProductCard({
         title: "Нет в наличии",
         description: "К сожалению, этот товар закончился",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
       return;
     }
@@ -85,7 +85,7 @@ export default function ProductCard({
         title: "Требуется авторизация",
         description: "Войдите в аккаунт чтобы добавлять товары в избранное",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
       return;
     }
@@ -95,7 +95,7 @@ export default function ProductCard({
       toast({
         title: inWishlist ? "Удалено из избранного" : "Добавлено в избранное",
         description: inWishlist ? `${name} удалён` : `${name} добавлен`,
-        duration: 2000,
+        duration: 1000,
       });
     } catch (error) {
       console.error("Ошибка wishlist:", error);
@@ -103,7 +103,7 @@ export default function ProductCard({
         title: "Ошибка",
         description: "Не удалось обновить избранное",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
     }
   };
@@ -122,7 +122,7 @@ export default function ProductCard({
         title: "Ошибка",
         description: "Введите корректный email адрес",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
       return;
     }
@@ -133,7 +133,7 @@ export default function ProductCard({
       toast({
         title: "Подписка оформлена! 🔔",
         description: "Мы уведомим вас когда товар появится в наличии",
-        duration: 2000,
+        duration: 1000,
       });
       setShowNotifyDialog(false);
       setNotifyEmail("");
@@ -142,7 +142,7 @@ export default function ProductCard({
         title: "Ошибка",
         description: error.message || "Не удалось оформить подписку",
         variant: "destructive",
-        duration: 2000,
+        duration: 1000,
       });
     } finally {
       setIsSubscribing(false);
