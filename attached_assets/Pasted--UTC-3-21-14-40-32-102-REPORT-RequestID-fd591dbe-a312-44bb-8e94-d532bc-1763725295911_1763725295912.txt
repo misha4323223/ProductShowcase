@@ -1,0 +1,83 @@
+Время (UTC +3)
+Сообщение
+
+21 нояб. 14:40:32.102
+REPORT RequestID: fd591dbe-a312-44bb-8e94-d532bca188e1 Duration: 302.245 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 106 MB Queuing Duration: 0.087 ms Function Init Duration: 191.689 ms CPU Usage: 11.816 %
+
+21 нояб. 14:40:32.102
+END RequestID: fd591dbe-a312-44bb-8e94-d532bca188e1
+
+21 нояб. 14:40:32.100
+}
+
+21 нояб. 14:40:32.100
+Code: 'BadRequestException'
+
+21 нояб. 14:40:32.100
+},
+
+21 нояб. 14:40:32.100
+totalRetryDelay: 0
+
+21 нояб. 14:40:32.100
+attempts: 1,
+
+21 нояб. 14:40:32.100
+cfId: undefined,
+
+21 нояб. 14:40:32.100
+extendedRequestId: undefined,
+
+21 нояб. 14:40:32.100
+requestId: undefined,
+
+21 нояб. 14:40:32.100
+httpStatusCode: 400,
+
+21 нояб. 14:40:32.100
+'$metadata': {
+
+21 нояб. 14:40:32.100
+'$retryable': undefined,
+
+21 нояб. 14:40:32.100
+'$fault': 'client',
+
+21 нояб. 14:40:32.100
+at async exports.handler [as handlerFn] (/function/code/index.js:99:5) {
+
+21 нояб. 14:40:32.100
+at async sendEmail (/function/code/index.js:41:18)
+
+21 нояб. 14:40:32.100
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+21 нояб. 14:40:32.100
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+21 нояб. 14:40:32.100
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+21 нояб. 14:40:32.100
+at async /function/code/node_modules/@smithy/core/dist-cjs/submodules/schema/index.js:26:24
+
+21 нояб. 14:40:32.100
+at async AwsRestJsonProtocol.deserializeResponse (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:744:24)
+
+21 нояб. 14:40:32.100
+at async AwsRestJsonProtocol.deserializeResponse (/function/code/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:301:13)
+
+21 нояб. 14:40:32.100
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+21 нояб. 14:40:32.100
+at AwsRestJsonProtocol.handleError (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:759:27)
+
+21 нояб. 14:40:32.099
+RequestID: c2bc5d19-edb3-45a3-a16e-c9aeda84c70d
+
+21 нояб. 14:40:32.099
+Error sending email: BadRequestException: validation failed: invalid «from» address
+
+21 нояб. 14:40:31.789
+START RequestID: fd591dbe-a312-44bb-8e94-d532bca188e1 Version: d4ecpm0dfni01ef61336
