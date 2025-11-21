@@ -188,18 +188,6 @@ export default function LoginPage() {
             </div>
             
             <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <Button 
-                  variant="ghost" 
-                  className="px-0 text-xs h-auto text-slate-900 font-semibold hover:text-slate-700"
-                  type="button"
-                  onClick={() => setIsResetDialogOpen(true)}
-                  data-testid="button-forgot-password"
-                  style={{textShadow: "0 1px 2px rgba(255, 255, 255, 0.5)"}}
-                >
-                  Забыли?
-                </Button>
-              </div>
               <div className="flex items-center bg-white/5 dark:bg-black/5 backdrop-blur-sm border-2 border-purple-300/60 dark:border-purple-400/40 rounded-md focus-within:border-purple-400/80 transition-colors">
                 <Input
                   id="login-password"
@@ -236,6 +224,17 @@ export default function LoginPage() {
             data-testid="button-login-submit"
           >
             {isLoading ? "..." : "Войти"}
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="text-xs text-slate-900 font-medium hover:text-slate-700 h-auto py-0"
+            type="button"
+            onClick={() => setIsResetDialogOpen(true)}
+            data-testid="button-forgot-password"
+            style={{textShadow: "0 1px 2px rgba(255, 255, 255, 0.5)"}}
+          >
+            Забыли пароль?
           </Button>
 
           <Button 
