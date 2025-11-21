@@ -3,12 +3,11 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Home } from "lucide-react";
 import { Link } from "wouter";
 import logoUrl from "@assets/logo.webp";
 
@@ -151,219 +150,225 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
-      <div 
-        className="absolute inset-0 bg-gradient-to-br from-pink-100/80 via-purple-100/80 to-blue-100/80 dark:from-pink-950/30 dark:via-purple-950/30 dark:to-blue-950/30"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle at 20% 50%, rgba(251, 207, 232, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(221, 214, 254, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 40% 20%, rgba(254, 202, 202, 0.2) 0%, transparent 50%)
-          `
-        }}
-      />
-      
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-32 h-32 bg-pink-300/20 dark:bg-pink-500/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-16 right-16 w-40 h-40 bg-purple-300/20 dark:bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-1/4 left-16 w-24 h-24 bg-blue-300/20 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+      <Link 
+        href="/" 
+        className="absolute top-4 left-4 z-50 p-2 rounded-md bg-white/10 dark:bg-black/10 backdrop-blur-sm hover-elevate active-elevate-2 transition-all"
+        data-testid="link-home"
+      >
+        <Home className="w-5 h-5 text-foreground" />
+      </Link>
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8 space-y-4">
-          <Link href="/" className="inline-block group" data-testid="link-logo">
-            <div className="mb-4 transform transition-transform group-hover:scale-105">
-              <img 
-                src={logoUrl} 
-                alt="Sweet Delights Logo" 
-                className="w-32 h-32 mx-auto drop-shadow-2xl"
-                loading="eager"
-              />
-            </div>
-            <h1 className="font-serif text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 drop-shadow-sm">
-              Sweet Delights
-            </h1>
-          </Link>
-          <p className="text-muted-foreground text-sm">Сладкие Наслаждения</p>
+      <div 
+        className="absolute inset-0 flex items-center justify-center"
+        style={{
+          backgroundImage: `url(${logoUrl})`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/95 via-purple-50/95 to-blue-50/95 dark:from-gray-950/95 dark:via-gray-900/95 dark:to-gray-950/95" />
+      </div>
+
+      <div className="w-full max-w-md relative z-10 p-6">
+        <div className="text-center mb-8">
+          <h1 className="font-serif text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 mb-2">
+            Sweet Delights
+          </h1>
+          <p className="text-muted-foreground text-lg">Сладкие Наслаждения</p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-4 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm">
-            <TabsTrigger value="login" data-testid="tab-login">Вход</TabsTrigger>
-            <TabsTrigger value="signup" data-testid="tab-signup">Регистрация</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 mb-6 bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/10">
+            <TabsTrigger 
+              value="login" 
+              data-testid="tab-login"
+              className="data-[state=active]:bg-white/40 dark:data-[state=active]:bg-white/10"
+            >
+              Вход
+            </TabsTrigger>
+            <TabsTrigger 
+              value="signup" 
+              data-testid="tab-signup"
+              className="data-[state=active]:bg-white/40 dark:data-[state=active]:bg-white/10"
+            >
+              Регистрация
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="login">
-            <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-white/20 dark:border-gray-700/20 shadow-2xl">
-              <CardHeader>
-                <CardTitle className="text-2xl">Вход в аккаунт</CardTitle>
-                <CardDescription>Введите свои данные для входа</CardDescription>
-              </CardHeader>
-              <form onSubmit={handleLogin}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+            <div className="bg-white/10 dark:bg-black/10 backdrop-blur-xl rounded-md border border-white/20 dark:border-white/10 p-6 space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-semibold mb-2">Вход в аккаунт</h2>
+                <p className="text-sm text-muted-foreground">Введите свои данные для входа</p>
+              </div>
+              
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="login-email" className="text-foreground">Email</Label>
+                  <Input
+                    id="login-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                    required
+                    data-testid="input-login-email"
+                    className="bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="login-password" className="text-foreground">Пароль</Label>
+                    <Button 
+                      variant="ghost" 
+                      className="px-0 text-xs h-auto text-primary hover:underline"
+                      type="button"
+                      onClick={() => setIsResetDialogOpen(true)}
+                      data-testid="button-forgot-password"
+                    >
+                      Забыли пароль?
+                    </Button>
+                  </div>
+                  <div className="relative">
                     <Input
-                      id="login-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
+                      id="login-password"
+                      type={showLoginPassword ? "text" : "password"}
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
                       required
-                      data-testid="input-login-email"
-                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                      data-testid="input-login-password"
+                      className="pr-10 bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground"
                     />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowLoginPassword(!showLoginPassword)}
+                      data-testid="button-toggle-login-password"
+                    >
+                      {showLoginPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="login-password">Пароль</Label>
-                      <Button 
-                        variant="ghost" 
-                        className="px-0 text-xs h-auto text-primary hover:underline"
-                        type="button"
-                        onClick={() => setIsResetDialogOpen(true)}
-                        data-testid="button-forgot-password"
-                      >
-                        Забыли пароль?
-                      </Button>
-                    </div>
-                    <div className="relative">
-                      <Input
-                        id="login-password"
-                        type={showLoginPassword ? "text" : "password"}
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
-                        required
-                        data-testid="input-login-password"
-                        className="pr-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowLoginPassword(!showLoginPassword)}
-                        data-testid="button-toggle-login-password"
-                      >
-                        {showLoginPassword ? (
-                          <EyeOff className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white shadow-lg" 
-                    disabled={isLoading}
-                    data-testid="button-login-submit"
-                  >
-                    {isLoading ? "Вход..." : "Войти"}
-                  </Button>
-                </CardFooter>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0" 
+                  disabled={isLoading}
+                  data-testid="button-login-submit"
+                >
+                  {isLoading ? "Вход..." : "Войти"}
+                </Button>
               </form>
-            </Card>
+            </div>
           </TabsContent>
           
           <TabsContent value="signup">
-            <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-white/20 dark:border-gray-700/20 shadow-2xl">
-              <CardHeader>
-                <CardTitle className="text-2xl">Регистрация</CardTitle>
-                <CardDescription>Создайте новый аккаунт</CardDescription>
-              </CardHeader>
-              <form onSubmit={handleSignup}>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+            <div className="bg-white/10 dark:bg-black/10 backdrop-blur-xl rounded-md border border-white/20 dark:border-white/10 p-6 space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-semibold mb-2">Регистрация</h2>
+                <p className="text-sm text-muted-foreground">Создайте новый аккаунт</p>
+              </div>
+              
+              <form onSubmit={handleSignup} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email" className="text-foreground">Email</Label>
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
+                    required
+                    data-testid="input-signup-email"
+                    className="bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="signup-password" className="text-foreground">Пароль</Label>
+                  <div className="relative">
                     <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={signupEmail}
-                      onChange={(e) => setSignupEmail(e.target.value)}
+                      id="signup-password"
+                      type={showSignupPassword ? "text" : "password"}
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
                       required
-                      data-testid="input-signup-email"
-                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                      minLength={6}
+                      data-testid="input-signup-password"
+                      className="pr-10 bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground"
                     />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowSignupPassword(!showSignupPassword)}
+                      data-testid="button-toggle-signup-password"
+                    >
+                      {showSignupPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Пароль</Label>
-                    <div className="relative">
-                      <Input
-                        id="signup-password"
-                        type={showSignupPassword ? "text" : "password"}
-                        value={signupPassword}
-                        onChange={(e) => setSignupPassword(e.target.value)}
-                        required
-                        minLength={6}
-                        data-testid="input-signup-password"
-                        className="pr-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowSignupPassword(!showSignupPassword)}
-                        data-testid="button-toggle-signup-password"
-                      >
-                        {showSignupPassword ? (
-                          <EyeOff className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="signup-confirm-password" className="text-foreground">Подтвердите пароль</Label>
+                  <div className="relative">
+                    <Input
+                      id="signup-confirm-password"
+                      type={showSignupConfirmPassword ? "text" : "password"}
+                      value={signupConfirmPassword}
+                      onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                      required
+                      minLength={6}
+                      data-testid="input-signup-confirm-password"
+                      className="pr-10 bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowSignupConfirmPassword(!showSignupConfirmPassword)}
+                      data-testid="button-toggle-confirm-password"
+                    >
+                      {showSignupConfirmPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-confirm-password">Подтвердите пароль</Label>
-                    <div className="relative">
-                      <Input
-                        id="signup-confirm-password"
-                        type={showSignupConfirmPassword ? "text" : "password"}
-                        value={signupConfirmPassword}
-                        onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                        required
-                        minLength={6}
-                        data-testid="input-signup-confirm-password"
-                        className="pr-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowSignupConfirmPassword(!showSignupConfirmPassword)}
-                        data-testid="button-toggle-confirm-password"
-                      >
-                        {showSignupConfirmPassword ? (
-                          <EyeOff className="h-4 w-4 text-muted-foreground" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white shadow-lg" 
-                    disabled={isLoading}
-                    data-testid="button-signup-submit"
-                  >
-                    {isLoading ? "Регистрация..." : "Зарегистрироваться"}
-                  </Button>
-                </CardFooter>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0" 
+                  disabled={isLoading}
+                  data-testid="button-signup-submit"
+                >
+                  {isLoading ? "Регистрация..." : "Зарегистрироваться"}
+                </Button>
               </form>
-            </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
 
       <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-        <DialogContent data-testid="dialog-reset-password" className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md">
+        <DialogContent data-testid="dialog-reset-password" className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-white/30 dark:border-white/10">
           <form onSubmit={handleResetPassword}>
             <DialogHeader>
               <DialogTitle>Восстановление пароля</DialogTitle>
