@@ -184,7 +184,7 @@ export default function LoginPage() {
                 onChange={(e) => setLoginEmail(e.target.value)}
                 required
                 data-testid="input-login-email"
-                className="bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-slate-900 placeholder:text-slate-700 text-sm h-9 font-medium"
+                className="bg-white/5 dark:bg-black/5 backdrop-blur-sm border-2 border-pink-300/60 dark:border-pink-400/40 text-slate-900 placeholder:text-slate-700 text-sm h-9 font-medium focus:border-pink-400/80 transition-colors"
               />
             </div>
             
@@ -202,7 +202,7 @@ export default function LoginPage() {
                   Забыли?
                 </Button>
               </div>
-              <div className="flex items-center bg-white/5 dark:bg-black/5 backdrop-blur-sm border border-white/30 dark:border-white/10 rounded-md">
+              <div className="flex items-center bg-white/5 dark:bg-black/5 backdrop-blur-sm border-2 border-purple-300/60 dark:border-purple-400/40 rounded-md focus-within:border-purple-400/80 transition-colors">
                 <Input
                   id="login-password"
                   type={showLoginPassword ? "text" : "password"}
