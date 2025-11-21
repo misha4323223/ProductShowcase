@@ -163,12 +163,12 @@ export default function LoginPage() {
         <img 
           src={logoUrl} 
           alt="Sweet Delights Background" 
-          className="w-full max-w-4xl h-auto opacity-40 dark:opacity-20"
+          className="w-full max-w-4xl h-auto"
           loading="eager"
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-50/90 via-purple-50/90 to-blue-50/90 dark:from-gray-950/90 dark:via-gray-900/90 dark:to-gray-950/90" />
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30 dark:from-gray-950/50 dark:via-gray-900/50 dark:to-gray-950/50" />
 
       <div className="w-full max-w-md relative z-10 p-6">
         <div className="text-center mb-8">
