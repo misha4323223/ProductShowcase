@@ -171,14 +171,14 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30 dark:from-gray-950/50 dark:via-gray-900/50 dark:to-gray-950/50" />
 
       <div className="w-full max-w-sm relative z-10">
-        <form onSubmit={handleLogin} className="flex flex-col items-center gap-4">
-          <h2 className="font-serif text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 mt-4">
+        <form onSubmit={handleLogin} className="flex flex-col items-center gap-5 bg-white/15 dark:bg-black/15 backdrop-blur-lg rounded-2xl p-8 border border-white/30 dark:border-white/10 shadow-2xl">
+          <h2 className="font-serif text-4xl font-bold text-white drop-shadow-lg" style={{textShadow: "0 2px 8px rgba(0,0,0,0.3)"}}>
             Вход
           </h2>
           
-          <div className="w-full space-y-3">
-            <div className="space-y-1">
-              <Label htmlFor="login-email" className="text-foreground text-sm">Email</Label>
+          <div className="w-full space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="login-email" className="text-white font-semibold text-sm drop-shadow-md" style={{textShadow: "0 1px 3px rgba(0,0,0,0.3)"}}>Email</Label>
               <Input
                 id="login-email"
                 type="email"
@@ -187,19 +187,20 @@ export default function LoginPage() {
                 onChange={(e) => setLoginEmail(e.target.value)}
                 required
                 data-testid="input-login-email"
-                className="bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground placeholder:text-muted-foreground text-sm h-9"
+                className="bg-white/20 dark:bg-black/30 backdrop-blur-md border-white/40 dark:border-white/20 text-white placeholder:text-white/60 text-sm h-10 font-medium"
               />
             </div>
             
-            <div className="space-y-1">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="login-password" className="text-foreground text-sm">Пароль</Label>
+                <Label htmlFor="login-password" className="text-white font-semibold text-sm drop-shadow-md" style={{textShadow: "0 1px 3px rgba(0,0,0,0.3)"}}>Пароль</Label>
                 <Button 
                   variant="ghost" 
-                  className="px-0 text-xs h-auto text-primary hover:underline"
+                  className="px-0 text-xs h-auto text-white hover:text-white/80 font-semibold drop-shadow-md"
                   type="button"
                   onClick={() => setIsResetDialogOpen(true)}
                   data-testid="button-forgot-password"
+                  style={{textShadow: "0 1px 2px rgba(0,0,0,0.3)"}}
                 >
                   Забыли?
                 </Button>
@@ -212,7 +213,7 @@ export default function LoginPage() {
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
                   data-testid="input-login-password"
-                  className="pr-10 bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground text-sm h-9"
+                  className="pr-10 bg-white/20 dark:bg-black/30 backdrop-blur-md border-white/40 dark:border-white/20 text-white placeholder:text-white/60 text-sm h-10 font-medium"
                 />
                 <Button
                   type="button"
@@ -223,9 +224,9 @@ export default function LoginPage() {
                   data-testid="button-toggle-login-password"
                 >
                   {showLoginPassword ? (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    <EyeOff className="h-4 w-4 text-white/80" />
                   ) : (
-                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <Eye className="h-4 w-4 text-white/80" />
                   )}
                 </Button>
               </div>
@@ -234,7 +235,7 @@ export default function LoginPage() {
           
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0 h-9" 
+            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-bold shadow-xl border-0 h-10 text-base" 
             disabled={isLoading}
             data-testid="button-login-submit"
           >
@@ -244,9 +245,10 @@ export default function LoginPage() {
           <Button 
             type="button"
             variant="ghost"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-sm text-white font-medium hover:text-white/80 drop-shadow-md"
             onClick={() => setLocation("/register")}
             data-testid="button-go-signup"
+            style={{textShadow: "0 1px 3px rgba(0,0,0,0.3)"}}
           >
             Нет аккаунта? Зарегистрируйтесь
           </Button>
