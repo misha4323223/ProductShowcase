@@ -1,7 +1,7 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
-const { hashPassword, generateResetCode, validateEmail, validatePassword } = require('./lib/auth-utils');
-const { createResponse } = require('./lib/response-helper');
+const { hashPassword, generateResetCode, validateEmail, validatePassword } = require('../lib/auth-utils');
+const { createResponse } = require('../lib/response-helper');
 
 const client = new DynamoDBClient({
   region: 'ru-central1',

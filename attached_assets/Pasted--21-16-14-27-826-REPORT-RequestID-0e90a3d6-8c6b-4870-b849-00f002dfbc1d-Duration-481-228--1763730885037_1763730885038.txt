@@ -1,0 +1,37 @@
+
+
+21 нояб. 16:14:27.826
+REPORT RequestID: 0e90a3d6-8c6b-4870-b849-00f002dfbc1d Duration: 481.228 ms Billed Duration: 500 ms Memory Size: 128 MB Max Memory Used: 50 MB Queuing Duration: 0.075 ms CPU Usage: 13.672 %
+
+21 нояб. 16:14:27.826
+ERROR RequestID: 0e90a3d6-8c6b-4870-b849-00f002dfbc1d Code: 502 Message: Error during function invocation
+
+21 нояб. 16:14:27.826
+END RequestID: 0e90a3d6-8c6b-4870-b849-00f002dfbc1d
+
+21 нояб. 16:14:27.826
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+21 нояб. 16:14:27.816
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+21 нояб. 16:14:27.342
+START RequestID: 0e90a3d6-8c6b-4870-b849-00f002dfbc1d Version: d4e8vqn6hn4fskck7tip
+
+21 нояб. 16:14:17.170
+REPORT RequestID: bd1d3690-b286-45e2-92af-9b8cde901d1b Duration: 180.763 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.070 ms CPU Usage: 11.914 %
+
+21 нояб. 16:14:17.170
+ERROR RequestID: bd1d3690-b286-45e2-92af-9b8cde901d1b Code: 502 Message: Error during function invocation
+
+21 нояб. 16:14:17.170
+END RequestID: bd1d3690-b286-45e2-92af-9b8cde901d1b
+
+21 нояб. 16:14:17.169
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+21 нояб. 16:14:17.168
+Unable to import index.handler module. Error: Cannot find module '../lib/auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+21 нояб. 16:14:16.986
+START RequestID: bd1d3690-b286-45e2-92af-9b8cde901d1b Version: d4e8vqn6hn4fskck7tip
