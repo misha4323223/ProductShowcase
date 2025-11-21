@@ -15,6 +15,8 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  requestEmailVerification: (email: string, password: string) => Promise<void>;
+  verifyEmailCode: (email: string, password: string, verificationCode: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -123,8 +125,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const requestEmailVerification = async (email: string, password: string) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: trimmedEmail, password, action: 'send_verification' }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Ошибка отправки кода');
+    }
+  };
+
+  const verifyEmailCode = async (email: string, password: string, verificationCode: string) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        email: trimmedEmail, 
+        password, 
+        action: 'verify_email',
+        verificationCode: verificationCode.toUpperCase()
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Ошибка верификации');
+    }
+
+    const data = await response.json();
+    localStorage.setItem('authToken', data.token);
+    setUser(data.user);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode }}>
       {children}
     </AuthContext.Provider>
   );

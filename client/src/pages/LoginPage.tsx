@@ -15,7 +15,7 @@ const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
-  const { signIn, signUp, resetPassword } = useAuth();
+  const { signIn, resetPassword, requestEmailVerification, verifyEmailCode } = useAuth();
   const { toast } = useToast();
   
   const [loginEmail, setLoginEmail] = useState("");
@@ -23,6 +23,8 @@ export default function LoginPage() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+  const [signupStep, setSignupStep] = useState(1);
+  const [signupVerificationCode, setSignupVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
@@ -77,41 +79,71 @@ export default function LoginPage() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (signupPassword !== signupConfirmPassword) {
-      toast({
-        title: "Ошибка",
-        description: "Пароли не совпадают",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (signupPassword.length < 6) {
-      toast({
-        title: "Ошибка",
-        description: "Пароль должен быть не менее 6 символов",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setIsLoading(true);
-    
-    try {
-      await signUp(signupEmail, signupPassword);
-      toast({
-        title: "Регистрация успешна!",
-        description: "Добро пожаловать в Sweet Delights",
-      });
-      setLocation("/");
-    } catch (error: any) {
-      toast({
-        title: "Ошибка регистрации",
-        description: error.message || "Попробуйте другой email",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+    if (signupStep === 1) {
+      if (signupPassword !== signupConfirmPassword) {
+        toast({
+          title: "Ошибка",
+          description: "Пароли не совпадают",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (signupPassword.length < 6) {
+        toast({
+          title: "Ошибка",
+          description: "Пароль должен быть не менее 6 символов",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      try {
+        await requestEmailVerification(signupEmail, signupPassword);
+        setSignupStep(2);
+        toast({
+          title: "Письмо отправлено!",
+          description: "Проверьте почту и введите код подтверждения",
+        });
+      } catch (error: any) {
+        toast({
+          title: "Ошибка регистрации",
+          description: error.message || "Попробуйте другой email",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      if (!signupVerificationCode) {
+        toast({
+          title: "Ошибка",
+          description: "Введите код подтверждения",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      try {
+        await verifyEmailCode(signupEmail, signupPassword, signupVerificationCode);
+        toast({
+          title: "Регистрация успешна!",
+          description: "Добро пожаловать в Sweet Delights",
+        });
+        setLocation("/");
+      } catch (error: any) {
+        toast({
+          title: "Ошибка верификации",
+          description: error.message || "Попробуйте ещё раз",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 

@@ -96,6 +96,10 @@ exports.handler = async (event) => {
         emailParams = buildPasswordResetEmail(to, data);
         break;
       
+      case 'email_verification':
+        emailParams = buildEmailVerificationEmail(to, data);
+        break;
+      
       default:
         return {
           statusCode: 400,
@@ -406,6 +410,64 @@ ${resetCode}
     to,
     from: process.env.SUPPORT_EMAIL || process.env.FROM_EMAIL,
     subject: 'Восстановление пароля Sweet Delights',
+    htmlBody,
+    textBody,
+  };
+}
+
+function buildEmailVerificationEmail(to, data) {
+  const { verificationCode } = data;
+
+  const htmlBody = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
+      <h2 style="color: #EC4899;">Подтверждение адреса электронной почты</h2>
+      <p style="font-size: 16px; line-height: 1.6;">
+        Спасибо за регистрацию в Sweet Delights! 
+      </p>
+      <p style="font-size: 16px; line-height: 1.6;">
+        Используйте код ниже для подтверждения вашего адреса электронной почты:
+      </p>
+      <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+        <p style="font-size: 24px; font-weight: bold; color: #EC4899; letter-spacing: 2px;">
+          ${verificationCode}
+        </p>
+      </div>
+      <p style="font-size: 14px; color: #666;">
+        Код действителен в течение 15 минут.
+      </p>
+      <p style="font-size: 14px; color: #666;">
+        Если вы не регистрировались в Sweet Delights, проигнорируйте это письмо.
+      </p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+      <p style="font-size: 14px; color: #666;">
+        С наилучшими пожеланиями,<br/>
+        Команда Sweet Delights
+      </p>
+    </div>
+  `;
+
+  const textBody = `
+Подтверждение адреса электронной почты
+
+Спасибо за регистрацию в Sweet Delights!
+
+Используйте код ниже для подтверждения вашего адреса электронной почты:
+
+${verificationCode}
+
+Код действителен в течение 15 минут.
+
+Если вы не регистрировались в Sweet Delights, проигнорируйте это письмо.
+
+С наилучшими пожеланиями,
+Команда Sweet Delights
+  `;
+
+  return {
+    to,
+    from: process.env.SUPPORT_EMAIL || process.env.FROM_EMAIL,
+    subject: 'Подтверждение адреса электронной почты - Sweet Delights',
     htmlBody,
     textBody,
   };
