@@ -42,6 +42,11 @@ module.exports.handler = async (event) => {
 
     const user = result.Item;
 
+    // Проверить, верифицирован ли email
+    if (!user.isVerified) {
+      return createResponse(401, { error: 'Пожалуйста, подтвердите вашу почту перед входом' });
+    }
+
     const isValidPassword = verifyPassword(password, user.passwordSalt, user.passwordHash);
     if (!isValidPassword) {
       return createResponse(401, { error: 'Неверный email или пароль' });
