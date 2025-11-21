@@ -170,200 +170,87 @@ export default function LoginPage() {
 
       <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30 dark:from-gray-950/50 dark:via-gray-900/50 dark:to-gray-950/50" />
 
-      <div className="w-full max-w-md relative z-10 p-6">
-        <div className="text-center mb-8">
-          <h1 className="font-serif text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 mb-2">
-            Sweet Delights
-          </h1>
-          <p className="text-muted-foreground text-lg">Сладкие Наслаждения</p>
-        </div>
+      <div className="w-full max-w-sm relative z-10">
+        <form onSubmit={handleLogin} className="flex flex-col items-center gap-4">
+          <h2 className="font-serif text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 mt-4">
+            Вход
+          </h2>
+          
+          <div className="w-full space-y-3">
+            <div className="space-y-1">
+              <Label htmlFor="login-email" className="text-foreground text-sm">Email</Label>
+              <Input
+                id="login-email"
+                type="email"
+                placeholder="your@email.com"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                required
+                data-testid="input-login-email"
+                className="bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground placeholder:text-muted-foreground text-sm h-9"
+              />
+            </div>
+            
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="login-password" className="text-foreground text-sm">Пароль</Label>
+                <Button 
+                  variant="ghost" 
+                  className="px-0 text-xs h-auto text-primary hover:underline"
+                  type="button"
+                  onClick={() => setIsResetDialogOpen(true)}
+                  data-testid="button-forgot-password"
+                >
+                  Забыли?
+                </Button>
+              </div>
+              <div className="relative">
+                <Input
+                  id="login-password"
+                  type={showLoginPassword ? "text" : "password"}
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                  data-testid="input-login-password"
+                  className="pr-10 bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground text-sm h-9"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                  data-testid="button-toggle-login-password"
+                >
+                  {showLoginPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          <Button 
+            type="submit" 
+            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0 h-9" 
+            disabled={isLoading}
+            data-testid="button-login-submit"
+          >
+            {isLoading ? "Вход..." : "Войти"}
+          </Button>
 
-        <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6 bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/10">
-            <TabsTrigger 
-              value="login" 
-              data-testid="tab-login"
-              className="data-[state=active]:bg-white/40 dark:data-[state=active]:bg-white/10"
-            >
-              Вход
-            </TabsTrigger>
-            <TabsTrigger 
-              value="signup" 
-              data-testid="tab-signup"
-              className="data-[state=active]:bg-white/40 dark:data-[state=active]:bg-white/10"
-            >
-              Регистрация
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="login">
-            <div className="bg-white/10 dark:bg-black/10 backdrop-blur-xl rounded-md border border-white/20 dark:border-white/10 p-6 space-y-6">
-              <div className="text-center">
-                <h2 className="text-2xl font-semibold mb-2">Вход в аккаунт</h2>
-                <p className="text-sm text-muted-foreground">Введите свои данные для входа</p>
-              </div>
-              
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="login-email" className="text-foreground">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    required
-                    data-testid="input-login-email"
-                    className="bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground placeholder:text-muted-foreground"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="login-password" className="text-foreground">Пароль</Label>
-                    <Button 
-                      variant="ghost" 
-                      className="px-0 text-xs h-auto text-primary hover:underline"
-                      type="button"
-                      onClick={() => setIsResetDialogOpen(true)}
-                      data-testid="button-forgot-password"
-                    >
-                      Забыли пароль?
-                    </Button>
-                  </div>
-                  <div className="relative">
-                    <Input
-                      id="login-password"
-                      type={showLoginPassword ? "text" : "password"}
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      required
-                      data-testid="input-login-password"
-                      className="pr-10 bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowLoginPassword(!showLoginPassword)}
-                      data-testid="button-toggle-login-password"
-                    >
-                      {showLoginPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0" 
-                  disabled={isLoading}
-                  data-testid="button-login-submit"
-                >
-                  {isLoading ? "Вход..." : "Войти"}
-                </Button>
-              </form>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="signup">
-            <div className="bg-white/10 dark:bg-black/10 backdrop-blur-xl rounded-md border border-white/20 dark:border-white/10 p-6 space-y-6">
-              <div className="text-center">
-                <h2 className="text-2xl font-semibold mb-2">Регистрация</h2>
-                <p className="text-sm text-muted-foreground">Создайте новый аккаунт</p>
-              </div>
-              
-              <form onSubmit={handleSignup} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-foreground">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={signupEmail}
-                    onChange={(e) => setSignupEmail(e.target.value)}
-                    required
-                    data-testid="input-signup-email"
-                    className="bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground placeholder:text-muted-foreground"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password" className="text-foreground">Пароль</Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-password"
-                      type={showSignupPassword ? "text" : "password"}
-                      value={signupPassword}
-                      onChange={(e) => setSignupPassword(e.target.value)}
-                      required
-                      minLength={6}
-                      data-testid="input-signup-password"
-                      className="pr-10 bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowSignupPassword(!showSignupPassword)}
-                      data-testid="button-toggle-signup-password"
-                    >
-                      {showSignupPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="signup-confirm-password" className="text-foreground">Подтвердите пароль</Label>
-                  <div className="relative">
-                    <Input
-                      id="signup-confirm-password"
-                      type={showSignupConfirmPassword ? "text" : "password"}
-                      value={signupConfirmPassword}
-                      onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                      required
-                      minLength={6}
-                      data-testid="input-signup-confirm-password"
-                      className="pr-10 bg-white/20 dark:bg-black/20 backdrop-blur-sm border-white/30 dark:border-white/10 text-foreground"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowSignupConfirmPassword(!showSignupConfirmPassword)}
-                      data-testid="button-toggle-confirm-password"
-                    >
-                      {showSignupConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0" 
-                  disabled={isLoading}
-                  data-testid="button-signup-submit"
-                >
-                  {isLoading ? "Регистрация..." : "Зарегистрироваться"}
-                </Button>
-              </form>
-            </div>
-          </TabsContent>
-        </Tabs>
+          <Button 
+            type="button"
+            variant="ghost"
+            className="text-sm text-muted-foreground hover:text-foreground"
+            onClick={() => setLocation("/register")}
+            data-testid="button-go-signup"
+          >
+            Нет аккаунта? Зарегистрируйтесь
+          </Button>
+        </form>
       </div>
 
       <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
