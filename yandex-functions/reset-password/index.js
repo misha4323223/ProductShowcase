@@ -1,7 +1,7 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
-const { hashPassword, generateResetCode, validateEmail, validatePassword } = require('../lib/auth-utils');
-const { createResponse } = require('../lib/response-helper');
+const { hashPassword, generateResetCode, validateEmail, validatePassword } = require('./lib/auth-utils');
+const { createResponse } = require('./lib/response-helper');
 
 const client = new DynamoDBClient({
   region: 'ru-central1',
@@ -12,15 +12,43 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
+
+async function sendResetCodeEmail(email, resetCode) {
+  try {
+    const response = await fetch(process.env.SEND_EMAIL_FUNCTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'password_reset',
+        to: email,
+        data: {
+          resetCode: resetCode
+        }
+      })
+    });
+    return response.ok;
+  } catch (error) {
+    console.error('Email send error:', error);
+    return false;
+  }
+}
 
 module.exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
     const { email, action, resetCode, newPassword } = body;
 
-    if (!email) {
-      return createResponse(400, { error: 'Email обязателен' });
+    if (!email || !action) {
+      return createResponse(400, { error: 'Email и action обязательны' });
     }
 
     const trimmedEmail = email.trim().toLowerCase();
@@ -41,60 +69,34 @@ module.exports.handler = async (event) => {
     }
 
     if (action === 'request') {
-      const resetCode = generateResetCode();
-      const resetExpiry = Date.now() + (15 * 60 * 1000);
+      const code = generateResetCode();
+      const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
       const updateCommand = new UpdateCommand({
         TableName: 'users',
         Key: { email: trimmedEmail },
-        UpdateExpression: 'SET resetCode = :code, resetExpiry = :expiry',
+        UpdateExpression: 'SET resetCode = :code, resetCodeExpires = :expires',
         ExpressionAttributeValues: {
-          ':code': resetCode,
-          ':expiry': resetExpiry,
-        },
+          ':code': code,
+          ':expires': expiresAt
+        }
       });
 
       await docClient.send(updateCommand);
 
-      const sendEmailResponse = await fetch(process.env.SEND_EMAIL_FUNCTION_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'password_reset',
-          to: trimmedEmail,
-          data: {
-            resetCode: resetCode
-          }
-        }),
-      });
-
-      if (!sendEmailResponse.ok) {
-        console.error('Failed to send reset email');
-      }
+      const emailSent = await sendResetCodeEmail(trimmedEmail, code);
 
       return createResponse(200, {
         success: true,
-        message: 'Код для сброса пароля отправлен на email'
+        message: emailSent 
+          ? 'Код отправлен на email' 
+          : 'Код создан, но email не отправлен',
+        code: emailSent ? undefined : code
       });
-    }
 
-    if (action === 'verify') {
-      const user = result.Item;
-
-      if (!user.resetCode || !user.resetExpiry) {
-        return createResponse(400, { error: 'Код сброса не был запрошен' });
-      }
-
-      if (Date.now() > user.resetExpiry) {
-        return createResponse(400, { error: 'Код сброса истек. Запросите новый' });
-      }
-
-      if (user.resetCode !== resetCode) {
-        return createResponse(400, { error: 'Неверный код сброса' });
-      }
-
-      if (!newPassword) {
-        return createResponse(400, { error: 'Новый пароль обязателен' });
+    } else if (action === 'verify') {
+      if (!resetCode || !newPassword) {
+        return createResponse(400, { error: 'Код и новый пароль обязательны' });
       }
 
       const passwordValidation = validatePassword(newPassword);
@@ -102,30 +104,45 @@ module.exports.handler = async (event) => {
         return createResponse(400, { error: passwordValidation.error });
       }
 
+      const user = result.Item;
+
+      if (!user.resetCode || !user.resetCodeExpires) {
+        return createResponse(400, { error: 'Код сброса не запрашивался' });
+      }
+
+      if (new Date(user.resetCodeExpires) < new Date()) {
+        return createResponse(400, { error: 'Код истёк' });
+      }
+
+      if (user.resetCode !== resetCode.toUpperCase()) {
+        return createResponse(400, { error: 'Неверный код' });
+      }
+
       const { salt, hash } = hashPassword(newPassword);
 
       const updateCommand = new UpdateCommand({
         TableName: 'users',
         Key: { email: trimmedEmail },
-        UpdateExpression: 'SET passwordSalt = :salt, passwordHash = :hash REMOVE resetCode, resetExpiry',
+        UpdateExpression: 'SET passwordSalt = :salt, passwordHash = :hash REMOVE resetCode, resetCodeExpires',
         ExpressionAttributeValues: {
           ':salt': salt,
-          ':hash': hash,
-        },
+          ':hash': hash
+        }
       });
 
       await docClient.send(updateCommand);
 
       return createResponse(200, {
         success: true,
-        message: 'Пароль успешно изменен'
+        message: 'Пароль успешно изменён'
       });
+
+    } else {
+      return createResponse(400, { error: 'Неверный action' });
     }
 
-    return createResponse(400, { error: 'Неверное действие. Используйте action: "request" или "verify"' });
-
   } catch (error) {
-    console.error('Password reset error:', error);
+    console.error('Reset password error:', error);
     return createResponse(500, { error: 'Ошибка при сбросе пароля' });
   }
 };
