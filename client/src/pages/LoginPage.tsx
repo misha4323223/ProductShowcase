@@ -213,13 +213,13 @@ export default function LoginPage() {
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
                   data-testid="input-login-password"
-                  className="pr-9 bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-slate-900 text-sm h-9 font-medium"
+                  className="pr-10 bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-slate-900 text-sm h-9 font-medium"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 hover:bg-transparent h-auto"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-1 py-1 hover:bg-transparent"
                   onClick={() => setShowLoginPassword(!showLoginPassword)}
                   data-testid="button-toggle-login-password"
                 >
