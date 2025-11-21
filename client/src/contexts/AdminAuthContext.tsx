@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
-const ADMIN_EMAIL = "admin@sweetdelights.com";
+const ADMIN_EMAIL = "Pimashin2015@gmail.com";
 
 interface AdminAuthContextType {
   isAuthenticated: boolean;

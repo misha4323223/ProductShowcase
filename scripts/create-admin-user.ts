@@ -23,8 +23,8 @@ function hashPassword(password: string): { salt: string; hash: string } {
 }
 
 async function createAdminUser() {
-  const adminEmail = 'admin@sweetdelights.com';
-  const adminPassword = '119944Alisa';
+  const adminEmail = 'Pimashin2015@gmail.com';
+  const adminPassword = 'Positive2009#';
 
   console.log('🔍 Проверяем существует ли админ...');
 
