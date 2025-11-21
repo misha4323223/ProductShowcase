@@ -159,17 +159,16 @@ export default function LoginPage() {
         <Home className="w-5 h-5 text-foreground" />
       </Link>
 
-      <div 
-        className="absolute inset-0 flex items-center justify-center"
-        style={{
-          backgroundImage: `url(${logoUrl})`,
-          backgroundSize: 'contain',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/95 via-purple-50/95 to-blue-50/95 dark:from-gray-950/95 dark:via-gray-900/95 dark:to-gray-950/95" />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img 
+          src={logoUrl} 
+          alt="Sweet Delights Background" 
+          className="w-full max-w-4xl h-auto opacity-40 dark:opacity-20"
+          loading="eager"
+        />
       </div>
+
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-50/90 via-purple-50/90 to-blue-50/90 dark:from-gray-950/90 dark:via-gray-900/90 dark:to-gray-950/90" />
 
       <div className="w-full max-w-md relative z-10 p-6">
         <div className="text-center mb-8">
