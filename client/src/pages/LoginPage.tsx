@@ -232,7 +232,7 @@ export default function LoginPage() {
           
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0 h-8 text-sm" 
+            className="w-full bg-white/10 hover:bg-white/20 text-slate-900 font-semibold border-2 border-slate-900/40 hover:border-slate-900/60 h-8 text-sm transition-all" 
             disabled={isLoading}
             data-testid="button-login-submit"
           >
