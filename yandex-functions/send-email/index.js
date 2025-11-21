@@ -12,10 +12,13 @@ const sesClient = new SESv2Client({
 });
 
 function getLogoHtml() {
-  // Base64-encoded lollipop candy image
-  const lollipopBase64 = 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3QgeD0iNDUiIHk9IjYwIiB3aWR0aD0iMTAiIGhlaWdodD0iMzUiIGZpbGw9IiM4QjQ1MTMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjI1IiByPSIyNSIgZmlsbD0iI0VDNDg5OSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMjUiIHI9IjE4IiBmaWxsPSIjRkY2NkI4Ii8+PHBhdGggZD0iTSA0MCAxNSBRIDMyIDI1IDQwIDM1IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==';
   return `<div style="text-align: center; margin-bottom: 30px;">
-    <img src="data:image/svg+xml;base64,${lollipopBase64}" alt="Sweet Delights" width="100" height="100" style="display: inline-block;">
+    <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">
+      <rect x="45" y="60" width="10" height="35" fill="#8B4513"/>
+      <circle cx="50" cy="25" r="25" fill="#EC4899"/>
+      <circle cx="50" cy="25" r="18" fill="#FF66B8"/>
+      <path d="M 40 15 Q 32 25 40 35" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
   </div>`;
 }
 
