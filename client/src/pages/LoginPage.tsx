@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Sparkles, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Link } from "wouter";
+import logoUrl from "@assets/logo.webp";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
@@ -150,27 +151,50 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-block">
-            <h1 className="font-serif text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-500 to-accent drop-shadow-lg cursor-pointer mb-2" data-testid="link-logo">
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-pink-100/80 via-purple-100/80 to-blue-100/80 dark:from-pink-950/30 dark:via-purple-950/30 dark:to-blue-950/30"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 50%, rgba(251, 207, 232, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(221, 214, 254, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 20%, rgba(254, 202, 202, 0.2) 0%, transparent 50%)
+          `
+        }}
+      />
+      
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-32 h-32 bg-pink-300/20 dark:bg-pink-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-16 right-16 w-40 h-40 bg-purple-300/20 dark:bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/4 left-16 w-24 h-24 bg-blue-300/20 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="text-center mb-8 space-y-4">
+          <Link href="/" className="inline-block group" data-testid="link-logo">
+            <div className="mb-4 transform transition-transform group-hover:scale-105">
+              <img 
+                src={logoUrl} 
+                alt="Sweet Delights Logo" 
+                className="w-32 h-32 mx-auto drop-shadow-2xl"
+                loading="eager"
+              />
+            </div>
+            <h1 className="font-serif text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 drop-shadow-sm">
               Sweet Delights
             </h1>
           </Link>
-          <p className="text-muted-foreground">Войдите или создайте аккаунт</p>
+          <p className="text-muted-foreground text-sm">Сладкие Наслаждения</p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsList className="grid w-full grid-cols-2 mb-4 bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm">
             <TabsTrigger value="login" data-testid="tab-login">Вход</TabsTrigger>
             <TabsTrigger value="signup" data-testid="tab-signup">Регистрация</TabsTrigger>
           </TabsList>
           
           <TabsContent value="login">
-            <Card>
+            <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-white/20 dark:border-gray-700/20 shadow-2xl">
               <CardHeader>
-                <CardTitle>Вход в аккаунт</CardTitle>
+                <CardTitle className="text-2xl">Вход в аккаунт</CardTitle>
                 <CardDescription>Введите свои данные для входа</CardDescription>
               </CardHeader>
               <form onSubmit={handleLogin}>
@@ -185,6 +209,7 @@ export default function LoginPage() {
                       onChange={(e) => setLoginEmail(e.target.value)}
                       required
                       data-testid="input-login-email"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -208,7 +233,7 @@ export default function LoginPage() {
                         onChange={(e) => setLoginPassword(e.target.value)}
                         required
                         data-testid="input-login-password"
-                        className="pr-10"
+                        className="pr-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
                       />
                       <Button
                         type="button"
@@ -230,7 +255,7 @@ export default function LoginPage() {
                 <CardFooter>
                   <Button 
                     type="submit" 
-                    className="w-full" 
+                    className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white shadow-lg" 
                     disabled={isLoading}
                     data-testid="button-login-submit"
                   >
@@ -242,9 +267,9 @@ export default function LoginPage() {
           </TabsContent>
           
           <TabsContent value="signup">
-            <Card>
+            <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-white/20 dark:border-gray-700/20 shadow-2xl">
               <CardHeader>
-                <CardTitle>Регистрация</CardTitle>
+                <CardTitle className="text-2xl">Регистрация</CardTitle>
                 <CardDescription>Создайте новый аккаунт</CardDescription>
               </CardHeader>
               <form onSubmit={handleSignup}>
@@ -259,6 +284,7 @@ export default function LoginPage() {
                       onChange={(e) => setSignupEmail(e.target.value)}
                       required
                       data-testid="input-signup-email"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -272,7 +298,7 @@ export default function LoginPage() {
                         required
                         minLength={6}
                         data-testid="input-signup-password"
-                        className="pr-10"
+                        className="pr-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
                       />
                       <Button
                         type="button"
@@ -301,7 +327,7 @@ export default function LoginPage() {
                         required
                         minLength={6}
                         data-testid="input-signup-confirm-password"
-                        className="pr-10"
+                        className="pr-10 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
                       />
                       <Button
                         type="button"
@@ -323,7 +349,7 @@ export default function LoginPage() {
                 <CardFooter>
                   <Button 
                     type="submit" 
-                    className="w-full" 
+                    className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white shadow-lg" 
                     disabled={isLoading}
                     data-testid="button-signup-submit"
                   >
@@ -336,9 +362,8 @@ export default function LoginPage() {
         </Tabs>
       </div>
 
-      {/* Dialog восстановления пароля вынесен за пределы форм */}
       <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-        <DialogContent data-testid="dialog-reset-password">
+        <DialogContent data-testid="dialog-reset-password" className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md">
           <form onSubmit={handleResetPassword}>
             <DialogHeader>
               <DialogTitle>Восстановление пароля</DialogTitle>
@@ -356,6 +381,7 @@ export default function LoginPage() {
                 onChange={(e) => setResetEmail(e.target.value)}
                 required
                 data-testid="input-reset-email"
+                className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
               />
             </div>
             <DialogFooter>
@@ -363,6 +389,7 @@ export default function LoginPage() {
                 type="submit" 
                 disabled={isResetLoading}
                 data-testid="button-reset-submit"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white"
               >
                 {isResetLoading ? "Отправка..." : "Отправить письмо"}
               </Button>
