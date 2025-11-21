@@ -238,7 +238,10 @@ export default function LoginPage() {
         <img 
           src={logoUrl} 
           alt="Sweet Delights Background" 
-          className="w-full max-w-4xl h-auto -mt-96 sm:-mt-72 md:mt-0 lg:mt-0 opacity-100 dark:opacity-20"
+          className="w-full max-w-4xl h-auto -mt-96 sm:-mt-72 md:mt-0 lg:mt-0 opacity-100 dark:opacity-40"
+          style={{
+            filter: "var(--logo-filter, none)",
+          }}
           loading="eager"
         />
       </div>
