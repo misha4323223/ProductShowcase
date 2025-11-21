@@ -11,6 +11,15 @@ const sesClient = new SESv2Client({
   },
 });
 
+function getLogoHtml() {
+  return `<div style="text-align: center; margin-bottom: 30px;">
+    <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="50" fill="#06B6D4"/>
+      <text x="50" y="60" font-size="48" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">SD</text>
+    </svg>
+  </div>`;
+}
+
 async function sendEmail({ to, subject, htmlBody, textBody, from }) {
   const params = {
     FromEmailAddress: from || process.env.FROM_EMAIL,
@@ -139,6 +148,7 @@ function buildOrderConfirmationEmail(to, data) {
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
       <h2 style="color: #EC4899;">Спасибо за ваш заказ!</h2>
       <p>Здравствуйте, ${customerName}!</p>
       <p>Ваш заказ <strong>#${orderNumber}</strong> успешно оформлен.</p>
@@ -208,6 +218,7 @@ function buildStockNotificationEmail(to, data) {
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
       <h2 style="color: #EC4899;">Отличные новости!</h2>
       <p style="font-size: 16px; line-height: 1.5;">
         Товар <strong>${productName}</strong>, на который вы подписались, снова в наличии!
@@ -252,6 +263,7 @@ function buildNewsletterEmail(to, data) {
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
       <h2 style="color: #EC4899;">${title || 'Новости Sweet Delights'}</h2>
       <div style="font-size: 16px; line-height: 1.6;">
         ${message}
@@ -290,6 +302,7 @@ ${message.replace(/<[^>]*>/g, '')}
 function buildWelcomeNewsletterEmail(to) {
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
       <h2 style="color: #EC4899;">Добро пожаловать в Sweet Delights!</h2>
       <p style="font-size: 16px; line-height: 1.6;">
         Спасибо за подписку на нашу рассылку!
@@ -348,6 +361,7 @@ function buildPasswordResetEmail(to, data) {
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
       <h2 style="color: #EC4899;">Восстановление пароля</h2>
       <p style="font-size: 16px; line-height: 1.6;">
         Вы запросили восстановление пароля. Используйте код ниже для смены пароля:
