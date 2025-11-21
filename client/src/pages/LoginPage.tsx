@@ -25,6 +25,7 @@ export default function LoginPage() {
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [signupStep, setSignupStep] = useState(1);
   const [signupVerificationCode, setSignupVerificationCode] = useState("");
+  const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
@@ -315,7 +316,15 @@ export default function LoginPage() {
             type="button"
             variant="ghost"
             className="text-xs text-slate-900 font-medium hover:text-slate-700 h-auto py-0"
-            onClick={() => setLocation("/register")}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsSignupDialogOpen(true);
+              setSignupStep(1);
+              setSignupEmail("");
+              setSignupPassword("");
+              setSignupConfirmPassword("");
+              setSignupVerificationCode("");
+            }}
             data-testid="button-go-signup"
             style={{textShadow: "0 1px 2px rgba(255, 255, 255, 0.5)"}}
           >
@@ -323,6 +332,97 @@ export default function LoginPage() {
           </Button>
         </form>
       </div>
+
+      <Dialog open={isSignupDialogOpen} onOpenChange={(open) => {
+        setIsSignupDialogOpen(open);
+        if (!open) {
+          setSignupStep(1);
+          setSignupEmail("");
+          setSignupPassword("");
+          setSignupConfirmPassword("");
+          setSignupVerificationCode("");
+        }
+      }}>
+        <DialogContent data-testid="dialog-signup" className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-white/30 dark:border-white/10">
+          <form onSubmit={handleSignup}>
+            <DialogHeader>
+              <DialogTitle>Регистрация</DialogTitle>
+              <DialogDescription>
+                {signupStep === 1 ? "Создайте новый аккаунт" : "Подтвердите ваш email"}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4 space-y-4">
+              {signupStep === 1 ? (
+                <>
+                  <div>
+                    <Label htmlFor="signup-email">Email</Label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={signupEmail}
+                      onChange={(e) => setSignupEmail(e.target.value)}
+                      required
+                      data-testid="input-signup-email"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="signup-password">Пароль</Label>
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      placeholder="Минимум 6 символов"
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
+                      required
+                      data-testid="input-signup-password"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="signup-confirm-password">Повторите пароль</Label>
+                    <Input
+                      id="signup-confirm-password"
+                      type="password"
+                      placeholder="Подтвердите пароль"
+                      value={signupConfirmPassword}
+                      onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                      required
+                      data-testid="input-signup-confirm-password"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <Label htmlFor="signup-code">Код из письма</Label>
+                  <Input
+                    id="signup-code"
+                    type="text"
+                    placeholder="Введите код"
+                    value={signupVerificationCode}
+                    onChange={(e) => setSignupVerificationCode(e.target.value)}
+                    required
+                    data-testid="input-signup-code"
+                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm uppercase"
+                  />
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                data-testid="button-signup-submit"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white"
+              >
+                {isLoading ? "Обработка..." : signupStep === 1 ? "Продолжить" : "Подтвердить"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isResetDialogOpen} onOpenChange={(open) => {
         setIsResetDialogOpen(open);
