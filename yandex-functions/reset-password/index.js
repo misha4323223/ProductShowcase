@@ -1,7 +1,43 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
-const { hashPassword, generateResetCode, validateEmail, validatePassword } = require('./auth-utils');
-const { createResponse } = require('./response-helper');
+const crypto = require('crypto');
+
+// ========== ВСТРОЕННЫЕ УТИЛИТЫ ==========
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+  return { salt, hash };
+}
+
+function generateResetCode() {
+  return crypto.randomBytes(3).toString('hex').toUpperCase();
+}
+
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function validatePassword(password) {
+  if (password.length < 6) {
+    return { valid: false, error: 'Пароль должен содержать минимум 6 символов' };
+  }
+  return { valid: true };
+}
+
+function createResponse(statusCode, data) {
+  return {
+    statusCode,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+}
+
+// ========== КОНЕЦ УТИЛИТ ==========
 
 const client = new DynamoDBClient({
   region: 'ru-central1',
@@ -159,7 +195,7 @@ module.exports.handler = async (event) => {
     }
 
   } catch (error) {
-    console.error('Reset password error:', error);
-    return createResponse(500, { error: 'Ошибка при сбросе пароля' });
+    console.error('Ошибка сброса пароля:', error);
+    return createResponse(500, { error: `Ошибка при сбросе пароля: ${error.message}` });
   }
 };

@@ -1,0 +1,74 @@
+Время (UTC +3)
+Сообщение
+
+21 нояб. 16:20:48.826
+REPORT RequestID: 7fbe161a-d026-4539-8e6b-0c7a554e17f2 Duration: 481.817 ms Billed Duration: 500 ms Memory Size: 128 MB Max Memory Used: 51 MB Queuing Duration: 0.054 ms CPU Usage: 14.941 %
+
+21 нояб. 16:20:48.826
+ERROR RequestID: 7fbe161a-d026-4539-8e6b-0c7a554e17f2 Code: 502 Message: Error during function invocation
+ERROR RequestID: 7fbe161a-d026-4539-8e6b-0c7a554e17f2 Code: 502 Message: Error during function invocation
+"request_id""7fbe161a-d026-4539-8e6b-0c7a554e17f2"
+"source""system"
+"version_id""d4ele3j30ghmgbd0605d"
+
+21 нояб. 16:20:48.826
+END RequestID: 7fbe161a-d026-4539-8e6b-0c7a554e17f2
+
+21 нояб. 16:20:48.824
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module './auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+21 нояб. 16:20:48.814
+Unable to import index.handler module. Error: Cannot find module './auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: Cannot find module './auth-utils'
+Require stack:
+- /function/code/index.js
+Stack: Require stack:
+- /function/code/index.js
+    at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""7fbe161a-d026-4539-8e6b-0c7a554e17f2"
+"source""user"
+"version_id""d4ele3j30ghmgbd0605d"
+
+21 нояб. 16:20:48.341
+START RequestID: 7fbe161a-d026-4539-8e6b-0c7a554e17f2 Version: d4ele3j30ghmgbd0605d
+
+21 нояб. 16:20:18.908
+REPORT RequestID: 26ba1c06-5340-4924-b0ee-292a803d7498 Duration: 189.424 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.078 ms CPU Usage: 11.914 %
+
+21 нояб. 16:20:18.908
+ERROR RequestID: 26ba1c06-5340-4924-b0ee-292a803d7498 Code: 502 Message: Error during function invocation
+ERROR RequestID: 26ba1c06-5340-4924-b0ee-292a803d7498 Code: 502 Message: Error during function invocation
+"request_id""26ba1c06-5340-4924-b0ee-292a803d7498"
+"source""system"
+"version_id""d4ele3j30ghmgbd0605d"
+
+21 нояб. 16:20:18.908
+END RequestID: 26ba1c06-5340-4924-b0ee-292a803d7498
+
+21 нояб. 16:20:18.906
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module './auth-utils'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+21 нояб. 16:20:18.905
+Unable to import index.handler module. Error: Cannot find module './auth-utils' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: Cannot find module './auth-utils'
+Require stack:
+- /function/code/index.js
+Stack: Require stack:
+- /function/code/index.js
+    at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""26ba1c06-5340-4924-b0ee-292a803d7498"
+"source""user"
+"version_id""d4ele3j30ghmgbd0605d"
+
+21 нояб. 16:20:18.716
+START RequestID: 26ba1c06-5340-4924-b0ee-292a803d7498 Version: d4ele3j30ghmgbd0605d
+START RequestID: 26ba1c06-5340-4924-b0ee-292a803d7498 Version: d4ele3j30ghmgbd0605d
+"request_id""26ba1c06-5340-4924-b0ee-292a803d7498"
+"source""system"
+"version_id""d4ele3j30ghmgbd0605d"

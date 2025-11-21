@@ -1,7 +1,68 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
-const { hashPassword, generateJWT, validateEmail, validatePassword, generateResetCode } = require('./auth-utils');
-const { createResponse } = require('./response-helper');
+const crypto = require('crypto');
+
+// ========== ВСТРОЕННЫЕ УТИЛИТЫ ==========
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+  return { salt, hash };
+}
+
+function generateJWT(userId, email, role = 'user') {
+  const header = {
+    alg: 'HS256',
+    typ: 'JWT'
+  };
+  
+  const payload = {
+    userId,
+    email,
+    role,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60)
+  };
+  
+  const base64Header = Buffer.from(JSON.stringify(header)).toString('base64url');
+  const base64Payload = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  
+  const signature = crypto
+    .createHmac('sha256', process.env.JWT_SECRET || 'default-secret-key')
+    .update(`${base64Header}.${base64Payload}`)
+    .digest('base64url');
+  
+  return `${base64Header}.${base64Payload}.${signature}`;
+}
+
+function generateResetCode() {
+  return crypto.randomBytes(3).toString('hex').toUpperCase();
+}
+
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function validatePassword(password) {
+  if (password.length < 6) {
+    return { valid: false, error: 'Пароль должен содержать минимум 6 символов' };
+  }
+  return { valid: true };
+}
+
+function createResponse(statusCode, data) {
+  return {
+    statusCode,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+}
+
+// ========== КОНЕЦ УТИЛИТ ==========
 
 const client = new DynamoDBClient({
   region: 'ru-central1',
@@ -96,7 +157,6 @@ module.exports.handler = async (event) => {
       const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
       if (existingUser.Item) {
-        // Обновить существующую незаверифицированную запись
         const updateCommand = new UpdateCommand({
           TableName: 'users',
           Key: { email: trimmedEmail },
@@ -109,7 +169,6 @@ module.exports.handler = async (event) => {
         });
         await docClient.send(updateCommand);
       } else {
-        // Создать новую незаверифицированную запись
         const putCommand = new PutCommand({
           TableName: 'users',
           Item: {
@@ -146,7 +205,6 @@ module.exports.handler = async (event) => {
         return createResponse(404, { error: 'Пользователь не найден' });
       }
 
-      // Проверить код
       if (!user.Item.verificationCode) {
         return createResponse(400, { error: 'Код верификации истёк или не существует' });
       }
@@ -155,13 +213,11 @@ module.exports.handler = async (event) => {
         return createResponse(400, { error: 'Неверный код верификации' });
       }
 
-      // Проверить срок действия
       const expiresAt = new Date(user.Item.verificationCodeExpires);
       if (expiresAt < new Date()) {
         return createResponse(400, { error: 'Код верификации истёк' });
       }
 
-      // Создать аккаунт
       const { salt, hash } = hashPassword(password);
       const userId = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
