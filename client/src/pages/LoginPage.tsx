@@ -170,7 +170,7 @@ export default function LoginPage() {
 
       <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30 dark:from-gray-950/50 dark:via-gray-900/50 dark:to-gray-950/50" />
 
-      <div className="w-full max-w-sm relative z-10 -ml-12" style={{marginTop: "32rem"}}>
+      <div className="w-full max-w-sm relative z-10 -ml-12" style={{marginTop: "8rem"}}>
         <form onSubmit={handleLogin} className="flex flex-col items-center gap-3">
           
           <div className="w-full space-y-2">
