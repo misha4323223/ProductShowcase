@@ -172,7 +172,7 @@ export default function LoginPage() {
 
       <div className="w-full max-w-sm relative z-10">
         <form onSubmit={handleLogin} className="flex flex-col items-center gap-4">
-          <h2 className="font-serif text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 mt-4">
+          <h2 className="font-serif text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 -mt-2 drop-shadow-lg" style={{textShadow: "0 2px 8px rgba(236, 72, 153, 0.3)"}}>
             Вход
           </h2>
           
@@ -205,7 +205,7 @@ export default function LoginPage() {
                   Забыли?
                 </Button>
               </div>
-              <div className="relative">
+              <div className="flex items-center bg-white/5 dark:bg-black/5 backdrop-blur-sm border border-white/30 dark:border-white/10 rounded-md">
                 <Input
                   id="login-password"
                   type={showLoginPassword ? "text" : "password"}
@@ -213,13 +213,13 @@ export default function LoginPage() {
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
                   data-testid="input-login-password"
-                  className="pr-10 bg-white/5 dark:bg-black/5 backdrop-blur-sm border-white/30 dark:border-white/10 text-slate-900 text-sm h-9 font-medium"
+                  className="flex-1 bg-transparent border-0 text-slate-900 text-sm h-9 font-medium focus-visible:ring-0"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-1 py-1 hover:bg-transparent"
+                  className="px-2 py-1 hover:bg-transparent h-auto"
                   onClick={() => setShowLoginPassword(!showLoginPassword)}
                   data-testid="button-toggle-login-password"
                 >
