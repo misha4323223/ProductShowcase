@@ -11,6 +11,8 @@ import { Eye, EyeOff, Home } from "lucide-react";
 import { Link } from "wouter";
 import logoUrl from "@assets/logo.webp";
 
+const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
+
 export default function LoginPage() {
   const [, setLocation] = useLocation();
   const { signIn, signUp, resetPassword } = useAuth();
@@ -153,7 +155,7 @@ export default function LoginPage() {
           return;
         }
 
-        const response = await fetch("/api/auth/reset-password", {
+        const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
