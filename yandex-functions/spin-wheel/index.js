@@ -77,17 +77,17 @@ exports.handler = async (event) => {
       return errorResponse(400, 'Недостаточно спинов');
     }
 
-    // 3. Получить вишлист
-    const wishlistResult = await docClient.send(new GetCommand({
-      TableName: "wishlists",
-      Key: { id: userId }
+    // 3. Получить корзину
+    const cartResult = await docClient.send(new GetCommand({
+      TableName: "carts",
+      Key: { userId }
     }));
 
-    const wishlistItems = wishlistResult.Item?.items || [];
-    console.log('Wishlist items count:', wishlistItems.length);
+    const cartItems = cartResult.Item?.items || [];
+    console.log('Cart items count:', cartItems.length);
 
-    if (wishlistItems.length === 0) {
-      return errorResponse(400, 'Добавьте товары в избранное для участия в рулетке');
+    if (cartItems.length === 0) {
+      return errorResponse(400, 'Добавьте товары в корзину для участия в рулетке');
     }
 
     // 4. Генерация приза с учетом прогрессивной системы
@@ -115,18 +115,18 @@ exports.handler = async (event) => {
       prize.discountValue = 10;
     } 
     else if (prizeType === 'discount_20') {
-      // Выбрать случайный товар из вишлиста
-      const randomIndex = Math.floor(Math.random() * wishlistItems.length);
-      const randomWishlistItem = wishlistItems[randomIndex];
+      // Выбрать случайный товар из корзины
+      const randomIndex = Math.floor(Math.random() * cartItems.length);
+      const randomCartItem = cartItems[randomIndex];
 
       // Получить детали товара
       const productResult = await docClient.send(new GetCommand({
         TableName: "products",
-        Key: { id: randomWishlistItem.productId }
+        Key: { id: randomCartItem.productId }
       }));
 
       if (productResult.Item) {
-        prize.productId = randomWishlistItem.productId;
+        prize.productId = randomCartItem.productId;
         prize.productName = productResult.Item.name;
         prize.productImage = productResult.Item.image;
       }
@@ -147,9 +147,9 @@ exports.handler = async (event) => {
       }));
     } 
     else if (prizeType === 'free_item') {
-      // Найти самый дешевый товар в вишлисте
+      // Найти самый дешевый товар в корзине
       // Оптимизация: берём только первые 10 товаров для проверки
-      const itemsToCheck = wishlistItems.slice(0, 10);
+      const itemsToCheck = cartItems.slice(0, 10);
       
       const products = await Promise.all(
         itemsToCheck.map(item =>
@@ -173,10 +173,10 @@ exports.handler = async (event) => {
     } 
     else if (prizeType === 'jackpot') {
       prize.discountValue = 40;
-      // Джекпот применяется ко всем товарам в вишлисте
-      prize.appliesToAllWishlist = true;
-      // Сохраняем snapshot вишлиста на момент выигрыша (первые 50 товаров)
-      prize.wishlistSnapshot = wishlistItems.slice(0, 50).map(item => item.productId);
+      // Джекпот применяется ко всем товарам в корзине
+      prize.appliesToAllCart = true;
+      // Сохраняем snapshot корзины на момент выигрыша (первые 50 товаров)
+      prize.cartSnapshot = cartItems.slice(0, 50).map(item => item.productId);
     }
     else if (prizeType === 'delivery') {
       // Бесплатная доставка - дополнительных данных не требуется

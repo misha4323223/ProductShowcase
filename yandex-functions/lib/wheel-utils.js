@@ -163,12 +163,12 @@ function generatePrizeId() {
  */
 function getPrizeDisplayName(prizeType) {
   const names = {
-    'discount_10': 'Скидка 10% на выбор',
+    'discount_10': 'Скидка 10% на весь заказ',
     'discount_20': 'Скидка 20% на товар',
     'points': '+200 баллов',
     'delivery': 'Бесплатная доставка',
     'free_item': 'Бесплатный товар',
-    'jackpot': 'ДЖЕКПОТ! -40% на весь вишлист'
+    'jackpot': 'ДЖЕКПОТ! -40% на весь заказ'
   };
   return names[prizeType] || prizeType;
 }
