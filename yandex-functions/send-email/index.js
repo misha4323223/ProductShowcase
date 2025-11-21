@@ -12,13 +12,11 @@ const sesClient = new SESv2Client({
 });
 
 function getLogoHtml() {
-  return `<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto 30px; width: 100px;">
-    <tr>
-      <td style="width: 100px; height: 100px; background-color: #06B6D4; border-radius: 50%; text-align: center; vertical-align: middle; font-size: 48px; font-weight: bold; color: white; font-family: Arial, sans-serif; line-height: 100px;">
-        SD
-      </td>
-    </tr>
-  </table>`;
+  // Base64-encoded lollipop candy image
+  const lollipopBase64 = 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3QgeD0iNDUiIHk9IjYwIiB3aWR0aD0iMTAiIGhlaWdodD0iMzUiIGZpbGw9IiM4QjQ1MTMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjI1IiByPSIyNSIgZmlsbD0iI0VDNDg5OSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMjUiIHI9IjE4IiBmaWxsPSIjRkY2NkI4Ii8+PHBhdGggZD0iTSA0MCAxNSBRIDMyIDI1IDQwIDM1IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==';
+  return `<div style="text-align: center; margin-bottom: 30px;">
+    <img src="data:image/svg+xml;base64,${lollipopBase64}" alt="Sweet Delights" width="100" height="100" style="display: inline-block;">
+  </div>`;
 }
 
 async function sendEmail({ to, subject, htmlBody, textBody, from }) {
