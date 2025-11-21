@@ -175,11 +175,10 @@ export default function LoginPage() {
           
           <div className="w-full space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="login-email" className="text-slate-900 font-semibold text-sm" style={{textShadow: "0 1px 3px rgba(255, 255, 255, 0.5)"}}>Email</Label>
               <Input
                 id="login-email"
                 type="email"
-                placeholder="your@email.com"
+                placeholder="Ваш логин/почта"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
                 required
@@ -190,7 +189,6 @@ export default function LoginPage() {
             
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <Label htmlFor="login-password" className="text-slate-900 font-semibold text-sm" style={{textShadow: "0 1px 3px rgba(255, 255, 255, 0.5)"}}>Пароль</Label>
                 <Button 
                   variant="ghost" 
                   className="px-0 text-xs h-auto text-slate-900 font-semibold hover:text-slate-700"
@@ -206,11 +204,12 @@ export default function LoginPage() {
                 <Input
                   id="login-password"
                   type={showLoginPassword ? "text" : "password"}
+                  placeholder="Пароль"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
                   data-testid="input-login-password"
-                  className="flex-1 bg-transparent border-0 text-slate-900 text-sm h-9 font-medium focus-visible:ring-0"
+                  className="flex-1 bg-transparent border-0 text-slate-900 placeholder:text-slate-700 text-sm h-9 font-medium focus-visible:ring-0"
                 />
                 <Button
                   type="button"
