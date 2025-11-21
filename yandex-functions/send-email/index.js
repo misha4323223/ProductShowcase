@@ -1,8 +1,10 @@
-const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
+const AWS_SES = require("@aws-sdk/client-sesv2");
+const SESv2Client = AWS_SES.SESv2Client;
+const SendEmailCommand = AWS_SES.SendEmailCommand;
 
-const sesClient = new SESClient({
+const sesClient = new SESv2Client({
   region: "ru-central1",
-  endpoint: "https://postbox.cloud.yandex.net/",
+  endpoint: "https://postbox.cloud.yandex.net",
   credentials: {
     accessKeyId: process.env.POSTBOX_ACCESS_KEY_ID,
     secretAccessKey: process.env.POSTBOX_SECRET_ACCESS_KEY,
@@ -11,24 +13,26 @@ const sesClient = new SESClient({
 
 async function sendEmail({ to, subject, htmlBody, textBody, from }) {
   const params = {
-    Source: from || process.env.FROM_EMAIL,
+    FromEmailAddress: from || process.env.FROM_EMAIL,
     Destination: {
       ToAddresses: Array.isArray(to) ? to : [to],
     },
-    Message: {
-      Subject: {
-        Data: subject,
-        Charset: "UTF-8",
-      },
-      Body: {
-        Html: htmlBody ? {
-          Data: htmlBody,
+    Content: {
+      Simple: {
+        Subject: {
+          Data: subject,
           Charset: "UTF-8",
-        } : undefined,
-        Text: textBody ? {
-          Data: textBody,
-          Charset: "UTF-8",
-        } : undefined,
+        },
+        Body: {
+          Html: htmlBody ? {
+            Data: htmlBody,
+            Charset: "UTF-8",
+          } : undefined,
+          Text: textBody ? {
+            Data: textBody,
+            Charset: "UTF-8",
+          } : undefined,
+        },
       },
     },
   };
@@ -36,7 +40,6 @@ async function sendEmail({ to, subject, htmlBody, textBody, from }) {
   const command = new SendEmailCommand(params);
   const result = await sesClient.send(command);
   
-  // Возвращаем только нужные данные в валидном JSON формате
   return {
     messageId: result.MessageId,
     success: true
@@ -76,6 +79,10 @@ exports.handler = async (event) => {
       
       case 'welcome_newsletter':
         emailParams = buildWelcomeNewsletterEmail(to);
+        break;
+      
+      case 'password_reset':
+        emailParams = buildPasswordResetEmail(to, data);
         break;
       
       default:
@@ -132,7 +139,7 @@ function buildOrderConfirmationEmail(to, data) {
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #EC4899;">Спасибо за ваш заказ! 🎉</h2>
+      <h2 style="color: #EC4899;">Спасибо за ваш заказ!</h2>
       <p>Здравствуйте, ${customerName}!</p>
       <p>Ваш заказ <strong>#${orderNumber}</strong> успешно оформлен.</p>
       
@@ -156,7 +163,7 @@ function buildOrderConfirmationEmail(to, data) {
       <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
       <p style="color: #666; font-size: 14px;">
         С наилучшими пожеланиями,<br/>
-        Команда Sweet Delights 🍬
+        Команда Sweet Delights
       </p>
     </div>
   `;
@@ -184,11 +191,12 @@ ${deliveryInfoText}
 Телефон: ${phone}
 
 С наилучшими пожеланиями,
-Команда Sweet Delights 🍬
+Команда Sweet Delights
   `;
 
   return {
     to,
+    from: process.env.ORDERS_EMAIL || process.env.FROM_EMAIL,
     subject: `Подтверждение заказа #${orderNumber} - Sweet Delights`,
     htmlBody,
     textBody,
@@ -200,7 +208,7 @@ function buildStockNotificationEmail(to, data) {
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #EC4899;">Отличные новости! 🎉</h2>
+      <h2 style="color: #EC4899;">Отличные новости!</h2>
       <p style="font-size: 16px; line-height: 1.5;">
         Товар <strong>${productName}</strong>, на который вы подписались, снова в наличии!
       </p>
@@ -213,7 +221,7 @@ function buildStockNotificationEmail(to, data) {
       <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
       <p style="font-size: 14px; color: #666;">
         С наилучшими пожеланиями,<br/>
-        Команда Sweet Delights 🍬
+        Команда Sweet Delights
       </p>
     </div>
   `;
@@ -227,11 +235,12 @@ function buildStockNotificationEmail(to, data) {
 Перейти к товару: ${productUrl}
 
 С наилучшими пожеланиями,
-Команда Sweet Delights 🍬
+Команда Sweet Delights
   `;
 
   return {
     to,
+    from: process.env.NOTIFICATIONS_EMAIL || process.env.FROM_EMAIL,
     subject: `${productName} снова в наличии! - Sweet Delights`,
     htmlBody,
     textBody,
@@ -250,7 +259,7 @@ function buildNewsletterEmail(to, data) {
       <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
       <p style="font-size: 14px; color: #666;">
         С наилучшими пожеланиями,<br/>
-        Команда Sweet Delights 🍬
+        Команда Sweet Delights
       </p>
       <p style="font-size: 12px; color: #999; margin-top: 20px;">
         Если вы хотите отписаться от рассылки, свяжитесь с нами.
@@ -264,13 +273,14 @@ ${title || 'Новости Sweet Delights'}
 ${message.replace(/<[^>]*>/g, '')}
 
 С наилучшими пожеланиями,
-Команда Sweet Delights 🍬
+Команда Sweet Delights
 
 Если вы хотите отписаться от рассылки, свяжитесь с нами.
   `;
 
   return {
     to,
+    from: process.env.NEWSLETTER_EMAIL || process.env.FROM_EMAIL,
     subject: subject || 'Новости Sweet Delights',
     htmlBody,
     textBody,
@@ -280,7 +290,7 @@ ${message.replace(/<[^>]*>/g, '')}
 function buildWelcomeNewsletterEmail(to) {
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #EC4899;">Добро пожаловать в Sweet Delights! 🎉</h2>
+      <h2 style="color: #EC4899;">Добро пожаловать в Sweet Delights!</h2>
       <p style="font-size: 16px; line-height: 1.6;">
         Спасибо за подписку на нашу рассылку!
       </p>
@@ -289,10 +299,10 @@ function buildWelcomeNewsletterEmail(to) {
         Теперь вы первыми узнаете о:
       </p>
       <ul style="font-size: 16px; line-height: 1.8; color: #333;">
-        <li>🎊 Открытии нашего магазина</li>
-        <li>🍬 Новых поступлениях товаров</li>
-        <li>💝 Эксклюзивных предложениях и скидках</li>
-        <li>🎁 Специальных акциях только для подписчиков</li>
+        <li>Открытии нашего магазина</li>
+        <li>Новых поступлениях товаров</li>
+        <li>Эксклюзивных предложениях и скидках</li>
+        <li>Специальных акциях только для подписчиков</li>
       </ul>
       <p style="font-size: 16px; line-height: 1.6;">
         Следите за нашими новостями - скоро мы откроемся и порадуем вас самыми вкусными сладостями!
@@ -300,33 +310,86 @@ function buildWelcomeNewsletterEmail(to) {
       <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
       <p style="font-size: 14px; color: #666;">
         С наилучшими пожеланиями,<br/>
-        Команда Sweet Delights 🍬
+        Команда Sweet Delights
       </p>
     </div>
   `;
 
   const textBody = `
-Добро пожаловать в Sweet Delights! 🎉
+Добро пожаловать в Sweet Delights!
 
 Спасибо за подписку на нашу рассылку!
 
 Мы рады приветствовать вас в семье любителей сладостей Sweet Delights. 
 Теперь вы первыми узнаете о:
 
-🎊 Открытии нашего магазина
-🍬 Новых поступлениях товаров
-💝 Эксклюзивных предложениях и скидках
-🎁 Специальных акциях только для подписчиков
+Открытии нашего магазина
+Новых поступлениях товаров
+Эксклюзивных предложениях и скидках
+Специальных акциях только для подписчиков
 
 Следите за нашими новостями - скоро мы откроемся и порадуем вас самыми вкусными сладостями!
 
 С наилучшими пожеланиями,
-Команда Sweet Delights 🍬
+Команда Sweet Delights
   `;
 
   return {
     to,
-    subject: 'Добро пожаловать в Sweet Delights! 🍬',
+    from: process.env.NEWSLETTER_EMAIL || process.env.FROM_EMAIL,
+    subject: 'Добро пожаловать в Sweet Delights!',
+    htmlBody,
+    textBody,
+  };
+}
+
+function buildPasswordResetEmail(to, data) {
+  const { resetCode } = data;
+
+  const htmlBody = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #EC4899;">Восстановление пароля</h2>
+      <p style="font-size: 16px; line-height: 1.6;">
+        Вы запросили восстановление пароля. Используйте код ниже для смены пароля:
+      </p>
+      <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+        <p style="font-size: 24px; font-weight: bold; color: #EC4899; letter-spacing: 2px;">
+          ${resetCode}
+        </p>
+      </div>
+      <p style="font-size: 14px; color: #666;">
+        Код действителен в течение 15 минут.
+      </p>
+      <p style="font-size: 14px; color: #666;">
+        Если вы не запрашивали сброс пароля, проигнорируйте это письмо.
+      </p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+      <p style="font-size: 14px; color: #666;">
+        С наилучшими пожеланиями,<br/>
+        Команда Sweet Delights
+      </p>
+    </div>
+  `;
+
+  const textBody = `
+Восстановление пароля
+
+Вы запросили восстановление пароля. Используйте код ниже для смены пароля:
+
+${resetCode}
+
+Код действителен в течение 15 минут.
+
+Если вы не запрашивали сброс пароля, проигнорируйте это письмо.
+
+С наилучшими пожеланиями,
+Команда Sweet Delights
+  `;
+
+  return {
+    to,
+    from: process.env.SUPPORT_EMAIL || process.env.FROM_EMAIL,
+    subject: 'Восстановление пароля Sweet Delights',
     htmlBody,
     textBody,
   };
