@@ -225,28 +225,25 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
       <Link 
         href="/" 
-        className="absolute top-4 left-4 z-50 p-2 rounded-md bg-white/10 dark:bg-white/10 backdrop-blur-sm hover-elevate active-elevate-2 transition-all"
+        className="absolute top-4 left-4 z-50 p-2 rounded-md bg-white/10 dark:bg-black/10 backdrop-blur-sm hover-elevate active-elevate-2 transition-all"
         data-testid="link-home"
       >
-        <Home className="w-5 h-5 text-foreground dark:text-white" />
+        <Home className="w-5 h-5 text-foreground" />
       </Link>
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img 
           src={logoUrl} 
           alt="Sweet Delights Background" 
-          className="w-full max-w-4xl h-auto -mt-96 sm:-mt-72 md:mt-0 lg:mt-0 opacity-100"
-          style={{
-            filter: "var(--logo-filter, none)",
-          }}
+          className="w-full max-w-4xl h-auto -mt-96 sm:-mt-72 md:mt-0 lg:mt-0"
           loading="eager"
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30 dark:from-transparent dark:via-transparent dark:to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30 dark:from-gray-950/50 dark:via-gray-900/50 dark:to-gray-950/50" />
 
       <div className="w-full max-w-sm relative z-10 -ml-12" style={{marginTop: "8rem"}}>
         <form onSubmit={handleLogin} className="flex flex-col items-center gap-3">
@@ -261,12 +258,12 @@ export default function LoginPage() {
                 onChange={(e) => setLoginEmail(e.target.value)}
                 required
                 data-testid="input-login-email"
-                className="bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 border-pink-300/60 dark:border-pink-400/60 text-slate-900 dark:text-white placeholder:text-slate-700 dark:placeholder:text-gray-300 text-sm h-9 font-medium focus:border-pink-400/80 transition-colors"
+                className="bg-white/5 dark:bg-black/5 backdrop-blur-sm border-2 border-pink-300/60 dark:border-pink-400/40 text-slate-900 placeholder:text-slate-700 text-sm h-9 font-medium focus:border-pink-400/80 transition-colors"
               />
             </div>
             
             <div className="space-y-1">
-              <div className="flex items-center bg-white/80 dark:bg-white/10 backdrop-blur-sm border-2 border-purple-300/60 dark:border-purple-400/60 rounded-md focus-within:border-purple-400/80 transition-colors">
+              <div className="flex items-center bg-white/5 dark:bg-black/5 backdrop-blur-sm border-2 border-purple-300/60 dark:border-purple-400/40 rounded-md focus-within:border-purple-400/80 transition-colors">
                 <Input
                   id="login-password"
                   type={showLoginPassword ? "text" : "password"}
@@ -275,7 +272,7 @@ export default function LoginPage() {
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
                   data-testid="input-login-password"
-                  className="flex-1 bg-transparent border-0 text-slate-900 dark:text-white placeholder:text-slate-700 dark:placeholder:text-gray-300 text-sm h-9 font-medium focus-visible:ring-0"
+                  className="flex-1 bg-transparent border-0 text-slate-900 placeholder:text-slate-700 text-sm h-9 font-medium focus-visible:ring-0"
                 />
                 <Button
                   type="button"
@@ -286,9 +283,9 @@ export default function LoginPage() {
                   data-testid="button-toggle-login-password"
                 >
                   {showLoginPassword ? (
-                    <EyeOff className="h-4 w-4 text-slate-700 dark:text-gray-300" />
+                    <EyeOff className="h-4 w-4 text-slate-700" />
                   ) : (
-                    <Eye className="h-4 w-4 text-slate-700 dark:text-gray-300" />
+                    <Eye className="h-4 w-4 text-slate-700" />
                   )}
                 </Button>
               </div>
@@ -297,7 +294,7 @@ export default function LoginPage() {
           
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold h-8 text-sm transition-all dark:from-pink-600 dark:via-purple-600 dark:to-blue-600 dark:hover:from-pink-700 dark:hover:via-purple-700 dark:hover:to-blue-700" 
+            className="w-full bg-white/10 hover:bg-white/20 text-slate-900 font-semibold border-2 border-slate-900/40 hover:border-slate-900/60 h-8 text-sm transition-all" 
             disabled={isLoading}
             data-testid="button-login-submit"
           >
@@ -306,7 +303,7 @@ export default function LoginPage() {
 
           <Button 
             variant="ghost" 
-            className="text-xs text-slate-900 dark:text-gray-300 font-medium hover:text-slate-700 dark:hover:text-white h-auto py-0"
+            className="text-xs text-slate-900 font-medium hover:text-slate-700 h-auto py-0"
             type="button"
             onClick={() => setIsResetDialogOpen(true)}
             data-testid="button-forgot-password"
@@ -318,7 +315,7 @@ export default function LoginPage() {
           <Button 
             type="button"
             variant="ghost"
-            className="text-xs text-slate-900 dark:text-gray-300 font-medium hover:text-slate-700 dark:hover:text-white h-auto py-0"
+            className="text-xs text-slate-900 font-medium hover:text-slate-700 h-auto py-0"
             onClick={(e) => {
               e.preventDefault();
               setIsSignupDialogOpen(true);
