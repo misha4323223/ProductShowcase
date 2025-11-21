@@ -171,12 +171,9 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30 dark:from-gray-950/50 dark:via-gray-900/50 dark:to-gray-950/50" />
 
       <div className="w-full max-w-sm relative z-10">
-        <form onSubmit={handleLogin} className="flex flex-col items-center gap-4">
-          <h2 className="font-serif text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 dark:from-pink-400 dark:via-purple-400 dark:to-blue-400 -mt-2 drop-shadow-lg" style={{textShadow: "0 2px 8px rgba(236, 72, 153, 0.3)"}}>
-            Вход
-          </h2>
+        <form onSubmit={handleLogin} className="flex flex-col items-center gap-3">
           
-          <div className="w-full space-y-3">
+          <div className="w-full space-y-2">
             <div className="space-y-1">
               <Label htmlFor="login-email" className="text-slate-900 font-semibold text-sm" style={{textShadow: "0 1px 3px rgba(255, 255, 255, 0.5)"}}>Email</Label>
               <Input
@@ -235,20 +232,20 @@ export default function LoginPage() {
           
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0 h-9" 
+            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white font-semibold shadow-lg border-0 h-8 text-sm" 
             disabled={isLoading}
             data-testid="button-login-submit"
           >
-            {isLoading ? "Вход..." : "Войти"}
+            {isLoading ? "..." : "Войти"}
           </Button>
 
           <Button 
             type="button"
             variant="ghost"
-            className="text-sm text-slate-900 font-medium hover:text-slate-700"
+            className="text-xs text-slate-900 font-medium hover:text-slate-700 h-auto py-0"
             onClick={() => setLocation("/register")}
             data-testid="button-go-signup"
-            style={{textShadow: "0 1px 3px rgba(255, 255, 255, 0.5)"}}
+            style={{textShadow: "0 1px 2px rgba(255, 255, 255, 0.5)"}}
           >
             Нет аккаунта? Зарегистрируйтесь
           </Button>
