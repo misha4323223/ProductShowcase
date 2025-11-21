@@ -234,11 +234,11 @@ export default function LoginPage() {
         <Home className="w-5 h-5 text-foreground" />
       </Link>
 
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none md:block">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img 
           src={logoUrl} 
           alt="Sweet Delights Background" 
-          className="w-full max-w-4xl h-auto -mt-96 sm:-mt-72 md:mt-0"
+          className="w-full max-w-4xl h-auto -mt-96 sm:-mt-72 md:mt-0 lg:mt-0"
           loading="eager"
         />
       </div>
