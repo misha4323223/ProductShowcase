@@ -1,0 +1,82 @@
+
+
+21 нояб. 14:30:44.983
+REPORT RequestID: 36da790a-dee5-4633-8369-e71643bd80f5 Duration: 383.992 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.064 ms Function Init Duration: 199.615 ms CPU Usage: 16.992 %
+
+21 нояб. 14:30:44.983
+END RequestID: 36da790a-dee5-4633-8369-e71643bd80f5
+
+21 нояб. 14:30:44.980
+}
+
+21 нояб. 14:30:44.980
+Code: 'NotFoundException'
+
+21 нояб. 14:30:44.980
+},
+
+21 нояб. 14:30:44.980
+totalRetryDelay: 0
+
+21 нояб. 14:30:44.980
+attempts: 1,
+
+21 нояб. 14:30:44.980
+cfId: undefined,
+
+21 нояб. 14:30:44.980
+extendedRequestId: undefined,
+
+21 нояб. 14:30:44.980
+requestId: undefined,
+
+21 нояб. 14:30:44.980
+httpStatusCode: 404,
+
+21 нояб. 14:30:44.980
+'$metadata': {
+
+21 нояб. 14:30:44.980
+'$retryable': undefined,
+
+21 нояб. 14:30:44.980
+'$fault': 'client',
+
+21 нояб. 14:30:44.980
+at async exports.handler [as handlerFn] (/function/code/index.js:99:5) {
+
+21 нояб. 14:30:44.980
+at async sendEmail (/function/code/index.js:41:18)
+
+21 нояб. 14:30:44.980
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+21 нояб. 14:30:44.980
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+21 нояб. 14:30:44.980
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+21 нояб. 14:30:44.980
+at async /function/code/node_modules/@smithy/core/dist-cjs/submodules/schema/index.js:26:24
+
+21 нояб. 14:30:44.980
+at async AwsRestJsonProtocol.deserializeResponse (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:744:24)
+
+21 нояб. 14:30:44.980
+at async AwsRestJsonProtocol.deserializeResponse (/function/code/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:301:13)
+
+21 нояб. 14:30:44.980
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+21 нояб. 14:30:44.980
+at AwsRestJsonProtocol.handleError (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:759:27)
+
+21 нояб. 14:30:44.980
+RequestID: 7e953db1-3ed5-4340-a86a-ee9126a4a0b0
+
+21 нояб. 14:30:44.980
+Error sending email: NotFoundException: identity not found
+
+21 нояб. 14:30:44.522
+START RequestID: 36da790a-dee5-4633-8369-e71643bd80f5 Version: d4egkqbgi2f1s2ojmab9
