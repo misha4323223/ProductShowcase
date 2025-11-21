@@ -24,7 +24,15 @@ const docClient = DynamoDBDocumentClient.from(client, {
 
 async function sendResetCodeEmail(email, resetCode) {
   try {
-    const response = await fetch(process.env.SEND_EMAIL_FUNCTION_URL, {
+    const sendEmailUrl = process.env.SEND_EMAIL_FUNCTION_URL;
+    console.log('Отправка кода сброса пароля на', email, 'URL:', sendEmailUrl);
+    
+    if (!sendEmailUrl) {
+      console.error('SEND_EMAIL_FUNCTION_URL не установлена!');
+      return false;
+    }
+
+    const response = await fetch(sendEmailUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -35,9 +43,18 @@ async function sendResetCodeEmail(email, resetCode) {
         }
       })
     });
-    return response.ok;
+
+    const responseText = await response.text();
+    console.log('Ответ от send-email:', response.status, responseText);
+    
+    if (!response.ok) {
+      console.error('Ошибка отправки письма. Статус:', response.status);
+      return false;
+    }
+    
+    return true;
   } catch (error) {
-    console.error('Email send error:', error);
+    console.error('Ошибка отправки письма сброса пароля:', error.message);
     return false;
   }
 }
