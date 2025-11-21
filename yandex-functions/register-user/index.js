@@ -12,11 +12,27 @@ const client = new DynamoDBClient({
   },
 });
 
-const docClient = DynamoDBDocumentClient.from(client);
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions: {
+    removeUndefinedValues: true,
+    convertEmptyValues: false,
+  },
+  unmarshallOptions: {
+    wrapNumbers: false,
+  },
+});
 
 async function sendVerificationEmail(email, verificationCode) {
   try {
-    const response = await fetch(process.env.SEND_EMAIL_FUNCTION_URL, {
+    const sendEmailUrl = process.env.SEND_EMAIL_FUNCTION_URL;
+    console.log('Отправка письма на', email, 'URL:', sendEmailUrl);
+    
+    if (!sendEmailUrl) {
+      console.error('SEND_EMAIL_FUNCTION_URL не установлена!');
+      return false;
+    }
+
+    const response = await fetch(sendEmailUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -27,9 +43,18 @@ async function sendVerificationEmail(email, verificationCode) {
         }
       })
     });
-    return response.ok;
+
+    const responseText = await response.text();
+    console.log('Ответ от send-email:', response.status, responseText);
+    
+    if (!response.ok) {
+      console.error('Ошибка отправки письма. Статус:', response.status);
+      return false;
+    }
+    
+    return true;
   } catch (error) {
-    console.error('Ошибка отправки письма верификации:', error);
+    console.error('Ошибка отправки письма верификации:', error.message);
     return false;
   }
 }
@@ -138,7 +163,7 @@ module.exports.handler = async (event) => {
 
       // Создать аккаунт
       const { salt, hash } = hashPassword(password);
-      const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const userId = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
       const updateCommand = new UpdateCommand({
         TableName: 'users',
@@ -174,7 +199,7 @@ module.exports.handler = async (event) => {
     }
 
     const { salt, hash } = hashPassword(password);
-    const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const userId = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
     const putCommand = new PutCommand({
       TableName: 'users',
@@ -205,6 +230,6 @@ module.exports.handler = async (event) => {
 
   } catch (error) {
     console.error('Ошибка регистрации:', error);
-    return createResponse(500, { error: 'Ошибка при регистрации' });
+    return createResponse(500, { error: `Ошибка при регистрации: ${error.message}` });
   }
 };

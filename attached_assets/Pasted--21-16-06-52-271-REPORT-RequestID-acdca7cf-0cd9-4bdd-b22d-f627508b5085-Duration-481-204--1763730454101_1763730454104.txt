@@ -1,0 +1,37 @@
+
+
+21 нояб. 16:06:52.271
+REPORT RequestID: acdca7cf-0cd9-4bdd-b22d-f627508b5085 Duration: 481.204 ms Billed Duration: 500 ms Memory Size: 128 MB Max Memory Used: 51 MB Queuing Duration: 0.066 ms CPU Usage: 14.355 %
+
+21 нояб. 16:06:52.271
+ERROR RequestID: acdca7cf-0cd9-4bdd-b22d-f627508b5085 Code: 502 Message: Error during function invocation
+
+21 нояб. 16:06:52.271
+END RequestID: acdca7cf-0cd9-4bdd-b22d-f627508b5085
+
+21 нояб. 16:06:52.270
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '@aws-sdk/client-sesv2'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+21 нояб. 16:06:52.260
+Unable to import index.handler module. Error: Cannot find module '@aws-sdk/client-sesv2' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+21 нояб. 16:06:51.785
+START RequestID: acdca7cf-0cd9-4bdd-b22d-f627508b5085 Version: d4e3jqg0l7bh1j3ck10h
+
+21 нояб. 16:06:22.538
+REPORT RequestID: 61f53da9-778c-4dec-b69e-1a6d02814e6a Duration: 192.421 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.085 ms CPU Usage: 12.793 %
+
+21 нояб. 16:06:22.538
+ERROR RequestID: 61f53da9-778c-4dec-b69e-1a6d02814e6a Code: 502 Message: Error during function invocation
+
+21 нояб. 16:06:22.538
+END RequestID: 61f53da9-778c-4dec-b69e-1a6d02814e6a
+
+21 нояб. 16:06:22.537
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '@aws-sdk/client-sesv2'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+21 нояб. 16:06:22.536
+Unable to import index.handler module. Error: Cannot find module '@aws-sdk/client-sesv2' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+21 нояб. 16:06:22.340
+START RequestID: 61f53da9-778c-4dec-b69e-1a6d02814e6a Version: d4e3jqg0l7bh1j3ck10h
