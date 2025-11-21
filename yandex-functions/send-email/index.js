@@ -12,11 +12,13 @@ const sesClient = new SESv2Client({
 });
 
 function getLogoHtml() {
-  return `<div style="text-align: center; margin-bottom: 30px;">
-    <div style="width: 100px; height: 100px; background-color: #06B6D4; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: bold; color: white; font-family: Arial, sans-serif;">
-      SD
-    </div>
-  </div>`;
+  return `<table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto 30px; width: 100px;">
+    <tr>
+      <td style="width: 100px; height: 100px; background-color: #06B6D4; border-radius: 50%; text-align: center; vertical-align: middle; font-size: 48px; font-weight: bold; color: white; font-family: Arial, sans-serif; line-height: 100px;">
+        SD
+      </td>
+    </tr>
+  </table>`;
 }
 
 async function sendEmail({ to, subject, htmlBody, textBody, from }) {
