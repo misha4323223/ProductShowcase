@@ -225,7 +225,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+    <div className="w-screen min-h-screen relative overflow-hidden flex items-center justify-center bg-white">
       <Link 
         href="/" 
         className="absolute top-4 left-4 z-50 p-2 rounded-md bg-white/10 dark:bg-black/10 backdrop-blur-sm hover-elevate active-elevate-2 transition-all"
