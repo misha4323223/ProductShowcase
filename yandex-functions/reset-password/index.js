@@ -60,14 +60,11 @@ module.exports.handler = async (event) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          type: 'password_reset',
           to: trimmedEmail,
-          subject: 'Восстановление пароля Sweet Delights',
-          html: `
-            <h2>Восстановление пароля</h2>
-            <p>Ваш код для сброса пароля: <strong>${resetCode}</strong></p>
-            <p>Код действителен в течение 15 минут.</p>
-            <p>Если вы не запрашивали сброс пароля, проигнорируйте это письмо.</p>
-          `,
+          data: {
+            resetCode: resetCode
+          }
         }),
       });
 
