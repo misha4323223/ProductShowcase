@@ -56,18 +56,28 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      if (email !== ADMIN_EMAIL) {
+      const trimmedEmail = email.trim().toLowerCase();
+      const trimmedAdminEmail = ADMIN_EMAIL.trim().toLowerCase();
+      
+      console.log("🔐 Попытка входа:", { email: trimmedEmail, adminEmail: trimmedAdminEmail, match: trimmedEmail === trimmedAdminEmail });
+      
+      if (trimmedEmail !== trimmedAdminEmail) {
+        console.log("❌ Email не совпадает с ADMIN_EMAIL");
         return { success: false, error: "Доступ запрещен" };
       }
 
+      console.log("📤 Отправляем запрос на /auth/login");
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: trimmedEmail, password }),
       });
+
+      console.log("📥 Ответ:", response.status);
 
       if (!response.ok) {
         const error = await response.json();
+        console.log("❌ Ошибка от сервера:", error);
         let errorMessage = "Ошибка входа";
         
         if (error.error === "Неверный email или пароль") {
@@ -78,18 +88,21 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await response.json();
+      console.log("✅ Данные от сервера:", data);
       
       if (data.user.role !== 'admin') {
+        console.log("❌ Роль не admin:", data.user.role);
         return { success: false, error: "Доступ запрещен" };
       }
 
+      console.log("✅ Вход успешен!");
       localStorage.setItem('adminAuthToken', data.token);
       setIsAuthenticated(true);
       return { success: true };
       
     } catch (error: any) {
-      console.error("Ошибка при входе:", error);
-      return { success: false, error: "Ошибка соединения" };
+      console.error("❌ Ошибка при входе:", error);
+      return { success: false, error: "Ошибка соединения: " + error.message };
     }
   };
 
