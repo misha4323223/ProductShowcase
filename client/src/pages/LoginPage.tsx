@@ -25,6 +25,11 @@ export default function LoginPage() {
   const [resetEmail, setResetEmail] = useState("");
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
+  const [resetStep, setResetStep] = useState(1);
+  const [resetCode, setResetCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
@@ -113,35 +118,70 @@ export default function LoginPage() {
     setIsResetLoading(true);
     
     try {
-      await resetPassword(resetEmail);
-      toast({
-        title: "Письмо отправлено!",
-        description: "Проверьте свою почту для сброса пароля. Письмо может попасть в спам.",
-      });
-      setIsResetDialogOpen(false);
-      setResetEmail("");
-    } catch (error: any) {
-      let errorMessage = "Не удалось отправить письмо";
-      
-      if (error.code === "auth/user-not-found") {
-        errorMessage = "Пользователь с таким email не найден. Сначала зарегистрируйтесь!";
-      } else if (error.code === "auth/invalid-email") {
-        errorMessage = "Неверный формат email";
-      } else if (error.code === "auth/too-many-requests") {
-        errorMessage = "Слишком много запросов. Попробуйте позже";
-      } else if (error.code === "auth/missing-email") {
-        errorMessage = "Введите email адрес";
-      } else if (error.code === "auth/network-request-failed") {
-        errorMessage = "Проблема с интернет-соединением";
-      } else if (error.code === "auth/invalid-api-key") {
-        errorMessage = "Ошибка конфигурации Firebase. Обратитесь к администратору";
+      if (resetStep === 1) {
+        await resetPassword(resetEmail);
+        setResetStep(2);
+        toast({
+          title: "Письмо отправлено!",
+          description: "Введите код из письма и новый пароль",
+        });
       } else {
-        errorMessage = `Ошибка: ${error.code || error.message}`;
+        if (!resetCode || !newPassword) {
+          toast({
+            title: "Ошибка",
+            description: "Заполните все поля",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        if (newPassword !== confirmPassword) {
+          toast({
+            title: "Ошибка",
+            description: "Пароли не совпадают",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        if (newPassword.length < 6) {
+          toast({
+            title: "Ошибка",
+            description: "Пароль должен быть минимум 6 символов",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        const response = await fetch("/api/auth/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: resetEmail,
+            action: "verify",
+            resetCode: resetCode.toUpperCase(),
+            newPassword,
+          }),
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Ошибка сброса пароля");
+
+        toast({
+          title: "Успех!",
+          description: "Пароль успешно изменён",
+        });
+        setIsResetDialogOpen(false);
+        setResetEmail("");
+        setResetCode("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setResetStep(1);
       }
-      
+    } catch (error: any) {
       toast({
-        title: "Ошибка восстановления пароля",
-        description: errorMessage,
+        title: "Ошибка",
+        description: error.message || "Попробуйте ещё раз",
         variant: "destructive",
       });
     } finally {
@@ -250,27 +290,91 @@ export default function LoginPage() {
         </form>
       </div>
 
-      <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+      <Dialog open={isResetDialogOpen} onOpenChange={(open) => {
+        setIsResetDialogOpen(open);
+        if (!open) {
+          setResetStep(1);
+          setResetEmail("");
+          setResetCode("");
+          setNewPassword("");
+          setConfirmPassword("");
+        }
+      }}>
         <DialogContent data-testid="dialog-reset-password" className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-white/30 dark:border-white/10">
           <form onSubmit={handleResetPassword}>
             <DialogHeader>
               <DialogTitle>Восстановление пароля</DialogTitle>
               <DialogDescription>
-                Введите email, на который зарегистрирован ваш аккаунт. Мы отправим вам письмо со ссылкой для сброса пароля.
+                {resetStep === 1 ? "Введите email для получения кода восстановления" : "Введите код из письма и новый пароль"}
               </DialogDescription>
             </DialogHeader>
-            <div className="py-4">
-              <Label htmlFor="reset-email">Email</Label>
-              <Input
-                id="reset-email"
-                type="email"
-                placeholder="your@email.com"
-                value={resetEmail}
-                onChange={(e) => setResetEmail(e.target.value)}
-                required
-                data-testid="input-reset-email"
-                className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
-              />
+            <div className="py-4 space-y-4">
+              {resetStep === 1 ? (
+                <div>
+                  <Label htmlFor="reset-email">Email</Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required
+                    data-testid="input-reset-email"
+                    className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                  />
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <Label htmlFor="reset-code">Код из письма</Label>
+                    <Input
+                      id="reset-code"
+                      type="text"
+                      placeholder="Введите код"
+                      value={resetCode}
+                      onChange={(e) => setResetCode(e.target.value)}
+                      required
+                      data-testid="input-reset-code"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm uppercase"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-password">Новый пароль</Label>
+                    <div className="flex items-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-md border border-input">
+                      <Input
+                        id="new-password"
+                        type={showNewPassword ? "text" : "password"}
+                        placeholder="Новый пароль"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        required
+                        data-testid="input-new-password"
+                        className="border-0 bg-transparent"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="pr-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+                      >
+                        {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="confirm-password">Подтвердить пароль</Label>
+                    <Input
+                      id="confirm-password"
+                      type="password"
+                      placeholder="Подтвердите пароль"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      data-testid="input-confirm-password"
+                      className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm"
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <DialogFooter>
               <Button 
@@ -279,7 +383,7 @@ export default function LoginPage() {
                 data-testid="button-reset-submit"
                 className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white"
               >
-                {isResetLoading ? "Отправка..." : "Отправить письмо"}
+                {isResetLoading ? "Обработка..." : resetStep === 1 ? "Отправить код" : "Изменить пароль"}
               </Button>
             </DialogFooter>
           </form>
