@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, HelpCircle, Lock, FileText } from "lucide-react";
 import { SiTelegram, SiInstagram, SiVk } from "react-icons/si";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -188,27 +188,27 @@ export default function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border">
-          <div className={`flex flex-col md:flex-row justify-between items-center gap-4 text-sm ${mutedClass}`}>
-            <p data-testid="text-copyright">© 2025 Sweet Delights. Все права защищены.</p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <Link href="/faq" className="hover:text-foreground transition-colors" data-testid="link-faq">
-                Частые вопросы
-              </Link>
-              <button 
-                onClick={() => setPrivacyOpen(true)} 
-                className="hover:text-foreground transition-colors" 
-                data-testid="link-privacy"
-              >
-                Политика конфиденциальности
-              </button>
-              <button 
-                onClick={() => setTermsOpen(true)} 
-                className="hover:text-foreground transition-colors" 
-                data-testid="link-terms"
-              >
-                Договор оферты
-              </button>
-            </div>
+          <div className={`flex flex-wrap justify-center items-center gap-6 text-sm ${mutedClass}`}>
+            <Link href="/faq" className="flex items-center gap-2 hover:text-foreground hover:underline transition-colors" data-testid="link-faq">
+              <HelpCircle className="h-4 w-4" />
+              Частые вопросы
+            </Link>
+            <button 
+              onClick={() => setPrivacyOpen(true)} 
+              className="flex items-center gap-2 hover:text-foreground hover:underline transition-colors" 
+              data-testid="link-privacy"
+            >
+              <Lock className="h-4 w-4" />
+              Политика конфиденциальности
+            </button>
+            <button 
+              onClick={() => setTermsOpen(true)} 
+              className="flex items-center gap-2 hover:text-foreground hover:underline transition-colors" 
+              data-testid="link-terms"
+            >
+              <FileText className="h-4 w-4" />
+              Договор оферты
+            </button>
           </div>
 
           <div className="mt-6 pt-6 border-t border-border/50">
