@@ -5,27 +5,23 @@ import "./index.css";
 // Типизация для window
 declare global {
   interface Window {
-    __themeLoading?: boolean;
+    __themeReady?: Promise<void>;
     __initialTheme?: string;
   }
 }
 
 // Ожидаем загрузки темы перед монтированием React
 async function mountApp() {
-  // Ждем пока тема загружена (максимум 2 секунды)
-  if (window.__themeLoading) {
-    await new Promise(resolve => {
-      const timeoutId = setTimeout(() => {
-        console.warn('Theme loading timeout (2s), mounting app with loaded theme');
-        resolve(null);
-      }, 2000);
-      
-      window.addEventListener('themeReady', () => {
-        clearTimeout(timeoutId);
-        console.log('Theme loaded successfully:', window.__initialTheme);
-        resolve(null);
-      }, { once: true });
-    });
+  try {
+    // Ждем пока Promise из index.html разрешится (максимум 3 секунды)
+    if (window.__themeReady) {
+      await Promise.race([
+        window.__themeReady,
+        new Promise(resolve => setTimeout(resolve, 3000))
+      ]);
+    }
+  } catch (err) {
+    console.error('Error waiting for theme:', err);
   }
   
   // Монтируем React

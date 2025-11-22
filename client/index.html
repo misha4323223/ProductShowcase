@@ -100,41 +100,63 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
     
-    <!-- ОПТИМИЗАЦИЯ: Синхронная блокирующая загрузка темы из YDB БЕЗ мерцания -->
+    <!-- ОПТИМИЗАЦИЯ: Загрузка темы + фона БЕЗ мерцания перед React монтированием -->
     <script>
       (function() {
         const API_BASE_URL = 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
         
-        // Маркируем что загрузка темы началась
-        window.__themeLoading = true;
-        
-        // Синхронная загрузка (блокирует до завершения)
-        fetch(`${API_BASE_URL}/site-settings?key=current_theme`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        })
-          .then(res => res.json())
-          .then(data => {
-            const theme = data.settingValue || 'sakura';
+        // Promise который разрешится когда ВСЕ готово: тема + фон + класс на документе
+        window.__themeReady = (async () => {
+          try {
+            // Загружаем текущую тему
+            const themeRes = await fetch(`${API_BASE_URL}/site-settings?key=current_theme`, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            });
+            const themeData = await themeRes.json();
+            const theme = themeData.settingValue || 'sakura';
             
-            if (['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(theme)) {
-              document.documentElement.classList.add(theme);
-              window.__initialTheme = theme;
-            } else {
-              document.documentElement.classList.add('sakura');
-              window.__initialTheme = 'sakura';
+            // Валидируем тему
+            const validTheme = ['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(theme) 
+              ? theme 
+              : 'sakura';
+            
+            // Сохраняем для React контекста
+            window.__initialTheme = validTheme;
+            
+            // Применяем класс темы к html ДО загрузки фона
+            document.documentElement.classList.add(validTheme);
+            
+            // Загружаем фоны (background_settings)
+            try {
+              const bgRes = await fetch(`${API_BASE_URL}/site-settings?key=background_settings`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+              });
+              const bgData = await bgRes.json();
+              const bgSettings = bgData.settingValue ? JSON.parse(bgData.settingValue) : null;
+              
+              if (bgSettings) {
+                // Применяем фон для текущей темы
+                const themeKey = validTheme === 'new-year' ? 'newyear' : validTheme;
+                const themeBg = bgSettings[themeKey];
+                
+                if (themeBg && (themeBg.webpImage || themeBg.image)) {
+                  const imageUrl = themeBg.webpImage || themeBg.image;
+                  document.body.style.backgroundImage = `url('${imageUrl}')`;
+                  document.body.style.backgroundAttachment = 'fixed';
+                }
+              }
+            } catch (bgErr) {
+              console.error('Failed to load backgrounds:', bgErr);
+              // Продолжаем даже если фоны не загрузились
             }
-          })
-          .catch(err => {
+          } catch (err) {
             console.error('Failed to load theme:', err);
             document.documentElement.classList.add('sakura');
             window.__initialTheme = 'sakura';
-          })
-          .finally(() => {
-            window.__themeLoading = false;
-            // Если React уже готов к монтированию, диспатчим событие
-            window.dispatchEvent(new CustomEvent('themeReady'));
-          });
+          }
+        })();
       })();
     </script>
   </head>

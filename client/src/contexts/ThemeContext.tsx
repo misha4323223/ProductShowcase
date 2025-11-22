@@ -16,9 +16,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('sakura');
+  // Инициализируем с темой из pre-load скрипта если она есть
+  // (она уже загружена и применена в index.html перед React монтированием)
+  const initialTheme = (typeof window !== 'undefined' && (window as any).__initialTheme) || 'sakura';
+  
+  const [theme, setThemeState] = useState<Theme>(initialTheme as Theme);
   const [preferredThemeState, setPreferredThemeState] = useState<PreferredTheme>('sakura');
-  const [isLoading, setIsLoading] = useState(true);
+  // isLoading = false потому что тема и фон уже предзагружены в index.html
+  const [isLoading, setIsLoading] = useState(false);
   const [backgroundSettings, setBackgroundSettings] = useState<BackgroundSettings>({
     sakura: { image: '', webpImage: '', title: '' },
     newyear: { image: '', webpImage: '', title: '' },
@@ -26,16 +31,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     autumn: { image: '', webpImage: '', title: '' },
   });
 
+  // Загружаем данные с сервера только для синхронизации (polling)
+  // НЕ в initial load - избегаем повторного применения предзагруженной темы
   useEffect(() => {
-    async function loadTheme() {
+    async function syncTheme() {
       try {
-        // Load preferred theme (user's main theme choice)
+        // Load preferred theme
         const serverPreferred = await getPreferredTheme();
         const validPreferred = ['sakura', 'new-year', 'spring', 'autumn'].includes(serverPreferred)
           ? serverPreferred as PreferredTheme
           : 'sakura';
         
-        // Только обновляем если изменилась
         setPreferredThemeState(prev => prev !== validPreferred ? validPreferred : prev);
 
         // Load current theme
@@ -46,58 +52,39 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         
         // Только обновляем если изменилась (предотвращаем мерцание)
         setThemeState(prev => prev !== validTheme ? validTheme : prev);
-        
-        if (isLoading) {
-          setIsLoading(false);
-        }
       } catch (error) {
-        console.error('Failed to load theme from server:', error);
-        if (isLoading) {
-          setThemeState('sakura');
-          setPreferredThemeState('sakura');
-          setIsLoading(false);
-        }
+        console.error('Failed to sync theme from server:', error);
       }
     }
     
-    // Initial load
-    loadTheme();
-
-    // Poll for theme changes every 3 seconds (но не переменяет если не изменилась)
-    const pollInterval = setInterval(loadTheme, 3000);
+    // Не загружаем в initial render - начинаем polling со скоростью каждые 3 сек
+    const pollInterval = setInterval(syncTheme, 3000);
     
     return () => {
       clearInterval(pollInterval);
     };
-  }, [isLoading]);
+  }, []);
 
+  // Загружаем фоны один раз при монтировании (они уже применены в index.html)
   useEffect(() => {
     async function loadBackgroundSettings() {
       try {
         const settings = await getBackgroundSettings();
         if (settings && Object.keys(settings).length > 0) {
-          // Только обновляем если изменилась (предотвращаем мерцание)
+          // Только обновляем если изменилась
           setBackgroundSettings(prev => {
             const changed = JSON.stringify(prev) !== JSON.stringify(settings);
             return changed ? settings : prev;
           });
-          applyBackgroundToTheme(theme, settings);
         }
       } catch (error) {
         console.error('Failed to load background settings:', error);
       }
     }
     
-    // Initial load
+    // Загружаем фоны один раз при монтировании, БЕЗ polling
     loadBackgroundSettings();
-
-    // Poll for background changes every 3 seconds (но не переменяет если не изменилась)
-    const pollInterval = setInterval(loadBackgroundSettings, 3000);
-    
-    return () => {
-      clearInterval(pollInterval);
-    };
-  }, [theme]);
+  }, []);
 
   const applyBackgroundToTheme = (currentTheme: Theme, settings: BackgroundSettings) => {
     const themeKey = currentTheme === 'new-year' ? 'newyear' : currentTheme;
@@ -113,19 +100,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    if (isLoading) return;
-    
-    // Apply theme class to document
+    // Apply theme class to document (он уже применен в index.html, но обновляем при изменении)
     const root = document.documentElement;
     root.classList.remove('light', 'dark', 'sakura', 'new-year', 'spring', 'autumn');
     root.classList.add(theme);
     console.log('🎨 Theme applied:', theme);
 
-    // Apply background for the new theme
+    // Apply background для новой темы (когда тема измениласьс)
     if (backgroundSettings && Object.keys(backgroundSettings).length > 0) {
       applyBackgroundToTheme(theme, backgroundSettings);
     }
-  }, [theme, isLoading, backgroundSettings]);
+  }, [theme, backgroundSettings]);
 
   const setTheme = async (newTheme: Theme) => {
     try {
