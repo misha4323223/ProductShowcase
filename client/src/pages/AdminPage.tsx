@@ -196,38 +196,75 @@ export default function AdminPage() {
       setSlidesLoading(true);
       try {
         const slides = await getHeroSlides(selectedSlidesTheme);
-        // Если слайдов нет, создаём дефолтные и сохраняем в YDB
+        // Если слайдов нет, загружаем текущие слайды (без фильтра по теме)
         if (!slides || slides.length === 0) {
-          const defaultSlides: HeroSlide[] = [
-            {
-              id: 1,
-              image: heroImage1,
-              webpImage: heroImage1WebP,
-              title: `${selectedSlidesTheme} слайд 1`,
-              subtitle: 'Первый слайд',
-            },
-            {
-              id: 2,
-              image: heroImage2,
-              webpImage: heroImage2WebP,
-              title: `${selectedSlidesTheme} слайд 2`,
-              subtitle: 'Второй слайд',
-            },
-            {
-              id: 3,
-              image: heroImage3,
-              webpImage: heroImage3WebP,
-              title: `${selectedSlidesTheme} слайд 3`,
-              subtitle: 'Третий слайд',
-            },
-          ];
-          await setHeroSlides(defaultSlides, selectedSlidesTheme);
-          setHeroSlidesState(defaultSlides);
+          // Для sakura - копируем текущие слайды если они есть
+          if (selectedSlidesTheme === 'sakura') {
+            const defaultSlides = await getHeroSlides();
+            if (defaultSlides && defaultSlides.length > 0) {
+              await setHeroSlides(defaultSlides, 'sakura');
+              setHeroSlidesState(defaultSlides);
+            } else {
+              throw new Error('No default slides found');
+            }
+          } else {
+            // Для остальных тем - создаём с названием темы
+            const defaultSlides: HeroSlide[] = [
+              {
+                id: 1,
+                image: heroImage1,
+                webpImage: heroImage1WebP,
+                title: `${selectedSlidesTheme} слайд 1`,
+                subtitle: 'Первый слайд',
+              },
+              {
+                id: 2,
+                image: heroImage2,
+                webpImage: heroImage2WebP,
+                title: `${selectedSlidesTheme} слайд 2`,
+                subtitle: 'Второй слайд',
+              },
+              {
+                id: 3,
+                image: heroImage3,
+                webpImage: heroImage3WebP,
+                title: `${selectedSlidesTheme} слайд 3`,
+                subtitle: 'Третий слайд',
+              },
+            ];
+            await setHeroSlides(defaultSlides, selectedSlidesTheme);
+            setHeroSlidesState(defaultSlides);
+          }
         } else {
           setHeroSlidesState(slides);
         }
       } catch (error) {
         console.error('Error loading hero slides:', error);
+        // Fallback - создаём дефолтные слайды если ничего не получилось
+        const defaultSlides: HeroSlide[] = [
+          {
+            id: 1,
+            image: heroImage1,
+            webpImage: heroImage1WebP,
+            title: 'Sweet Delights',
+            subtitle: 'Мир сладостей и радости',
+          },
+          {
+            id: 2,
+            image: heroImage2,
+            webpImage: heroImage2WebP,
+            title: 'Доставим сладость в каждый дом',
+            subtitle: '',
+          },
+          {
+            id: 3,
+            image: heroImage3,
+            webpImage: heroImage3WebP,
+            title: 'Ваши улыбки — наша награда!',
+            subtitle: '',
+          },
+        ];
+        setHeroSlidesState(defaultSlides);
       } finally {
         setSlidesLoading(false);
       }
