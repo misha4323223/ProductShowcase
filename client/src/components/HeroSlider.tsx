@@ -108,7 +108,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   return (
     <>
-      <div className="relative w-full h-[70vh] md:h-[92vh] overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 pt-8 md:pt-6">
+      <div className="relative w-full h-screen md:h-[95vh] overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 pt-12 md:pt-8">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
