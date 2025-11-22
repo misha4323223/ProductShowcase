@@ -14,7 +14,7 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-2xl sm:max-w-3xl max-h-[90vh] flex flex-col" data-testid={`dialog-${type}`}>
+      <DialogContent className="w-[95vw] max-w-2xl sm:max-w-3xl max-h-[90vh] flex flex-col overflow-hidden" data-testid={`dialog-${type}`}>
         <DialogHeader>
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
             <div className="p-1 sm:p-1.5 md:p-2 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 flex-shrink-0">
