@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useWheel } from "@/contexts/WheelContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import WheelModal from "@/components/WheelModal";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
@@ -51,6 +52,7 @@ export default function Home() {
   const [cartOpen, setCartOpen] = useState(false);
   const [wheelOpen, setWheelOpen] = useState(false);
   const { toast } = useToast();
+  const { theme } = useTheme();
   const { products, isLoading: productsLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
@@ -265,7 +267,10 @@ export default function Home() {
         <section className="py-16 candy-stripe">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm">
+              <h2 
+                className="font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm"
+                style={theme === 'new-year' ? { textShadow: '0 2px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.4)' } : {}}
+              >
                 Категории
               </h2>
               <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mx-auto shadow-lg shadow-pink-200" />
@@ -305,7 +310,10 @@ export default function Home() {
         <section className="py-16 bg-gradient-to-b from-pink-50/30 via-purple-50/20 to-background relative pastel-dots">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm">
+              <h2 
+                className="font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm"
+                style={theme === 'new-year' ? { textShadow: '0 2px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.4)' } : {}}
+              >
                 Популярные товары
               </h2>
               <div className="h-1.5 w-32 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mx-auto shadow-lg shadow-pink-200" />
