@@ -100,30 +100,105 @@ export default function Home() {
     gcTime: 300000,
   });
 
-  // Использую слайды из YDB, если есть, иначе использую дефолтные
-  const slides = heroSlidesData.length > 0 ? heroSlidesData : [
-    {
-      id: 1,
-      image: heroImage1,
-      webpImage: heroImage1WebP,
-      title: 'Sweet Delights',
-      subtitle: 'Мир сладостей и радости',
-    },
-    {
-      id: 2,
-      image: heroImage2,
-      webpImage: heroImage2WebP,
-      title: 'Доставим сладость в каждый дом',
-      subtitle: '',
-    },
-    {
-      id: 3,
-      image: heroImage3,
-      webpImage: heroImage3WebP,
-      title: 'Ваши улыбки — наша награда!',
-      subtitle: '',
-    },
-  ];
+  // Слайды для разных тем
+  const slidesByTheme = {
+    'new-year': [
+      {
+        id: 1,
+        image: heroImage1,
+        webpImage: heroImage1WebP,
+        title: '🎄 С новым годом! 🎄',
+        subtitle: 'Праздничные подарки для любимых',
+      },
+      {
+        id: 2,
+        image: heroImage2,
+        webpImage: heroImage2WebP,
+        title: 'Доставим волшебство по России',
+        subtitle: 'Встречайте Новый год со сладостями!',
+      },
+      {
+        id: 3,
+        image: heroImage3,
+        webpImage: heroImage3WebP,
+        title: 'Праздник начинается с улыбки!',
+        subtitle: 'Специальные цены на новогодние наборы',
+      },
+    ],
+    'sakura': [
+      {
+        id: 1,
+        image: heroImage1,
+        webpImage: heroImage1WebP,
+        title: '🌸 Сакура в Мире сладостей 🌸',
+        subtitle: 'Весна пришла',
+      },
+      {
+        id: 2,
+        image: heroImage2,
+        webpImage: heroImage2WebP,
+        title: 'Нежные цветы сакуры',
+        subtitle: 'Подарите любовь через сладость',
+      },
+      {
+        id: 3,
+        image: heroImage3,
+        webpImage: heroImage3WebP,
+        title: 'Красота весны в каждом подарке',
+        subtitle: 'Новая коллекция цветочных ароматов',
+      },
+    ],
+    'spring': [
+      {
+        id: 1,
+        image: heroImage1,
+        webpImage: heroImage1WebP,
+        title: '🌼 Весна! 🌼',
+        subtitle: 'Пробуждение природы',
+      },
+      {
+        id: 2,
+        image: heroImage2,
+        webpImage: heroImage2WebP,
+        title: 'Свежесть весны в каждой конфете',
+        subtitle: 'Светлые дни, яркие эмоции',
+      },
+      {
+        id: 3,
+        image: heroImage3,
+        webpImage: heroImage3WebP,
+        title: 'Радуга весенних вкусов',
+        subtitle: 'Распродажа весенней коллекции',
+      },
+    ],
+    'autumn': [
+      {
+        id: 1,
+        image: heroImage1,
+        webpImage: heroImage1WebP,
+        title: '🍂 Осень! 🍂',
+        subtitle: 'Время уютных моментов',
+      },
+      {
+        id: 2,
+        image: heroImage2,
+        webpImage: heroImage2WebP,
+        title: 'Тепло осени в каждом подарке',
+        subtitle: 'Золотая пора сладостей',
+      },
+      {
+        id: 3,
+        image: heroImage3,
+        webpImage: heroImage3WebP,
+        title: 'Вкусы осени ждут вас',
+        subtitle: 'Специальная коллекция по цене меда',
+      },
+    ],
+  };
+
+  // Выбираю слайды в зависимости от темы
+  const themeSlides = slidesByTheme[theme as keyof typeof slidesByTheme] || slidesByTheme['sakura'];
+  const slides = heroSlidesData.length > 0 ? heroSlidesData : themeSlides;
 
   // Используем ТОЛЬКО категории с изображениями из базы данных
   // Мемоизируем чтобы не пересчитывать каждый раз и не вызывать переапплаицирование CategoryCard
