@@ -1,6 +1,11 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
 
+console.log("Environment variables:");
+console.log("YDB_ENDPOINT:", process.env.YDB_ENDPOINT);
+console.log("YDB_ACCESS_KEY_ID:", process.env.YDB_ACCESS_KEY_ID ? "SET" : "NOT SET");
+console.log("YDB_SECRET_KEY:", process.env.YDB_SECRET_KEY ? "SET" : "NOT SET");
+
 const client = new DynamoDBClient({
   region: "ru-central1",
   endpoint: process.env.YDB_ENDPOINT,

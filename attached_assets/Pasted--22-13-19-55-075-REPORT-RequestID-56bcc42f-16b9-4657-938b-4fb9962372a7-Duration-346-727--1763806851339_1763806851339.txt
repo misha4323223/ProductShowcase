@@ -1,0 +1,79 @@
+
+
+22 нояб. 13:19:55.075
+REPORT RequestID: 56bcc42f-16b9-4657-938b-4fb9962372a7 Duration: 346.727 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 102 MB Queuing Duration: 0.026 ms Function Init Duration: 182.724 ms CPU Usage: 16.699 %
+
+22 нояб. 13:19:55.075
+END RequestID: 56bcc42f-16b9-4657-938b-4fb9962372a7
+
+22 нояб. 13:19:55.071
+}
+
+22 нояб. 13:19:55.071
+__type: 'ru.yandex.docapi.v20120810#ValidationException'
+
+22 нояб. 13:19:55.071
+},
+
+22 нояб. 13:19:55.071
+totalRetryDelay: 0
+
+22 нояб. 13:19:55.071
+attempts: 1,
+
+22 нояб. 13:19:55.071
+cfId: undefined,
+
+22 нояб. 13:19:55.071
+extendedRequestId: undefined,
+
+22 нояб. 13:19:55.071
+requestId: '32836522-e3bf-40f9-b33c-5cf0b02f7603',
+
+22 нояб. 13:19:55.071
+httpStatusCode: 400,
+
+22 нояб. 13:19:55.071
+'$metadata': {
+
+22 нояб. 13:19:55.071
+'$retryable': undefined,
+
+22 нояб. 13:19:55.071
+'$fault': 'client',
+
+22 нояб. 13:19:55.071
+at async exports.handler [as handlerFn] (/function/code/index.js:39:5) {
+
+22 нояб. 13:19:55.071
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+22 нояб. 13:19:55.071
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+22 нояб. 13:19:55.071
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+22 нояб. 13:19:55.071
+at async /function/code/node_modules/@aws-sdk/lib-dynamodb/dist-cjs/index.js:107:34
+
+22 нояб. 13:19:55.071
+at async /function/code/node_modules/@smithy/core/dist-cjs/submodules/schema/index.js:26:24
+
+22 нояб. 13:19:55.071
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+22 нояб. 13:19:55.071
+at AwsJson1_0Protocol.deserializeResponse (/function/code/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:473:24)
+
+22 нояб. 13:19:55.071
+at AwsJson1_0Protocol.handleError (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:640:65)
+
+22 нояб. 13:19:55.071
+at ProtocolLib.getErrorSchemaOrThrowBaseException (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:69:67)
+
+22 нояб. 13:19:55.071
+Error setting site settings: ValidationException: Unsupported API version "" for table "/ru-central1/b1gnp4ml7k5j7cquabad/etngc3d5gjae4oef9v48/site_settings"
+
+22 нояб. 13:19:54.397
+START RequestID: 56bcc42f-16b9-4657-938b-4fb9962372a7 Version: d4ekg3i2og98vcbgm0ah
