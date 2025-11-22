@@ -126,21 +126,21 @@ export default function Home() {
   ];
 
   // Используем ТОЛЬКО категории с изображениями из базы данных
-  const categoriesWithImages: CategoryWithImages[] = categories
-    .filter((cat: Category) => cat.image) // Показываем только категории с загруженными изображениями
-    .map((cat: Category) => {
-      // Добавляем timestamp для обхода кэша браузера
-      const timestamp = new Date().getTime();
-      const imageWithCacheBust = `${cat.image}?v=${timestamp}`;
-      
-      return {
-        name: cat.name,
-        slug: cat.slug,
-        image: imageWithCacheBust,
-        webpImage: imageWithCacheBust, // WebP формат уже загружен в Yandex Storage
-        id: cat.id,
-      };
-    });
+  // Мемоизируем чтобы не пересчитывать каждый раз и не вызывать переапплаицирование CategoryCard
+  const categoriesWithImages: CategoryWithImages[] = useMemo(() => 
+    categories
+      .filter((cat: Category) => cat.image) // Показываем только категории с загруженными изображениями
+      .map((cat: Category) => {
+        return {
+          name: cat.name,
+          slug: cat.slug,
+          image: cat.image,
+          webpImage: cat.image, // WebP формат уже загружен в Yandex Storage
+          id: cat.id,
+        };
+      }),
+    [categories]
+  );
 
   const handleAddToCart = (productId: string) => {
     const product = products.find(p => p.id === productId);
