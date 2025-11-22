@@ -215,3 +215,50 @@ export async function setBackgroundSettings(settings: BackgroundSettings): Promi
     throw error;
   }
 }
+
+export async function getPreferredTheme(): Promise<string> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings?key=preferred_theme`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch preferred theme from server, using default');
+      return 'sakura';
+    }
+
+    const data: SiteSetting = await response.json();
+    return data.settingValue || 'sakura';
+  } catch (error) {
+    console.error('Error fetching preferred theme:', error);
+    return 'sakura';
+  }
+}
+
+export async function setPreferredTheme(theme: string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        settingKey: 'preferred_theme',
+        settingValue: theme
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to set preferred theme');
+    }
+
+    console.log('Preferred theme saved to server:', theme);
+  } catch (error: any) {
+    console.error('Error setting preferred theme:', error);
+    throw error;
+  }
+}

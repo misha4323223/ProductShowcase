@@ -18,7 +18,8 @@ import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, ge
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
-import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, getBackgroundSettings, setBackgroundSettings, type HeroSlide, type BackgroundSettings, type BackgroundSetting } from "@/services/site-settings-client";
+import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, getBackgroundSettings, setBackgroundSettings, setPreferredTheme as savePreferredTheme, type HeroSlide, type BackgroundSettings, type BackgroundSetting } from "@/services/site-settings-client";
+import { useTheme } from "@/contexts/ThemeContext";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -95,6 +96,7 @@ type HeroSlideForm = z.infer<typeof heroSlideSchema>;
 export default function AdminPage() {
   const { toast } = useToast();
   const { logout } = useAdminAuth();
+  const { preferredTheme, setPreferredTheme } = useTheme();
   const [activeTab, setActiveTab] = useState("categories");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [promoUsageCounts, setPromoUsageCounts] = useState<Record<string, number>>({});

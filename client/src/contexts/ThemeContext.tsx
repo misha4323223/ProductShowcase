@@ -1,11 +1,14 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { getCurrentTheme, setCurrentTheme, getBackgroundSettings, type BackgroundSettings } from '@/services/site-settings-client';
+import { getCurrentTheme, setCurrentTheme, getBackgroundSettings, getPreferredTheme, setPreferredTheme, type BackgroundSettings } from '@/services/site-settings-client';
 
 type Theme = 'light' | 'dark' | 'sakura' | 'new-year' | 'spring' | 'autumn';
+type PreferredTheme = 'sakura' | 'new-year' | 'spring' | 'autumn';
 
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  preferredTheme: PreferredTheme;
+  setPreferredTheme: (theme: PreferredTheme) => void;
   isLoading: boolean;
   backgroundSettings: BackgroundSettings;
 }
@@ -14,6 +17,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('sakura');
+  const [preferredThemeState, setPreferredThemeState] = useState<PreferredTheme>('sakura');
   const [isLoading, setIsLoading] = useState(true);
   const [backgroundSettings, setBackgroundSettings] = useState<BackgroundSettings>({
     sakura: { image: '', webpImage: '', title: '' },
@@ -25,15 +29,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function loadTheme() {
       try {
+        // Load preferred theme (user's main theme choice)
+        const serverPreferred = await getPreferredTheme();
+        const validPreferred = ['sakura', 'new-year', 'spring', 'autumn'].includes(serverPreferred)
+          ? serverPreferred as PreferredTheme
+          : 'sakura';
+        setPreferredThemeState(validPreferred);
+
+        // Load current theme
         const serverTheme = await getCurrentTheme();
         const validTheme = ['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(serverTheme) 
           ? serverTheme as Theme 
-          : 'sakura';
+          : validPreferred;
         setThemeState(validTheme);
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to load theme from server:', error);
         setThemeState('sakura');
+        setPreferredThemeState('sakura');
         setIsLoading(false);
       }
     }
@@ -113,8 +126,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const setPreferredThemeFunc = async (newPreferred: PreferredTheme) => {
+    try {
+      // Save to YDB first
+      await setPreferredTheme(newPreferred);
+      // Then update local state
+      setPreferredThemeState(newPreferred);
+      // Also set current theme to the preferred theme
+      await setCurrentTheme(newPreferred);
+      setThemeState(newPreferred);
+      console.log('✅ Preferred theme saved:', newPreferred);
+    } catch (error) {
+      console.error('Failed to save preferred theme:', error);
+    }
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isLoading, backgroundSettings }}>
+    <ThemeContext.Provider value={{ theme, setTheme, preferredTheme: preferredThemeState, setPreferredTheme: setPreferredThemeFunc, isLoading, backgroundSettings }}>
       {children}
     </ThemeContext.Provider>
   );
