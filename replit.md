@@ -13,7 +13,11 @@ Preferred communication style: Simple, everyday language.
 - **Routing**: Wouter for lightweight client-side navigation.
 - **State Management**: TanStack React Query for server state, localStorage for theme persistence, local React state for UI.
 - **UI/Styling**: Shadcn UI (Radix UI + Tailwind CSS) with a custom design system featuring a warm, playful color palette, Playfair Display and Inter fonts, and responsive design with iOS Safari compatibility.
-- **Theme System**: Multi-theme design system with festive seasonal themes (Sakura, New Year, Spring, Autumn). Themes stored in localStorage and applied via CSS variables.
+- **Theme System**: Multi-theme design system with festive seasonal themes (Sakura, New Year, Spring, Autumn). Themes stored in localStorage and applied via CSS variables. Each theme includes:
+  - Custom background images managed via admin panel
+  - Background images stored in YDB and Yandex Object Storage (`backgrounds/[theme-name]` folders)
+  - Real-time sync with 3-second polling for global synchronization
+  - Auto-initialization of 4 default backgrounds on first admin load
 - **Key Components**: Includes sticky header, auto-rotating hero slider, animated product cards, side-panel shopping cart, category navigation, feature highlights bar, and a footer with legal links.
 - **CDEK Delivery Integration**:
   - `DeliverySelector`: Delivery service selector (CDEK only - nationwide coverage).
