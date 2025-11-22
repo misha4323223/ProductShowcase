@@ -538,10 +538,7 @@ export default function AdminPage() {
 
   const setThemeMutation = useMutation({
     mutationFn: async (theme: string) => {
-      const response = await apiRequest("/admin/set-theme", {
-        method: "POST",
-        body: JSON.stringify({ theme }),
-      });
+      const response = await apiRequest("POST", "/admin/set-theme", { theme });
       return response.json();
     },
     onSuccess: (data) => {
