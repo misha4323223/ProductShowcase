@@ -9,6 +9,7 @@ import { Link } from "wouter";
 import LegalDialog from "@/components/LegalDialog";
 import { subscribeToNewsletter } from "@/services/yandex-newsletter";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Footer() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
@@ -17,6 +18,9 @@ export default function Footer() {
   const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { toast } = useToast();
+  const { theme } = useTheme();
+  
+  const mutedClass = theme === 'new-year' ? 'text-white' : 'text-muted-foreground';
 
   const handleNewsletterSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +85,7 @@ export default function Footer() {
             <h3 className="font-serif text-xl font-bold text-primary mb-4">
               Sweet Delights
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className={`text-sm ${mutedClass} mb-4`}>
               Лучшие сладости с доставкой по всей России.
             </p>
             <div className="flex gap-3">
@@ -111,7 +115,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-semibold mb-4">Контакты</h4>
-            <div className="space-y-3 text-sm text-muted-foreground">
+            <div className={`space-y-3 text-sm ${mutedClass}`}>
               <div className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 <a href="mailto:Storesweeet@gmail.com" className="hover:text-foreground transition-colors">
@@ -133,7 +137,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-semibold mb-4">Подписка на новости</h4>
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className={`text-sm ${mutedClass} mb-3`}>
               Узнайте первыми об открытии магазина и получайте эксклюзивные предложения
             </p>
             <form onSubmit={handleNewsletterSubscribe} className="space-y-3">
@@ -165,7 +169,7 @@ export default function Footer() {
                 />
                 <Label 
                   htmlFor="newsletter-consent" 
-                  className="text-xs text-muted-foreground leading-tight cursor-pointer"
+                  className={`text-xs ${mutedClass} leading-tight cursor-pointer`}
                 >
                   Я согласен с{" "}
                   <button
@@ -184,7 +188,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+          <div className={`flex flex-col md:flex-row justify-between items-center gap-4 text-sm ${mutedClass}`}>
             <p data-testid="text-copyright">© 2025 Sweet Delights. Все права защищены.</p>
             <div className="flex flex-wrap justify-center gap-6">
               <Link href="/faq" className="hover:text-foreground transition-colors" data-testid="link-faq">
@@ -208,7 +212,7 @@ export default function Footer() {
           </div>
 
           <div className="mt-6 pt-6 border-t border-border/50">
-            <p className="text-xs text-muted-foreground text-center">
+            <p className={`text-xs ${mutedClass} text-center`}>
               ИП Пимашин Михаил Игоревич | ИНН: 711612442203 | Самозанятый (НПД)
             </p>
           </div>
