@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Shield, FileText } from "lucide-react";
 import { Link } from "wouter";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LegalDialogProps {
   isOpen: boolean;
@@ -36,7 +35,7 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 pr-2 md:pr-4 my-3 md:my-4">
+        <div className="flex-1 overflow-visible my-3 md:my-4">
           <div className="prose prose-sm max-w-none space-y-4">
             {isPrivacy ? (
               <>
@@ -132,7 +131,7 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
               </p>
             </div>
           </div>
-        </ScrollArea>
+        </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 pt-3 md:pt-4 border-t flex-shrink-0">
           <Link 
