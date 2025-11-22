@@ -14,8 +14,8 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-2xl sm:max-w-3xl max-h-[90vh] flex flex-col overflow-hidden" data-testid={`dialog-${type}`}>
-        <DialogHeader>
+      <DialogContent className="!w-[95vw] !max-w-2xl sm:!max-w-3xl !max-h-[90vh] !p-0 !gap-0 !grid-cols-1 flex flex-col" data-testid={`dialog-${type}`}>
+        <DialogHeader className="px-6 py-4 border-b flex-shrink-0">
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
             <div className="p-1 sm:p-1.5 md:p-2 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 flex-shrink-0">
               {isPrivacy ? (
@@ -35,8 +35,8 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="prose prose-xs sm:prose-sm max-w-none space-y-2 sm:space-y-3 md:space-y-4 px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="prose prose-xs sm:prose-sm max-w-none space-y-2 sm:space-y-3 md:space-y-4">
             {isPrivacy ? (
               <>
                 <section>
@@ -133,7 +133,7 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t">
+        <div className="flex flex-col gap-2 px-6 py-4 border-t flex-shrink-0">
           <Link 
             href={isPrivacy ? "/privacy" : "/terms"} 
             onClick={() => {
