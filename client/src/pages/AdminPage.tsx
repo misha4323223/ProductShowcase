@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send, Edit, Palette } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send, Edit, Palette, Check } from "lucide-react";
 import { getUserOrders, updateOrderStatus, getAllOrders, deleteOrder } from "@/services/yandex-orders";
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
@@ -105,9 +105,12 @@ export default function AdminPage() {
   const [heroSlides, setHeroSlidesState] = useState<HeroSlide[]>([]);
   const [slidesLoading, setSlidesLoading] = useState(false);
   const [editingSlideId, setEditingSlideId] = useState<number | null>(null);
+  const [editingSlideTitle, setEditingSlideTitle] = useState<string>("");
+  const [editingSlideSubtitle, setEditingSlideSubtitle] = useState<string>("");
   const [slideImageFile, setSlideImageFile] = useState<File | null>(null);
   const [slideImagePreview, setSlideImagePreview] = useState<string>("");
   const [isUploadingSlideImage, setIsUploadingSlideImage] = useState(false);
+  const [isSavingSlide, setIsSavingSlide] = useState(false);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -2188,7 +2191,13 @@ export default function AdminPage() {
                                     ? "bg-accent/10 border-accent"
                                     : "bg-card hover:bg-muted/50"
                                 }`}
-                                onClick={() => setEditingSlideId(slide.id)}
+                                onClick={() => {
+                                  setEditingSlideId(slide.id);
+                                  setEditingSlideTitle(slide.title);
+                                  setEditingSlideSubtitle(slide.subtitle);
+                                  setSlideImagePreview(slide.image);
+                                  setSlideImageFile(null);
+                                }}
                                 data-testid={`button-edit-slide-${slide.id}`}
                               >
                                 <div className="flex items-start justify-between">
@@ -2222,6 +2231,195 @@ export default function AdminPage() {
                       </div>
                     )}
                   </div>
+
+                  {editingSlideId !== null && (
+                    <div className="mt-6 p-4 border-2 border-accent bg-accent/5 rounded-lg">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="font-semibold text-sm">✏️ Редактирование слайда</h4>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setEditingSlideId(null);
+                            setEditingSlideTitle("");
+                            setEditingSlideSubtitle("");
+                            setSlideImageFile(null);
+                            setSlideImagePreview("");
+                          }}
+                          data-testid="button-close-edit"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <Label className="text-xs font-medium mb-1 block">Заголовок слайда</Label>
+                          <Input
+                            type="text"
+                            value={editingSlideTitle}
+                            onChange={(e) => setEditingSlideTitle(e.target.value)}
+                            placeholder="Введите заголовок"
+                            data-testid="input-edit-slide-title"
+                          />
+                        </div>
+
+                        <div>
+                          <Label className="text-xs font-medium mb-1 block">Подзаголовок слайда (опционально)</Label>
+                          <Input
+                            type="text"
+                            value={editingSlideSubtitle}
+                            onChange={(e) => setEditingSlideSubtitle(e.target.value)}
+                            placeholder="Введите подзаголовок"
+                            data-testid="input-edit-slide-subtitle"
+                          />
+                        </div>
+
+                        <div>
+                          <Label className="text-xs font-medium mb-1 block">Изображение (опционально - оставьте пустым для сохранения текущего)</Label>
+                          <div className="flex gap-2">
+                            <div className="flex-1">
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const error = validateImageFile(file);
+                                    if (error) {
+                                      toast({
+                                        title: "Ошибка",
+                                        description: error,
+                                        variant: "destructive"
+                                      });
+                                      return;
+                                    }
+                                    setSlideImageFile(file);
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      setSlideImagePreview(reader.result as string);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                                data-testid="input-edit-slide-image"
+                              />
+                            </div>
+                            {slideImageFile && (
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => {
+                                  setSlideImageFile(null);
+                                  const currentSlide = heroSlides.find(s => s.id === editingSlideId);
+                                  if (currentSlide) {
+                                    setSlideImagePreview(currentSlide.image);
+                                  }
+                                }}
+                                data-testid="button-clear-edit-image"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+
+                        {slideImagePreview && (
+                          <div className="relative inline-block">
+                            <img
+                              src={slideImagePreview}
+                              alt="Предпросмотр редактируемого слайда"
+                              className="max-w-xs max-h-32 rounded border"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex gap-2 pt-2">
+                          <Button
+                            type="button"
+                            onClick={async () => {
+                              if (!editingSlideTitle.trim()) {
+                                toast({
+                                  title: "Ошибка",
+                                  description: "Заголовок не может быть пустым",
+                                  variant: "destructive"
+                                });
+                                return;
+                              }
+
+                              setIsSavingSlide(true);
+                              try {
+                                let imageUrl = slideImagePreview;
+
+                                // Загружаем новое изображение если оно выбрано
+                                if (slideImageFile) {
+                                  imageUrl = await uploadImageToYandexStorage(slideImageFile, 'hero-slides');
+                                }
+
+                                // Обновляем слайд в массиве
+                                const updatedSlides = heroSlides.map(slide => {
+                                  if (slide.id === editingSlideId) {
+                                    return {
+                                      ...slide,
+                                      title: editingSlideTitle,
+                                      subtitle: editingSlideSubtitle,
+                                      image: imageUrl,
+                                      webpImage: imageUrl,
+                                    };
+                                  }
+                                  return slide;
+                                });
+
+                                await saveHeroSlidesMutation.mutateAsync(updatedSlides);
+
+                                // Закрываем форму редактирования
+                                setEditingSlideId(null);
+                                setEditingSlideTitle("");
+                                setEditingSlideSubtitle("");
+                                setSlideImageFile(null);
+                                setSlideImagePreview("");
+
+                                toast({
+                                  title: "Слайд сохранен!",
+                                  description: "Изменения применены"
+                                });
+                              } catch (error: any) {
+                                toast({
+                                  title: "Ошибка сохранения",
+                                  description: error.message,
+                                  variant: "destructive"
+                                });
+                              } finally {
+                                setIsSavingSlide(false);
+                              }
+                            }}
+                            disabled={isSavingSlide || saveHeroSlidesMutation.isPending}
+                            data-testid="button-save-slide"
+                          >
+                            <Check className="w-4 h-4 mr-2" />
+                            {isSavingSlide ? "Сохранение..." : "Сохранить"}
+                          </Button>
+
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                              setEditingSlideId(null);
+                              setEditingSlideTitle("");
+                              setEditingSlideSubtitle("");
+                              setSlideImageFile(null);
+                              setSlideImagePreview("");
+                            }}
+                            data-testid="button-cancel-edit"
+                          >
+                            Отмена
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-6 p-4 bg-muted rounded-lg">
                     <h4 className="font-semibold text-sm mb-3">Добавить новый слайд</h4>
