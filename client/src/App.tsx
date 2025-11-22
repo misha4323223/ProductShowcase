@@ -86,30 +86,6 @@ function App() {
     initAnalytics();
   }, []);
 
-  // Загрузка текущей темы сайта из localStorage и слушание изменений
-  useEffect(() => {
-    const updateTheme = () => {
-      const theme = localStorage.getItem("sweetDelights_theme") || "sakura";
-      // Удаляем все классы тем
-      document.documentElement.classList.remove('new-year', 'sakura', 'spring', 'autumn');
-      // Добавляем новый класс темы
-      document.documentElement.classList.add(theme);
-      console.log("🎨 Тема установлена:", theme);
-    };
-    
-    updateTheme();
-    
-    // Слушаем изменения localStorage из других вкладок
-    window.addEventListener('storage', updateTheme);
-    
-    // Слушаем кастомное событие смены темы (из админки в той же вкладке)
-    window.addEventListener('theme-changed', updateTheme);
-    
-    return () => {
-      window.removeEventListener('storage', updateTheme);
-      window.removeEventListener('theme-changed', updateTheme);
-    };
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

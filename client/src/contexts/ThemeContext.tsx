@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { getCurrentTheme } from '@/services/site-settings-client';
+import { getCurrentTheme, setCurrentTheme } from '@/services/site-settings-client';
 
 type Theme = 'light' | 'dark' | 'sakura' | 'new-year' | 'spring' | 'autumn';
 
@@ -23,11 +23,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           ? serverTheme as Theme 
           : 'sakura';
         setThemeState(validTheme);
+        setIsLoading(false);
       } catch (error) {
-        console.error('Failed to load theme from server, using default:', error);
-        const localTheme = localStorage.getItem('theme') as Theme;
-        setThemeState(localTheme || 'sakura');
-      } finally {
+        console.error('Failed to load theme from server:', error);
+        setThemeState('sakura');
         setIsLoading(false);
       }
     }
@@ -37,37 +36,32 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     // Poll for theme changes every 3 seconds
     const pollInterval = setInterval(loadTheme, 3000);
-
-    const handleThemeChange = (event: CustomEvent) => {
-      const newTheme = event.detail.theme as Theme;
-      setThemeState(newTheme);
-    };
-
-    window.addEventListener('theme-changed', handleThemeChange as EventListener);
     
     return () => {
       clearInterval(pollInterval);
-      window.removeEventListener('theme-changed', handleThemeChange as EventListener);
     };
   }, []);
 
   useEffect(() => {
     if (isLoading) return;
     
+    // Apply theme class to document
     const root = document.documentElement;
-    
     root.classList.remove('light', 'dark', 'sakura', 'new-year', 'spring', 'autumn');
     root.classList.add(theme);
-    
-    // Используем правильный ключ localStorage для совместимости с App.tsx
-    localStorage.setItem('sweetDelights_theme', theme);
-    
-    // Отправляем кастомное событие для других слушателей
-    window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme } }));
+    console.log('🎨 Theme applied:', theme);
   }, [theme, isLoading]);
 
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
+  const setTheme = async (newTheme: Theme) => {
+    try {
+      // Save to YDB first
+      await setCurrentTheme(newTheme);
+      // Then update local state
+      setThemeState(newTheme);
+      console.log('✅ Theme saved:', newTheme);
+    } catch (error) {
+      console.error('Failed to save theme:', error);
+    }
   };
 
   return (
