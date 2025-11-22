@@ -265,6 +265,11 @@ html.sakura body {
   background-position: center;
   background-attachment: fixed;
   background-color: transparent;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  filter: contrast(1.05) brightness(1.02);
 
   --background: 340 70% 96%;
 
@@ -384,6 +389,11 @@ html.new-year body {
   background-position: center;
   background-attachment: fixed;
   background-color: transparent;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  filter: contrast(1.05) brightness(1.02);
 
   --background: 0 10% 10%;
 
@@ -502,6 +512,11 @@ html.spring body {
   background-position: center;
   background-attachment: fixed;
   background-color: transparent;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  filter: contrast(1.05) brightness(1.02);
 
   --background: 120 50% 97%;
   --foreground: 120 40% 25%;
@@ -580,6 +595,11 @@ html.autumn body {
   background-position: center;
   background-attachment: fixed;
   background-color: transparent;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  filter: contrast(1.05) brightness(1.02);
 
   --background: 25 50% 12%;
   --foreground: 25 50% 90%;
