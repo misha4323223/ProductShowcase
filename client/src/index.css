@@ -2117,5 +2117,16 @@ html.autumn body {
   html.autumn .dialog-overlay {
     background: rgba(80, 60, 40, 0.5);
   }
+
+  /* ========================================
+     DIALOG CONTENT - ПОЗИЦИОНИРОВАНИЕ ДЛЯ ВСЕХ ТЕМ
+     ======================================== */
+  
+  /* Гарантируем, что Dialog Content всегда в самом низу и видно сразу */
+  [role="dialog"] {
+    top: auto !important;
+    bottom: 0 !important;
+    transform: translateX(-50%) !important;
+  }
   
 }
