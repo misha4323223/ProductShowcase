@@ -100,34 +100,41 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
     
-    <!-- ОПТИМИЗАЦИЯ: Параллельная загрузка темы из YDB без мерцания -->
+    <!-- ОПТИМИЗАЦИЯ: Синхронная загрузка темы из YDB БЕЗ мерцания -->
     <script>
       (function() {
         const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
         
-        // Применяем дефолтную тему сразу
-        document.documentElement.classList.add('sakura');
-        
-        // Параллельно запрашиваем сохраненную тему
-        fetch(`${API_BASE_URL}/site-settings?key=current_theme`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        })
-          .then(res => res.json())
-          .then(data => {
+        // Функция для синхронной загрузки темы
+        async function loadThemeBeforeRender() {
+          try {
+            const response = await fetch(`${API_BASE_URL}/site-settings?key=current_theme`, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            });
+            
+            if (!response.ok) throw new Error('Failed to fetch theme');
+            
+            const data = await response.json();
             const theme = data.settingValue || 'sakura';
+            
             if (['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(theme)) {
-              // Если тема не sakura - переменяем её
-              if (theme !== 'sakura') {
-                document.documentElement.classList.remove('sakura');
-                document.documentElement.classList.add(theme);
-              }
+              document.documentElement.classList.add(theme);
+              // Сохраняем в window для ThemeContext
+              window.__initialTheme = theme;
+            } else {
+              document.documentElement.classList.add('sakura');
+              window.__initialTheme = 'sakura';
             }
-          })
-          .catch(err => {
-            console.error('Failed to load theme:', err);
-            // Оставляем sakura как дефолт
-          });
+          } catch (err) {
+            console.error('Failed to load initial theme:', err);
+            document.documentElement.classList.add('sakura');
+            window.__initialTheme = 'sakura';
+          }
+        }
+        
+        // Загружаем тему ДО монтирования React
+        loadThemeBeforeRender();
       })();
     </script>
   </head>
