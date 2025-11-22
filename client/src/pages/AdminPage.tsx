@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send, Edit } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send, Edit, Palette } from "lucide-react";
 import { getUserOrders, updateOrderStatus, getAllOrders, deleteOrder } from "@/services/yandex-orders";
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
@@ -91,6 +91,7 @@ export default function AdminPage() {
   const [categoryImagePreview, setCategoryImagePreview] = useState<string>("");
   const [isUploadingCategoryImage, setIsUploadingCategoryImage] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [currentTheme, setCurrentTheme] = useState<string>("sakura");
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -133,6 +134,19 @@ export default function AdminPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const response = await fetch("/api/theme");
+        const data = await response.json();
+        setCurrentTheme(data.theme || "sakura");
+      } catch (error) {
+        console.error("Ошибка загрузки темы:", error);
+      }
+    };
+    loadTheme();
   }, []);
 
   useEffect(() => {
@@ -522,6 +536,31 @@ export default function AdminPage() {
     },
   });
 
+  const setThemeMutation = useMutation({
+    mutationFn: async (theme: string) => {
+      const response = await apiRequest("/admin/set-theme", {
+        method: "POST",
+        body: JSON.stringify({ theme }),
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setCurrentTheme(data.theme);
+      document.documentElement.setAttribute('data-theme', data.theme);
+      toast({ 
+        title: "Тема изменена!", 
+        description: `Выбрана тема: ${data.theme}` 
+      });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -707,7 +746,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-7 mb-6">
+        <TabsList className="grid w-full grid-cols-8 mb-6">
           <TabsTrigger value="orders" data-testid="tab-orders">
             <ShoppingBag className="w-4 h-4 mr-2" />
             Заказы ({allOrders.length})
@@ -735,6 +774,10 @@ export default function AdminPage() {
           <TabsTrigger value="categories" data-testid="tab-categories">
             <FolderOpen className="w-4 h-4 mr-2" />
             Категории
+          </TabsTrigger>
+          <TabsTrigger value="settings" data-testid="tab-settings">
+            <Palette className="w-4 h-4 mr-2" />
+            Оформление
           </TabsTrigger>
         </TabsList>
 
@@ -2008,6 +2051,62 @@ export default function AdminPage() {
                   })}
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Оформление сайта</CardTitle>
+              <CardDescription>Настройка внешнего вида и темы</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="theme-select" className="text-base font-semibold mb-3 block">
+                    Выбрать тему сайта
+                  </Label>
+                  <Select value={currentTheme} onValueChange={(value) => setThemeMutation.mutate(value)}>
+                    <SelectTrigger id="theme-select" data-testid="select-theme">
+                      <SelectValue placeholder="Выберите тему" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sakura" data-testid="select-option-theme-sakura">
+                        🌸 Сакура (текущая)
+                      </SelectItem>
+                      <SelectItem value="new-year" data-testid="select-option-theme-new-year">
+                        🎄 Новогодняя
+                      </SelectItem>
+                      <SelectItem value="spring" data-testid="select-option-theme-spring">
+                        🌼 Весенняя
+                      </SelectItem>
+                      <SelectItem value="autumn" data-testid="select-option-theme-autumn">
+                        🍂 Осенняя
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-3">
+                    Выбранная тема будет применена ко всему сайту для всех пользователей
+                  </p>
+                </div>
+
+                {setThemeMutation.isPending && (
+                  <div className="p-3 bg-muted rounded-md text-sm">
+                    Применение темы...
+                  </div>
+                )}
+
+                <div className="p-4 bg-card border rounded-lg space-y-3">
+                  <div className="font-semibold text-sm">📋 Доступные темы:</div>
+                  <ul className="text-sm space-y-2 text-muted-foreground">
+                    <li>• <strong>🌸 Сакура</strong> - нежная розовая тема с японской эстетикой</li>
+                    <li>• <strong>🎄 Новогодняя</strong> - красная и золотая праздничная тема</li>
+                    <li>• <strong>🌼 Весенняя</strong> - светлые пастельные цвета (скоро)</li>
+                    <li>• <strong>🍂 Осенняя</strong> - теплые осенние оттенки (скоро)</li>
+                  </ul>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

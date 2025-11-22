@@ -86,6 +86,23 @@ function App() {
     initAnalytics();
   }, []);
 
+  // Загрузка текущей темы сайта
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const response = await fetch("/api/theme");
+        const data = await response.json();
+        const theme = data.theme || "sakura";
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (error) {
+        console.error("Ошибка загрузки темы:", error);
+        // Fallback на sakura если ошибка
+        document.documentElement.setAttribute('data-theme', 'sakura');
+      }
+    };
+    loadTheme();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>

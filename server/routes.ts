@@ -142,6 +142,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get current theme
+  app.get("/api/theme", async (req, res) => {
+    try {
+      const theme = await storage.getSetting("current_theme");
+      res.json({ theme: theme || "sakura" });
+    } catch (error: any) {
+      console.error("Error getting theme:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Set theme (admin only)
+  app.post("/admin/set-theme", async (req, res) => {
+    try {
+      const { theme } = req.body;
+
+      if (!theme) {
+        return res.status(400).json({ error: "Theme is required" });
+      }
+
+      const validThemes = ["sakura", "new-year", "spring", "autumn"];
+      if (!validThemes.includes(theme)) {
+        return res.status(400).json({ error: "Invalid theme" });
+      }
+
+      await storage.setSetting("current_theme", theme);
+      res.json({ success: true, theme });
+    } catch (error: any) {
+      console.error("Error setting theme:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
