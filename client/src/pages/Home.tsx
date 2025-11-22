@@ -268,8 +268,11 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
               <h2 
-                className="font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm"
-                style={theme === 'new-year' ? { textShadow: '0 2px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.4)' } : {}}
+                className={theme === 'new-year' ? "font-serif text-3xl md:text-4xl font-bold mb-2 text-white drop-shadow-lg" : "font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm"}
+                style={theme === 'new-year' ? { 
+                  textShadow: '2px 2px 0 rgba(255, 0, 0, 0.8), -2px -2px 0 rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 0, 0, 0.5)',
+                  fontWeight: '900'
+                } : {}}
               >
                 Категории
               </h2>
@@ -311,8 +314,11 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
               <h2 
-                className="font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm"
-                style={theme === 'new-year' ? { textShadow: '0 2px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.4)' } : {}}
+                className={theme === 'new-year' ? "font-serif text-3xl md:text-4xl font-bold mb-2 text-white drop-shadow-lg" : "font-serif text-3xl md:text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm"}
+                style={theme === 'new-year' ? { 
+                  textShadow: '2px 2px 0 rgba(255, 0, 0, 0.8), -2px -2px 0 rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 0, 0, 0.5)',
+                  fontWeight: '900'
+                } : {}}
               >
                 Популярные товары
               </h2>
