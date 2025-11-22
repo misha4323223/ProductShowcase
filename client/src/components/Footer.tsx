@@ -166,6 +166,7 @@ export default function Footer() {
                   onCheckedChange={(checked) => setNewsletterConsent(checked as boolean)}
                   disabled={isSubscribing}
                   data-testid="checkbox-newsletter-consent"
+                  className={theme === 'new-year' ? 'border-yellow-300 data-[state=checked]:bg-yellow-300' : ''}
                 />
                 <Label 
                   htmlFor="newsletter-consent" 
@@ -175,7 +176,7 @@ export default function Footer() {
                   <button
                     type="button"
                     onClick={() => setPrivacyOpen(true)}
-                    className="text-primary hover:underline font-medium"
+                    className={theme === 'new-year' ? 'text-yellow-300 hover:text-yellow-200 hover:underline font-medium' : 'text-primary hover:underline font-medium'}
                     data-testid="link-newsletter-privacy"
                   >
                     политикой конфиденциальности
