@@ -30,7 +30,9 @@ export default function CategoryCard({ name, image, webpImage, onClick }: Catego
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115 group-hover:rotate-2"
         />
       </div>
-      <div className={`absolute inset-0 ${isNewYear ? 'bg-gradient-to-t from-blue-900/40 via-transparent to-transparent' : 'bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent'} group-hover:${isNewYear ? 'from-blue-900/50' : 'from-pink-800/70'} rounded-3xl`} />
+      {!isNewYear && (
+        <div className="absolute inset-0 bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent group-hover:from-pink-800/70 rounded-3xl" />
+      )}
       <div className={`absolute top-4 right-4 ${isNewYear ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-300`}>
         <div className="w-10 h-10 rounded-full lollipop-swirl border-4 border-white shadow-2xl flex items-center justify-center">
           <Sparkles className="h-5 w-5 text-white drop-shadow-lg" />
