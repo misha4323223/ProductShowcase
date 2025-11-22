@@ -1,0 +1,37 @@
+6s
+Run npm run build:gh-pages -- --base=/
+
+> rest-express@1.0.0 build:gh-pages
+> vite build --base=/
+
+vite v5.4.20 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 13 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 3323 modules transformed.
+x Build failed in 4.83s
+error during build:
+client/src/components/HeroSlider.tsx (11:9): "ThemeContext" is not exported by "client/src/contexts/ThemeContext.tsx", imported by "client/src/components/HeroSlider.tsx".
+file: /home/runner/work/ProductShowcase/ProductShowcase/client/src/components/HeroSlider.tsx:11:9
+
+ 9: import OptimizedImage from "@/components/OptimizedImage";
+10: import LegalDialog from "@/components/LegalDialog";
+11: import { ThemeContext } from "@/contexts/ThemeContext";
+             ^
+12: 
+13: interface Slide {
+
+    at getRollupError (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/parseAst.js:396:41)
+    at error (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/parseAst.js:392:42)
+    at Module.error (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:15588:16)
+    at Module.traceVariable (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:16037:29)
+    at ModuleScope.findVariable (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:13820:39)
+    at FunctionScope.findVariable (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:5283:38)
+    at FunctionBodyScope.findVariable (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:5283:38)
+    at Identifier.bind (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:5066:40)
+    at CallExpression.bind (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:2649:28)
+    at CallExpression.bind (file:///home/runner/work/ProductShowcase/ProductShowcase/node_modules/rollup/dist/es/shared/node-entry.js:11284:15)
+Error: Process completed with exit code 1.

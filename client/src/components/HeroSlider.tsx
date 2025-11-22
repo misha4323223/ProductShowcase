@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Mail, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletter } from "@/services/yandex-newsletter";
 import OptimizedImage from "@/components/OptimizedImage";
 import LegalDialog from "@/components/LegalDialog";
-import { ThemeContext } from "@/contexts/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Slide {
   id: number;
@@ -31,8 +31,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
   const { toast } = useToast();
-  const themeContext = useContext(ThemeContext);
-  const currentTheme = themeContext?.theme || 'sakura';
+  const { theme: currentTheme } = useTheme();
 
   useEffect(() => {
     // ОПТИМИЗАЦИЯ: Увеличен интервал с 5 до 10 секунд для снижения нагрузки
