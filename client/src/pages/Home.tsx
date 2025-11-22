@@ -94,8 +94,8 @@ export default function Home() {
   }, []);
 
   const { data: heroSlidesData = [], isLoading: slidesLoading } = useQuery<HeroSlide[]>({
-    queryKey: ["/api/hero-slides"],
-    queryFn: getHeroSlides,
+    queryKey: ["/api/hero-slides", theme],
+    queryFn: () => getHeroSlides(theme),
     staleTime: 60000,
     gcTime: 300000,
   });
