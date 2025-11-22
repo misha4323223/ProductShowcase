@@ -1736,32 +1736,6 @@ html.autumn body {
     filter: brightness(1.2);
   }
 
-  /* New Year Dialog Fix - ensure text is visible */
-  html.new-year [data-testid="dialog-privacy"],
-  html.new-year [data-testid="dialog-terms"] {
-    background: hsl(var(--background)) !important;
-    color: hsl(var(--foreground)) !important;
-  }
-
-  html.new-year [data-testid="dialog-privacy"] h3,
-  html.new-year [data-testid="dialog-terms"] h3,
-  html.new-year [data-testid="dialog-privacy"] h2,
-  html.new-year [data-testid="dialog-terms"] h2 {
-    color: hsl(var(--primary)) !important;
-  }
-
-  html.new-year [data-testid="dialog-privacy"] p,
-  html.new-year [data-testid="dialog-terms"] p,
-  html.new-year [data-testid="dialog-privacy"] li,
-  html.new-year [data-testid="dialog-terms"] li {
-    color: hsl(var(--foreground)) !important;
-  }
-
-  html.new-year [data-testid="dialog-privacy"] .prose,
-  html.new-year [data-testid="dialog-terms"] .prose {
-    color: hsl(var(--foreground)) !important;
-  }
-
 
   @keyframes float-up {
     from {
