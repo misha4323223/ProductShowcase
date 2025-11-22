@@ -153,3 +153,65 @@ export async function setHeroSlides(slides: HeroSlide[]): Promise<void> {
     throw error;
   }
 }
+
+export interface BackgroundSetting {
+  image: string;
+  webpImage: string;
+  title: string;
+}
+
+export interface BackgroundSettings {
+  sakura: BackgroundSetting;
+  newyear: BackgroundSetting;
+  spring: BackgroundSetting;
+  autumn: BackgroundSetting;
+}
+
+export async function getBackgroundSettings(): Promise<BackgroundSettings> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings?key=background_settings`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch background settings from server');
+      return {} as BackgroundSettings;
+    }
+
+    const data: SiteSetting = await response.json();
+    if (!data.settingValue) return {} as BackgroundSettings;
+    
+    return JSON.parse(data.settingValue) as BackgroundSettings;
+  } catch (error) {
+    console.error('Error fetching background settings:', error);
+    return {} as BackgroundSettings;
+  }
+}
+
+export async function setBackgroundSettings(settings: BackgroundSettings): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        settingKey: 'background_settings',
+        settingValue: JSON.stringify(settings)
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to save background settings');
+    }
+
+    console.log('Background settings saved to server');
+  } catch (error: any) {
+    console.error('Error setting background settings:', error);
+    throw error;
+  }
+}

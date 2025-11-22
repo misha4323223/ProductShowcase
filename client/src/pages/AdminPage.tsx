@@ -18,7 +18,7 @@ import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, ge
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
-import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, type HeroSlide } from "@/services/site-settings-client";
+import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, getBackgroundSettings, setBackgroundSettings, type HeroSlide, type BackgroundSettings, type BackgroundSetting } from "@/services/site-settings-client";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -117,6 +117,19 @@ export default function AdminPage() {
   const [slideImagePreview, setSlideImagePreview] = useState<string>("");
   const [isUploadingSlideImage, setIsUploadingSlideImage] = useState(false);
   const [isSavingSlide, setIsSavingSlide] = useState(false);
+
+  const [backgroundSettings, setBackgroundSettingsState] = useState<BackgroundSettings>({
+    sakura: { image: '', webpImage: '', title: '' },
+    newyear: { image: '', webpImage: '', title: '' },
+    spring: { image: '', webpImage: '', title: '' },
+    autumn: { image: '', webpImage: '', title: '' },
+  });
+  const [backgroundsLoading, setBackgroundsLoading] = useState(false);
+  const [editingBackgroundTheme, setEditingBackgroundTheme] = useState<keyof BackgroundSettings | null>(null);
+  const [editingBackgroundTitle, setEditingBackgroundTitle] = useState<string>("");
+  const [backgroundImageFile, setBackgroundImageFile] = useState<File | null>(null);
+  const [backgroundImagePreview, setBackgroundImagePreview] = useState<string>("");
+  const [isSavingBackground, setIsSavingBackground] = useState(false);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -217,6 +230,23 @@ export default function AdminPage() {
       }
     }
     loadHeroSlides();
+  }, []);
+
+  useEffect(() => {
+    async function loadBackgrounds() {
+      setBackgroundsLoading(true);
+      try {
+        const settings = await getBackgroundSettings();
+        if (settings && Object.keys(settings).length > 0) {
+          setBackgroundSettingsState(settings);
+        }
+      } catch (error) {
+        console.error('Error loading background settings:', error);
+      } finally {
+        setBackgroundsLoading(false);
+      }
+    }
+    loadBackgrounds();
   }, []);
 
   useEffect(() => {
@@ -2551,6 +2581,230 @@ export default function AdminPage() {
                       )}
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div className="border-t pt-6 space-y-4">
+                <div>
+                  <h3 className="text-base font-semibold mb-4">🖼️ Управление фонами тем</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Загрузьте фоновые изображения для каждой темы сайта
+                  </p>
+
+                  <div className="mb-4">
+                    <h4 className="font-semibold text-sm mb-3">Текущие фоны:</h4>
+                    {backgroundsLoading ? (
+                      <div className="text-center py-4 text-muted-foreground">Загрузка фонов...</div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        {(['sakura', 'newyear', 'spring', 'autumn'] as Array<keyof BackgroundSettings>).map((theme) => {
+                          const bg = backgroundSettings[theme];
+                          const themeLabel = theme === 'newyear' ? '🎄 Новогодняя' : 
+                                            theme === 'sakura' ? '🌸 Сакура' :
+                                            theme === 'spring' ? '🌼 Весенняя' : '🍂 Осенняя';
+                          return (
+                            <div
+                              key={theme}
+                              className={`border rounded-lg p-3 cursor-pointer transition-all hover-elevate ${
+                                editingBackgroundTheme === theme
+                                  ? "bg-accent/10 border-accent"
+                                  : "bg-card hover:bg-muted/50"
+                              }`}
+                              onClick={() => {
+                                setEditingBackgroundTheme(theme);
+                                setEditingBackgroundTitle(bg?.title || '');
+                                setBackgroundImagePreview(bg?.webpImage || bg?.image || '');
+                                setBackgroundImageFile(null);
+                              }}
+                              data-testid={`button-edit-background-${theme}`}
+                            >
+                              <div className="text-sm font-semibold mb-2">{themeLabel}</div>
+                              {bg?.webpImage || bg?.image ? (
+                                <img 
+                                  src={bg.webpImage || bg.image}
+                                  alt={themeLabel}
+                                  className="w-full h-24 object-cover rounded border"
+                                />
+                              ) : (
+                                <div className="w-full h-24 bg-muted rounded border flex items-center justify-center text-xs text-muted-foreground">
+                                  Нет фона
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {editingBackgroundTheme !== null && (
+                    <div className="mt-4 p-4 border-2 border-accent bg-accent/5 rounded-lg">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="font-semibold text-sm">✏️ Редактирование фона</h4>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setEditingBackgroundTheme(null);
+                            setEditingBackgroundTitle("");
+                            setBackgroundImageFile(null);
+                            setBackgroundImagePreview("");
+                          }}
+                          data-testid="button-close-background-edit"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <Label className="text-xs font-medium mb-1 block">Название (опционально)</Label>
+                          <Input
+                            type="text"
+                            value={editingBackgroundTitle}
+                            onChange={(e) => setEditingBackgroundTitle(e.target.value)}
+                            placeholder="Введите название фона"
+                            data-testid="input-edit-background-title"
+                          />
+                        </div>
+
+                        <div>
+                          <Label className="text-xs font-medium mb-1 block">Изображение (опционально - оставьте пустым для сохранения текущего)</Label>
+                          <div className="flex gap-2">
+                            <div className="flex-1">
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const error = validateImageFile(file);
+                                    if (error) {
+                                      toast({
+                                        title: "Ошибка",
+                                        description: error,
+                                        variant: "destructive"
+                                      });
+                                      return;
+                                    }
+                                    setBackgroundImageFile(file);
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      setBackgroundImagePreview(reader.result as string);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                                data-testid="input-edit-background-image"
+                              />
+                            </div>
+                            {backgroundImageFile && (
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => {
+                                  setBackgroundImageFile(null);
+                                  if (backgroundSettings[editingBackgroundTheme]) {
+                                    setBackgroundImagePreview(
+                                      backgroundSettings[editingBackgroundTheme].webpImage || 
+                                      backgroundSettings[editingBackgroundTheme].image || 
+                                      ""
+                                    );
+                                  }
+                                }}
+                                data-testid="button-clear-background-image"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+
+                        {backgroundImagePreview && (
+                          <div className="relative inline-block">
+                            <img
+                              src={backgroundImagePreview}
+                              alt="Предпросмотр фона"
+                              className="max-w-xs max-h-32 rounded border"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex gap-2 pt-2">
+                          <Button
+                            type="button"
+                            onClick={async () => {
+                              setIsSavingBackground(true);
+                              try {
+                                let imageUrl = backgroundImagePreview;
+
+                                // Загружаем новое изображение если оно выбрано
+                                if (backgroundImageFile) {
+                                  imageUrl = await uploadImageToYandexStorage(
+                                    backgroundImageFile, 
+                                    `backgrounds/${editingBackgroundTheme}`
+                                  );
+                                }
+
+                                // Обновляем фон в настройках
+                                const updated: BackgroundSettings = {
+                                  ...backgroundSettings,
+                                  [editingBackgroundTheme]: {
+                                    image: imageUrl,
+                                    webpImage: imageUrl,
+                                    title: editingBackgroundTitle,
+                                  }
+                                };
+
+                                await setBackgroundSettings(updated);
+                                setBackgroundSettingsState(updated);
+
+                                // Закрываем форму редактирования
+                                setEditingBackgroundTheme(null);
+                                setEditingBackgroundTitle("");
+                                setBackgroundImageFile(null);
+                                setBackgroundImagePreview("");
+
+                                toast({
+                                  title: "Фон сохранен!",
+                                  description: "Изменения применены"
+                                });
+                              } catch (error: any) {
+                                toast({
+                                  title: "Ошибка сохранения",
+                                  description: error.message,
+                                  variant: "destructive"
+                                });
+                              } finally {
+                                setIsSavingBackground(false);
+                              }
+                            }}
+                            disabled={isSavingBackground}
+                            data-testid="button-save-background"
+                          >
+                            <Check className="w-4 h-4 mr-2" />
+                            {isSavingBackground ? "Сохранение..." : "Сохранить"}
+                          </Button>
+
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                              setEditingBackgroundTheme(null);
+                              setEditingBackgroundTitle("");
+                              setBackgroundImageFile(null);
+                              setBackgroundImagePreview("");
+                            }}
+                            data-testid="button-cancel-background-edit"
+                          >
+                            Отмена
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
