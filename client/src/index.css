@@ -661,6 +661,17 @@ html.autumn body {
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* Mobile background optimization - show full image without cropping */
+@media (max-width: 768px) {
+  html.sakura body,
+  html.new-year body,
+  html.spring body,
+  html.autumn body {
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
