@@ -36,7 +36,7 @@
 
 ```javascript
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, GetItemCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -61,7 +61,7 @@ exports.handler = async (event) => {
   try {
     const settingKey = event.queryStringParameters?.key || 'current_theme';
     
-    const result = await docClient.send(new GetItemCommand({
+    const result = await docClient.send(new GetCommand({
       TableName: "site_settings",
       Key: {
         settingKey: settingKey
@@ -153,7 +153,7 @@ exports.handler = async (event) => {
 
 ```javascript
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutItemCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -190,7 +190,7 @@ exports.handler = async (event) => {
       };
     }
     
-    await docClient.send(new PutItemCommand({
+    await docClient.send(new PutCommand({
       TableName: "site_settings",
       Item: {
         settingKey: settingKey,

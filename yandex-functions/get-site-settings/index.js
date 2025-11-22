@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, GetItemCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -24,7 +24,7 @@ exports.handler = async (event) => {
   try {
     const settingKey = event.queryStringParameters?.key || 'current_theme';
     
-    const result = await docClient.send(new GetItemCommand({
+    const result = await docClient.send(new GetCommand({
       TableName: "site_settings",
       Key: {
         settingKey: settingKey

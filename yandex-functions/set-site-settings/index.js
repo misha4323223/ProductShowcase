@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutItemCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -36,7 +36,7 @@ exports.handler = async (event) => {
       };
     }
     
-    await docClient.send(new PutItemCommand({
+    await docClient.send(new PutCommand({
       TableName: "site_settings",
       Item: {
         settingKey: settingKey,
