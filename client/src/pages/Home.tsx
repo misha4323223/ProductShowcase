@@ -100,8 +100,8 @@ export default function Home() {
     gcTime: 300000,
   });
 
-  // Слайды для разных тем
-  const slidesByTheme = {
+  // Слайды для разных тем - мемоизированы
+  const slidesByTheme = useMemo(() => ({
     'new-year': [
       {
         id: 1,
@@ -194,11 +194,15 @@ export default function Home() {
         subtitle: 'Специальная коллекция по цене меда',
       },
     ],
-  };
+  }), []);
 
-  // Выбираю слайды в зависимости от темы
-  const themeSlides = slidesByTheme[theme as keyof typeof slidesByTheme] || slidesByTheme['sakura'];
-  const slides = heroSlidesData.length > 0 ? heroSlidesData : themeSlides;
+  // Выбираю слайды в зависимости от темы - мемоизировано
+  const slides = useMemo(() => {
+    const themeSlides = slidesByTheme[theme as keyof typeof slidesByTheme] || slidesByTheme['sakura'];
+    const selectedSlides = heroSlidesData.length > 0 ? heroSlidesData : themeSlides;
+    console.log('🎬 Hero slides selected for theme:', theme, 'Title:', selectedSlides[0]?.title);
+    return selectedSlides;
+  }, [theme, heroSlidesData, slidesByTheme]);
 
   // Используем ТОЛЬКО категории с изображениями из базы данных
   // Мемоизируем чтобы не пересчитывать каждый раз и не вызывать переапплаицирование CategoryCard
