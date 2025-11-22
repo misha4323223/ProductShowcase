@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ChevronLeft, ChevronRight, Mail, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { subscribeToNewsletter } from "@/services/yandex-newsletter";
 import OptimizedImage from "@/components/OptimizedImage";
 import LegalDialog from "@/components/LegalDialog";
+import { ThemeContext } from "@/contexts/ThemeContext";
 
 interface Slide {
   id: number;
@@ -30,6 +31,8 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
   const { toast } = useToast();
+  const themeContext = useContext(ThemeContext);
+  const currentTheme = themeContext?.theme || 'sakura';
 
   useEffect(() => {
     // ОПТИМИЗАЦИЯ: Увеличен интервал с 5 до 10 секунд для снижения нагрузки
@@ -146,9 +149,11 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         {/* Кнопка подписки */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-20 pb-16 md:pb-16">
           <div className="text-center max-w-3xl px-4 pointer-events-auto">
-            <p className="text-accent text-2xl md:text-4xl font-bold mb-4 drop-shadow-2xl">
-              Скоро Открытие!
-            </p>
+            {currentTheme === 'new-year' && (
+              <p className="text-accent text-2xl md:text-4xl font-bold mb-4 drop-shadow-2xl">
+                Скоро Открытие!
+              </p>
+            )}
             <p className="text-white text-base md:text-lg font-medium mb-2 drop-shadow-lg">
               Первым покупателям - скидка 10% ✨
             </p>
