@@ -3,22 +3,22 @@ import { useTheme } from "@/contexts/ThemeContext";
 export function WaveDivider() {
   const { theme } = useTheme();
 
-  // Определяю цвет фона для каждой темы
-  const getBackgroundColor = () => {
+  // Определяю цвет волны для каждой темы - красиво гармонирует с темой
+  const getWaveColor = () => {
     switch (theme) {
       case 'new-year':
-        return 'hsl(var(--background))';
+        return '#C41E3A'; // Насыщенный новогодний красный
       case 'spring':
-        return 'hsl(var(--background))';
+        return '#90EE90'; // Светло-зелёный для весны
       case 'autumn':
-        return 'hsl(var(--background))';
+        return '#CD853F'; // Коричнево-оранжевый для осени
       case 'sakura':
       default:
-        return 'hsl(var(--background))';
+        return '#FFB6D9'; // Розовый для сакуры
     }
   };
 
-  const bgColor = getBackgroundColor();
+  const waveColor = getWaveColor();
 
   return (
     <div className="w-full overflow-hidden -mt-0.5">
@@ -31,7 +31,7 @@ export function WaveDivider() {
         {/* Одна красивая волна - сверху ровно, снизу волнистая */}
         <path
           d="M 0,0 L 1200,0 L 1200,35 Q 1050,55 900,40 T 600,40 T 300,40 T 0,35 L 0,0 Z"
-          fill={bgColor}
+          fill={waveColor}
         />
       </svg>
     </div>
