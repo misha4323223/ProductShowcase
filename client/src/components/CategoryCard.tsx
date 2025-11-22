@@ -16,11 +16,11 @@ export default function CategoryCard({ name, image, webpImage, onClick }: Catego
   
   return (
     <Card 
-      className={`group relative overflow-visible cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl ${isNewYear ? 'hover:shadow-white/50' : 'hover:shadow-pink-300/50'} transition-all duration-300 hover:-translate-y-3 ${isNewYear ? '' : 'candy-wrapper metallic-wrapper'} jelly-wobble`}
+      className={`group relative overflow-visible cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl ${isNewYear ? 'hover:shadow-white/50 category-card-new-year' : 'hover:shadow-pink-300/50'} transition-all duration-300 hover:-translate-y-3 ${isNewYear ? '' : 'candy-wrapper metallic-wrapper'} jelly-wobble`}
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
-      <div className={`aspect-[4/3] overflow-hidden rounded-3xl ${isNewYear ? 'falling-snow' : 'sugar-crystals'}`}>
+      <div className={`aspect-[4/3] overflow-hidden rounded-3xl ${isNewYear ? '' : 'sugar-crystals'}`}>
         <OptimizedImage
           src={image}
           webpSrc={webpImage}
