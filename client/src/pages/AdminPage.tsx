@@ -26,6 +26,12 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { uploadImageToYandexStorage, validateImageFile } from "@/services/yandex-storage";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import heroImage1 from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.png';
+import heroImage1WebP from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.webp';
+import heroImage2 from '@assets/generated_images/Lollipop_delivery_character_scene_9b1fad01.png';
+import heroImage2WebP from '@assets/generated_images/Lollipop_delivery_character_scene_9b1fad01.webp';
+import heroImage3 from '@assets/generated_images/Candy_box_explosion_celebration_bbc9c118.png';
+import heroImage3WebP from '@assets/generated_images/Candy_box_explosion_celebration_bbc9c118.webp';
 
 const categorySchema = z.object({
   id: z.string().trim().min(1, "ID обязателен"),
@@ -174,7 +180,36 @@ export default function AdminPage() {
       setSlidesLoading(true);
       try {
         const slides = await getHeroSlides();
-        setHeroSlidesState(slides);
+        // Если слайдов нет, создаём дефолтные и сохраняем в YDB
+        if (!slides || slides.length === 0) {
+          const defaultSlides: HeroSlide[] = [
+            {
+              id: 1,
+              image: heroImage1,
+              webpImage: heroImage1WebP,
+              title: 'Sweet Delights',
+              subtitle: 'Мир сладостей и радости',
+            },
+            {
+              id: 2,
+              image: heroImage2,
+              webpImage: heroImage2WebP,
+              title: 'Доставим сладость в каждый дом',
+              subtitle: '',
+            },
+            {
+              id: 3,
+              image: heroImage3,
+              webpImage: heroImage3WebP,
+              title: 'Ваши улыбки — наша награда!',
+              subtitle: '',
+            },
+          ];
+          await setHeroSlides(defaultSlides);
+          setHeroSlidesState(defaultSlides);
+        } else {
+          setHeroSlidesState(slides);
+        }
       } catch (error) {
         console.error('Error loading hero slides:', error);
       } finally {
