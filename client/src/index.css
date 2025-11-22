@@ -1950,6 +1950,20 @@ html.autumn body {
     }
   }
 
+  /* Остановка снега при скролле на мобильной версии */
+  @media (max-width: 768px) {
+    /* Глобальный снег в новогодней теме */
+    html.new-year.is-scrolling::before {
+      animation-play-state: paused !important;
+    }
+
+    /* Снег на карточках категорий */
+    .is-scrolling .category-card-new-year::before,
+    .is-scrolling .category-card-new-year::after {
+      animation-play-state: paused !important;
+    }
+  }
+
   /* Исправление обрезания букв в заголовках с градиентом */
   .text-transparent.bg-clip-text {
     padding-bottom: 0.625rem;
