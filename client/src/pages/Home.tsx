@@ -303,6 +303,7 @@ export default function Home() {
                     image={category.image}
                     webpImage={category.webpImage}
                     onClick={() => setLocation(`/category/${category.slug}`)}
+                    theme={theme}
                   />
                 ))}
               </div>

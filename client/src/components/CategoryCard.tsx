@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import OptimizedImage from "@/components/OptimizedImage";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useMemo, memo } from "react";
 
 interface CategoryCardProps {
@@ -9,10 +8,10 @@ interface CategoryCardProps {
   image: string;
   webpImage: string;
   onClick?: () => void;
+  theme: string;
 }
 
-function CategoryCardComponent({ name, image, webpImage, onClick }: CategoryCardProps) {
-  const { theme } = useTheme();
+function CategoryCardComponent({ name, image, webpImage, onClick, theme }: CategoryCardProps) {
   const isNewYear = useMemo(() => theme === 'new-year', [theme]);
   
   return (
