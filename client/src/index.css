@@ -250,6 +250,11 @@ html.sakura {
   --elevate-1: rgba(255,183,197, .04);
   --elevate-2: rgba(255,183,197, .09);
 
+  background-image: url('@/assets/generated_images/sakura_cherry_blossom_background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
   --background: 340 70% 96%;
 
   --foreground: 340 80% 25%;
@@ -361,6 +366,11 @@ html.new-year {
   --elevate-1: rgba(255, 215, 0, .05);
   --elevate-2: rgba(255, 215, 0, .10);
 
+  background-image: url('@/assets/generated_images/christmas_new_year_festive_background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
   --background: 0 10% 10%;
 
   --foreground: 0 0% 95%;
@@ -471,6 +481,11 @@ html.spring {
   --elevate-1: rgba(76, 175, 80, .04);
   --elevate-2: rgba(76, 175, 80, .09);
 
+  background-image: url('@/assets/generated_images/spring_blossom_nature_background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
   --background: 120 50% 97%;
   --foreground: 120 40% 25%;
   --border: 120 50% 88%;
@@ -540,6 +555,11 @@ html.autumn {
 
   --elevate-1: rgba(255, 152, 0, .05);
   --elevate-2: rgba(255, 152, 0, .10);
+
+  background-image: url('@/assets/generated_images/autumn_fall_harvest_background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 
   --background: 25 50% 12%;
   --foreground: 25 50% 90%;
