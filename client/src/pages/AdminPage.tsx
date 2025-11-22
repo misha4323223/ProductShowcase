@@ -535,6 +535,8 @@ export default function AdminPage() {
     onSuccess: (data) => {
       setCurrentTheme(data.theme);
       document.documentElement.setAttribute('data-theme', data.theme);
+      // Отправляем кастомное событие для других компонентов
+      window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: data.theme } }));
       toast({ 
         title: "Тема изменена!", 
         description: `Выбрана тема: ${data.theme}` 

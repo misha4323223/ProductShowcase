@@ -86,10 +86,26 @@ function App() {
     initAnalytics();
   }, []);
 
-  // Загрузка текущей темы сайта из localStorage
+  // Загрузка текущей темы сайта из localStorage и слушание изменений
   useEffect(() => {
-    const theme = localStorage.getItem("sweetDelights_theme") || "sakura";
-    document.documentElement.setAttribute('data-theme', theme);
+    const updateTheme = () => {
+      const theme = localStorage.getItem("sweetDelights_theme") || "sakura";
+      document.documentElement.setAttribute('data-theme', theme);
+      console.log("🎨 Тема установлена:", theme);
+    };
+    
+    updateTheme();
+    
+    // Слушаем изменения localStorage из других вкладок
+    window.addEventListener('storage', updateTheme);
+    
+    // Слушаем кастомное событие смены темы (из админки в той же вкладке)
+    window.addEventListener('theme-changed', updateTheme);
+    
+    return () => {
+      window.removeEventListener('storage', updateTheme);
+      window.removeEventListener('theme-changed', updateTheme);
+    };
   }, []);
 
   return (
