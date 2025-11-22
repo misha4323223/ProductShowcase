@@ -6,14 +6,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Link } from "wouter";
-import LegalDialog from "@/components/LegalDialog";
 import { subscribeToNewsletter } from "@/services/yandex-newsletter";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useLegalDialog } from "@/contexts/LegalDialogContext";
 
 export default function Footer() {
-  const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [termsOpen, setTermsOpen] = useState(false);
+  const { setPrivacyOpen, setTermsOpen } = useLegalDialog();
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -219,9 +218,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      <LegalDialog isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} type="privacy" />
-      <LegalDialog isOpen={termsOpen} onClose={() => setTermsOpen(false)} type="terms" />
     </footer>
     </>
   );

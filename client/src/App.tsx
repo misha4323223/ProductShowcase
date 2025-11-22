@@ -10,8 +10,11 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { WheelProvider } from "@/contexts/WheelContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { LegalDialogProvider } from "@/contexts/LegalDialogContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import CookieBanner from "@/components/CookieBanner";
+import LegalDialog from "@/components/LegalDialog";
+import { useLegalDialog } from "@/contexts/LegalDialogContext";
 import { useScrollPause } from "@/hooks/use-scroll-pause";
 import { initAnalytics } from "@/lib/analytics";
 
@@ -77,6 +80,16 @@ function Router() {
   );
 }
 
+function LegalDialogContainer() {
+  const { privacyOpen, termsOpen, setPrivacyOpen, setTermsOpen } = useLegalDialog();
+  return (
+    <>
+      <LegalDialog isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} type="privacy" />
+      <LegalDialog isOpen={termsOpen} onClose={() => setTermsOpen(false)} type="terms" />
+    </>
+  );
+}
+
 function App() {
   // ОПТИМИЗАЦИЯ: Автоматическая пауза анимаций при скролле
   useScrollPause();
@@ -95,11 +108,14 @@ function App() {
             <CartProvider>
               <WishlistProvider>
                 <WheelProvider>
-                  <TooltipProvider>
-                    <Toaster />
-                    <CookieBanner />
-                    <Router />
-                  </TooltipProvider>
+                  <LegalDialogProvider>
+                    <TooltipProvider>
+                      <Toaster />
+                      <CookieBanner />
+                      <Router />
+                      <LegalDialogContainer />
+                    </TooltipProvider>
+                  </LegalDialogProvider>
                 </WheelProvider>
               </WishlistProvider>
             </CartProvider>
