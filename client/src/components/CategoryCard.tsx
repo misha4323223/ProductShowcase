@@ -30,8 +30,8 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115 group-hover:rotate-2"
         />
       </div>
-      <div className={`absolute inset-0 rounded-3xl ${isNewYear ? 'new-year-category-overlay' : 'bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent group-hover:from-pink-800/70'}`} />
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
+      {!isNewYear && <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent group-hover:from-pink-800/70" />}
+      <div className={`absolute bottom-0 left-0 right-0 p-6 ${isNewYear ? 'bg-gradient-to-t from-black/50 via-black/20 to-transparent' : 'bg-gradient-to-t from-black/70 via-black/40 to-transparent'}`}>
         <div className="relative">
           <h3 className={`font-serif text-2xl md:text-3xl font-bold transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl ${isNewYear ? 'text-white new-year-text-outline' : 'text-white'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
             {name}
