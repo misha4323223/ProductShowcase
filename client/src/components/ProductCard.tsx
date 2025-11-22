@@ -213,23 +213,23 @@ export default function ProductCard({
         )}
         </div>
       </div>
-      <div className={`p-4 space-y-3 ${isNewYear ? 'bg-gradient-to-b from-blue-50 via-white to-cyan-50 dark:from-blue-950 dark:via-slate-900 dark:to-cyan-950' : 'bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'} relative ${!isNewYear && 'caramel-drip'}`}>
-        <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-slate-800 dark:text-cyan-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
+      <div className={`p-4 space-y-3 ${isNewYear ? 'bg-gradient-to-b from-red-50/50 via-white to-orange-50/50 dark:from-red-950/50 dark:via-slate-900 dark:to-orange-950/50' : 'bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'} relative ${!isNewYear && 'caramel-drip'}`}>
+        <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             {hasDiscount ? (
               <>
-                <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-orange-600 via-yellow-500 to-orange-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-sale-price-${id}`}>
+                <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-sale-price-${id}`}>
                   {salePrice}₽
                 </span>
-                <span className={`text-sm line-through ${isNewYear ? 'text-slate-500 dark:text-slate-400' : 'text-muted-foreground'}`} data-testid={`text-original-price-${id}`}>
+                <span className={`text-sm line-through ${isNewYear ? 'text-gray-500 dark:text-gray-400' : 'text-muted-foreground'}`} data-testid={`text-original-price-${id}`}>
                   {price}₽
                 </span>
               </>
             ) : (
-              <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-cyan-600 via-blue-500 to-blue-600' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-price-${id}`}>
+              <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-red-500 to-orange-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-price-${id}`}>
                 {price}₽
               </span>
             )}
@@ -254,7 +254,7 @@ export default function ProductCard({
         </div>
         {isOutOfStock ? (
           <Button
-            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 ${isNewYear ? 'bg-gradient-to-r from-orange-500 via-yellow-400 to-orange-600 hover:from-orange-600 hover:via-yellow-500 hover:to-orange-700' : 'gummy-button bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600'}`}
+            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-red-600 hover:from-red-700 hover:via-orange-600 hover:to-red-700' : 'gummy-button bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600'}`}
             onClick={handleNotifyClick}
             data-testid={`button-notify-${id}`}
           >
@@ -263,7 +263,7 @@ export default function ProductCard({
           </Button>
         ) : (
           <Button
-            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 ${isNewYear ? 'bg-gradient-to-r from-cyan-500 via-blue-500 to-blue-600 hover:from-cyan-600 hover:via-blue-600 hover:to-blue-700' : `gummy-button bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 ${isAdding ? 'jelly-add-animation' : ''}`}`}
+            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 hover:from-red-700 hover:via-orange-600 hover:to-yellow-600' : `gummy-button bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 ${isAdding ? 'jelly-add-animation' : ''}`}`}
             onClick={handleAddToCart}
             data-testid={`button-add-to-cart-${id}`}
           >

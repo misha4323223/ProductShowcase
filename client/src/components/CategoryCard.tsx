@@ -16,7 +16,7 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
   
   return (
     <Card 
-      className={`group relative overflow-hidden cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 jelly-wobble ${isNewYear ? 'new-year-category-card hover:shadow-cyan-300/40' : 'hover:shadow-pink-300/50 candy-wrapper metallic-wrapper'}`}
+      className={`group relative overflow-hidden cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 jelly-wobble ${isNewYear ? 'new-year-category-card hover:shadow-red-400/40' : 'hover:shadow-pink-300/50 candy-wrapper metallic-wrapper'}`}
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
@@ -38,7 +38,7 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
           <h3 className={`font-serif text-2xl md:text-3xl font-bold transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl ${isNewYear ? 'text-white new-year-text-outline' : 'text-white'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
             {name}
           </h3>
-          <div className={`h-1.5 w-20 rounded-full mt-2 transition-all duration-300 ${isNewYear ? 'bg-gradient-to-r from-cyan-300 via-white to-blue-300 shadow-lg shadow-cyan-400/60 new-year-line-glow' : `bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400 shadow-lg shadow-pink-300/50 ${!isNewYear && 'gummy-button'}`}`} style={!isNewYear ? {boxShadow: '0 3px 0 -1px rgba(0,0,0,0.15), 0 4px 6px -1px rgba(0,0,0,0.2)'} : undefined} />
+          <div className={`h-1.5 w-20 rounded-full mt-2 transition-all duration-300 ${isNewYear ? 'bg-gradient-to-r from-yellow-300 via-yellow-200 to-orange-300 shadow-lg shadow-yellow-400/60 new-year-line-glow' : `bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400 shadow-lg shadow-pink-300/50 ${!isNewYear && 'gummy-button'}`}`} style={!isNewYear ? {boxShadow: '0 3px 0 -1px rgba(0,0,0,0.15), 0 4px 6px -1px rgba(0,0,0,0.2)'} : undefined} />
         </div>
       </div>
     </Card>
