@@ -2151,5 +2151,51 @@ html.autumn body {
       min-height: 65dvh;
     }
   }
+
+  /* ========================================
+     СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ iOS/Safari
+     Исправляют проблему с object-cover на iPhone
+     ======================================== */
+  @supports (-webkit-touch-callout: none) {
+    /* Только для iOS (iPhone, iPad) */
+    
+    /* Для слайдов - используем background-size вместо object-cover */
+    .hero-mobile-fix [role="dialog"] + div picture img {
+      width: 100%;
+      height: 100%;
+      -webkit-object-fit: cover;
+      object-fit: cover;
+      -webkit-object-position: center;
+      object-position: center;
+      display: block;
+    }
+
+    /* Убеждаемся что контейнер слайда ведёт себя правильно */
+    .hero-mobile-fix > div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Переопределяем object-position для всех картинок в слайдах */
+    picture img[class*="object-left"] {
+      -webkit-object-position: left center;
+      object-position: left center;
+    }
+
+    picture img[class*="object-bottom"] {
+      -webkit-object-position: center bottom;
+      object-position: center bottom;
+    }
+
+    picture img[class*="object-center"] {
+      -webkit-object-position: center center;
+      object-position: center center;
+    }
+  }
   
 }
