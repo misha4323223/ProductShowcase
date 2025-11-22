@@ -1,0 +1,98 @@
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://d5dqs08iq55f8bu3s0pf.apigw.yandexcloud.net';
+
+export interface SiteSetting {
+  settingKey: string;
+  settingValue: string;
+}
+
+export async function getCurrentTheme(): Promise<string> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings?key=current_theme`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch theme from server, using default');
+      return 'sakura';
+    }
+
+    const data: SiteSetting = await response.json();
+    return data.settingValue || 'sakura';
+  } catch (error) {
+    console.error('Error fetching current theme:', error);
+    return 'sakura';
+  }
+}
+
+export async function setCurrentTheme(theme: string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        settingKey: 'current_theme',
+        settingValue: theme
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to set theme');
+    }
+
+    const result = await response.json();
+    console.log('Theme saved to server:', result);
+  } catch (error: any) {
+    console.error('Error setting theme:', error);
+    throw error;
+  }
+}
+
+export async function getSiteSetting(key: string): Promise<string | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings?key=${encodeURIComponent(key)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data: SiteSetting = await response.json();
+    return data.settingValue || null;
+  } catch (error) {
+    console.error(`Error fetching setting ${key}:`, error);
+    return null;
+  }
+}
+
+export async function setSiteSetting(key: string, value: string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        settingKey: key,
+        settingValue: value
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to set setting');
+    }
+  } catch (error: any) {
+    console.error(`Error setting ${key}:`, error);
+    throw error;
+  }
+}

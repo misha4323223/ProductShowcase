@@ -18,6 +18,7 @@ import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, ge
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
+import { setCurrentTheme as saveThemeToServer } from "@/services/site-settings-client";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -136,8 +137,17 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    const theme = localStorage.getItem("sweetDelights_theme") || "sakura";
-    setCurrentTheme(theme);
+    async function loadTheme() {
+      try {
+        const { getCurrentTheme } = await import("@/services/site-settings-client");
+        const theme = await getCurrentTheme();
+        setCurrentTheme(theme);
+      } catch (error) {
+        const localTheme = localStorage.getItem("sweetDelights_theme") || "sakura";
+        setCurrentTheme(localTheme);
+      }
+    }
+    loadTheme();
   }, []);
 
   useEffect(() => {
@@ -529,24 +539,23 @@ export default function AdminPage() {
 
   const setThemeMutation = useMutation({
     mutationFn: async (theme: string) => {
+      await saveThemeToServer(theme);
       localStorage.setItem("sweetDelights_theme", theme);
       return { theme };
     },
     onSuccess: (data) => {
       setCurrentTheme(data.theme);
-      // Удаляем все классы тем и добавляем новый
-      document.documentElement.classList.remove('new-year', 'sakura', 'spring', 'autumn');
+      document.documentElement.classList.remove('new-year', 'sakura', 'spring', 'autumn', 'light', 'dark');
       document.documentElement.classList.add(data.theme);
-      // Отправляем кастомное событие для других компонентов
       window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: data.theme } }));
       toast({ 
-        title: "Тема изменена!", 
-        description: `Выбрана тема: ${data.theme}` 
+        title: "Тема сохранена на сервере!", 
+        description: `Выбрана тема: ${data.theme}. Все пользователи увидят эту тему.` 
       });
     },
     onError: (error: any) => {
       toast({ 
-        title: "Ошибка", 
+        title: "Ошибка сохранения темы", 
         description: error.message,
         variant: "destructive"
       });

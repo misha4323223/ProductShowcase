@@ -1,0 +1,10 @@
+{
+  "name": "set-site-settings",
+  "version": "1.0.0",
+  "description": "Set site settings in YDB",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.525.0",
+    "@aws-sdk/lib-dynamodb": "^3.525.0"
+  }
+}
