@@ -32,7 +32,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
     }
     
+    // Initial load
     loadTheme();
+
+    // Poll for theme changes every 3 seconds
+    const pollInterval = setInterval(loadTheme, 3000);
 
     const handleThemeChange = (event: CustomEvent) => {
       const newTheme = event.detail.theme as Theme;
@@ -42,6 +46,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     window.addEventListener('theme-changed', handleThemeChange as EventListener);
     
     return () => {
+      clearInterval(pollInterval);
       window.removeEventListener('theme-changed', handleThemeChange as EventListener);
     };
   }, []);
