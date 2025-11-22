@@ -59,7 +59,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.remove('light', 'dark', 'sakura', 'new-year', 'spring', 'autumn');
     root.classList.add(theme);
     
-    localStorage.setItem('theme', theme);
+    // Используем правильный ключ localStorage для совместимости с App.tsx
+    localStorage.setItem('sweetDelights_theme', theme);
+    
+    // Отправляем кастомное событие для других слушателей
+    window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme } }));
   }, [theme, isLoading]);
 
   const setTheme = (newTheme: Theme) => {
