@@ -105,9 +105,10 @@ export interface HeroSlide {
   subtitle: string;
 }
 
-export async function getHeroSlides(): Promise<HeroSlide[]> {
+export async function getHeroSlides(theme?: string): Promise<HeroSlide[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/site-settings?key=hero_slides`, {
+    const key = theme ? `hero_slides_${theme}` : 'hero_slides';
+    const response = await fetch(`${API_BASE_URL}/site-settings?key=${encodeURIComponent(key)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -129,15 +130,16 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
   }
 }
 
-export async function setHeroSlides(slides: HeroSlide[]): Promise<void> {
+export async function setHeroSlides(slides: HeroSlide[], theme?: string): Promise<void> {
   try {
+    const key = theme ? `hero_slides_${theme}` : 'hero_slides';
     const response = await fetch(`${API_BASE_URL}/site-settings`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        settingKey: 'hero_slides',
+        settingKey: key,
         settingValue: JSON.stringify(slides)
       }),
     });
@@ -147,7 +149,7 @@ export async function setHeroSlides(slides: HeroSlide[]): Promise<void> {
       throw new Error(errorData.error || 'Failed to save hero slides');
     }
 
-    console.log('Hero slides saved to server');
+    console.log(`Hero slides for theme "${theme || 'default'}" saved to server`);
   } catch (error: any) {
     console.error('Error setting hero slides:', error);
     throw error;

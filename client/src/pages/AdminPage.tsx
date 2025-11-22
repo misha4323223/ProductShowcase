@@ -112,6 +112,7 @@ export default function AdminPage() {
   
   const [heroSlides, setHeroSlidesState] = useState<HeroSlide[]>([]);
   const [slidesLoading, setSlidesLoading] = useState(false);
+  const [selectedSlidesTheme, setSelectedSlidesTheme] = useState<'sakura' | 'new-year' | 'spring' | 'autumn'>('sakura');
   const [editingSlideId, setEditingSlideId] = useState<number | null>(null);
   const [editingSlideTitle, setEditingSlideTitle] = useState<string>("");
   const [editingSlideSubtitle, setEditingSlideSubtitle] = useState<string>("");
@@ -194,7 +195,7 @@ export default function AdminPage() {
     async function loadHeroSlides() {
       setSlidesLoading(true);
       try {
-        const slides = await getHeroSlides();
+        const slides = await getHeroSlides(selectedSlidesTheme);
         // Если слайдов нет, создаём дефолтные и сохраняем в YDB
         if (!slides || slides.length === 0) {
           const defaultSlides: HeroSlide[] = [
@@ -202,25 +203,25 @@ export default function AdminPage() {
               id: 1,
               image: heroImage1,
               webpImage: heroImage1WebP,
-              title: 'Sweet Delights',
-              subtitle: 'Мир сладостей и радости',
+              title: `${selectedSlidesTheme} слайд 1`,
+              subtitle: 'Первый слайд',
             },
             {
               id: 2,
               image: heroImage2,
               webpImage: heroImage2WebP,
-              title: 'Доставим сладость в каждый дом',
-              subtitle: '',
+              title: `${selectedSlidesTheme} слайд 2`,
+              subtitle: 'Второй слайд',
             },
             {
               id: 3,
               image: heroImage3,
               webpImage: heroImage3WebP,
-              title: 'Ваши улыбки — наша награда!',
-              subtitle: '',
+              title: `${selectedSlidesTheme} слайд 3`,
+              subtitle: 'Третий слайд',
             },
           ];
-          await setHeroSlides(defaultSlides);
+          await setHeroSlides(defaultSlides, selectedSlidesTheme);
           setHeroSlidesState(defaultSlides);
         } else {
           setHeroSlidesState(slides);
@@ -232,7 +233,7 @@ export default function AdminPage() {
       }
     }
     loadHeroSlides();
-  }, []);
+  }, [selectedSlidesTheme]);
 
   useEffect(() => {
     async function loadBackgrounds() {
@@ -691,7 +692,7 @@ export default function AdminPage() {
 
   const saveHeroSlidesMutation = useMutation({
     mutationFn: async (slides: HeroSlide[]) => {
-      await setHeroSlides(slides);
+      await setHeroSlides(slides, selectedSlidesTheme);
       return slides;
     },
     onSuccess: (data) => {
@@ -2295,7 +2296,32 @@ export default function AdminPage() {
                   </p>
 
                   <div className="mb-4">
-                    <h4 className="font-semibold text-sm mb-3">Текущие слайды:</h4>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-semibold text-sm">Текущие слайды:</h4>
+                      <div className="flex gap-2">
+                        {(['sakura', 'new-year', 'spring', 'autumn'] as const).map((theme) => {
+                          const themeNames: Record<string, string> = {
+                            'sakura': '🌸 Сакура',
+                            'new-year': '🎄 Новый год',
+                            'spring': '🌼 Весна',
+                            'autumn': '🍂 Осень'
+                          };
+                          const isSelected = selectedSlidesTheme === theme;
+                          return (
+                            <Button
+                              key={theme}
+                              onClick={() => setSelectedSlidesTheme(theme)}
+                              variant={isSelected ? "default" : "outline"}
+                              size="sm"
+                              className="text-xs"
+                              data-testid={`button-select-slides-theme-${theme}`}
+                            >
+                              {themeNames[theme]}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </div>
                     {slidesLoading ? (
                       <div className="text-center py-4 text-muted-foreground">Загрузка слайдов...</div>
                     ) : (
