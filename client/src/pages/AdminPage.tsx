@@ -237,7 +237,33 @@ export default function AdminPage() {
       setBackgroundsLoading(true);
       try {
         const settings = await getBackgroundSettings();
-        if (settings && Object.keys(settings).length > 0) {
+        // Если фоны не загрузились или пусты, создаём дефолтные
+        if (!settings || Object.keys(settings).length === 0 || !settings.sakura?.webpImage) {
+          const defaultBackgrounds: BackgroundSettings = {
+            sakura: { 
+              image: heroImage1, 
+              webpImage: heroImage1WebP, 
+              title: 'Сакура фон' 
+            },
+            newyear: { 
+              image: heroImage2, 
+              webpImage: heroImage2WebP, 
+              title: 'Новогодний фон' 
+            },
+            spring: { 
+              image: heroImage3, 
+              webpImage: heroImage3WebP, 
+              title: 'Весенний фон' 
+            },
+            autumn: { 
+              image: heroImage1, 
+              webpImage: heroImage1WebP, 
+              title: 'Осенний фон' 
+            },
+          };
+          await setBackgroundSettings(defaultBackgrounds);
+          setBackgroundSettingsState(defaultBackgrounds);
+        } else {
           setBackgroundSettingsState(settings);
         }
       } catch (error) {
