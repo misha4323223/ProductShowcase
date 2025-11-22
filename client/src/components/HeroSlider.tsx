@@ -108,11 +108,11 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   return (
     <>
-      <div className="relative w-full h-screen md:h-[95vh] overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 mt-8 md:mt-6">
+      <div className="relative w-full h-screen md:h-[95vh] overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 pt-16 md:pt-12">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-700 ${
+            className={`absolute inset-0 top-8 md:top-6 transition-opacity duration-700 ${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
           >
