@@ -1935,5 +1935,13 @@ html.autumn body {
     padding-bottom: 0.625rem;
     line-height: 1.4;
   }
-  
+}
+
+/* Адаптация фона для мобильной версии */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
 }
