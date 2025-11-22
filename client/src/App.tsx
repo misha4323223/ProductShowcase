@@ -86,21 +86,10 @@ function App() {
     initAnalytics();
   }, []);
 
-  // Загрузка текущей темы сайта
+  // Загрузка текущей темы сайта из localStorage
   useEffect(() => {
-    const loadTheme = async () => {
-      try {
-        const response = await fetch("/api/theme");
-        const data = await response.json();
-        const theme = data.theme || "sakura";
-        document.documentElement.setAttribute('data-theme', theme);
-      } catch (error) {
-        console.error("Ошибка загрузки темы:", error);
-        // Fallback на sakura если ошибка
-        document.documentElement.setAttribute('data-theme', 'sakura');
-      }
-    };
-    loadTheme();
+    const theme = localStorage.getItem("sweetDelights_theme") || "sakura";
+    document.documentElement.setAttribute('data-theme', theme);
   }, []);
 
   return (

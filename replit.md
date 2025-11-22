@@ -9,10 +9,11 @@ Preferred communication style: Simple, everyday language.
 ## System Architecture
 
 ### Frontend
-- **Framework**: React 18 with TypeScript.
+- **Type**: Static React 18 + TypeScript application (no local server needed).
 - **Routing**: Wouter for lightweight client-side navigation.
-- **State Management**: TanStack React Query for server state, local React state for UI.
+- **State Management**: TanStack React Query for server state, localStorage for theme persistence, local React state for UI.
 - **UI/Styling**: Shadcn UI (Radix UI + Tailwind CSS) with a custom design system featuring a warm, playful color palette, Playfair Display and Inter fonts, and responsive design with iOS Safari compatibility.
+- **Theme System**: Multi-theme design system with festive seasonal themes (Sakura, New Year, Spring, Autumn). Themes stored in localStorage and applied via CSS variables.
 - **Key Components**: Includes sticky header, auto-rotating hero slider, animated product cards, side-panel shopping cart, category navigation, feature highlights bar, and a footer with legal links.
 - **CDEK Delivery Integration**:
   - `DeliverySelector`: Delivery service selector (CDEK only - nationwide coverage).
@@ -22,18 +23,17 @@ Preferred communication style: Simple, everyday language.
   - Supports two delivery types: PICKUP (to pickup point) and DOOR (courier to door).
 
 ### Backend
-- **Framework**: Express.js with TypeScript for a flexible REST API.
-- **API Structure**: Endpoints prefixed with `/api`, using an abstract storage interface (currently in-memory, designed for database migration).
-- **Build**: esbuild for production bundling, tsx for development hot-reloading.
+- **Architecture**: Yandex Cloud Functions + YDB (no local Express server).
+- **Frontend-Backend Communication**: Frontend makes direct calls to Yandex Cloud API Gateway endpoints (configured via `VITE_API_GATEWAY_URL`).
+- **All API endpoints**: Defined in Yandex Cloud Functions, not in local code.
 
 ### Data Layer
-- **ORM**: Drizzle ORM for type-safe SQL queries.
-- **Database**: PostgreSQL (Neon Database) for core data, with schema defined in `shared/schema.ts`.
-- **Storage Abstraction**: `IStorage` interface for CRUD operations, allowing easy switching between in-memory and database implementations.
+- **Database**: Yandex Database (YDB) for all data persistence.
+- **Object Storage**: Yandex Object Storage for product images.
 
 ### Build and Deployment
-- **Build Process**: Frontend built with Vite to `dist/public`, backend with esbuild to `dist/index.js`.
-- **Deployment**: Static frontend hosted on GitHub Pages via GitHub Actions. Backend services utilize Yandex Cloud.
+- **Build Process**: Frontend-only build with Vite.
+- **Deployment**: Static frontend deployed on Replit or hosted service. Backend services run on Yandex Cloud.
 
 ### SEO and Performance
 - **SEO Component**: Universal `SEO.tsx` component supporting dynamic meta tags, Open Graph, Twitter Cards, and Schema.org structured data.

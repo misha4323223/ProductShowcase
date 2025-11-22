@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { auth } from "@/lib/firebase";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { getAllProducts, getAllCategories, createProduct, updateProduct, deleteProduct, createCategory, updateCategory, deleteCategory } from "@/services/api-client";
 import { Button } from "@/components/ui/button";
@@ -17,9 +16,9 @@ import { getUserOrders, updateOrderStatus, getAllOrders, deleteOrder } from "@/s
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
-import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter } from "@/services/yandex-newsletter";
+import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
-import type { Order, Review, PromoCode, NewsletterSubscription } from "@/types/firebase-types";
+import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -137,16 +136,8 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    const loadTheme = async () => {
-      try {
-        const response = await fetch("/api/theme");
-        const data = await response.json();
-        setCurrentTheme(data.theme || "sakura");
-      } catch (error) {
-        console.error("Ошибка загрузки темы:", error);
-      }
-    };
-    loadTheme();
+    const theme = localStorage.getItem("sweetDelights_theme") || "sakura";
+    setCurrentTheme(theme);
   }, []);
 
   useEffect(() => {
@@ -538,8 +529,8 @@ export default function AdminPage() {
 
   const setThemeMutation = useMutation({
     mutationFn: async (theme: string) => {
-      const response = await apiRequest("POST", "/admin/set-theme", { theme });
-      return response.json();
+      localStorage.setItem("sweetDelights_theme", theme);
+      return { theme };
     },
     onSuccess: (data) => {
       setCurrentTheme(data.theme);
