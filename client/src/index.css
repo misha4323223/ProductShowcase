@@ -1762,6 +1762,7 @@ html.autumn body {
     color: hsl(var(--foreground)) !important;
   }
 
+
   @keyframes float-up {
     from {
       transform: translateY(0);
