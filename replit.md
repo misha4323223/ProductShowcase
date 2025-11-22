@@ -7,16 +7,30 @@ Sweet Delights is an e-commerce platform specializing in sweets (chocolates, can
 Preferred communication style: Simple, everyday language.
 
 ## Latest Updates (November 22, 2025)
+
+✅ **Theme Flicker Issue Fixed - Nov 22, 2025 (Final)**:
+- **Root Cause**: Theme + background being applied repeatedly every 3 seconds (polling re-applied same values)
+- **Solution Implemented**:
+  - **Pre-loading in index.html**: Theme + background fetch and CSS application BEFORE React mounts (eliminates flicker)
+  - **ThemeContext optimization**: Initializes with pre-loaded theme (no refetch on mount), polling starts AFTER init
+  - **Removed background polling**: Backgrounds load once on mount, apply only when theme changes (not every 3 sec)
+  - **Smart state updates**: Only setState if value actually changed (prevents unnecessary re-renders)
+- **Result**: Theme + background visible instantly with ZERO flicker on page load and navigation
+- **Files Modified**:
+  - `client/index.html`: Added async pre-load script that fetches current_theme + background_settings before React mounts
+  - `client/src/main.tsx`: Added Promise.race to wait for pre-load completion before React render
+  - `client/src/contexts/ThemeContext.tsx`: Removed polling on initial load, sync starts after ThemeProvider mount, background load only once
+
 ✅ **Theme System Redesigned - Nov 22, 2025**:
 - **Preferred Theme System**: Users now have a "preferred seasonal theme" that persists in YDB
 - **Theme Toggle Logic**: Changed from cycling (light→dark→sakura) to simple binary toggle (preferred ↔ dark)
 - **Admin Panel**: Added UI section to select default preferred theme (4 buttons: Sakura, New Year, Spring, Autumn)
-- **Real-time Sync**: Preferred theme synced every 3 seconds via ThemeContext polling
+- **Real-time Sync**: Theme synced every 3 seconds via polling (only updates if changed)
 - **API Functions**: 
   - `getPreferredTheme()`: Fetches user's preferred theme (defaults to 'sakura')
   - `setPreferredTheme(theme)`: Saves preferred theme to YDB and applies it immediately
 - **Files Modified**: 
-  - `client/src/contexts/ThemeContext.tsx`: Added preferredTheme state and polling
+  - `client/src/contexts/ThemeContext.tsx`: Added preferredTheme state and optimized polling
   - `client/src/components/ThemeToggle.tsx`: Simplified to binary toggle with emoji indicators
   - `client/src/pages/AdminPage.tsx`: Added theme selector UI (🎨 section)
   - `client/src/services/site-settings-client.ts`: Added new API functions
