@@ -34,40 +34,53 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         const validPreferred = ['sakura', 'new-year', 'spring', 'autumn'].includes(serverPreferred)
           ? serverPreferred as PreferredTheme
           : 'sakura';
-        setPreferredThemeState(validPreferred);
+        
+        // Только обновляем если изменилась
+        setPreferredThemeState(prev => prev !== validPreferred ? validPreferred : prev);
 
         // Load current theme
         const serverTheme = await getCurrentTheme();
         const validTheme = ['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(serverTheme) 
           ? serverTheme as Theme 
           : validPreferred;
-        setThemeState(validTheme);
-        setIsLoading(false);
+        
+        // Только обновляем если изменилась (предотвращаем мерцание)
+        setThemeState(prev => prev !== validTheme ? validTheme : prev);
+        
+        if (isLoading) {
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error('Failed to load theme from server:', error);
-        setThemeState('sakura');
-        setPreferredThemeState('sakura');
-        setIsLoading(false);
+        if (isLoading) {
+          setThemeState('sakura');
+          setPreferredThemeState('sakura');
+          setIsLoading(false);
+        }
       }
     }
     
     // Initial load
     loadTheme();
 
-    // Poll for theme changes every 3 seconds
+    // Poll for theme changes every 3 seconds (но не переменяет если не изменилась)
     const pollInterval = setInterval(loadTheme, 3000);
     
     return () => {
       clearInterval(pollInterval);
     };
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     async function loadBackgroundSettings() {
       try {
         const settings = await getBackgroundSettings();
         if (settings && Object.keys(settings).length > 0) {
-          setBackgroundSettings(settings);
+          // Только обновляем если изменилась (предотвращаем мерцание)
+          setBackgroundSettings(prev => {
+            const changed = JSON.stringify(prev) !== JSON.stringify(settings);
+            return changed ? settings : prev;
+          });
           applyBackgroundToTheme(theme, settings);
         }
       } catch (error) {
@@ -78,13 +91,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // Initial load
     loadBackgroundSettings();
 
-    // Poll for background changes every 3 seconds
+    // Poll for background changes every 3 seconds (но не переменяет если не изменилась)
     const pollInterval = setInterval(loadBackgroundSettings, 3000);
     
     return () => {
       clearInterval(pollInterval);
     };
-  }, []);
+  }, [theme]);
 
   const applyBackgroundToTheme = (currentTheme: Theme, settings: BackgroundSettings) => {
     const themeKey = currentTheme === 'new-year' ? 'newyear' : currentTheme;
