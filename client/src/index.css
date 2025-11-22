@@ -1718,42 +1718,22 @@ html.autumn body {
 
   /* ===== НОВОГОДНИЙ ДИЗАЙН КАРТОЧЕК ===== */
   
-  /* Новогодняя карточка категории */
-  .new-year-category-card {
+  /* New Year Category Card - Image Part */
+  .new-year-category-card-image {
     background: transparent !important;
-    border: 3px solid rgba(220, 38, 38, 0.5) !important;
-    box-shadow: 
-      0 0 30px rgba(234, 179, 8, 0.3),
-      inset 0 0 20px rgba(220, 38, 38, 0.1) !important;
-    position: relative;
-    overflow: visible;
-    transition: all 0.3s ease;
   }
 
-  .new-year-category-card::before {
-    content: '✦';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 24px;
-    color: rgba(234, 179, 8, 0.8);
-    z-index: 20;
-    text-shadow: 0 0 10px rgba(234, 179, 8, 0.6);
-    animation: festive-bounce 2s ease-in-out infinite;
+  /* New Year Category Title */
+  .new-year-category-title h3 {
+    color: transparent;
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.9) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 193, 7, 0.9) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
-  .new-year-category-card:hover {
-    border-color: rgba(220, 38, 38, 0.8) !important;
-    box-shadow: 
-      0 0 50px rgba(234, 179, 8, 0.5),
-      0 10px 30px rgba(220, 38, 38, 0.3),
-      inset 0 0 30px rgba(220, 38, 38, 0.2),
-      -15px -15px 20px rgba(234, 179, 8, 0.4),
-      15px -15px 20px rgba(234, 179, 8, 0.4),
-      -15px 15px 20px rgba(234, 179, 8, 0.4),
-      15px 15px 20px rgba(234, 179, 8, 0.4) !important;
-    animation: float-up 0.3s ease-out;
+  .group:hover .new-year-category-title h3 {
+    filter: brightness(1.2);
   }
 
   @keyframes float-up {
