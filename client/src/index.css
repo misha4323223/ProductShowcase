@@ -683,10 +683,15 @@ html.autumn body {
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Mobile: show center part of background with cover sizing */
+  /* Mobile: use optimized vertical background images */
   @media only screen and (max-width: 768px) {
+    html.new-year body {
+      background-image: url('/new-year-bg-mobile.png');
+      background-size: cover;
+      background-position: center center;
+    }
+
     html.sakura body,
-    html.new-year body,
     html.spring body,
     html.autumn body {
       background-size: cover;
