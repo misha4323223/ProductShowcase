@@ -16,11 +16,11 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
   
   return (
     <Card 
-      className={`group relative overflow-visible cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl ${isNewYear ? 'hover:shadow-white/50 category-card-new-year' : 'hover:shadow-pink-300/50'} transition-all duration-300 hover:-translate-y-3 ${isNewYear ? '' : 'candy-wrapper metallic-wrapper'} jelly-wobble`}
+      className={`group relative overflow-hidden cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 jelly-wobble ${isNewYear ? 'new-year-category-card hover:shadow-cyan-300/40' : 'hover:shadow-pink-300/50 candy-wrapper metallic-wrapper'}`}
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
-      <div className={`aspect-[4/3] overflow-hidden rounded-3xl ${isNewYear ? '' : 'sugar-crystals'}`}>
+      <div className={`aspect-[4/3] overflow-hidden rounded-3xl ${isNewYear ? 'new-year-category-bg' : 'sugar-crystals'}`}>
         <OptimizedImage
           src={image}
           webpSrc={webpImage}
@@ -30,18 +30,15 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115 group-hover:rotate-2"
         />
       </div>
-      <div className={`absolute inset-0 rounded-3xl ${isNewYear ? 'new-year-candy-overlay' : 'bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent group-hover:from-pink-800/70'}`} />
-      <div className={`absolute top-4 right-4 ${isNewYear ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-300`}>
-        <div className="w-10 h-10 rounded-full lollipop-swirl border-4 border-white shadow-2xl flex items-center justify-center">
-          <Sparkles className="h-5 w-5 text-white drop-shadow-lg" />
-        </div>
-      </div>
-      <div className={`absolute bottom-0 left-0 right-0 p-6 ${!isNewYear && 'caramel-drip'}`}>
+      {isNewYear && <div className="category-card-new-year-snow-before"></div>}
+      {isNewYear && <div className="category-card-new-year-snow-after"></div>}
+      <div className={`absolute inset-0 rounded-3xl ${isNewYear ? 'new-year-category-overlay' : 'bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent group-hover:from-pink-800/70'}`} />
+      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
         <div className="relative">
-          <h3 className={`font-serif text-2xl md:text-3xl font-bold transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl ${isNewYear ? 'text-white new-year-category-title' : 'text-white'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
+          <h3 className={`font-serif text-2xl md:text-3xl font-bold transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl ${isNewYear ? 'text-white new-year-text-outline' : 'text-white'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
             {name}
           </h3>
-          <div className={`h-1.5 w-20 rounded-full mt-2 transition-all duration-300 ${isNewYear ? 'bg-gradient-to-r from-white via-yellow-300 to-red-400 shadow-lg shadow-red-300/50 new-year-category-line' : `bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400 shadow-lg shadow-pink-300/50 ${!isNewYear && 'gummy-button'}`}`} style={!isNewYear ? {boxShadow: '0 3px 0 -1px rgba(0,0,0,0.15), 0 4px 6px -1px rgba(0,0,0,0.2)'} : undefined} />
+          <div className={`h-1.5 w-20 rounded-full mt-2 transition-all duration-300 ${isNewYear ? 'bg-gradient-to-r from-cyan-300 via-white to-blue-300 shadow-lg shadow-cyan-400/60 new-year-line-glow' : `bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400 shadow-lg shadow-pink-300/50 ${!isNewYear && 'gummy-button'}`}`} style={!isNewYear ? {boxShadow: '0 3px 0 -1px rgba(0,0,0,0.15), 0 4px 6px -1px rgba(0,0,0,0.2)'} : undefined} />
         </div>
       </div>
     </Card>
