@@ -683,8 +683,16 @@ html.autumn body {
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Четкий системный шрифт для мобильных устройств (как на Android) */
+  /* Mobile: show center part of background with cover sizing */
   @media only screen and (max-width: 768px) {
+    html.sakura body,
+    html.new-year body,
+    html.spring body,
+    html.autumn body {
+      background-size: cover;
+      background-position: center center;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       font-weight: 600;
