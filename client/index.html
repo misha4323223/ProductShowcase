@@ -100,18 +100,34 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
     
-    <!-- ОПТИМИЗАЦИЯ: Инициализация темы ДО монтирования React для предотвращения мерцания -->
+    <!-- ОПТИМИЗАЦИЯ: Параллельная загрузка темы из YDB без мерцания -->
     <script>
       (function() {
-        // Попробуем загрузить тему из sessionStorage (быстрее всего)
-        const sessionTheme = sessionStorage.getItem('sweet-delights-theme');
-        if (sessionTheme && ['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(sessionTheme)) {
-          document.documentElement.classList.add(sessionTheme);
-          return;
-        }
+        const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
         
-        // Если нет в sessionStorage, используем дефолт
+        // Применяем дефолтную тему сразу
         document.documentElement.classList.add('sakura');
+        
+        // Параллельно запрашиваем сохраненную тему
+        fetch(`${API_BASE_URL}/site-settings?key=current_theme`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        })
+          .then(res => res.json())
+          .then(data => {
+            const theme = data.settingValue || 'sakura';
+            if (['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(theme)) {
+              // Если тема не sakura - переменяем её
+              if (theme !== 'sakura') {
+                document.documentElement.classList.remove('sakura');
+                document.documentElement.classList.add(theme);
+              }
+            }
+          })
+          .catch(err => {
+            console.error('Failed to load theme:', err);
+            // Оставляем sakura как дефолт
+          });
       })();
     </script>
   </head>
