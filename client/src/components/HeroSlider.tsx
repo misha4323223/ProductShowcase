@@ -146,7 +146,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         {/* Кнопка подписки */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-20 pb-16 md:pb-16">
           <div className="text-center max-w-3xl px-4 pointer-events-auto">
-            <p className="text-white text-lg md:text-xl font-bold mb-4 drop-shadow-lg">
+            <p className="text-accent text-2xl md:text-4xl font-bold mb-4 drop-shadow-2xl">
               Скоро Открытие!
             </p>
             <p className="text-white text-base md:text-lg font-medium mb-2 drop-shadow-lg">
