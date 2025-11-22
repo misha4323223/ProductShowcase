@@ -9,8 +9,11 @@ html, body {
 }
 
 /* Default background для светлой темы */
-html:not(.sakura):not(.new-year):not(.spring):not(.autumn),
-html.light {
+body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn *) {
+  background-color: white;
+}
+
+html.light body {
   background-color: white;
 }
 
@@ -254,7 +257,9 @@ html.sakura {
   /* Нежные тени для элегантности */
   --elevate-1: rgba(255,183,197, .04);
   --elevate-2: rgba(255,183,197, .09);
+}
 
+html.sakura body {
   background-image: url('/sakura-bg.png');
   background-size: cover;
   background-position: center;
@@ -371,7 +376,9 @@ html.new-year {
   /* Праздничные тени с золотым оттенком */
   --elevate-1: rgba(255, 215, 0, .05);
   --elevate-2: rgba(255, 215, 0, .10);
+}
 
+html.new-year body {
   background-image: url('/new-year-bg.png');
   background-size: cover;
   background-position: center;
@@ -487,7 +494,9 @@ html.spring {
 
   --elevate-1: rgba(76, 175, 80, .04);
   --elevate-2: rgba(76, 175, 80, .09);
+}
 
+html.spring body {
   background-image: url('/spring-bg.png');
   background-size: cover;
   background-position: center;
@@ -563,7 +572,9 @@ html.autumn {
 
   --elevate-1: rgba(255, 152, 0, .05);
   --elevate-2: rgba(255, 152, 0, .10);
+}
 
+html.autumn body {
   background-image: url('/autumn-bg.png');
   background-size: cover;
   background-position: center;
