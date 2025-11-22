@@ -20,7 +20,7 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
-      <div className={`aspect-[4/3] overflow-hidden rounded-3xl ${isNewYear ? 'new-year-category-bg' : 'sugar-crystals'}`}>
+      <div className={`aspect-[4/3] overflow-hidden rounded-3xl ${isNewYear ? '' : 'sugar-crystals'}`}>
         <OptimizedImage
           src={image}
           webpSrc={webpImage}
@@ -30,8 +30,6 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115 group-hover:rotate-2"
         />
       </div>
-      {isNewYear && <div className="category-card-new-year-snow-before"></div>}
-      {isNewYear && <div className="category-card-new-year-snow-after"></div>}
       <div className={`absolute inset-0 rounded-3xl ${isNewYear ? 'new-year-category-overlay' : 'bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent group-hover:from-pink-800/70'}`} />
       <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
         <div className="relative">
