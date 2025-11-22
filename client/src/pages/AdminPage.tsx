@@ -2259,6 +2259,36 @@ export default function AdminPage() {
 
               <div className="border-t pt-6 space-y-4">
                 <div>
+                  <h3 className="text-base font-semibold mb-4">🎨 Основная тема пользователей</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Выберите основную сезонную тему, которая будет применяться пользователям по умолчанию. Пользователи смогут переключаться между этой темой и темной версией.
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {(['sakura', 'new-year', 'spring', 'autumn'] as const).map((theme) => {
+                      const themeNames: Record<string, string> = {
+                        'sakura': '🌸 Сакура',
+                        'new-year': '🎄 Новый год',
+                        'spring': '🌼 Весна',
+                        'autumn': '🍂 Осень'
+                      };
+                      const isSelected = preferredTheme === theme;
+                      return (
+                        <Button
+                          key={theme}
+                          onClick={() => setPreferredTheme(theme)}
+                          variant={isSelected ? "default" : "outline"}
+                          className="w-full"
+                          data-testid={`button-set-preferred-theme-${theme}`}
+                        >
+                          {themeNames[theme]}
+                          {isSelected && <Check className="w-4 h-4 ml-2" />}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
                   <h3 className="text-base font-semibold mb-4">🎬 Управление слайдами героя</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Добавьте, отредактируйте или удалите слайды, которые показываются на главной странице

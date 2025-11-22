@@ -6,6 +6,21 @@ Sweet Delights is an e-commerce platform specializing in sweets (chocolates, can
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
+## Latest Updates (November 22, 2025)
+✅ **Theme System Redesigned - Nov 22, 2025**:
+- **Preferred Theme System**: Users now have a "preferred seasonal theme" that persists in YDB
+- **Theme Toggle Logic**: Changed from cycling (light→dark→sakura) to simple binary toggle (preferred ↔ dark)
+- **Admin Panel**: Added UI section to select default preferred theme (4 buttons: Sakura, New Year, Spring, Autumn)
+- **Real-time Sync**: Preferred theme synced every 3 seconds via ThemeContext polling
+- **API Functions**: 
+  - `getPreferredTheme()`: Fetches user's preferred theme (defaults to 'sakura')
+  - `setPreferredTheme(theme)`: Saves preferred theme to YDB and applies it immediately
+- **Files Modified**: 
+  - `client/src/contexts/ThemeContext.tsx`: Added preferredTheme state and polling
+  - `client/src/components/ThemeToggle.tsx`: Simplified to binary toggle with emoji indicators
+  - `client/src/pages/AdminPage.tsx`: Added theme selector UI (🎨 section)
+  - `client/src/services/site-settings-client.ts`: Added new API functions
+
 ## System Architecture
 
 ### Frontend
