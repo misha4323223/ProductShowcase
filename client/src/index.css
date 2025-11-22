@@ -240,7 +240,7 @@ html, body {
 }
 
 /* SAKURA THEME - Japanese Cherry Blossom Aesthetic 🌸 */
-:root[data-theme="sakura"] {
+html.sakura {
   --button-outline: rgba(255,183,197, .15);
   --badge-outline: rgba(255,183,197, .08);
 
@@ -351,7 +351,7 @@ html, body {
 }
 
 /* NEW YEAR THEME - Christmas Holiday Aesthetic 🎄 */
-:root[data-theme="new-year"] {
+html.new-year {
   --button-outline: rgba(255, 215, 0, .15);
   --badge-outline: rgba(255, 215, 0, .08);
 
@@ -462,7 +462,7 @@ html, body {
 }
 
 /* SPRING THEME - Fresh Blooming Aesthetic 🌱 */
-:root[data-theme="spring"] {
+html.spring {
   --button-outline: rgba(76, 175, 80, .15);
   --badge-outline: rgba(76, 175, 80, .08);
 
@@ -532,7 +532,7 @@ html, body {
 }
 
 /* AUTUMN THEME - Warm Harvest Aesthetic 🍂 */
-:root[data-theme="autumn"] {
+html.autumn {
   --button-outline: rgba(255, 152, 0, .15);
   --badge-outline: rgba(255, 152, 0, .08);
 

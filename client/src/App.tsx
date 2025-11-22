@@ -90,7 +90,10 @@ function App() {
   useEffect(() => {
     const updateTheme = () => {
       const theme = localStorage.getItem("sweetDelights_theme") || "sakura";
-      document.documentElement.setAttribute('data-theme', theme);
+      // Удаляем все классы тем
+      document.documentElement.classList.remove('new-year', 'sakura', 'spring', 'autumn');
+      // Добавляем новый класс темы
+      document.documentElement.classList.add(theme);
       console.log("🎨 Тема установлена:", theme);
     };
     

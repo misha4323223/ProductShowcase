@@ -534,7 +534,9 @@ export default function AdminPage() {
     },
     onSuccess: (data) => {
       setCurrentTheme(data.theme);
-      document.documentElement.setAttribute('data-theme', data.theme);
+      // Удаляем все классы тем и добавляем новый
+      document.documentElement.classList.remove('new-year', 'sakura', 'spring', 'autumn');
+      document.documentElement.classList.add(data.theme);
       // Отправляем кастомное событие для других компонентов
       window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: data.theme } }));
       toast({ 
