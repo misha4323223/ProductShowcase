@@ -27,7 +27,7 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
           alt={`Купить ${name} в интернет-магазине Sweet Delights - каталог сладостей с доставкой по России`}
           loading="lazy"
           decoding="async"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115 group-hover:rotate-2"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115"
         />
       </div>
       {!isNewYear && <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-pink-900/80 via-purple-900/40 to-transparent group-hover:from-pink-800/70" />}
