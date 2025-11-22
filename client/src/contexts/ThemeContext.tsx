@@ -106,6 +106,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const root = document.documentElement;
     root.classList.remove('light', 'dark', 'sakura', 'new-year', 'spring', 'autumn');
     root.classList.add(theme);
+    
+    // Сохраняем тему в sessionStorage для быстрой загрузки при следующем входе
+    sessionStorage.setItem('sweet-delights-theme', theme);
     console.log('🎨 Theme applied:', theme);
 
     // Apply background for the new theme

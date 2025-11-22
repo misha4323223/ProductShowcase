@@ -99,6 +99,21 @@
       }(window.location))
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
+    
+    <!-- ОПТИМИЗАЦИЯ: Инициализация темы ДО монтирования React для предотвращения мерцания -->
+    <script>
+      (function() {
+        // Попробуем загрузить тему из sessionStorage (быстрее всего)
+        const sessionTheme = sessionStorage.getItem('sweet-delights-theme');
+        if (sessionTheme && ['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(sessionTheme)) {
+          document.documentElement.classList.add(sessionTheme);
+          return;
+        }
+        
+        // Если нет в sessionStorage, используем дефолт
+        document.documentElement.classList.add('sakura');
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
