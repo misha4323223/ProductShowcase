@@ -265,13 +265,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Простая надпись "Скоро открытие" для новогодней темы */}
-        {theme === 'new-year' && (
-          <div className="py-2 sm:py-3 md:py-4 text-center">
-            <p className="font-serif text-lg sm:text-xl md:text-2xl font-bold text-white drop-shadow-lg">Скоро открытие</p>
-          </div>
-        )}
-
         <HeroSlider slides={slides} />
         
         {/* Волнистый разделитель между слайдером и категориями */}
