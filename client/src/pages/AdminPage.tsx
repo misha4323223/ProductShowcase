@@ -104,7 +104,7 @@ export default function AdminPage() {
   
   const [heroSlides, setHeroSlidesState] = useState<HeroSlide[]>([]);
   const [slidesLoading, setSlidesLoading] = useState(false);
-  const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
+  const [editingSlideId, setEditingSlideId] = useState<number | null>(null);
   const [slideImageFile, setSlideImageFile] = useState<File | null>(null);
   const [slideImagePreview, setSlideImagePreview] = useState<string>("");
   const [isUploadingSlideImage, setIsUploadingSlideImage] = useState(false);
@@ -2168,40 +2168,60 @@ export default function AdminPage() {
                     Добавьте, отредактируйте или удалите слайды, которые показываются на главной странице
                   </p>
 
-                  {slidesLoading ? (
-                    <div className="text-center py-4 text-muted-foreground">Загрузка слайдов...</div>
-                  ) : (
-                    <div className="space-y-3">
-                      {heroSlides.length === 0 ? (
-                        <div className="text-center py-4 text-muted-foreground">
-                          Слайды еще не добавлены
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {heroSlides.map((slide, index) => (
-                            <div key={slide.id} className="border rounded-lg p-3 flex items-start justify-between bg-card">
-                              <div className="flex-1">
-                                <div className="font-semibold text-sm">{slide.title}</div>
-                                {slide.subtitle && <div className="text-xs text-muted-foreground">{slide.subtitle}</div>}
-                                <div className="text-xs text-muted-foreground mt-1">{slide.image}</div>
-                              </div>
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => {
-                                  const newSlides = heroSlides.filter(s => s.id !== slide.id);
-                                  saveHeroSlidesMutation.mutate(newSlides);
-                                }}
-                                data-testid={`button-delete-slide-${slide.id}`}
+                  <div className="mb-4">
+                    <h4 className="font-semibold text-sm mb-3">Текущие слайды:</h4>
+                    {slidesLoading ? (
+                      <div className="text-center py-4 text-muted-foreground">Загрузка слайдов...</div>
+                    ) : (
+                      <div className="space-y-2">
+                        {heroSlides.length === 0 ? (
+                          <div className="text-center py-4 text-muted-foreground">
+                            Слайды еще не добавлены
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            {heroSlides.map((slide, index) => (
+                              <div
+                                key={slide.id}
+                                className={`border rounded-lg p-3 cursor-pointer transition-all hover-elevate ${
+                                  editingSlideId === slide.id
+                                    ? "bg-accent/10 border-accent"
+                                    : "bg-card hover:bg-muted/50"
+                                }`}
+                                onClick={() => setEditingSlideId(slide.id)}
+                                data-testid={`button-edit-slide-${slide.id}`}
                               >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-semibold text-sm">
+                                      {index + 1}. {slide.title}
+                                      {slide.subtitle && ` → ${slide.subtitle}`}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground mt-1 truncate">
+                                      {slide.image}
+                                    </div>
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="ml-2 flex-shrink-0"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const newSlides = heroSlides.filter(s => s.id !== slide.id);
+                                      saveHeroSlidesMutation.mutate(newSlides);
+                                    }}
+                                    data-testid={`button-delete-slide-${slide.id}`}
+                                  >
+                                    <Trash2 className="w-4 h-4 text-destructive" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
 
                   <div className="mt-6 p-4 bg-muted rounded-lg">
                     <h4 className="font-semibold text-sm mb-3">Добавить новый слайд</h4>
