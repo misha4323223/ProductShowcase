@@ -18,7 +18,7 @@ import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, ge
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
-import { setCurrentTheme as saveThemeToServer } from "@/services/site-settings-client";
+import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, type HeroSlide } from "@/services/site-settings-client";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,7 +75,16 @@ const newsletterSchema = z.object({
   message: z.string().trim().min(1, "Сообщение обязательно"),
 });
 
+const heroSlideSchema = z.object({
+  id: z.number(),
+  title: z.string().trim().min(1, "Заголовок обязателен"),
+  subtitle: z.string().trim().optional(),
+  image: z.string().trim().min(1, "Изображение обязательно"),
+  webpImage: z.string().trim().min(1, "WebP изображение обязательно"),
+});
+
 type NewsletterForm = z.infer<typeof newsletterSchema>;
+type HeroSlideForm = z.infer<typeof heroSlideSchema>;
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -92,6 +101,13 @@ export default function AdminPage() {
   const [isUploadingCategoryImage, setIsUploadingCategoryImage] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [currentTheme, setCurrentTheme] = useState<string>("sakura");
+  
+  const [heroSlides, setHeroSlidesState] = useState<HeroSlide[]>([]);
+  const [slidesLoading, setSlidesLoading] = useState(false);
+  const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
+  const [slideImageFile, setSlideImageFile] = useState<File | null>(null);
+  const [slideImagePreview, setSlideImagePreview] = useState<string>("");
+  const [isUploadingSlideImage, setIsUploadingSlideImage] = useState(false);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -148,6 +164,21 @@ export default function AdminPage() {
       }
     }
     loadTheme();
+  }, []);
+
+  useEffect(() => {
+    async function loadHeroSlides() {
+      setSlidesLoading(true);
+      try {
+        const slides = await getHeroSlides();
+        setHeroSlidesState(slides);
+      } catch (error) {
+        console.error('Error loading hero slides:', error);
+      } finally {
+        setSlidesLoading(false);
+      }
+    }
+    loadHeroSlides();
   }, []);
 
   useEffect(() => {
@@ -556,6 +587,27 @@ export default function AdminPage() {
     onError: (error: any) => {
       toast({ 
         title: "Ошибка сохранения темы", 
+        description: error.message,
+        variant: "destructive"
+      });
+    },
+  });
+
+  const saveHeroSlidesMutation = useMutation({
+    mutationFn: async (slides: HeroSlide[]) => {
+      await setHeroSlides(slides);
+      return slides;
+    },
+    onSuccess: (data) => {
+      setHeroSlidesState(data);
+      toast({ 
+        title: "Слайды сохранены!", 
+        description: "Все пользователи увидят обновленные слайды" 
+      });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Ошибка сохранения слайдов", 
         description: error.message,
         variant: "destructive"
       });
@@ -2106,6 +2158,146 @@ export default function AdminPage() {
                     <li>• <strong>🌼 Весенняя</strong> - светлые пастельные цвета (скоро)</li>
                     <li>• <strong>🍂 Осенняя</strong> - теплые осенние оттенки (скоро)</li>
                   </ul>
+                </div>
+              </div>
+
+              <div className="border-t pt-6 space-y-4">
+                <div>
+                  <h3 className="text-base font-semibold mb-4">🎬 Управление слайдами героя</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Добавьте, отредактируйте или удалите слайды, которые показываются на главной странице
+                  </p>
+
+                  {slidesLoading ? (
+                    <div className="text-center py-4 text-muted-foreground">Загрузка слайдов...</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {heroSlides.length === 0 ? (
+                        <div className="text-center py-4 text-muted-foreground">
+                          Слайды еще не добавлены
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          {heroSlides.map((slide, index) => (
+                            <div key={slide.id} className="border rounded-lg p-3 flex items-start justify-between bg-card">
+                              <div className="flex-1">
+                                <div className="font-semibold text-sm">{slide.title}</div>
+                                {slide.subtitle && <div className="text-xs text-muted-foreground">{slide.subtitle}</div>}
+                                <div className="text-xs text-muted-foreground mt-1">{slide.image}</div>
+                              </div>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => {
+                                  const newSlides = heroSlides.filter(s => s.id !== slide.id);
+                                  saveHeroSlidesMutation.mutate(newSlides);
+                                }}
+                                data-testid={`button-delete-slide-${slide.id}`}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="mt-6 p-4 bg-muted rounded-lg">
+                    <h4 className="font-semibold text-sm mb-3">Добавить новый слайд</h4>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-xs font-medium mb-1 block">Загруженные слайды используют формат: image (PNG/JPG) и webpImage (WebP)</Label>
+                        <div className="flex gap-2 mt-2">
+                          <div className="flex-1">
+                            <Input 
+                              type="file" 
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const error = validateImageFile(file);
+                                  if (error) {
+                                    toast({ 
+                                      title: "Ошибка", 
+                                      description: error,
+                                      variant: "destructive"
+                                    });
+                                    return;
+                                  }
+                                  setSlideImageFile(file);
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => {
+                                    setSlideImagePreview(reader.result as string);
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                              data-testid="input-slide-image"
+                            />
+                          </div>
+                          {slideImageFile && (
+                            <Button
+                              type="button"
+                              onClick={async () => {
+                                if (!slideImageFile) return;
+                                setIsUploadingSlideImage(true);
+                                try {
+                                  const imageUrl = await uploadImageToYandexStorage(slideImageFile, 'hero-slides');
+                                  const newSlide: HeroSlide = {
+                                    id: Math.max(...heroSlides.map(s => s.id), 0) + 1,
+                                    title: `Слайд ${heroSlides.length + 1}`,
+                                    subtitle: '',
+                                    image: imageUrl,
+                                    webpImage: imageUrl,
+                                  };
+                                  saveHeroSlidesMutation.mutate([...heroSlides, newSlide]);
+                                  setSlideImageFile(null);
+                                  setSlideImagePreview('');
+                                } catch (error: any) {
+                                  toast({ 
+                                    title: "Ошибка загрузки", 
+                                    description: error.message,
+                                    variant: "destructive"
+                                  });
+                                } finally {
+                                  setIsUploadingSlideImage(false);
+                                }
+                              }}
+                              disabled={isUploadingSlideImage}
+                              data-testid="button-upload-slide"
+                            >
+                              <Upload className="w-4 h-4 mr-2" />
+                              {isUploadingSlideImage ? "Загрузка..." : "Загрузить"}
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {slideImagePreview && (
+                        <div className="relative inline-block">
+                          <img 
+                            src={slideImagePreview} 
+                            alt="Предпросмотр слайда" 
+                            className="max-w-xs max-h-32 rounded border"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="absolute top-1 right-1"
+                            onClick={() => {
+                              setSlideImageFile(null);
+                              setSlideImagePreview('');
+                            }}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>

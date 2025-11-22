@@ -16,6 +16,7 @@ import { useWheel } from "@/contexts/WheelContext";
 import WheelModal from "@/components/WheelModal";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
+import { getHeroSlides, type HeroSlide } from "@/services/site-settings-client";
 import type { Category } from "@/types/firebase-types";
 
 import heroImage1 from '@assets/generated_images/Candy_characters_big_gift_box_7a7377e6.png';
@@ -90,7 +91,15 @@ export default function Home() {
     };
   }, []);
 
-  const slides = [
+  const { data: heroSlidesData = [], isLoading: slidesLoading } = useQuery<HeroSlide[]>({
+    queryKey: ["/api/hero-slides"],
+    queryFn: getHeroSlides,
+    staleTime: 60000,
+    gcTime: 300000,
+  });
+
+  // Использую слайды из YDB, если есть, иначе использую дефолтные
+  const slides = heroSlidesData.length > 0 ? heroSlidesData : [
     {
       id: 1,
       image: heroImage1,
