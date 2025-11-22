@@ -36,12 +36,12 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
           <Sparkles className="h-5 w-5 text-white drop-shadow-lg" />
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-6 caramel-drip">
+      <div className={`absolute bottom-0 left-0 right-0 p-6 ${!isNewYear && 'caramel-drip'}`}>
         <div className="relative">
-          <h3 className="font-serif text-2xl md:text-3xl font-bold text-white drop-shadow-2xl transition-transform duration-300 group-hover:scale-110" data-testid={`text-category-name-${name.toLowerCase()}`}>
+          <h3 className={`font-serif text-2xl md:text-3xl font-bold transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl ${isNewYear ? 'text-white new-year-category-title' : 'text-white'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
             {name}
           </h3>
-          <div className={`h-1.5 w-20 rounded-full mt-2 ${isNewYear ? 'bg-white' : 'bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400'} transition-all duration-300 ${isNewYear ? 'shadow-lg shadow-white/50' : 'shadow-lg shadow-pink-300/50'} ${isNewYear ? '' : 'gummy-button'}`} style={isNewYear ? undefined : {boxShadow: '0 3px 0 -1px rgba(0,0,0,0.15), 0 4px 6px -1px rgba(0,0,0,0.2)'}} />
+          <div className={`h-1.5 w-20 rounded-full mt-2 transition-all duration-300 ${isNewYear ? 'bg-gradient-to-r from-white via-yellow-300 to-red-400 shadow-lg shadow-red-300/50 new-year-category-line' : `bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400 shadow-lg shadow-pink-300/50 ${!isNewYear && 'gummy-button'}`}`} style={!isNewYear ? {boxShadow: '0 3px 0 -1px rgba(0,0,0,0.15), 0 4px 6px -1px rgba(0,0,0,0.2)'} : undefined} />
         </div>
       </div>
     </Card>

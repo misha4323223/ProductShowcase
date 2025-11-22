@@ -1603,6 +1603,57 @@ html.autumn body {
       inset 0 -2px 12px rgba(220, 38, 38, 0.3);
   }
 
+  /* Новогодний стиль для категорий - красно-белая обводка */
+  .new-year-category-title {
+    text-shadow: 
+      -2px -2px 0 rgba(220, 38, 38, 0.8),
+      2px -2px 0 rgba(220, 38, 38, 0.8),
+      -2px 2px 0 rgba(220, 38, 38, 0.8),
+      2px 2px 0 rgba(220, 38, 38, 0.8),
+      0px -2px 0 rgba(220, 38, 38, 0.5),
+      0px 2px 0 rgba(220, 38, 38, 0.5),
+      -2px 0px 0 rgba(220, 38, 38, 0.5),
+      2px 0px 0 rgba(220, 38, 38, 0.5);
+  }
+
+  /* Новогодняя линия под названием категории */
+  .new-year-category-line {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(220, 38, 38, 0.6), 0 0 10px rgba(255, 193, 7, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(220, 38, 38, 0.8), 0 0 20px rgba(255, 193, 7, 0.5);
+    }
+  }
+
+  /* Новогодняя карточка товара */
+  .new-year-product-card {
+    border-color: rgba(220, 38, 38, 0.3) !important;
+  }
+
+  /* Новогодний бейджик скидки */
+  .new-year-badge {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 235, 59, 0.8));
+    box-shadow: 0 0 12px rgba(255, 193, 7, 0.6);
+    animation: rotate-badge 3s linear infinite;
+  }
+
+  @keyframes rotate-badge {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.05);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+
   /* Летящая иконка в корзину */
   @keyframes fly-to-cart {
     0% {
