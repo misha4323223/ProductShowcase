@@ -1,0 +1,88 @@
+
+
+22 нояб. 13:33:36.662
+REPORT RequestID: 1f5e54c6-59f5-4aed-bf89-50848f5720db Duration: 295.806 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 102 MB Queuing Duration: 0.031 ms Function Init Duration: 180.198 ms CPU Usage: 17.285 %
+
+22 нояб. 13:33:36.662
+END RequestID: 1f5e54c6-59f5-4aed-bf89-50848f5720db
+
+22 нояб. 13:33:36.658
+}
+
+22 нояб. 13:33:36.658
+__type: 'ru.yandex.docapi.v20120810#ResourceNotFoundException'
+
+22 нояб. 13:33:36.658
+},
+
+22 нояб. 13:33:36.658
+totalRetryDelay: 0
+
+22 нояб. 13:33:36.658
+attempts: 1,
+
+22 нояб. 13:33:36.658
+cfId: undefined,
+
+22 нояб. 13:33:36.658
+extendedRequestId: undefined,
+
+22 нояб. 13:33:36.658
+requestId: 'dac6bb61-a069-4421-bc79-3274e77610b5',
+
+22 нояб. 13:33:36.658
+httpStatusCode: 400,
+
+22 нояб. 13:33:36.658
+'$metadata': {
+
+22 нояб. 13:33:36.658
+'$retryable': undefined,
+
+22 нояб. 13:33:36.658
+'$fault': 'client',
+
+22 нояб. 13:33:36.658
+at async exports.handler [as handlerFn] (/function/code/index.js:44:5) {
+
+22 нояб. 13:33:36.658
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+22 нояб. 13:33:36.658
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+22 нояб. 13:33:36.658
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+22 нояб. 13:33:36.658
+at async /function/code/node_modules/@aws-sdk/lib-dynamodb/dist-cjs/index.js:107:34
+
+22 нояб. 13:33:36.658
+at async /function/code/node_modules/@smithy/core/dist-cjs/submodules/schema/index.js:26:24
+
+22 нояб. 13:33:36.658
+at async AwsJson1_0Protocol.deserializeResponse (/function/code/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:473:13)
+
+22 нояб. 13:33:36.658
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+22 нояб. 13:33:36.658
+at AwsJson1_0Protocol.handleError (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:644:27)
+
+22 нояб. 13:33:36.658
+Error setting site settings: ResourceNotFoundException: Database "" not ready to serve requests
+
+22 нояб. 13:33:36.539
+YDB_SECRET_KEY: SET
+
+22 нояб. 13:33:36.539
+YDB_ACCESS_KEY_ID: SET
+
+22 нояб. 13:33:36.539
+YDB_ENDPOINT: https://docapi.serverless.yandexcloud.net
+
+22 нояб. 13:33:36.539
+Environment variables:
+
+22 нояб. 13:33:36.290
+START RequestID: 1f5e54c6-59f5-4aed-bf89-50848f5720db Version: d4ee0h13ko4rcqka7nvo
