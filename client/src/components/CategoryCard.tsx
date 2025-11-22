@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useMemo, memo } from "react";
 
 interface CategoryCardProps {
   name: string;
@@ -10,13 +11,13 @@ interface CategoryCardProps {
   onClick?: () => void;
 }
 
-export default function CategoryCard({ name, image, webpImage, onClick }: CategoryCardProps) {
+function CategoryCardComponent({ name, image, webpImage, onClick }: CategoryCardProps) {
   const { theme } = useTheme();
-  const isNewYear = theme === 'new-year';
+  const isNewYear = useMemo(() => theme === 'new-year', [theme]);
   
   return (
     <Card 
-      className={`group relative overflow-visible cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl ${isNewYear ? 'hover:shadow-white/50' : 'hover:shadow-pink-300/50'} transition-all duration-300 hover:-translate-y-3 ${isNewYear ? '' : 'candy-wrapper metallic-wrapper'} jelly-wobble`}
+      className={`group relative overflow-visible cursor-pointer border-0 rounded-3xl shadow-xl hover:shadow-2xl ${isNewYear ? 'hover:shadow-white/50 category-card-new-year' : 'hover:shadow-pink-300/50'} transition-all duration-300 hover:-translate-y-3 ${isNewYear ? '' : 'candy-wrapper metallic-wrapper'} jelly-wobble`}
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
@@ -47,3 +48,5 @@ export default function CategoryCard({ name, image, webpImage, onClick }: Catego
     </Card>
   );
 }
+
+export default memo(CategoryCardComponent);

@@ -1531,6 +1531,49 @@ html.autumn body {
     100% { transform: translateY(500px) translateX(-100px); opacity: 0; }
   }
 
+  /* Снег только на Card для новогодней темы */
+  .category-card-new-year::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    background: 
+      radial-gradient(1.5px 1.5px at 10% 20%, white, transparent),
+      radial-gradient(1px 1px at 80% 80%, white, transparent),
+      radial-gradient(2px 2px at 50% 50%, white, transparent),
+      radial-gradient(1px 1px at 30% 60%, white, transparent),
+      radial-gradient(1.5px 1.5px at 90% 10%, white, transparent),
+      radial-gradient(1px 1px at 20% 90%, white, transparent),
+      radial-gradient(2px 2px at 70% 30%, white, transparent),
+      radial-gradient(1px 1px at 40% 70%, white, transparent);
+    background-size: 100% 600%, 80% 500%, 120% 550%, 90% 480%, 100% 520%, 95% 600%, 110% 530%, 100% 490%;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+    animation: snowfall-1 5s linear infinite;
+    border-radius: 1.5rem;
+  }
+
+  .category-card-new-year::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    background: 
+      radial-gradient(1px 1px at 70% 40%, white, transparent),
+      radial-gradient(1.5px 1.5px at 15% 50%, white, transparent),
+      radial-gradient(1px 1px at 85% 30%, white, transparent),
+      radial-gradient(2px 2px at 60% 80%, white, transparent),
+      radial-gradient(1px 1px at 25% 20%, white, transparent),
+      radial-gradient(1.5px 1.5px at 75% 60%, white, transparent),
+      radial-gradient(1px 1px at 35% 90%, white, transparent),
+      radial-gradient(1px 1px at 55% 10%, white, transparent);
+    background-size: 100% 600%, 80% 500%, 120% 550%, 90% 480%, 100% 520%, 95% 600%, 110% 530%, 100% 490%;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+    animation: snowfall-2 6s linear infinite 0.3s;
+    border-radius: 1.5rem;
+  }
+
   /* Новогодний candy-стиль оверлей для категорий */
   .new-year-candy-overlay {
     background: linear-gradient(
