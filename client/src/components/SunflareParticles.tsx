@@ -21,8 +21,8 @@ export default function SunflareParticles() {
         id: i,
         top: Math.random() * 80,
         left: Math.random() * 90,
-        delay: Math.random() * 12,
-        duration: 4 + Math.random() * 3,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 1.5,
         width: 8 + Math.random() * 20,
         height: 50 + Math.random() * 80,
       }));
