@@ -191,8 +191,8 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   return (
     <>
       <Dialog open={open && !showPrizeModal} onOpenChange={onClose}>
-        <DialogContent className="max-w-3xl p-4 max-h-[90vh] overflow-y-auto" data-testid="dialog-wheel">
-          <DialogHeader className="sticky top-0 bg-background z-10 pb-2">
+        <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] p-0 gap-0 flex flex-col" data-testid="dialog-wheel">
+          <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b flex-shrink-0">
             <DialogTitle className="text-xl font-bold text-center flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
               Рулетка Желаний
@@ -200,7 +200,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="py-2 pb-4">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Левая колонка - Инструкция */}
               <div className="space-y-3">
