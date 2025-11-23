@@ -405,7 +405,6 @@ html.sakura body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
-  filter: contrast(1.05) brightness(1.02);
   width: 100%;
   min-height: 100vh;
 
@@ -528,7 +527,6 @@ html.new-year body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
-  filter: contrast(1.05) brightness(1.02);
   width: 100%;
   min-height: 100vh;
 
@@ -650,7 +648,6 @@ html.spring body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
-  filter: contrast(1.05) brightness(1.02);
   width: 100%;
   min-height: 100vh;
 
@@ -732,7 +729,6 @@ html.autumn body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
-  filter: contrast(1.05) brightness(1.02);
   width: 100%;
   min-height: 100vh;
 
