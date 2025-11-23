@@ -108,14 +108,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
         document.body.style.backgroundSize = 'cover';
         
-        // На мобильных устройствах позиционируем фон от верха для портретных изображений
-        if (isMobile) {
-          document.body.style.backgroundPosition = 'top center';
-        } else {
-          document.body.style.backgroundPosition = 'center center';
-        }
-        
+        // На мобильных устройствах позиционируем от верха, на десктопе - по центру
+        document.body.style.backgroundPosition = isMobile ? 'top center' : 'center center';
         document.body.style.backgroundRepeat = 'no-repeat';
+        
         console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile' : 'Desktop', 'URL:', imageUrl);
       }
     }

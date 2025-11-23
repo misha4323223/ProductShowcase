@@ -18,10 +18,11 @@ html, body {
   .hero-slide-image {
     object-fit: cover !important;
   }
-}
-
-/* Новогодняя тема - портретный фон для мобильных */
-@media (max-width: 1024px) {
+  
+  /* Для всех тем на мобильных используем cover с позицией от верха */
+  html.sakura body,
+  html.spring body,
+  html.autumn body,
   html.new-year body {
     background-size: cover !important;
     background-position: top center !important;
