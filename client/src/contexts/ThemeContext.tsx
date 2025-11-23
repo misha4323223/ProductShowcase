@@ -230,23 +230,29 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.add(theme);
     console.log('🎨 Theme applied:', theme);
 
-    // Clear background for light/dark themes, apply for seasonal themes
+    // Очищаем фон для светлых/тёмных тем, даём CSS animation работать
     if (['light', 'dark'].includes(theme)) {
-      // Очищаем фон для светлых/тёмных тем и устанавливаем правильный цвет
-      const bgColor = theme === 'dark' ? '#0f172a' : '#ffffff';
-      root.style.setProperty('background-image', 'none', 'important');
-      root.style.setProperty('background-color', bgColor, 'important');
+      // Полностью удаляем inline styles чтобы CSS animation/color работали
+      root.style.removeProperty('background-color');
+      root.style.removeProperty('background-image');
+      
+      if (theme === 'light') {
+        // Для светлой темы устанавливаем белый фон через CSS класс
+        root.style.setProperty('background-color', '#ffffff', 'important');
+      }
+      // Для тёмной темы CSS animation сам определяет цвет - ничего не устанавливаем
+      
       document.body.style.setProperty('background-image', 'none', 'important');
-      document.body.style.setProperty('background-color', bgColor, 'important');
+      document.body.style.setProperty('background-color', 'transparent', 'important');
       const rootElement = document.getElementById('root');
       if (rootElement) {
         rootElement.classList.remove('ios-background');
         rootElement.style.setProperty('background-image', 'none', 'important');
         rootElement.style.setProperty('background-color', 'transparent', 'important');
       }
-      console.log('🧹 Background cleared and color set for theme:', theme);
+      console.log('✅ Фон очищен для темы:', theme);
     } else if (backgroundSettings && Object.keys(backgroundSettings).length > 0) {
-      // Apply background для сезонных тем
+      // Применяем фон для сезонных тем
       applyBackgroundToTheme(theme, backgroundSettings);
     }
 
