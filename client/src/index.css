@@ -57,61 +57,43 @@ html.light body {
   background-color: white;
 }
 
-/* AUTUMN LEAVES ANIMATION - GLOBAL */
-html.autumn::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  background-image: 
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 Q30,30 25,50 Q20,70 35,85 Q50,95 50,95 Q50,95 65,85 Q80,70 75,50 Q70,30 50,10' fill='%23d97706'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 Q30,30 25,50 Q20,70 35,85 Q50,95 50,95 Q50,95 65,85 Q80,70 75,50 Q70,30 50,10' fill='%23dc2626'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 Q30,30 25,50 Q20,70 35,85 Q50,95 50,95 Q50,95 65,85 Q80,70 75,50 Q70,30 50,10' fill='%23f59e0b'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 Q30,30 25,50 Q20,70 35,85 Q50,95 50,95 Q50,95 65,85 Q80,70 75,50 Q70,30 50,10' fill='%23ea580c'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 Q30,30 25,50 Q20,70 35,85 Q50,95 50,95 Q50,95 65,85 Q80,70 75,50 Q70,30 50,10' fill='%23991b1b'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,10 Q30,30 25,50 Q20,70 35,85 Q50,95 50,95 Q50,95 65,85 Q80,70 75,50 Q70,30 50,10' fill='%23b45309'/%3E%3C/svg%3E");
-  background-size: 
-    150px 150px,
-    120px 120px,
-    110px 110px,
-    130px 130px,
-    140px 140px,
-    95px 95px;
-  background-position: 
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0;
-  background-repeat: repeat;
-  animation: global-autumn-leaves 20s linear infinite;
-  will-change: background-position;
-}
-
-@keyframes global-autumn-leaves {
+/* AUTUMN LEAVES ANIMATION */
+@keyframes autumn-leaf-fall {
   0% {
-    background-position: 
-      0 0,
-      0 0,
-      0 0,
-      0 0,
-      0 0,
-      0 0;
+    transform: translateY(-100px) translateX(0) rotateZ(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(30vh) translateX(var(--leaf-swing)) rotateZ(90deg);
+  }
+  50% {
+    transform: translateY(60vh) translateX(calc(var(--leaf-swing) * -1)) rotateZ(180deg);
+  }
+  75% {
+    transform: translateY(90vh) translateX(var(--leaf-swing)) rotateZ(270deg);
   }
   100% {
-    background-position: 
-      0 2000px,
-      0 2000px,
-      0 2000px,
-      0 2000px,
-      0 2000px,
-      0 2000px;
+    transform: translateY(150vh) translateX(0) rotateZ(360deg);
+    opacity: 0;
   }
+}
+
+.autumn-rain-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.autumn-leaf {
+  position: absolute;
+  animation: autumn-leaf-fall linear infinite;
+  top: -100px;
+  will-change: transform;
 }
 
 /* LIGHT MODE */

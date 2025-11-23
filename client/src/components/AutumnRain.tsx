@@ -12,12 +12,12 @@ interface Leaf {
 }
 
 const LEAF_COLORS = [
-  '#d97706', // amber-600
-  '#dc2626', // red-600
-  '#f59e0b', // amber-500
-  '#ea580c', // orange-600
-  '#991b1b', // red-900
-  '#b45309', // amber-700
+  '#d97706',
+  '#dc2626',
+  '#f59e0b',
+  '#ea580c',
+  '#991b1b',
+  '#b45309',
 ];
 
 export default function AutumnRain() {
