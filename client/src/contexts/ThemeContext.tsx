@@ -105,24 +105,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
       
       if (imageUrl) {
-        document.body.style.backgroundImage = `url('${imageUrl}')`;
-        document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundRepeat = 'no-repeat';
-        document.body.style.width = '100vw';
-        document.body.style.minHeight = '100vh';
-        document.body.style.margin = '0';
-        document.body.style.padding = '0';
+        // Установляем фон на html (он никогда не растягивается)
+        const html = document.documentElement;
+        html.style.backgroundImage = `url('${imageUrl}')`;
+        html.style.backgroundSize = 'cover';
+        html.style.backgroundRepeat = 'no-repeat';
+        html.style.backgroundPosition = isMobile ? 'top center' : 'center center';
+        html.style.backgroundAttachment = 'fixed';
+        html.style.width = '100vw';
+        html.style.height = '100vh';
         
-        // На мобильных: scroll + позиция от верха; на десктопе: fixed + центр
-        if (isMobile) {
-          document.body.style.backgroundAttachment = 'scroll';
-          document.body.style.backgroundPosition = 'top center';
-        } else {
-          document.body.style.backgroundAttachment = 'fixed';
-          document.body.style.backgroundPosition = 'center center';
-        }
+        // Убеждаемся, что body не перекрывает фон
+        document.body.style.backgroundColor = 'transparent';
+        document.body.style.backgroundImage = 'none';
         
-        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (cover)' : 'Desktop (cover)', 'URL:', imageUrl);
+        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile' : 'Desktop', 'URL:', imageUrl);
       }
     }
   };

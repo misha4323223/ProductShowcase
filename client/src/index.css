@@ -684,30 +684,16 @@ html.autumn body {
   html {
     font-size: 16px;
     height: 100%;
+    overflow: hidden;
   }
 
   body {
-    height: 100%;
     width: 100%;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-  }
-
-  @supports (height: 100dvh) {
-    body {
-      min-height: 100dvh;
-    }
-  }
-
-  @supports not (height: 100dvh) {
-    body {
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-    }
-  }
-
-  body {
+    overflow-y: auto;
     @apply font-sans antialiased bg-background text-foreground;
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
