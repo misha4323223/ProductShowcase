@@ -77,6 +77,31 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
   overflow-y: auto !important;
 }
 
+/* HEADER - Theme-specific colors matching wave colors */
+header.header-themed {
+  background-color: white;
+}
+
+/* Sakura theme - Pink/Rose header */
+html.sakura header.header-themed {
+  background: linear-gradient(135deg, rgba(244, 114, 182, 0.95), rgba(236, 72, 153, 0.95));
+}
+
+/* New Year theme - Red header */
+html.new-year header.header-themed {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.95), rgba(185, 28, 28, 0.95));
+}
+
+/* Spring theme - Green header */
+html.spring header.header-themed {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.95), rgba(22, 163, 74, 0.95));
+}
+
+/* Autumn theme - Orange/Brown header */
+html.autumn header.header-themed {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.95), rgba(217, 119, 6, 0.95));
+}
+
 html.light body {
   background-color: white;
 }

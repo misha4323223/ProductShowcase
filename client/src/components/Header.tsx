@@ -142,7 +142,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b sticky-candy shadow-lg">
+    <header className="sticky top-0 z-50 w-full border-b sticky-candy shadow-lg header-themed">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="flex h-16 items-center justify-between gap-1.5 pt-2">
           <button 
@@ -159,11 +159,11 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
           </button>
 
           <Link href="/" className="logo-container-flex font-serif text-base md:text-xl lg:text-2xl font-bold cursor-pointer" data-testid="link-logo">
-            <span className="logo-switching text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-500 to-accent drop-shadow-lg text-center leading-tight">
+            <span className="logo-switching text-white drop-shadow-lg text-center leading-tight header-text">
               <span className="block md:inline">Сладкие</span>
               <span className="block md:inline md:ml-1.5">Наслаждения</span>
             </span>
-            <span className="logo-switching logo-alt text-transparent bg-clip-text bg-gradient-to-r from-primary via-pink-500 to-accent drop-shadow-lg text-center leading-tight">
+            <span className="logo-switching logo-alt text-white drop-shadow-lg text-center leading-tight header-text">
               <span className="block md:inline">Sweet</span>
               <span className="block md:inline md:ml-1.5">Delights</span>
             </span>
