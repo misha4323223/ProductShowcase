@@ -53,7 +53,7 @@ export default function Home() {
   const [cartOpen, setCartOpen] = useState(false);
   const [wheelOpen, setWheelOpen] = useState(false);
   const { toast } = useToast();
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
   const { products, isLoading: productsLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
@@ -310,7 +310,7 @@ export default function Home() {
                     webpImage={category.webpImage}
                     onClick={() => setLocation(`/category/${category.slug}`)}
                     theme={theme}
-                    isDarkMode={theme === 'dark'}
+                    isDarkMode={isDarkMode}
                   />
                 ))}
               </div>

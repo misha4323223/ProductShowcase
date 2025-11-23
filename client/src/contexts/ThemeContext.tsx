@@ -11,6 +11,7 @@ interface ThemeContextType {
   setPreferredTheme: (theme: PreferredTheme) => void;
   isLoading: boolean;
   backgroundSettings: BackgroundSettings;
+  isDarkMode: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -35,6 +36,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const [theme, setThemeState] = useState<Theme>(getInitialTheme());
   const [preferredThemeState, setPreferredThemeState] = useState<PreferredTheme>('sakura');
+  const [isDarkMode, setIsDarkMode] = useState(false);
   // isLoading = false потому что тема и фон уже предзагружены в index.html
   const [isLoading, setIsLoading] = useState(false);
   const [backgroundSettings, setBackgroundSettings] = useState<BackgroundSettings>({
@@ -105,6 +107,26 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     
     // Загружаем фоны один раз при монтировании, БЕЗ polling
     loadBackgroundSettings();
+  }, []);
+
+  // Отслеживаем светлый/тёмный режим независимо от сезонной темы
+  useEffect(() => {
+    const updateDarkMode = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setIsDarkMode(isDark);
+    };
+
+    // Инициализируем при монтировании
+    updateDarkMode();
+
+    // Слушаем изменения класса dark на html
+    const observer = new MutationObserver(updateDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const applyBackgroundToTheme = (currentTheme: Theme, settings: BackgroundSettings) => {
@@ -260,7 +282,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, preferredTheme: preferredThemeState, setPreferredTheme: setPreferredThemeFunc, isLoading, backgroundSettings }}>
+    <ThemeContext.Provider value={{ theme, setTheme, preferredTheme: preferredThemeState, setPreferredTheme: setPreferredThemeFunc, isLoading, backgroundSettings, isDarkMode }}>
       {children}
     </ThemeContext.Provider>
   );
