@@ -31,11 +31,11 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
-        <div className="p-3 text-center">
-          <h3 className="font-serif text-base md:text-lg font-bold line-clamp-2 transition-colors group-hover:text-primary" data-testid={`text-category-name-${name.toLowerCase()}`}>
-            {isNewYear && <Sparkles className="inline-block w-4 h-4 mr-1 text-yellow-400 animate-pulse" />}
+        <div className={`p-4 text-center ${isNewYear ? 'bg-gradient-to-r from-red-600 to-red-700' : ''}`}>
+          <h3 className={`font-serif text-xl md:text-2xl font-bold line-clamp-2 transition-colors ${isNewYear ? 'text-white' : 'text-red-600 dark:text-red-500 group-hover:text-red-700 dark:group-hover:text-red-400'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
+            {isNewYear && <Sparkles className="inline-block w-5 h-5 mr-1 text-yellow-400 animate-pulse" />}
             {name}
-            {isNewYear && <Sparkles className="inline-block w-4 h-4 ml-1 text-yellow-400 animate-pulse" />}
+            {isNewYear && <Sparkles className="inline-block w-5 h-5 ml-1 text-yellow-400 animate-pulse" />}
           </h3>
         </div>
       </Card>
