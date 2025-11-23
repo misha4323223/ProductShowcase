@@ -24,9 +24,10 @@ html, body {
 @media (max-width: 1024px) {
   html.new-year body {
     background-size: cover !important;
-    background-position: center center !important;
+    background-position: top center !important;
     background-attachment: scroll !important;
     background-repeat: no-repeat !important;
+    min-height: 100vh !important;
   }
 }
 

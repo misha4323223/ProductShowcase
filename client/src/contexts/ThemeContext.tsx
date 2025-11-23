@@ -107,7 +107,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         document.body.style.backgroundImage = `url('${imageUrl}')`;
         document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
         document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundPosition = 'center center';
+        
+        // На мобильных устройствах позиционируем фон от верха для портретных изображений
+        if (isMobile) {
+          document.body.style.backgroundPosition = 'top center';
+        } else {
+          document.body.style.backgroundPosition = 'center center';
+        }
+        
         document.body.style.backgroundRepeat = 'no-repeat';
         console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile' : 'Desktop', 'URL:', imageUrl);
       }
@@ -125,6 +132,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (backgroundSettings && Object.keys(backgroundSettings).length > 0) {
       applyBackgroundToTheme(theme, backgroundSettings);
     }
+
+    // Обработка изменения размера окна (поворот устройства)
+    const handleResize = () => {
+      if (backgroundSettings && Object.keys(backgroundSettings).length > 0) {
+        applyBackgroundToTheme(theme, backgroundSettings);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [theme, backgroundSettings]);
 
   const setTheme = async (newTheme: Theme) => {
