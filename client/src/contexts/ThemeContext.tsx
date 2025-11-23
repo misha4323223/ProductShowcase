@@ -109,16 +109,26 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         document.body.style.setProperty('background-repeat', 'no-repeat', 'important');
         document.body.style.setProperty('background-color', 'transparent', 'important');
         document.body.style.setProperty('width', '100vw', 'important');
-        document.body.style.setProperty('min-height', '100vh', 'important');
         document.body.style.setProperty('margin', '0', 'important');
         document.body.style.setProperty('padding', '0', 'important');
         
-        // Используем cover везде для отображения фона
-        document.body.style.setProperty('background-size', 'cover', 'important');
-        document.body.style.setProperty('background-attachment', isMobile ? 'scroll' : 'fixed', 'important');
-        document.body.style.setProperty('background-position', 'center center', 'important');
+        if (isMobile) {
+          // Мобильная версия: contain для сохранения пропорций БЕЗ растяжки
+          document.body.style.setProperty('background-size', 'contain', 'important');
+          document.body.style.setProperty('background-attachment', 'scroll', 'important');
+          document.body.style.setProperty('background-position', 'top center', 'important');
+          document.body.style.removeProperty('height');
+          document.body.style.removeProperty('min-height');
+        } else {
+          // Десктопная версия: cover для заполнения экрана
+          document.body.style.setProperty('background-size', 'cover', 'important');
+          document.body.style.setProperty('background-attachment', 'fixed', 'important');
+          document.body.style.setProperty('background-position', 'center center', 'important');
+          document.body.style.setProperty('height', 'auto', 'important');
+          document.body.style.setProperty('min-height', '100vh', 'important');
+        }
         
-        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (cover)' : 'Desktop (cover)', 'URL:', imageUrl);
+        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (contain)' : 'Desktop (cover)', 'URL:', imageUrl);
       }
     }
   };

@@ -690,6 +690,7 @@ html.autumn body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    height: auto;
   }
 
   @supports (height: 100dvh) {
