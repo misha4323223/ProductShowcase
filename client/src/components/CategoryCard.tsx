@@ -20,8 +20,8 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
       className="group cursor-pointer"
       data-testid={`card-category-${name.toLowerCase()}`}
     >
-      <Card className="overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow border-0">
-        <div className="aspect-[4/3] overflow-hidden bg-muted">
+      <Card className="overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow border-0 bg-white dark:bg-slate-900">
+        <div className="aspect-[4/3] overflow-hidden bg-white dark:bg-slate-800">
           <OptimizedImage
             src={image}
             webpSrc={webpImage}
