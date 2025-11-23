@@ -112,20 +112,32 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         document.body.style.setProperty('margin', '0', 'important');
         document.body.style.setProperty('padding', '0', 'important');
         
-        // Используем cover везде для отображения
-        document.body.style.setProperty('background-size', 'cover', 'important');
-        document.body.style.setProperty('background-attachment', isMobile ? 'scroll' : 'fixed', 'important');
-        document.body.style.setProperty('background-position', 'center center', 'important');
-        document.body.style.setProperty('height', 'auto', 'important');
-        document.body.style.setProperty('min-height', '100vh', 'important');
+        // Используем contain на мобилях, cover на десктопе
+        if (isMobile) {
+          document.body.style.setProperty('background-size', 'contain', 'important');
+          document.body.style.setProperty('background-clip', 'unset', 'important');
+          document.body.style.setProperty('background-origin', 'unset', 'important');
+          document.body.style.setProperty('background-attachment', 'scroll', 'important');
+          document.body.style.setProperty('background-position', 'top center', 'important');
+          document.body.style.setProperty('height', 'auto', 'important');
+          document.body.style.setProperty('min-height', 'auto', 'important');
+          document.body.style.setProperty('overflow-y', 'auto', 'important');
+        } else {
+          document.body.style.setProperty('background-size', 'cover', 'important');
+          document.body.style.setProperty('background-attachment', 'fixed', 'important');
+          document.body.style.setProperty('background-position', 'center center', 'important');
+          document.body.style.setProperty('height', 'auto', 'important');
+          document.body.style.setProperty('min-height', '100vh', 'important');
+        }
         
         // Убедимся что root элемент не перекрывает фон
         const rootElement = document.getElementById('root');
         if (rootElement && currentTheme === 'new-year') {
           (rootElement as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
+          (rootElement as HTMLElement).style.setProperty('background-image', 'none', 'important');
         }
         
-        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (cover)' : 'Desktop (cover)', 'URL:', imageUrl);
+        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (contain)' : 'Desktop (cover)', 'URL:', imageUrl);
       }
     }
   };

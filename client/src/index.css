@@ -706,6 +706,13 @@ html.autumn body {
     }
   }
 
+  /* На мобилях НЕ ограничиваем высоту чтобы contain работал правильно */
+  @media only screen and (max-width: 1024px) {
+    body {
+      min-height: auto !important;
+    }
+  }
+
   body {
     @apply font-sans antialiased text-foreground;
     font-weight: 500;
