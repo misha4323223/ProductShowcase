@@ -56,11 +56,11 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
 /* Dialog позиционирование для всех тем - VIEWPORT CENTERED */
 [data-radix-dialog-content] {
   position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
+  top: 50vh !important;
+  left: 50vw !important;
   right: auto !important;
   bottom: auto !important;
-  transform: translate(-50%, -50%) !important;
+  translate: -50% -50% !important;
   z-index: 99999 !important;
   overflow-y: auto !important;
 }
