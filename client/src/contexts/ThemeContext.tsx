@@ -44,27 +44,46 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     autumn: { image: '', webpImage: '', title: '' },
   });
 
-  // Загружаем только preferred theme с сервера для синхронизации
-  // НЕ текущую тему - текущая тема хранится в localStorage и независима для каждого браузера
+  // Загружаем данные с сервера для синхронизации сезонных тем (глобальные)
+  // light/dark темы НЕ синхронизируются (локальные для каждого браузера)
   useEffect(() => {
-    async function syncPreferredTheme() {
+    async function syncTheme() {
       try {
-        // Load preferred theme (это глобальное предпочтение, но не влияет на текущую тему)
+        // Load preferred theme
         const serverPreferred = await getPreferredTheme();
         const validPreferred = ['sakura', 'new-year', 'spring', 'autumn'].includes(serverPreferred)
           ? serverPreferred as PreferredTheme
           : 'sakura';
         
         setPreferredThemeState(prev => prev !== validPreferred ? validPreferred : prev);
+
+        // Load current theme - но ТОЛЬКО если это сезонная тема (не light/dark)
+        const serverTheme = await getCurrentTheme();
+        const validTheme = ['sakura', 'new-year', 'spring', 'autumn'].includes(serverTheme)
+          ? serverTheme as Theme 
+          : validPreferred;
+        
+        // Синхронизируем только сезонные темы (свет/темнота остаются локальными)
+        setThemeState(prev => {
+          // Если текущая тема - light/dark, не переключаем на глобальную
+          if (['light', 'dark'].includes(prev)) {
+            return prev;
+          }
+          // Иначе синхронизируем сезонную тему
+          return prev !== validTheme ? validTheme : prev;
+        });
       } catch (error) {
-        console.error('Failed to sync preferred theme from server:', error);
+        console.error('Failed to sync theme from server:', error);
       }
     }
     
-    // Загружаем preferred theme один раз при монтировании
-    syncPreferredTheme();
+    // Первый синк сразу, потом polling каждые 3 сек
+    syncTheme();
+    const pollInterval = setInterval(syncTheme, 3000);
     
-    // Не используем polling для синхронизации текущей темы (она независима для каждого браузера)
+    return () => {
+      clearInterval(pollInterval);
+    };
   }, []);
 
   // Загружаем фоны один раз при монтировании (они уже применены в index.html)
@@ -209,11 +228,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = async (newTheme: Theme) => {
     try {
-      // Save to localStorage (для независимости этого браузера)
-      localStorage.setItem('user-theme', newTheme);
-      // Обновляем локальное состояние
-      setThemeState(newTheme);
-      console.log('✅ Theme saved to localStorage:', newTheme);
+      // Light/dark темы сохраняем в localStorage (локальные)
+      if (['light', 'dark'].includes(newTheme)) {
+        localStorage.setItem('user-theme', newTheme);
+        setThemeState(newTheme);
+        console.log('✅ Theme saved to localStorage (local):', newTheme);
+      } else {
+        // Сезонные темы сохраняем на сервер (глобальные)
+        await setCurrentTheme(newTheme);
+        setThemeState(newTheme);
+        console.log('✅ Theme saved to server (global):', newTheme);
+      }
     } catch (error) {
       console.error('Failed to save theme:', error);
     }
@@ -221,12 +246,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setPreferredThemeFunc = async (newPreferred: PreferredTheme) => {
     try {
-      // Save to YDB first (это глобальное предпочтение)
+      // Save to server first (это глобальное предпочтение)
       await setPreferredTheme(newPreferred);
       // Then update local state
       setPreferredThemeState(newPreferred);
-      // Also set current theme to the preferred theme и сохраняем в localStorage (для этого браузера)
-      localStorage.setItem('user-theme', newPreferred);
+      // Also set current theme to the preferred theme (глобальная синхронизация)
+      await setCurrentTheme(newPreferred);
       setThemeState(newPreferred);
       console.log('✅ Preferred theme saved:', newPreferred);
     } catch (error) {
