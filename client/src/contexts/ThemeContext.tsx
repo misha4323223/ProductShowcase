@@ -115,11 +115,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
         
         if (isIOS && isMobile) {
-          // Специально для iPhone: contain + scroll (fixed вызывает растяжение на iOS Safari)
-          htmlElement.style.setProperty('background-size', 'contain', 'important');
+          // Специально для iPhone: cover + scroll (fixed вызывает растяжение на iOS Safari)
+          htmlElement.style.setProperty('background-size', 'cover', 'important');
           htmlElement.style.setProperty('background-attachment', 'scroll', 'important');
-          htmlElement.style.setProperty('background-position', 'top center', 'important');
-          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (contain+scroll)', 'URL:', imageUrl);
+          htmlElement.style.setProperty('background-position', 'center center', 'important');
+          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (cover+scroll)', 'URL:', imageUrl);
         } else {
           // Для Android и десктопа: cover + fixed (старый код)
           htmlElement.style.setProperty('background-size', 'cover', 'important');
