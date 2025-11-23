@@ -279,11 +279,6 @@ html.sakura {
 }
 
 html.sakura body {
-  background-image: url('/sakura-bg.png');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
   background-color: transparent;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -529,11 +524,6 @@ html.spring {
 }
 
 html.spring body {
-  background-image: url('/spring-bg.png');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
   background-color: transparent;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -616,11 +606,6 @@ html.autumn {
 }
 
 html.autumn body {
-  background-image: url('/autumn-bg.png');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
   background-color: transparent;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -715,20 +700,10 @@ html.autumn body {
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Mobile: use optimized vertical background images */
-  @media only screen and (max-width: 768px) {
-    html.new-year body {
-      background-image: url('/new-year-bg-mobile.png');
-      background-size: cover;
-      background-position: center center;
-    }
-
-    html.sakura body,
-    html.spring body,
-    html.autumn body {
-      background-size: cover;
-      background-position: center center;
-    }
+  /* Mobile: JavaScript контролирует все background свойства через inline styles */
+  @media only screen and (max-width: 1024px) {
+    /* Rules removed - JavaScript handles background properties */
+  }
 
     /* Remove category card effects on mobile (keep snowfall) */
     .new-year-category-card::before {
