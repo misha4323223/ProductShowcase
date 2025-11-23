@@ -106,39 +106,28 @@ html.light body {
   background-color: white;
 }
 
+@keyframes chameleon-shift {
+  0% {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2463 25%, #0f172a 50%, #1a2463 75%, #0f172a 100%);
+  }
+  25% {
+    background: linear-gradient(135deg, #1a2463 0%, #1e3a5f 25%, #1a2463 50%, #1e3a5f 75%, #1a2463 100%);
+  }
+  50% {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 25%, #1e3a5f 50%, #2d5a7b 75%, #1e3a5f 100%);
+  }
+  75% {
+    background: linear-gradient(135deg, #1a2463 0%, #1e3a5f 25%, #1a2463 50%, #1e3a5f 75%, #1a2463 100%);
+  }
+  100% {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2463 25%, #0f172a 50%, #1a2463 75%, #0f172a 100%);
+  }
+}
+
 html.dark {
-  background-color: #0f172a;
-  background-image: 
-    radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(255, 255, 255, 0.4)),
-    radial-gradient(1px 1px at 60px 70px, #ffffff, rgba(255, 255, 255, 0.5)),
-    radial-gradient(0.5px 0.5px at 50px 50px, #ffffff, rgba(255, 255, 255, 0.3)),
-    radial-gradient(1px 1px at 130px 80px, #ffffff, rgba(255, 255, 255, 0.4)),
-    radial-gradient(1.5px 1.5px at 90px 10px, #ffffff, rgba(255, 255, 255, 0.5)),
-    radial-gradient(0.5px 0.5px at 30px 60px, #ffffff, rgba(255, 255, 255, 0.3)),
-    radial-gradient(1px 1px at 120px 40px, #ffffff, rgba(255, 255, 255, 0.4)),
-    radial-gradient(1.5px 1.5px at 10px 90px, #ffffff, rgba(255, 255, 255, 0.5)),
-    radial-gradient(0.5px 0.5px at 100px 100px, #ffffff, rgba(255, 255, 255, 0.3));
-  background-size: 
-    150px 200px,
-    200px 300px,
-    100px 150px,
-    180px 250px,
-    160px 220px,
-    120px 180px,
-    140px 200px,
-    110px 160px,
-    130px 190px;
-  background-position: 
-    0 0,
-    50px 60px,
-    20px 30px,
-    0 50px,
-    40px 20px,
-    10px 40px,
-    60px 10px,
-    30px 70px,
-    70px 40px;
-  background-repeat: repeat;
+  background: linear-gradient(135deg, #0f172a 0%, #1a2463 25%, #0f172a 50%, #1a2463 75%, #0f172a 100%);
+  animation: chameleon-shift 8s ease-in-out infinite;
+  background-size: 400% 400%;
   background-attachment: fixed;
 }
 
