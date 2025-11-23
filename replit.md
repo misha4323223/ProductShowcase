@@ -8,12 +8,44 @@ Preferred communication style: Simple, everyday language.
 
 ## Latest Updates (November 23, 2025)
 
+✅ **iOS Safari Background Fix - Nov 23, 2025 (FINAL SOLUTION)**:
+- **Problem**: Background images "stuck at top" on iOS Safari, not scrolling with content. Android worked fine.
+- **Root Cause**: 
+  - iOS detection failed (showed "Android/Mobile" in logs even on iPhone)
+  - Safari on iOS doesn't handle `background-attachment: fixed` properly on `<html>` element
+  - Applying `cover` to flex containers (#root) caused zooming/scaling issues on iOS
+- **Solution Implemented** (Platform-Specific Approach):
+  - **iOS (iPhone/iPad)**:
+    - Robust 4-method detection: `navigator.userAgentData`, userAgent regex, MacIntel+touch, ontouchstart fallback
+    - Background applied via `#root::before` pseudo-element with:
+      - `position: fixed` - stays in viewport
+      - `background-size: cover` - fills screen completely
+      - `background-attachment: scroll` - scrolls with content
+      - `z-index: -1` - behind all content
+    - CSS custom property `--ios-bg-image` set dynamically
+    - Class `ios-background` added to #root element
+  - **Android/Desktop**:
+    - Background applied to `<html>` element with:
+      - `background-size: cover`
+      - `background-attachment: fixed` - parallax effect
+      - `background-position: center center`
+    - Works perfectly as before, no changes needed
+- **Result**: Background images now work flawlessly on BOTH iOS and Android with separate optimized code paths
+- **Files Modified**:
+  - `client/src/index.css`: Added `#root.ios-background::before` CSS rules
+  - `client/src/contexts/ThemeContext.tsx`: Enhanced iOS detection + platform-specific background application logic
+- **Technical Notes**:
+  - Mobile breakpoint: 1024px (matches CSS media queries)
+  - iOS Safari requires different rendering strategy than Android Chrome
+  - Never use `background-attachment: fixed` on iOS - it causes rendering bugs
+  - ::before pseudo-element with fixed positioning is the most reliable solution for iOS
+
 ✅ **Mobile Background Support Added - Nov 23, 2025**:
 - **Feature**: Separate mobile and desktop background images for each theme
 - **Implementation**:
   - Added `mobileImage` and `mobileWebpImage` fields to BackgroundSetting interface
   - Admin panel now allows uploading separate mobile backgrounds (portrait 9:16 recommended)
-  - ThemeContext automatically selects mobile (≤768px) or desktop backgrounds
+  - ThemeContext automatically selects mobile (≤1024px) or desktop backgrounds
   - Storage: Desktop backgrounds in `backgrounds/[theme-name]`, mobile in `backgrounds/[theme-name]/mobile`
   - Fallback: Desktop version used if mobile not uploaded
 - **Files Modified**:
