@@ -57,6 +57,45 @@ html.light body {
   background-color: white;
 }
 
+/* SPRING PETALS ANIMATION */
+@keyframes spring-petal-fall {
+  0% {
+    transform: translateY(-100px) translateX(0) rotateZ(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(30vh) translateX(var(--petal-swing)) rotateZ(90deg);
+  }
+  50% {
+    transform: translateY(60vh) translateX(calc(var(--petal-swing) * -1)) rotateZ(180deg);
+  }
+  75% {
+    transform: translateY(90vh) translateX(var(--petal-swing)) rotateZ(270deg);
+  }
+  100% {
+    transform: translateY(150vh) translateX(0) rotateZ(360deg);
+    opacity: 0;
+  }
+}
+
+.spring-petals-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.spring-petal {
+  position: absolute;
+  animation: spring-petal-fall linear infinite;
+  top: -100px;
+  will-change: transform;
+}
+
 /* AUTUMN LEAVES ANIMATION */
 @keyframes autumn-leaf-fall {
   0% {
