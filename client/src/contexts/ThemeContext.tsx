@@ -91,7 +91,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const themeSetting = settings[themeKey as keyof BackgroundSettings];
     
     if (themeSetting) {
-      const isMobile = window.innerWidth <= 768;
+      // Используем 1024px как breakpoint - совпадает с CSS media queries
+      const isMobile = window.innerWidth <= 1024;
       
       // Выбираем мобильную или десктопную версию
       let imageUrl: string;
