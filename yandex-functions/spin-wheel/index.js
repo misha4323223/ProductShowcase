@@ -183,31 +183,58 @@ exports.handler = async (event) => {
     }
 
     // 6. Сохранить приз в таблицу wheelPrizes
-    await docClient.send(new PutCommand({
-      TableName: "wheelPrizes",
-      Item: prize
-    }));
-
-    // 7. Сохранить в историю wheelHistory
-    const historyRecord = {
-      id: generatePrizeId(),
-      userId,
-      prizeType,
-      prizeValue: getPrizeDisplayName(prizeType),
-      createdAt: new Date().toISOString()
-    };
-
-    // Добавляем детали приза только если они есть
-    if (prize.productName || prize.discountValue) {
-      historyRecord.prizeDetails = {};
-      if (prize.productName) historyRecord.prizeDetails.productName = prize.productName;
-      if (prize.discountValue) historyRecord.prizeDetails.discountAmount = prize.discountValue;
+    try {
+      const prizeItem = {
+        id: prizeId,
+        userId: userId,
+        prizeType: prizeType,
+        promoCode: promoCode,
+        expiresAt: expiresAt,
+        createdAt: new Date().toISOString(),
+        used: false
+      };
+      
+      // Добавляем опциональные поля только если они есть
+      if (prize.discountValue !== undefined) prizeItem.discountValue = prize.discountValue;
+      if (prize.pointsAmount !== undefined) prizeItem.pointsAmount = prize.pointsAmount;
+      if (prize.productId !== undefined) prizeItem.productId = prize.productId;
+      if (prize.productName !== undefined) prizeItem.productName = prize.productName;
+      if (prize.productImage !== undefined) prizeItem.productImage = prize.productImage;
+      if (prize.appliesToAllCart !== undefined) prizeItem.appliesToAllCart = prize.appliesToAllCart;
+      if (prize.cartSnapshot !== undefined) prizeItem.cartSnapshot = prize.cartSnapshot;
+      
+      await docClient.send(new PutCommand({
+        TableName: "wheelPrizes",
+        Item: prizeItem
+      }));
+      console.log('✅ Prize saved to wheelPrizes:', prizeId);
+    } catch (err) {
+      console.warn('⚠️ Warning saving to wheelPrizes:', err.message);
     }
 
-    await docClient.send(new PutCommand({
-      TableName: "wheelHistory",
-      Item: historyRecord
-    }));
+    // 7. Сохранить в историю wheelHistory
+    try {
+      const historyId = generatePrizeId();
+      const historyItem = {
+        id: historyId,
+        userId: userId,
+        prizeType: prizeType,
+        prizeValue: getPrizeDisplayName(prizeType),
+        createdAt: new Date().toISOString()
+      };
+      
+      // Добавляем детали приза только если они есть
+      if (prize.productName !== undefined) historyItem.productName = prize.productName;
+      if (prize.discountValue !== undefined) historyItem.discountAmount = prize.discountValue;
+      
+      await docClient.send(new PutCommand({
+        TableName: "wheelHistory",
+        Item: historyItem
+      }));
+      console.log('✅ Prize saved to wheelHistory:', historyId);
+    } catch (err) {
+      console.warn('⚠️ Warning saving to wheelHistory:', err.message);
+    }
 
     // 8. Обновить счетчики пользователя
     await docClient.send(new UpdateCommand({
