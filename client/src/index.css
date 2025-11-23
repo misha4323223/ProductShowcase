@@ -1738,7 +1738,7 @@ html.autumn body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 100;
     background-image: 
       radial-gradient(2px 2px at 10% 20%, white, transparent),
       radial-gradient(2.5px 2.5px at 40% 60%, rgba(255, 255, 255, 0.9), transparent),
