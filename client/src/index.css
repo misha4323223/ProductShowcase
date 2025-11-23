@@ -57,24 +57,27 @@ html.light body {
   background-color: white;
 }
 
-/* SUNFLARE PARTICLES ANIMATION */
+/* SUNFLARE PARTICLES ANIMATION - Real Sun Reflections */
 @keyframes sunflare-fall {
   0% {
-    transform: translateY(-100px) translateX(0) scale(0.8);
-    opacity: var(--flare-intensity);
+    transform: translateY(-150px) translateX(0) rotateZ(0deg);
+    opacity: 0.3;
+  }
+  15% {
+    opacity: 0.9;
   }
   25% {
-    transform: translateY(30vh) translateX(var(--flare-swing)) scale(1.2);
+    transform: translateY(30vh) translateX(var(--flare-swing)) rotateZ(25deg);
   }
   50% {
-    transform: translateY(60vh) translateX(calc(var(--flare-swing) * -1)) scale(1);
-    opacity: var(--flare-intensity);
+    transform: translateY(60vh) translateX(calc(var(--flare-swing) * -0.8)) rotateZ(-15deg);
+    opacity: 0.8;
   }
   75% {
-    transform: translateY(90vh) translateX(var(--flare-swing)) scale(1.1);
+    transform: translateY(90vh) translateX(var(--flare-swing)) rotateZ(35deg);
   }
   100% {
-    transform: translateY(150vh) translateX(0) scale(0.5);
+    transform: translateY(150vh) translateX(0) rotateZ(0deg);
     opacity: 0;
   }
 }
@@ -93,14 +96,8 @@ html.light body {
 .sunflare {
   position: absolute;
   animation: sunflare-fall linear infinite;
-  top: -100px;
+  top: -150px;
   will-change: transform;
-  width: var(--flare-size);
-  height: var(--flare-size);
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 200, 0.8), rgba(255, 220, 100, 0.6), rgba(255, 200, 0, 0));
-  border-radius: 50%;
-  filter: blur(3px);
-  box-shadow: 0 0 20px rgba(255, 220, 100, 0.6), inset -2px -2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* AUTUMN LEAVES ANIMATION */
