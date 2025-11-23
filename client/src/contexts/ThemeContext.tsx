@@ -105,32 +105,40 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
       
       if (imageUrl) {
-        // Обнаруживаем iOS устройство
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        // Улучшенный iOS detection (platform + touch support)
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         
         if (isIOS && isMobile) {
-          // Для iOS: применяем фон к body вместо html
-          const bodyElement = document.body;
+          // Для iOS: применяем фон к #root (настоящий scrolling container)
+          const rootElement = document.getElementById('root');
           const htmlElement = document.documentElement;
+          const bodyElement = document.body;
           
-          // Очищаем html
+          // Очищаем html и body
           htmlElement.style.setProperty('background-image', 'none', 'important');
           htmlElement.style.setProperty('background-color', 'transparent', 'important');
+          bodyElement.style.setProperty('background-color', 'transparent', 'important');
+          bodyElement.style.setProperty('background-image', 'none', 'important');
           
-          // Применяем фон к body
-          bodyElement.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
-          bodyElement.style.setProperty('background-repeat', 'no-repeat', 'important');
-          bodyElement.style.setProperty('background-size', 'cover', 'important');
-          bodyElement.style.setProperty('-webkit-background-size', 'cover', 'important');
-          bodyElement.style.setProperty('background-attachment', 'scroll', 'important');
-          bodyElement.style.setProperty('-webkit-background-attachment', 'scroll', 'important');
-          bodyElement.style.setProperty('background-position', 'center top', 'important');
-          bodyElement.style.setProperty('-webkit-background-position', 'center top', 'important');
-          bodyElement.style.setProperty('min-height', '100vh', 'important');
-          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (body + cover + scroll)', 'URL:', imageUrl);
+          // Применяем фон к #root (scrolling container)
+          if (rootElement) {
+            (rootElement as HTMLElement).style.setProperty('background-image', `url('${imageUrl}')`, 'important');
+            (rootElement as HTMLElement).style.setProperty('background-repeat', 'no-repeat', 'important');
+            (rootElement as HTMLElement).style.setProperty('background-size', 'cover', 'important');
+            (rootElement as HTMLElement).style.setProperty('-webkit-background-size', 'cover', 'important');
+            (rootElement as HTMLElement).style.setProperty('background-attachment', 'scroll', 'important');
+            (rootElement as HTMLElement).style.setProperty('-webkit-background-attachment', 'scroll', 'important');
+            (rootElement as HTMLElement).style.setProperty('background-position', 'center top', 'important');
+            (rootElement as HTMLElement).style.setProperty('-webkit-background-position', 'center top', 'important');
+            (rootElement as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
+          }
+          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iOS (#root + cover + scroll)', 'URL:', imageUrl);
         } else {
-          // Для Android и десктопа: фон на html элемент (старый код)
+          // Для Android и десктопа: фон на html элемент
           const htmlElement = document.documentElement;
+          const rootElement = document.getElementById('root');
+          
           htmlElement.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
           htmlElement.style.setProperty('background-repeat', 'no-repeat', 'important');
           htmlElement.style.setProperty('background-color', 'transparent', 'important');
@@ -138,18 +146,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
           htmlElement.style.setProperty('background-position', 'center center', 'important');
           
-          // Body прозрачный
+          // Body и root прозрачные
           document.body.style.setProperty('background-color', 'transparent', 'important');
           document.body.style.setProperty('background-image', 'none', 'important');
+          if (rootElement) {
+            (rootElement as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
+            (rootElement as HTMLElement).style.setProperty('background-image', 'none', 'important');
+          }
           
           console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Android/Mobile' : 'Desktop', 'URL:', imageUrl);
-        }
-        
-        // Убедимся что root элемент не перекрывает фон
-        const rootElement = document.getElementById('root');
-        if (rootElement && currentTheme === 'new-year') {
-          (rootElement as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
-          (rootElement as HTMLElement).style.setProperty('background-image', 'none', 'important');
         }
       }
     }
