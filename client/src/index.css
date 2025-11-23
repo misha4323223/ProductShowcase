@@ -20,22 +20,33 @@ html, body {
   }
 }
 
-/* Новогодняя тема - портретный фон для мобильных */
+/* Новогодняя тема - портретный фон для мобильных (iPhone фикс) */
 @media (max-width: 1024px) {
   html.new-year body {
     background-image: url('/new-year-mobile-slide.png') !important;
-    background-size: contain !important;
-    background-position: center center !important;
+    background-size: cover !important;
+    background-position: top center !important;
     background-attachment: scroll !important;
     background-repeat: no-repeat !important;
+    background-color: #0a0a0a !important;
+  }
+}
+
+/* Специальная оптимизация для очень высоких экранов (iPhone) */
+@media (max-width: 768px) and (min-aspect-ratio: 9/16) {
+  html.new-year body {
+    background-size: 100% auto !important;
+    background-position: top center !important;
   }
 }
 
 /* На десктопе новогодняя тема - ландшафтный фон */
 @media (min-width: 1025px) {
   html.new-year body {
+    background-image: url('/new-year-bg.png') !important;
     background-size: cover !important;
     background-position: center center !important;
+    background-attachment: fixed !important;
     min-height: 100vh !important;
   }
 }
@@ -43,9 +54,6 @@ html, body {
 /* Дополнительная фиксация для новогодней темы на всех разрешениях */
 html.new-year body {
   background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
-  background-size: cover !important;
-  background-position: center center !important;
   width: 100% !important;
   min-height: 100vh !important;
 }
