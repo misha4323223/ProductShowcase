@@ -106,23 +106,25 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       
       if (imageUrl) {
         document.body.style.backgroundImage = `url('${imageUrl}')`;
-        document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundRepeat = 'no-repeat';
         document.body.style.width = '100vw';
         document.body.style.minHeight = '100vh';
         document.body.style.margin = '0';
         document.body.style.padding = '0';
+        document.body.style.imageRendering = '-webkit-optimize-contrast';
         
-        // На мобильных: scroll + позиция от верха; на десктопе: fixed + центр
+        // На мобильных: 100vw auto (по ширине, без растягивания); на десктопе: cover
         if (isMobile) {
+          document.body.style.backgroundSize = '100vw auto';
           document.body.style.backgroundAttachment = 'scroll';
           document.body.style.backgroundPosition = 'top center';
         } else {
+          document.body.style.backgroundSize = 'cover';
           document.body.style.backgroundAttachment = 'fixed';
           document.body.style.backgroundPosition = 'center center';
         }
         
-        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (cover)' : 'Desktop (cover)', 'URL:', imageUrl);
+        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (100vw auto)' : 'Desktop (cover)', 'URL:', imageUrl);
       }
     }
   };

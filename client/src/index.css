@@ -711,6 +711,8 @@ html.autumn body {
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 
   /* Mobile: JavaScript контролирует все background свойства через inline styles */
