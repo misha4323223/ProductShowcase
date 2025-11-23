@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "z-[99999] border shadow-lg rounded-lg w-[95vw] max-w-lg max-h-[85vh] p-6 gap-4 flex flex-col overflow-auto duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "fixed left-[50%] top-[50%] z-[99999] -translate-x-1/2 -translate-y-1/2 border shadow-lg rounded-lg w-[95vw] max-w-lg max-h-[85vh] p-6 gap-4 flex flex-col overflow-auto duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         // Базовые цвета для светлой и тёмной темы
         "bg-white dark:bg-slate-950 text-black dark:text-white",
         // Сезонные темы - явные светлые фоны
