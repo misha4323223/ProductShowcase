@@ -702,9 +702,6 @@ html.autumn body {
 
   /* Mobile: JavaScript контролирует все background свойства через inline styles */
   @media only screen and (max-width: 1024px) {
-    /* Rules removed - JavaScript handles background properties */
-  }
-
     /* Remove category card effects on mobile (keep snowfall) */
     .new-year-category-card::before {
       display: none;
