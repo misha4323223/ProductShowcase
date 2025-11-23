@@ -114,7 +114,7 @@ export function WheelProvider({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
-      const response: SpinWheelResponse = await spinWheel(user.userId);
+      const response: SpinWheelResponse = await spinWheel();
       
       if (response.success && response.prize) {
         // Обновляем локальное состояние немедленно для быстрой обратной связи

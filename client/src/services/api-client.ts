@@ -286,10 +286,10 @@ export async function getWheelStatus(userId: string): Promise<WheelStatusRespons
 }
 
 // Крутить рулетку
-export async function spinWheel(userId: string): Promise<SpinWheelResponse> {
+export async function spinWheel(): Promise<SpinWheelResponse> {
   const token = localStorage.getItem('authToken');
   
-  const response = await fetch(`${API_BASE_URL}/wheel/spin?userId=${encodeURIComponent(userId)}`, {
+  const response = await fetch(`${API_BASE_URL}/wheel/spin`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
