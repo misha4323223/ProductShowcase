@@ -115,14 +115,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
         
         if (isIOS && isMobile) {
-          // Специально для iPhone: используем 60% размер
-          htmlElement.style.setProperty('background-size', '60%', 'important');
-          htmlElement.style.setProperty('-webkit-background-size', '60%', 'important');
-          htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
-          htmlElement.style.setProperty('-webkit-background-attachment', 'fixed', 'important');
+          // Специально для iPhone: contain + scroll (вся картинка видна, нет растяжки)
+          htmlElement.style.setProperty('background-size', 'contain', 'important');
+          htmlElement.style.setProperty('-webkit-background-size', 'contain', 'important');
+          htmlElement.style.setProperty('background-attachment', 'scroll', 'important');
+          htmlElement.style.setProperty('-webkit-background-attachment', 'scroll', 'important');
           htmlElement.style.setProperty('background-position', 'center center', 'important');
           htmlElement.style.setProperty('-webkit-background-position', 'center center', 'important');
-          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (60%+webkit fix)', 'URL:', imageUrl);
+          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (contain+scroll)', 'URL:', imageUrl);
         } else {
           // Для Android и десктопа: cover + fixed (старый код)
           htmlElement.style.setProperty('background-size', 'cover', 'important');
