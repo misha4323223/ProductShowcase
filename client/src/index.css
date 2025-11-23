@@ -112,24 +112,6 @@ html.dark body {
   overflow-x: hidden;
 }
 
-/* DARK MODE STARFIELD ANIMATION */
-@keyframes twinkle {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
 
 html.dark body::before {
   content: '';
@@ -139,15 +121,15 @@ html.dark body::before {
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(2px 2px at 20px 30px, white, rgba(255, 255, 255, 0.2)),
-    radial-gradient(2px 2px at 60px 70px, white, rgba(255, 255, 255, 0.3)),
-    radial-gradient(1px 1px at 50px 50px, white, rgba(255, 255, 255, 0.2)),
-    radial-gradient(1px 1px at 130px 80px, white, rgba(255, 255, 255, 0.2)),
-    radial-gradient(2px 2px at 90px 10px, white, rgba(255, 255, 255, 0.3)),
-    radial-gradient(1px 1px at 30px 60px, white, rgba(255, 255, 255, 0.2)),
-    radial-gradient(1px 1px at 120px 40px, white, rgba(255, 255, 255, 0.2)),
-    radial-gradient(2px 2px at 10px 90px, white, rgba(255, 255, 255, 0.3)),
-    radial-gradient(1px 1px at 100px 100px, white, rgba(255, 255, 255, 0.2));
+    radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(255, 255, 255, 0.4)),
+    radial-gradient(1px 1px at 60px 70px, #ffffff, rgba(255, 255, 255, 0.5)),
+    radial-gradient(0.5px 0.5px at 50px 50px, #ffffff, rgba(255, 255, 255, 0.3)),
+    radial-gradient(1px 1px at 130px 80px, #ffffff, rgba(255, 255, 255, 0.4)),
+    radial-gradient(1.5px 1.5px at 90px 10px, #ffffff, rgba(255, 255, 255, 0.5)),
+    radial-gradient(0.5px 0.5px at 30px 60px, #ffffff, rgba(255, 255, 255, 0.3)),
+    radial-gradient(1px 1px at 120px 40px, #ffffff, rgba(255, 255, 255, 0.4)),
+    radial-gradient(1.5px 1.5px at 10px 90px, #ffffff, rgba(255, 255, 255, 0.5)),
+    radial-gradient(0.5px 0.5px at 100px 100px, #ffffff, rgba(255, 255, 255, 0.3));
   background-size: 
     150px 200px,
     200px 300px,
@@ -169,7 +151,6 @@ html.dark body::before {
     30px 70px,
     70px 40px;
   background-repeat: repeat;
-  animation: twinkle 4s ease-in-out infinite, float 8s ease-in-out infinite;
   z-index: 1;
   pointer-events: none;
 }
