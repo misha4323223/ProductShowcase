@@ -30,7 +30,7 @@ export default function AutumnRain() {
         id: i,
         left: Math.random() * 100,
         delay: Math.random() * 6,
-        duration: 12 + Math.random() * 8,
+        duration: 18 + Math.random() * 12,
         size: 18 + Math.random() * 28,
         color: LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)],
         swingAmount: 40 + Math.random() * 60,
