@@ -125,7 +125,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               loading={index === 0 ? "eager" : "lazy"}
               decoding="async"
               fetchPriority={index === 0 ? "high" : "low"}
-              className={`w-full h-full object-cover ${
+              className={`w-full h-full object-contain md:object-cover ${
                 slide.id === 2 ? 'object-left' : slide.id === 3 ? 'object-bottom' : 'object-center'
               }`}
             />
