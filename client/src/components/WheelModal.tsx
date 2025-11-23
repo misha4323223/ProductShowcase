@@ -191,7 +191,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   return (
     <>
       <Dialog open={open && !showPrizeModal} onOpenChange={onClose}>
-        <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] p-0 gap-0 flex flex-col" data-testid="dialog-wheel">
+        <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] p-0 gap-0 flex flex-col !z-[99999]" data-testid="dialog-wheel">
           <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b flex-shrink-0">
             <DialogTitle className="text-xl font-bold text-center flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
@@ -408,7 +408,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       {/* Модалка с призом */}
       {wonPrize && (
         <Dialog open={showPrizeModal} onOpenChange={closePrizeModal}>
-          <DialogContent className="max-w-md" data-testid="dialog-prize-result">
+          <DialogContent className="max-w-md !z-[99999]" data-testid="dialog-prize-result">
             <div className="text-center py-6">
               <div className="text-6xl mb-4 animate-bounce">
                 {getPrizeInfo(wonPrize.prizeType).emoji}
