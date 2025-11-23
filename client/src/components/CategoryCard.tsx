@@ -20,15 +20,15 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
-      <Card className={`overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${isNewYear ? 'new-year-category-card-image border-2 border-red-600/40 shadow-red-900/30' : 'border-0 hover:shadow-pink-300/50'}`}>
-        <div className={`aspect-[4/3] overflow-hidden rounded-2xl ${isNewYear ? '' : 'sugar-crystals'}`}>
+      <Card className={`overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-3 ${isNewYear ? 'new-year-category-card-image border-2 border-red-600/40 shadow-red-900/30' : 'border-0 hover:shadow-pink-300/50'}`}>
+        <div className={`aspect-[4/3] overflow-hidden rounded-xl ${isNewYear ? '' : 'sugar-crystals'}`}>
           <OptimizedImage
             src={image}
             webpSrc={webpImage}
             alt={`Купить ${name} в интернет-магазине Sweet Delights - каталог сладостей с доставкой по России`}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
         </div>
       </Card>
