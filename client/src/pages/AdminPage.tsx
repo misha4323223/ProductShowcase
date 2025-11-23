@@ -132,6 +132,8 @@ export default function AdminPage() {
   const [editingBackgroundTitle, setEditingBackgroundTitle] = useState<string>("");
   const [backgroundImageFile, setBackgroundImageFile] = useState<File | null>(null);
   const [backgroundImagePreview, setBackgroundImagePreview] = useState<string>("");
+  const [mobileBackgroundImageFile, setMobileBackgroundImageFile] = useState<File | null>(null);
+  const [mobileBackgroundImagePreview, setMobileBackgroundImagePreview] = useState<string>("");
   const [isSavingBackground, setIsSavingBackground] = useState(false);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
@@ -2736,6 +2738,8 @@ export default function AdminPage() {
                                 setEditingBackgroundTitle(bg?.title || '');
                                 setBackgroundImagePreview(bg?.webpImage || bg?.image || '');
                                 setBackgroundImageFile(null);
+                                setMobileBackgroundImagePreview(bg?.mobileWebpImage || bg?.mobileImage || '');
+                                setMobileBackgroundImageFile(null);
                               }}
                               data-testid={`button-edit-background-${theme}`}
                             >
@@ -2771,6 +2775,8 @@ export default function AdminPage() {
                             setEditingBackgroundTitle("");
                             setBackgroundImageFile(null);
                             setBackgroundImagePreview("");
+                            setMobileBackgroundImageFile(null);
+                            setMobileBackgroundImagePreview("");
                           }}
                           data-testid="button-close-background-edit"
                         >
@@ -2791,7 +2797,7 @@ export default function AdminPage() {
                         </div>
 
                         <div>
-                          <Label className="text-xs font-medium mb-1 block">Изображение (опционально - оставьте пустым для сохранения текущего)</Label>
+                          <Label className="text-xs font-medium mb-1 block">🖥️ Изображение для десктопа (опционально - оставьте пустым для сохранения текущего)</Label>
                           <div className="flex gap-2">
                             <div className="flex-1">
                               <Input
@@ -2847,7 +2853,70 @@ export default function AdminPage() {
                           <div className="relative inline-block">
                             <img
                               src={backgroundImagePreview}
-                              alt="Предпросмотр фона"
+                              alt="Предпросмотр десктопного фона"
+                              className="max-w-xs max-h-32 rounded border"
+                            />
+                          </div>
+                        )}
+
+                        <div>
+                          <Label className="text-xs font-medium mb-1 block">📱 Изображение для мобильных (опционально - портретная ориентация 9:16)</Label>
+                          <div className="flex gap-2">
+                            <div className="flex-1">
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const error = validateImageFile(file);
+                                    if (error) {
+                                      toast({
+                                        title: "Ошибка",
+                                        description: error,
+                                        variant: "destructive"
+                                      });
+                                      return;
+                                    }
+                                    setMobileBackgroundImageFile(file);
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      setMobileBackgroundImagePreview(reader.result as string);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                                data-testid="input-edit-mobile-background-image"
+                              />
+                            </div>
+                            {mobileBackgroundImageFile && (
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => {
+                                  setMobileBackgroundImageFile(null);
+                                  if (backgroundSettings[editingBackgroundTheme]) {
+                                    setMobileBackgroundImagePreview(
+                                      backgroundSettings[editingBackgroundTheme].mobileWebpImage || 
+                                      backgroundSettings[editingBackgroundTheme].mobileImage || 
+                                      ""
+                                    );
+                                  }
+                                }}
+                                data-testid="button-clear-mobile-background-image"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+
+                        {mobileBackgroundImagePreview && (
+                          <div className="relative inline-block">
+                            <img
+                              src={mobileBackgroundImagePreview}
+                              alt="Предпросмотр мобильного фона"
                               className="max-w-xs max-h-32 rounded border"
                             />
                           </div>
@@ -2859,9 +2928,21 @@ export default function AdminPage() {
                             onClick={async () => {
                               setIsSavingBackground(true);
                               try {
-                                let imageUrl = backgroundImagePreview;
+                                const currentSetting = backgroundSettings[editingBackgroundTheme];
+                                
+                                // Защита: не сохраняем если нет ни существующих URL, ни новых файлов
+                                if (!currentSetting && !backgroundImageFile && !mobileBackgroundImageFile) {
+                                  toast({
+                                    title: "Ошибка",
+                                    description: "Не удалось загрузить настройки фонов. Попробуйте обновить страницу.",
+                                    variant: "destructive"
+                                  });
+                                  setIsSavingBackground(false);
+                                  return;
+                                }
 
-                                // Загружаем новое изображение если оно выбрано
+                                // Загружаем новое десктопное изображение если оно выбрано, иначе сохраняем существующее
+                                let imageUrl = currentSetting?.webpImage || currentSetting?.image || '';
                                 if (backgroundImageFile) {
                                   imageUrl = await uploadImageToYandexStorage(
                                     backgroundImageFile, 
@@ -2869,12 +2950,23 @@ export default function AdminPage() {
                                   );
                                 }
 
-                                // Обновляем фон в настройках
+                                // Загружаем новое мобильное изображение если оно выбрано, иначе сохраняем существующее
+                                let mobileImageUrl = currentSetting?.mobileWebpImage || currentSetting?.mobileImage || '';
+                                if (mobileBackgroundImageFile) {
+                                  mobileImageUrl = await uploadImageToYandexStorage(
+                                    mobileBackgroundImageFile, 
+                                    `backgrounds/${editingBackgroundTheme}/mobile`
+                                  );
+                                }
+
+                                // Обновляем фон в настройках - сохраняем ВСЕ поля
                                 const updated: BackgroundSettings = {
                                   ...backgroundSettings,
                                   [editingBackgroundTheme]: {
                                     image: imageUrl,
                                     webpImage: imageUrl,
+                                    mobileImage: mobileImageUrl,
+                                    mobileWebpImage: mobileImageUrl,
                                     title: editingBackgroundTitle,
                                   }
                                 };
@@ -2887,10 +2979,12 @@ export default function AdminPage() {
                                 setEditingBackgroundTitle("");
                                 setBackgroundImageFile(null);
                                 setBackgroundImagePreview("");
+                                setMobileBackgroundImageFile(null);
+                                setMobileBackgroundImagePreview("");
 
                                 toast({
                                   title: "Фон сохранен!",
-                                  description: "Изменения применены"
+                                  description: "Изменения применены (десктоп и мобильный)"
                                 });
                               } catch (error: any) {
                                 toast({
@@ -2917,6 +3011,8 @@ export default function AdminPage() {
                               setEditingBackgroundTitle("");
                               setBackgroundImageFile(null);
                               setBackgroundImagePreview("");
+                              setMobileBackgroundImageFile(null);
+                              setMobileBackgroundImagePreview("");
                             }}
                             data-testid="button-cancel-background-edit"
                           >

@@ -90,15 +90,27 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const themeKey = currentTheme === 'new-year' ? 'newyear' : currentTheme;
     const themeSetting = settings[themeKey as keyof BackgroundSettings];
     
-    if (themeSetting && themeSetting.webpImage) {
-      // Apply WebP image if available, fallback to regular image
-      const imageUrl = themeSetting.webpImage || themeSetting.image;
-      document.body.style.backgroundImage = `url('${imageUrl}')`;
-      // На мобильных (<=1024px) CSS сам установит scroll, на десктопе - fixed
-      // Не перезаписываем attachment здесь, чтобы не конфликтовать с CSS медиа-запросами
-      const isMobile = window.innerWidth <= 1024;
-      document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
-      console.log('🖼️ Background applied for theme:', currentTheme, 'URL:', imageUrl, 'Attachment:', isMobile ? 'scroll' : 'fixed');
+    if (themeSetting) {
+      const isMobile = window.innerWidth <= 768;
+      
+      // Выбираем мобильную или десктопную версию
+      let imageUrl: string;
+      if (isMobile && (themeSetting.mobileWebpImage || themeSetting.mobileImage)) {
+        // Используем мобильную версию, если она есть
+        imageUrl = themeSetting.mobileWebpImage || themeSetting.mobileImage || themeSetting.webpImage || themeSetting.image;
+      } else {
+        // Используем десктопную версию
+        imageUrl = themeSetting.webpImage || themeSetting.image;
+      }
+      
+      if (imageUrl) {
+        document.body.style.backgroundImage = `url('${imageUrl}')`;
+        document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile' : 'Desktop', 'URL:', imageUrl);
+      }
     }
   };
 

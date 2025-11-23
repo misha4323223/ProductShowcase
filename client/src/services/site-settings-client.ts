@@ -159,6 +159,8 @@ export async function setHeroSlides(slides: HeroSlide[], theme?: string): Promis
 export interface BackgroundSetting {
   image: string;
   webpImage: string;
+  mobileImage?: string;
+  mobileWebpImage?: string;
   title: string;
 }
 
@@ -179,14 +181,23 @@ export async function getBackgroundSettings(): Promise<BackgroundSettings> {
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch background settings from server');
+      console.error('Failed to fetch background settings from server, status:', response.status);
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
       return {} as BackgroundSettings;
     }
 
     const data: SiteSetting = await response.json();
-    if (!data.settingValue) return {} as BackgroundSettings;
+    console.log('Background settings data from API:', data);
     
-    return JSON.parse(data.settingValue) as BackgroundSettings;
+    if (!data.settingValue) {
+      console.warn('No background settings value found in API response');
+      return {} as BackgroundSettings;
+    }
+    
+    const parsed = JSON.parse(data.settingValue) as BackgroundSettings;
+    console.log('Parsed background settings:', parsed);
+    return parsed;
   } catch (error) {
     console.error('Error fetching background settings:', error);
     return {} as BackgroundSettings;
