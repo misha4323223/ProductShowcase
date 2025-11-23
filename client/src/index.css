@@ -53,6 +53,18 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
   background-color: white;
 }
 
+/* Dialog Portal - FIXES STACKING CONTEXT IN SEASONAL THEMES */
+[data-radix-dialog-portal] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99998 !important;
+  pointer-events: none !important;
+}
+
+[data-radix-dialog-portal] * {
+  pointer-events: auto !important;
+}
+
 /* Dialog позиционирование для всех тем - VIEWPORT CENTERED */
 [data-radix-dialog-content] {
   position: fixed !important;
