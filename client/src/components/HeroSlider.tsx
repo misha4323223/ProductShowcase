@@ -200,60 +200,73 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
       {/* Dialog для подписки */}
       <Dialog open={showSubscribeDialog} onOpenChange={setShowSubscribeDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Эксклюзивное предложение 🎁</DialogTitle>
-            <DialogDescription>
-              Подпишитесь на уведомление об открытии и получите промокод на скидку 10% для первого заказа
+        <DialogContent className="w-[95vw] max-w-md sm:max-w-md max-h-[90vh] p-0 gap-0 flex flex-col">
+          <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b flex-shrink-0">
+            <DialogTitle className="text-lg sm:text-xl">Эксклюзивное предложение 🎁</DialogTitle>
+            <DialogDescription className="text-sm">
+              Подпишитесь на уведомление об открытии и получите промокод на скидку 10%
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubscribe} className="space-y-4">
-            <Input
-              type="email"
-              placeholder="Ваш email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isSubscribing}
-              data-testid="input-subscribe-email"
-            />
-            
-            <div className="flex items-start gap-2">
-              <Checkbox
-                id="terms"
-                checked={agreedToTerms}
-                onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+          
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
+            <form onSubmit={handleSubscribe} className="space-y-4">
+              <Input
+                type="email"
+                placeholder="Ваш email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubscribing}
-                data-testid="checkbox-terms"
+                data-testid="input-subscribe-email"
               />
-              <label
-                htmlFor="terms"
-                className="text-sm text-muted-foreground leading-tight cursor-pointer"
-              >
-                Я согласен с{" "}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowPrivacyDialog(true);
-                  }}
-                  className="text-primary hover:underline font-medium"
-                  data-testid="button-privacy-policy"
+              
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id="terms"
+                  checked={agreedToTerms}
+                  onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                  disabled={isSubscribing}
+                  data-testid="checkbox-terms"
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm text-muted-foreground leading-tight cursor-pointer"
                 >
-                  политикой конфиденциальности
-                </button>
-                {" "}и на получение рассылки
-              </label>
-            </div>
+                  Я согласен с{" "}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowPrivacyDialog(true);
+                    }}
+                    className="text-primary hover:underline font-medium"
+                    data-testid="button-privacy-policy"
+                  >
+                    политикой конфиденциальности
+                  </button>
+                  {" "}и на получение рассылки
+                </label>
+              </div>
+            </form>
+          </div>
 
+          <div className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t flex gap-2">
             <Button 
-              type="submit" 
-              className="w-full"
+              onClick={() => setShowSubscribeDialog(false)}
+              variant="outline"
+              className="flex-1"
+              data-testid="button-cancel-subscribe"
+            >
+              Отмена
+            </Button>
+            <Button 
+              onClick={handleSubscribe}
+              className="flex-1"
               disabled={isSubscribing || !agreedToTerms}
               data-testid="button-submit-subscribe"
             >
               {isSubscribing ? "Подписываемся..." : "Подписаться"}
             </Button>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
 
