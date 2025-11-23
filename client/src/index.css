@@ -689,6 +689,8 @@ html.autumn body {
   @media only screen and (max-width: 1024px) {
     html {
       height: auto !important;
+      /* iOS Safari fix для фонового изображения */
+      height: 100% !important;
     }
   }
 
