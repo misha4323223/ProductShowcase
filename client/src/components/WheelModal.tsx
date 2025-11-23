@@ -191,7 +191,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
   return (
     <>
       <Dialog open={open && !showPrizeModal} onOpenChange={onClose}>
-        <DialogContent className="max-w-3xl p-4 max-h-[90vh] overflow-y-auto" data-testid="dialog-wheel">
+        <DialogContent className="fixed left-[50%] bottom-0 translate-x-[-50%] translate-y-0 max-w-3xl p-4 max-h-[90vh] overflow-y-auto w-[95vw]" data-testid="dialog-wheel">
           <DialogHeader className="sticky top-0 bg-background z-10 pb-2">
             <DialogTitle className="text-xl font-bold text-center flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
