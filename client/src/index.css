@@ -8,6 +8,13 @@ html, body {
   padding: 0;
 }
 
+/* На мобильных устройствах использовать scroll вместо fixed для фона */
+@media (max-width: 1024px) {
+  body {
+    background-attachment: scroll !important;
+  }
+}
+
 /* Default background для светлой темы */
 body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn *) {
   background-color: white;
@@ -2152,50 +2159,5 @@ html.autumn body {
     }
   }
 
-  /* ========================================
-     СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ iOS/Safari
-     Исправляют проблему с object-cover на iPhone
-     ======================================== */
-  @supports (-webkit-touch-callout: none) {
-    /* Только для iOS (iPhone, iPad) */
-    
-    /* Для слайдов - используем background-size вместо object-cover */
-    .hero-mobile-fix [role="dialog"] + div picture img {
-      width: 100%;
-      height: 100%;
-      -webkit-object-fit: cover;
-      object-fit: cover;
-      -webkit-object-position: center;
-      object-position: center;
-      display: block;
-    }
-
-    /* Убеждаемся что контейнер слайда ведёт себя правильно */
-    .hero-mobile-fix > div {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Переопределяем object-position для всех картинок в слайдах */
-    picture img[class*="object-left"] {
-      -webkit-object-position: left center;
-      object-position: left center;
-    }
-
-    picture img[class*="object-bottom"] {
-      -webkit-object-position: center bottom;
-      object-position: center bottom;
-    }
-
-    picture img[class*="object-center"] {
-      -webkit-object-position: center center;
-      object-position: center center;
-    }
-  }
   
 }
