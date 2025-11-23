@@ -110,7 +110,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         
         if (isIOS && isMobile) {
-          // Для iOS: применяем фон к #root (настоящий scrolling container)
+          // Для iOS: используем ::before псевдоэлемент с contain вместо cover
           const rootElement = document.getElementById('root');
           const htmlElement = document.documentElement;
           const bodyElement = document.body;
@@ -121,19 +121,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           bodyElement.style.setProperty('background-color', 'transparent', 'important');
           bodyElement.style.setProperty('background-image', 'none', 'important');
           
-          // Применяем фон к #root (scrolling container)
+          // Применяем фон через ::before используя CSS custom property
           if (rootElement) {
-            (rootElement as HTMLElement).style.setProperty('background-image', `url('${imageUrl}')`, 'important');
-            (rootElement as HTMLElement).style.setProperty('background-repeat', 'no-repeat', 'important');
-            (rootElement as HTMLElement).style.setProperty('background-size', 'cover', 'important');
-            (rootElement as HTMLElement).style.setProperty('-webkit-background-size', 'cover', 'important');
-            (rootElement as HTMLElement).style.setProperty('background-attachment', 'scroll', 'important');
-            (rootElement as HTMLElement).style.setProperty('-webkit-background-attachment', 'scroll', 'important');
-            (rootElement as HTMLElement).style.setProperty('background-position', 'center top', 'important');
-            (rootElement as HTMLElement).style.setProperty('-webkit-background-position', 'center top', 'important');
+            rootElement.classList.add('ios-background');
+            htmlElement.style.setProperty('--ios-bg-image', `url('${imageUrl}')`);
             (rootElement as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
+            (rootElement as HTMLElement).style.setProperty('background-image', 'none', 'important');
           }
-          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iOS (#root + cover + scroll)', 'URL:', imageUrl);
+          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iOS (::before + contain)', 'URL:', imageUrl);
         } else {
           // Для Android и десктопа: фон на html элемент
           const htmlElement = document.documentElement;
@@ -146,10 +141,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
           htmlElement.style.setProperty('background-position', 'center center', 'important');
           
-          // Body и root прозрачные
+          // Body и root прозрачные, убираем iOS класс
           document.body.style.setProperty('background-color', 'transparent', 'important');
           document.body.style.setProperty('background-image', 'none', 'important');
           if (rootElement) {
+            rootElement.classList.remove('ios-background');
+            htmlElement.style.removeProperty('--ios-bg-image');
             (rootElement as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
             (rootElement as HTMLElement).style.setProperty('background-image', 'none', 'important');
           }
