@@ -106,6 +106,74 @@ html.light body {
   background-color: white;
 }
 
+html.dark body {
+  background-color: #0f172a;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* DARK MODE STARFIELD ANIMATION */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+html.dark body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, white, rgba(255, 255, 255, 0.2)),
+    radial-gradient(2px 2px at 60px 70px, white, rgba(255, 255, 255, 0.3)),
+    radial-gradient(1px 1px at 50px 50px, white, rgba(255, 255, 255, 0.2)),
+    radial-gradient(1px 1px at 130px 80px, white, rgba(255, 255, 255, 0.2)),
+    radial-gradient(2px 2px at 90px 10px, white, rgba(255, 255, 255, 0.3)),
+    radial-gradient(1px 1px at 30px 60px, white, rgba(255, 255, 255, 0.2)),
+    radial-gradient(1px 1px at 120px 40px, white, rgba(255, 255, 255, 0.2)),
+    radial-gradient(2px 2px at 10px 90px, white, rgba(255, 255, 255, 0.3)),
+    radial-gradient(1px 1px at 100px 100px, white, rgba(255, 255, 255, 0.2));
+  background-size: 
+    150px 200px,
+    200px 300px,
+    100px 150px,
+    180px 250px,
+    160px 220px,
+    120px 180px,
+    140px 200px,
+    110px 160px,
+    130px 190px;
+  background-position: 
+    0 0,
+    50px 60px,
+    20px 30px,
+    0 50px,
+    40px 20px,
+    10px 40px,
+    60px 10px,
+    30px 70px,
+    70px 40px;
+  background-repeat: repeat;
+  animation: twinkle 4s ease-in-out infinite, float 8s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
 /* SUNFLARE PARTICLES ANIMATION - Real Sun Reflections */
 @keyframes sunflare-shimmer {
   0% {
