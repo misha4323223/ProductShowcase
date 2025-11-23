@@ -1,23 +1,44 @@
 import { useTheme } from "@/contexts/ThemeContext";
 import { useEffect, useState } from "react";
 
+interface Leaf {
+  id: number;
+  left: number;
+  delay: number;
+  duration: number;
+  size: number;
+  color: string;
+  swingAmount: number;
+}
+
+const LEAF_COLORS = [
+  '#d97706', // amber-600
+  '#dc2626', // red-600
+  '#f59e0b', // amber-500
+  '#ea580c', // orange-600
+  '#991b1b', // red-900
+  '#b45309', // amber-700
+];
+
 export default function AutumnRain() {
   const { theme } = useTheme();
-  const [raindrops, setRaindrops] = useState<Array<{ id: number; left: number; delay: number; duration: number }>>([]);
+  const [leaves, setLeaves] = useState<Leaf[]>([]);
 
   useEffect(() => {
-    // Генерируем капли дождя только для осенней темы
     if (theme === 'autumn') {
-      const drops = Array.from({ length: 80 }, (_, i) => ({
+      const newLeaves = Array.from({ length: 40 }, (_, i) => ({
         id: i,
         left: Math.random() * 100,
-        delay: Math.random() * 3,
-        duration: 2 + Math.random() * 1.5,
+        delay: Math.random() * 5,
+        duration: 6 + Math.random() * 4,
+        size: 15 + Math.random() * 25,
+        color: LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)],
+        swingAmount: 30 + Math.random() * 40,
       }));
-      setRaindrops(drops);
-      console.log('🍂 Дождик активирован! Капель:', drops.length);
+      setLeaves(newLeaves);
+      console.log('🍂 Осенние листья активированы! Листьев:', newLeaves.length);
     } else {
-      setRaindrops([]);
+      setLeaves([]);
     }
   }, [theme]);
 
@@ -25,16 +46,29 @@ export default function AutumnRain() {
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-visible autumn-rain-container">
-      {raindrops.map((drop) => (
+      {leaves.map((leaf) => (
         <div
-          key={drop.id}
-          className="autumn-raindrop"
+          key={leaf.id}
+          className="autumn-leaf"
           style={{
-            left: `${drop.left}%`,
-            animationDelay: `${drop.delay}s`,
-            animationDuration: `${drop.duration}s`,
-          }}
-        />
+            left: `${leaf.left}%`,
+            animationDelay: `${leaf.delay}s`,
+            animationDuration: `${leaf.duration}s`,
+            '--leaf-swing': `${leaf.swingAmount}px`,
+          } as React.CSSProperties & { '--leaf-swing': string }}
+        >
+          <svg
+            width={leaf.size}
+            height={leaf.size}
+            viewBox="0 0 100 100"
+            style={{
+              fill: leaf.color,
+              filter: `drop-shadow(0 2px 3px rgba(0,0,0,0.2))`,
+            }}
+          >
+            <path d="M50,10 Q30,30 25,50 Q20,70 35,85 Q50,95 50,95 Q50,95 65,85 Q80,70 75,50 Q70,30 50,10 M50,35 Q40,40 38,50 Q40,58 50,60 Q60,58 62,50 Q60,40 50,35" />
+          </svg>
+        </div>
       ))}
     </div>
   );

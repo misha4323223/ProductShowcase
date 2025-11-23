@@ -57,14 +57,42 @@ html.light body {
   background-color: white;
 }
 
-/* AUTUMN RAIN ANIMATION */
-@keyframes autumn-rain-fall {
-  from {
-    transform: translateY(-50px);
+/* AUTUMN LEAVES ANIMATION */
+@keyframes autumn-leaf-fall {
+  0% {
+    transform: translateY(-100px) translateX(0) rotateZ(0deg);
     opacity: 1;
   }
-  to {
-    transform: translateY(100vh);
+  10% {
+    transform: translateY(10vh) translateX(var(--leaf-swing)) rotateZ(45deg);
+  }
+  20% {
+    transform: translateY(20vh) translateX(calc(var(--leaf-swing) * -1)) rotateZ(-45deg);
+  }
+  30% {
+    transform: translateY(30vh) translateX(var(--leaf-swing)) rotateZ(90deg);
+  }
+  40% {
+    transform: translateY(40vh) translateX(calc(var(--leaf-swing) * -0.5)) rotateZ(135deg);
+  }
+  50% {
+    transform: translateY(50vh) translateX(var(--leaf-swing)) rotateZ(180deg);
+  }
+  60% {
+    transform: translateY(60vh) translateX(calc(var(--leaf-swing) * -1)) rotateZ(225deg);
+  }
+  70% {
+    transform: translateY(70vh) translateX(var(--leaf-swing)) rotateZ(270deg);
+  }
+  80% {
+    transform: translateY(80vh) translateX(calc(var(--leaf-swing) * -0.5)) rotateZ(315deg);
+  }
+  90% {
+    transform: translateY(90vh) translateX(var(--leaf-swing)) rotateZ(360deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) translateX(0) rotateZ(360deg);
     opacity: 0;
   }
 }
@@ -77,14 +105,10 @@ html.light body {
   z-index: 50;
 }
 
-.autumn-raindrop {
+.autumn-leaf {
   position: absolute;
-  width: 2px;
-  height: 10px;
-  background: linear-gradient(to bottom, rgba(180, 82, 45, 0.9), rgba(139, 69, 19, 0.4));
-  opacity: 0.8;
-  animation: autumn-rain-fall linear infinite;
-  top: -50px;
+  animation: autumn-leaf-fall linear infinite;
+  top: -100px;
   will-change: transform;
 }
 
