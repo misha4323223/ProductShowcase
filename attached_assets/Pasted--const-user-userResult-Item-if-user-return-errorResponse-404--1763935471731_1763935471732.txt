@@ -1,0 +1,165 @@
+   }));
+
+    const user = userResult.Item;
+    if (!user) {
+      return errorResponse(404, 'Пользователь не найден');
+    }
+
+    const currentSpins = user.spins || 0;
+    const totalSpinsEarned = user.totalSpinsEarned || 0;
+    console.log('Current spins:', currentSpins, 'Total earned:', totalSpinsEarned);
+
+    if (currentSpins < 1) {
+      return errorResponse(400, 'Недостаточно спинов');
+    }
+
+    // 3. Получить корзину (ИЗМЕНЕНО: вместо вишлиста)
+    const cartResult = await docClient.send(new GetCommand({
+      TableName: "carts",
+      Key: { userId }
+    }));
+
+    const cartItems = cartResult.Item?.items || [];
+    console.log('Cart items count:', cartItems.length);
+
+    if (cartItems.length === 0) {
+      return errorResponse(400, 'Добавьте товары в корзину для участия в рулетке');
+    }
+
+    // 4. Генерация приза с учетом прогрессивной системы
+    const randomValue = getSecureRandom();
+    const prizeType = determinePrize(randomValue, currentSpins);
+    const promoCode = generatePromoCode(prizeType);
+    const expiresAt = calculateExpiryDate(prizeType);
+    const prizeId = generatePrizeId();
+
+    console.log('Prize generated:', { prizeType, randomValue, currentSpins });
+
+    // 5. Подготовка данных приза
+    let prize = {
+      id: prizeId,
+      userId,
+      prizeType,
+      promoCode,
+      expiresAt,
+      used: false,
+      createdAt: new Date().toISOString()
+    };
+
+    // Дополнительные данные в зависимости от типа приза
+    if (prizeType === 'discount_10') {
+      prize.discountValue = 10;
+    } 
+    else if (prizeType === 'discount_20') {
+      // ИЗМЕНЕНО: выбираем из корзины вместо вишлиста
+      const randomIndex = Math.floor(Math.random() * cartItems.length);
+      const randomCartItem = cartItems[randomIndex];
+
+      const productResult = await docClient.send(new GetCommand({
+        TableName: "products",
+        Key: { id: randomCartItem.productId }
+      }));
+
+      if (productResult.Item) {
+        prize.productId = randomCartItem.productId;
+        prize.productName = productResult.Item.name;
+        prize.productImage = productResult.Item.image;
+      }
+      prize.discountValue = 20;
+    } 
+    else if (prizeType === 'points') {
+      prize.pointsAmount = 200;
+      
+      await docClient.send(new UpdateCommand({
+        TableName: "users",
+        Key: { email: userEmail },
+        UpdateExpression: "SET loyaltyPoints = if_not_exists(loyaltyPoints, :zero) + :points",
+        ExpressionAttributeValues: {
+          ":points": 200,
+          ":zero": 0
+        }
+      }));
+    } 
+    else if (prizeType === 'free_item') {
+      // ИЗМЕНЕНО: ищем дешевый товар в корзине вместо вишлиста
+      const itemsToCheck = cartItems.slice(0, 10);
+      
+      const products = await Promise.all(
+        itemsToCheck.map(item =>
+          docClient.send(new GetCommand({
+            TableName: "products",
+            Key: { id: item.productId }
+          })).then(res => res.Item).catch(() => null)
+        )
+      );
+
+      const validProducts = products.filter(p => p && p.price);
+      if (validProducts.length > 0) {
+        const cheapest = validProducts.reduce((min, p) =>
+          (!min || p.price < min.price) ? p : min
+        );
+
+        prize.productId = cheapest.id;
+        prize.productName = cheapest.name;
+        prize.productImage = cheapest.image;
+      }
+    } 
+    else if (prizeType === 'jackpot') {
+      prize.discountValue = 40;
+      // ИЗМЕНЕНО: джекпот на все товары в корзине
+      prize.appliesToAllCart = true;
+      prize.cartSnapshot = cartItems.slice(0, 50).map(item => item.productId);
+    }
+    else if (prizeType === 'delivery') {
+      // Бесплатная доставка
+    }
+
+    // 6. Сохранить приз
+    await docClient.send(new PutCommand({
+      TableName: "wheelPrizes",
+      Item: prize
+    }));
+
+    // 7. Сохранить в историю
+    const historyRecord = {
+      id: generatePrizeId(),
+      userId,
+      prizeType,
+      prizeValue: getPrizeDisplayName(prizeType),
+      createdAt: new Date().toISOString()
+    };
+
+    if (prize.productName || prize.discountValue) {
+      historyRecord.prizeDetails = {};
+      if (prize.productName) historyRecord.prizeDetails.productName = prize.productName;
+      if (prize.discountValue) historyRecord.prizeDetails.discountAmount = prize.discountValue;
+    }
+
+    await docClient.send(new PutCommand({
+      TableName: "wheelHistory",
+      Item: historyRecord
+    }));
+
+    // 8. Обновить счетчики
+    await docClient.send(new UpdateCommand({
+      TableName: "users",
+      Key: { email: userEmail },
+      UpdateExpression: "SET spins = spins - :one, totalWheelSpins = if_not_exists(totalWheelSpins, :zero) + :one",
+      ExpressionAttributeValues: {
+        ":one": 1,
+        ":zero": 0
+      }
+    }));
+
+    console.log('Prize saved successfully:', prizeId);
+
+    return successResponse({
+      success: true,
+      prize
+    });
+
+  } catch (error) {
+    console.error("Error spinning wheel:", error);
+    return errorResponse(500, error.message || 'Ошибка при вращении рулетки');
+  }
+};
