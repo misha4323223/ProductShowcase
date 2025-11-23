@@ -289,13 +289,12 @@ export async function getWheelStatus(userId: string): Promise<WheelStatusRespons
 export async function spinWheel(userId: string): Promise<SpinWheelResponse> {
   const token = localStorage.getItem('authToken');
   
-  const response = await fetch(`${API_BASE_URL}/wheel/spin`, {
+  const response = await fetch(`${API_BASE_URL}/wheel/spin?id=${encodeURIComponent(userId)}`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ id: userId }),
   });
 
   if (!response.ok) {
