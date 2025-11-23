@@ -53,24 +53,13 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
   background-color: white;
 }
 
-/* Dialog позиционирование для всех тем */
+/* Dialog позиционирование для всех тем - VIEWPORT CENTERED */
 [data-radix-dialog-content] {
   position: fixed !important;
-  left: 50% !important;
   top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  z-index: 99999 !important;
-  overflow-y: auto !important;
-}
-
-/* Явно для сезонных тем - перебиваем всё */
-html.sakura [data-radix-dialog-content],
-html.new-year [data-radix-dialog-content],
-html.spring [data-radix-dialog-content],
-html.autumn [data-radix-dialog-content] {
-  position: fixed !important;
   left: 50% !important;
-  top: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
   transform: translate(-50%, -50%) !important;
   z-index: 99999 !important;
   overflow-y: auto !important;
