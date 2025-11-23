@@ -110,9 +110,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         htmlElement.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
         htmlElement.style.setProperty('background-repeat', 'no-repeat', 'important');
         htmlElement.style.setProperty('background-color', 'transparent', 'important');
-        htmlElement.style.setProperty('background-size', 'cover', 'important');
-        htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
-        htmlElement.style.setProperty('background-position', 'center center', 'important');
+        
+        if (isMobile) {
+          // На мобилях: scroll вместо fixed (iOS Safari не поддерживает fixed правильно)
+          // Используем contain чтобы не растягивалось на iPhone
+          htmlElement.style.setProperty('background-size', 'contain', 'important');
+          htmlElement.style.setProperty('background-attachment', 'scroll', 'important');
+          htmlElement.style.setProperty('background-position', 'top center', 'important');
+        } else {
+          // На десктопе: cover с fixed для заполнения экрана
+          htmlElement.style.setProperty('background-size', 'cover', 'important');
+          htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
+          htmlElement.style.setProperty('background-position', 'center center', 'important');
+        }
         
         // Body прозрачный
         document.body.style.setProperty('background-color', 'transparent', 'important');
@@ -125,7 +135,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           (rootElement as HTMLElement).style.setProperty('background-image', 'none', 'important');
         }
         
-        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile' : 'Desktop', 'URL:', imageUrl);
+        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (contain+scroll for iOS)' : 'Desktop (cover+fixed)', 'URL:', imageUrl);
       }
     }
   };
