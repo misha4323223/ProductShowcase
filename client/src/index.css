@@ -2287,12 +2287,7 @@ html.autumn body {
      DIALOG CONTENT - ПОЗИЦИОНИРОВАНИЕ ДЛЯ ВСЕХ ТЕМ
      ======================================== */
   
-  /* Гарантируем, что Dialog Content всегда в самом низу и видно сразу */
-  [role="dialog"] {
-    top: auto !important;
-    bottom: 0 !important;
-    transform: translateX(-50%) !important;
-  }
+  /* Все диалоги центрируются - правило выше в [data-radix-dialog-content] */
 
   /* ========================================
      ОПТИМИЗАЦИЯ ФОНОВ ДЛЯ МОБИЛЬНЫХ
