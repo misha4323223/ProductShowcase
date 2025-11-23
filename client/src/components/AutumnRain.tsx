@@ -26,14 +26,14 @@ export default function AutumnRain() {
 
   useEffect(() => {
     if (theme === 'autumn') {
-      const newLeaves = Array.from({ length: 40 }, (_, i) => ({
+      const newLeaves = Array.from({ length: 50 }, (_, i) => ({
         id: i,
         left: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: 6 + Math.random() * 4,
-        size: 15 + Math.random() * 25,
+        delay: Math.random() * 6,
+        duration: 12 + Math.random() * 8,
+        size: 18 + Math.random() * 28,
         color: LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)],
-        swingAmount: 30 + Math.random() * 40,
+        swingAmount: 40 + Math.random() * 60,
       }));
       setLeaves(newLeaves);
       console.log('🍂 Осенние листья активированы! Листьев:', newLeaves.length);
@@ -45,7 +45,7 @@ export default function AutumnRain() {
   if (theme !== 'autumn') return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-visible autumn-rain-container">
+    <div className="autumn-rain-container">
       {leaves.map((leaf) => (
         <div
           key={leaf.id}

@@ -63,51 +63,85 @@ html.light body {
     transform: translateY(-100px) translateX(0) rotateZ(0deg);
     opacity: 1;
   }
+  5% {
+    transform: translateY(5vh) translateX(calc(var(--leaf-swing) * 0.3)) rotateZ(22deg);
+  }
   10% {
     transform: translateY(10vh) translateX(var(--leaf-swing)) rotateZ(45deg);
   }
+  15% {
+    transform: translateY(15vh) translateX(calc(var(--leaf-swing) * 0.7)) rotateZ(67deg);
+  }
   20% {
-    transform: translateY(20vh) translateX(calc(var(--leaf-swing) * -1)) rotateZ(-45deg);
+    transform: translateY(20vh) translateX(calc(var(--leaf-swing) * -0.5)) rotateZ(90deg);
+  }
+  25% {
+    transform: translateY(25vh) translateX(calc(var(--leaf-swing) * -0.8)) rotateZ(112deg);
   }
   30% {
-    transform: translateY(30vh) translateX(var(--leaf-swing)) rotateZ(90deg);
+    transform: translateY(30vh) translateX(var(--leaf-swing)) rotateZ(135deg);
+  }
+  35% {
+    transform: translateY(35vh) translateX(calc(var(--leaf-swing) * 0.5)) rotateZ(157deg);
   }
   40% {
-    transform: translateY(40vh) translateX(calc(var(--leaf-swing) * -0.5)) rotateZ(135deg);
+    transform: translateY(40vh) translateX(calc(var(--leaf-swing) * -0.4)) rotateZ(180deg);
+  }
+  45% {
+    transform: translateY(45vh) translateX(calc(var(--leaf-swing) * -0.9)) rotateZ(202deg);
   }
   50% {
-    transform: translateY(50vh) translateX(var(--leaf-swing)) rotateZ(180deg);
+    transform: translateY(50vh) translateX(var(--leaf-swing)) rotateZ(225deg);
+  }
+  55% {
+    transform: translateY(55vh) translateX(calc(var(--leaf-swing) * 0.6)) rotateZ(247deg);
   }
   60% {
-    transform: translateY(60vh) translateX(calc(var(--leaf-swing) * -1)) rotateZ(225deg);
+    transform: translateY(60vh) translateX(calc(var(--leaf-swing) * -1)) rotateZ(270deg);
+  }
+  65% {
+    transform: translateY(65vh) translateX(calc(var(--leaf-swing) * -0.5)) rotateZ(292deg);
   }
   70% {
-    transform: translateY(70vh) translateX(var(--leaf-swing)) rotateZ(270deg);
+    transform: translateY(70vh) translateX(var(--leaf-swing)) rotateZ(315deg);
+  }
+  75% {
+    transform: translateY(75vh) translateX(calc(var(--leaf-swing) * 0.4)) rotateZ(337deg);
   }
   80% {
-    transform: translateY(80vh) translateX(calc(var(--leaf-swing) * -0.5)) rotateZ(315deg);
+    transform: translateY(80vh) translateX(calc(var(--leaf-swing) * -0.7)) rotateZ(359deg);
+  }
+  85% {
+    transform: translateY(85vh) translateX(var(--leaf-swing)) rotateZ(360deg);
+    opacity: 0.9;
   }
   90% {
-    transform: translateY(90vh) translateX(var(--leaf-swing)) rotateZ(360deg);
-    opacity: 0.8;
+    transform: translateY(90vh) translateX(calc(var(--leaf-swing) * -0.3)) rotateZ(360deg);
+    opacity: 0.7;
+  }
+  95% {
+    transform: translateY(95vh) translateX(0) rotateZ(360deg);
+    opacity: 0.4;
   }
   100% {
-    transform: translateY(100vh) translateX(0) rotateZ(360deg);
+    transform: translateY(150vh) translateX(0) rotateZ(360deg);
     opacity: 0;
   }
 }
 
 .autumn-rain-container {
+  position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 50;
+  z-index: 5;
+  pointer-events: none;
 }
 
 .autumn-leaf {
   position: absolute;
-  animation: autumn-leaf-fall linear infinite;
+  animation: autumn-leaf-fall cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
   top: -100px;
   will-change: transform;
 }
