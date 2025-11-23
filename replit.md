@@ -6,7 +6,21 @@ Sweet Delights is an e-commerce platform specializing in sweets (chocolates, can
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
-## Latest Updates (November 22, 2025)
+## Latest Updates (November 23, 2025)
+
+✅ **Mobile Background Support Added - Nov 23, 2025**:
+- **Feature**: Separate mobile and desktop background images for each theme
+- **Implementation**:
+  - Added `mobileImage` and `mobileWebpImage` fields to BackgroundSetting interface
+  - Admin panel now allows uploading separate mobile backgrounds (portrait 9:16 recommended)
+  - ThemeContext automatically selects mobile (≤768px) or desktop backgrounds
+  - Storage: Desktop backgrounds in `backgrounds/[theme-name]`, mobile in `backgrounds/[theme-name]/mobile`
+  - Fallback: Desktop version used if mobile not uploaded
+- **Files Modified**:
+  - `shared/schema.ts`: Updated BackgroundSetting interface
+  - `client/src/pages/AdminPage.tsx`: Added mobile background upload UI with validation
+  - `client/src/contexts/ThemeContext.tsx`: Device detection and background selection logic
+  - `client/src/services/site-settings-client.ts`: Enhanced logging for debugging
 
 ✅ **Theme Flicker Issue Fixed - Nov 22, 2025 (Final)**:
 - **Root Cause**: Theme + background being applied repeatedly every 3 seconds (polling re-applied same values)
@@ -43,8 +57,10 @@ Preferred communication style: Simple, everyday language.
 - **State Management**: TanStack React Query for server state, localStorage for theme persistence, local React state for UI.
 - **UI/Styling**: Shadcn UI (Radix UI + Tailwind CSS) with a custom design system featuring a warm, playful color palette, Playfair Display and Inter fonts, and responsive design with iOS Safari compatibility.
 - **Theme System**: Multi-theme design system with festive seasonal themes (Sakura, New Year, Spring, Autumn). Themes stored in localStorage and applied via CSS variables. Each theme includes:
-  - Custom background images managed via admin panel
-  - Background images stored in YDB and Yandex Object Storage (`backgrounds/[theme-name]` folders)
+  - Custom background images managed via admin panel (separate mobile and desktop versions)
+  - Desktop backgrounds: `backgrounds/[theme-name]`, mobile: `backgrounds/[theme-name]/mobile`
+  - Automatic device detection: mobile backgrounds on ≤768px screens, desktop on larger
+  - Background images stored in YDB and Yandex Object Storage
   - Real-time sync with 3-second polling for global synchronization
   - Auto-initialization of 4 default backgrounds on first admin load
 - **Key Components**: Includes sticky header, auto-rotating hero slider, animated product cards, side-panel shopping cart, category navigation, feature highlights bar, and a footer with legal links.
