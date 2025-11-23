@@ -94,8 +94,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       // Apply WebP image if available, fallback to regular image
       const imageUrl = themeSetting.webpImage || themeSetting.image;
       document.body.style.backgroundImage = `url('${imageUrl}')`;
-      document.body.style.backgroundAttachment = 'fixed';
-      console.log('🖼️ Background applied for theme:', currentTheme, 'URL:', imageUrl);
+      // На мобильных (<=1024px) CSS сам установит scroll, на десктопе - fixed
+      // Не перезаписываем attachment здесь, чтобы не конфликтовать с CSS медиа-запросами
+      const isMobile = window.innerWidth <= 1024;
+      document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
+      console.log('🖼️ Background applied for theme:', currentTheme, 'URL:', imageUrl, 'Attachment:', isMobile ? 'scroll' : 'fixed');
     }
   };
 
