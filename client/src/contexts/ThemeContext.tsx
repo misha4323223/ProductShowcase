@@ -113,18 +113,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         document.body.style.setProperty('margin', '0', 'important');
         document.body.style.setProperty('padding', '0', 'important');
         
-        // На мобильных: contain (портретные изображения целиком); на десктопе: cover (широкие изображения заполняют)
-        if (isMobile) {
-          document.body.style.setProperty('background-size', 'contain', 'important');
-          document.body.style.setProperty('background-attachment', 'scroll', 'important');
-          document.body.style.setProperty('background-position', 'top center', 'important');
-        } else {
-          document.body.style.setProperty('background-size', 'cover', 'important');
-          document.body.style.setProperty('background-attachment', 'fixed', 'important');
-          document.body.style.setProperty('background-position', 'center center', 'important');
-        }
+        // Используем cover везде для отображения фона
+        document.body.style.setProperty('background-size', 'cover', 'important');
+        document.body.style.setProperty('background-attachment', isMobile ? 'scroll' : 'fixed', 'important');
+        document.body.style.setProperty('background-position', 'center center', 'important');
         
-        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (contain - portrait)' : 'Desktop (cover - landscape)', 'URL:', imageUrl);
+        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (cover)' : 'Desktop (cover)', 'URL:', imageUrl);
       }
     }
   };
