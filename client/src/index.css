@@ -24,10 +24,17 @@ html, body {
 @media (max-width: 1024px) {
   html.new-year body {
     background-image: url('/new-year-mobile-slide.png') !important;
-    background-size: cover !important;
+    background-size: contain !important;
     background-position: center center !important;
     background-attachment: scroll !important;
     background-repeat: no-repeat !important;
+  }
+}
+
+/* На десктопе новогодняя тема - ландшафтный фон */
+@media (min-width: 1025px) {
+  html.new-year body {
+    background-size: cover !important;
   }
 }
 
