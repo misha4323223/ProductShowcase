@@ -105,36 +105,45 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
       
       if (imageUrl) {
-        // Применяем фон на HTML элемент для правильного отображения
-        const htmlElement = document.documentElement;
-        htmlElement.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
-        htmlElement.style.setProperty('background-repeat', 'no-repeat', 'important');
-        htmlElement.style.setProperty('background-color', 'transparent', 'important');
-        
         // Обнаруживаем iOS устройство
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
         
         if (isIOS && isMobile) {
-          // Специально для iPhone: contain + local (вся картинка видна, скроллится с контентом)
-          htmlElement.style.setProperty('background-size', 'contain', 'important');
-          htmlElement.style.setProperty('-webkit-background-size', 'contain', 'important');
-          htmlElement.style.setProperty('background-attachment', 'local', 'important');
-          htmlElement.style.setProperty('-webkit-background-attachment', 'local', 'important');
-          htmlElement.style.setProperty('background-position', 'center top', 'important');
-          htmlElement.style.setProperty('-webkit-background-position', 'center top', 'important');
-          htmlElement.style.setProperty('background-repeat', 'no-repeat', 'important');
-          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (contain+local)', 'URL:', imageUrl);
+          // Для iOS: применяем фон к body вместо html
+          const bodyElement = document.body;
+          const htmlElement = document.documentElement;
+          
+          // Очищаем html
+          htmlElement.style.setProperty('background-image', 'none', 'important');
+          htmlElement.style.setProperty('background-color', 'transparent', 'important');
+          
+          // Применяем фон к body
+          bodyElement.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
+          bodyElement.style.setProperty('background-repeat', 'no-repeat', 'important');
+          bodyElement.style.setProperty('background-size', 'cover', 'important');
+          bodyElement.style.setProperty('-webkit-background-size', 'cover', 'important');
+          bodyElement.style.setProperty('background-attachment', 'scroll', 'important');
+          bodyElement.style.setProperty('-webkit-background-attachment', 'scroll', 'important');
+          bodyElement.style.setProperty('background-position', 'center top', 'important');
+          bodyElement.style.setProperty('-webkit-background-position', 'center top', 'important');
+          bodyElement.style.setProperty('min-height', '100vh', 'important');
+          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (body + cover + scroll)', 'URL:', imageUrl);
         } else {
-          // Для Android и десктопа: cover + fixed (старый код)
+          // Для Android и десктопа: фон на html элемент (старый код)
+          const htmlElement = document.documentElement;
+          htmlElement.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
+          htmlElement.style.setProperty('background-repeat', 'no-repeat', 'important');
+          htmlElement.style.setProperty('background-color', 'transparent', 'important');
           htmlElement.style.setProperty('background-size', 'cover', 'important');
           htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
           htmlElement.style.setProperty('background-position', 'center center', 'important');
+          
+          // Body прозрачный
+          document.body.style.setProperty('background-color', 'transparent', 'important');
+          document.body.style.setProperty('background-image', 'none', 'important');
+          
           console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Android/Mobile' : 'Desktop', 'URL:', imageUrl);
         }
-        
-        // Body прозрачный
-        document.body.style.setProperty('background-color', 'transparent', 'important');
-        document.body.style.setProperty('background-image', 'none', 'important');
         
         // Убедимся что root элемент не перекрывает фон
         const rootElement = document.getElementById('root');
