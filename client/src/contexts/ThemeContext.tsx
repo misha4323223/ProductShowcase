@@ -122,8 +122,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           htmlElement.style.setProperty('-webkit-background-attachment', 'fixed', 'important');
           htmlElement.style.setProperty('background-position', 'center center', 'important');
           htmlElement.style.setProperty('-webkit-background-position', 'center center', 'important');
-          // iOS Safari фиксы
-          htmlElement.style.setProperty('background-size', '100% 100%', 'important');
           console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (cover+webkit fix)', 'URL:', imageUrl);
         } else {
           // Для Android и десктопа: cover + fixed (старый код)
