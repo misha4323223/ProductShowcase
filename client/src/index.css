@@ -106,27 +106,8 @@ html.light body {
   background-color: white;
 }
 
-@keyframes chameleon-gradient {
-  0% {
-    background: linear-gradient(135deg, #0f172a 0%, #1a2463 30%, #1a2463 70%, #0f172a 100%);
-  }
-  25% {
-    background: linear-gradient(135deg, #1a2463 0%, #1e3a5f 30%, #2d5a7b 70%, #1a2463 100%);
-  }
-  50% {
-    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 30%, #1a2463 70%, #1e3a5f 100%);
-  }
-  75% {
-    background: linear-gradient(135deg, #1a2463 0%, #1e3a5f 30%, #2d5a7b 70%, #1a2463 100%);
-  }
-  100% {
-    background: linear-gradient(135deg, #0f172a 0%, #1a2463 30%, #1a2463 70%, #0f172a 100%);
-  }
-}
-
 html.dark {
-  background: linear-gradient(135deg, #0f172a 0%, #1a2463 30%, #1a2463 70%, #0f172a 100%);
-  animation: chameleon-gradient 8s ease-in-out infinite;
+  background: linear-gradient(135deg, #1a2463 0%, #0f172a 100%);
 }
 
 html.dark body {
