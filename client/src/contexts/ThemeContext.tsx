@@ -105,22 +105,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
       
       if (imageUrl) {
-        document.body.style.backgroundImage = `url('${imageUrl}')`;
-        document.body.style.backgroundRepeat = 'no-repeat';
-        document.body.style.width = '100vw';
-        document.body.style.minHeight = '100vh';
-        document.body.style.margin = '0';
-        document.body.style.padding = '0';
+        document.body.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
+        document.body.style.setProperty('background-repeat', 'no-repeat', 'important');
+        document.body.style.setProperty('background-color', 'transparent', 'important');
+        document.body.style.setProperty('width', '100vw', 'important');
+        document.body.style.setProperty('min-height', '100vh', 'important');
+        document.body.style.setProperty('margin', '0', 'important');
+        document.body.style.setProperty('padding', '0', 'important');
         
         // На мобильных: 100% auto (портретные изображения); на десктопе: cover (широкие изображения)
         if (isMobile) {
-          document.body.style.backgroundSize = '100% auto';
-          document.body.style.backgroundAttachment = 'scroll';
-          document.body.style.backgroundPosition = 'top center';
+          document.body.style.setProperty('background-size', '100% auto', 'important');
+          document.body.style.setProperty('background-attachment', 'scroll', 'important');
+          document.body.style.setProperty('background-position', 'top center', 'important');
         } else {
-          document.body.style.backgroundSize = 'cover';
-          document.body.style.backgroundAttachment = 'fixed';
-          document.body.style.backgroundPosition = 'center center';
+          document.body.style.setProperty('background-size', 'cover', 'important');
+          document.body.style.setProperty('background-attachment', 'fixed', 'important');
+          document.body.style.setProperty('background-position', 'center center', 'important');
         }
         
         console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile (100% auto - portrait)' : 'Desktop (cover - landscape)', 'URL:', imageUrl);
