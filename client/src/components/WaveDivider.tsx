@@ -36,6 +36,7 @@ export function WaveDivider() {
         <path
           d="M 0,0 L 1200,0 L 1200,35 Q 1050,55 900,40 T 600,40 T 300,40 T 0,35 L 0,0 Z"
           fill={waveColor}
+          opacity="0.5"
         />
       </svg>
     </div>
