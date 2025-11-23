@@ -1,0 +1,178 @@
+
+
+24 нояб. 01:23:05.122
+REPORT RequestID: 461c2a96-484e-4669-a1df-4b37a26c1658 Duration: 434.076 ms Billed Duration: 500 ms Memory Size: 256 MB Max Memory Used: 107 MB Queuing Duration: 0.026 ms Function Init Duration: 186.556 ms CPU Usage: 11.133 %
+
+24 нояб. 01:23:05.122
+END RequestID: 461c2a96-484e-4669-a1df-4b37a26c1658
+
+24 нояб. 01:23:05.119
+}
+
+24 нояб. 01:23:05.119
+__type: 'ru.yandex.docapi.v20120810#ValidationException'
+
+24 нояб. 01:23:05.119
+},
+
+24 нояб. 01:23:05.119
+totalRetryDelay: 0
+
+24 нояб. 01:23:05.119
+attempts: 1,
+
+24 нояб. 01:23:05.119
+cfId: undefined,
+
+24 нояб. 01:23:05.119
+extendedRequestId: undefined,
+
+24 нояб. 01:23:05.119
+requestId: 'ac0ccee7-0040-4c97-bef9-9e273c873e42',
+
+24 нояб. 01:23:05.119
+httpStatusCode: 400,
+
+24 нояб. 01:23:05.119
+'$metadata': {
+
+24 нояб. 01:23:05.119
+'$retryable': undefined,
+
+24 нояб. 01:23:05.119
+'$fault': 'client',
+
+24 нояб. 01:23:05.119
+at async exports.handler [as handlerFn] (/function/code/index.js:311:24) {
+
+24 нояб. 01:23:05.119
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+24 нояб. 01:23:05.119
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+24 нояб. 01:23:05.119
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+24 нояб. 01:23:05.119
+at async /function/code/node_modules/@aws-sdk/lib-dynamodb/dist-cjs/index.js:107:34
+
+24 нояб. 01:23:05.119
+at async /function/code/node_modules/@smithy/core/dist-cjs/submodules/schema/index.js:26:24
+
+24 нояб. 01:23:05.119
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+24 нояб. 01:23:05.119
+at AwsJson1_0Protocol.deserializeResponse (/function/code/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:473:24)
+
+24 нояб. 01:23:05.119
+at AwsJson1_0Protocol.handleError (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:640:65)
+
+24 нояб. 01:23:05.119
+at ProtocolLib.getErrorSchemaOrThrowBaseException (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:69:67)
+
+24 нояб. 01:23:05.119
+Error spinning wheel: ValidationException: Missing value for required parameter "id"
+
+24 нояб. 01:23:05.083
+Current spins: 10 Total earned: 40
+
+24 нояб. 01:23:04.881
+User ID: mi8xbi6wieiez6d8s9 Email: pimashin2015@gmail.com
+
+24 нояб. 01:23:04.880
+}
+
+24 нояб. 01:23:04.880
+"X-Trace-Id": "1e98a16b-2503-45b5-91c6-5b68a126a802"
+
+24 нояб. 01:23:04.880
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+24 нояб. 01:23:04.880
+"X-Serverless-Certificate-Ids": "{}",
+
+24 нояб. 01:23:04.880
+"X-Request-Id": "d2f17f87-ebb1-4739-b239-29a155750a8b",
+
+24 нояб. 01:23:04.880
+"X-Real-Remote-Address": "188.168.248.233:40970",
+
+24 нояб. 01:23:04.880
+"X-Forwarded-Proto": "https",
+
+24 нояб. 01:23:04.880
+"X-Forwarded-For": "188.168.248.233",
+
+24 нояб. 01:23:04.880
+"X-Envoy-Original-Path": "/wheel/spin",
+
+24 нояб. 01:23:04.880
+"X-Envoy-External-Address": "188.168.248.233",
+
+24 нояб. 01:23:04.880
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+24 нояб. 01:23:04.880
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+
+24 нояб. 01:23:04.880
+"Uber-Trace-Id": "e1630006a4a47cfc:6706b82e653349fd:4c611172a0bc79b4:1",
+
+24 нояб. 01:23:04.880
+"Sec-Fetch-Site": "cross-site",
+
+24 нояб. 01:23:04.880
+"Sec-Fetch-Mode": "cors",
+
+24 нояб. 01:23:04.880
+"Sec-Fetch-Dest": "empty",
+
+24 нояб. 01:23:04.880
+"Sec-Ch-Ua-Platform": "\"Windows\"",
+
+24 нояб. 01:23:04.880
+"Sec-Ch-Ua-Mobile": "?0",
+
+24 нояб. 01:23:04.880
+"Sec-Ch-Ua": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"",
+
+24 нояб. 01:23:04.880
+"Referer": "https://40429076-96be-478a-b31d-b19e62264374-00-28fpqgrtjuhxm.sisko.replit.dev/",
+
+24 нояб. 01:23:04.879
+"Priority": "u=1, i",
+
+24 нояб. 01:23:04.879
+"Origin": "https://40429076-96be-478a-b31d-b19e62264374-00-28fpqgrtjuhxm.sisko.replit.dev",
+
+24 нояб. 01:23:04.879
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+24 нояб. 01:23:04.879
+"Content-Type": "application/json",
+
+24 нояб. 01:23:04.879
+"Content-Length": "0",
+
+24 нояб. 01:23:04.879
+"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtaTh4Ymk2d2llaWV6NmQ4czkiLCJlbWFpbCI6InBpbWFzaGluMjAxNUBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjM5MTE5NTYsImV4cCI6MTc2NjUwMzk1Nn0.c93K-tk1T4W0T2aKzPhB0tV-KVmXBuNrB6SewRb-xc0",
+
+24 нояб. 01:23:04.879
+"Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+
+24 нояб. 01:23:04.879
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+24 нояб. 01:23:04.879
+"Accept": "*/*",
+
+24 нояб. 01:23:04.879
+Headers: {
+
+24 нояб. 01:23:04.879
+=== SPIN WHEEL REQUEST ===
+
+24 нояб. 01:23:04.685
+START RequestID: 461c2a96-484e-4669-a1df-4b37a26c1658 Version: d4el43p0giqsm8a8u42m
