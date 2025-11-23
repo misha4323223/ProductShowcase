@@ -291,7 +291,7 @@ export default function Home() {
                 <p className="text-sm text-muted-foreground">{String(categoriesError)}</p>
               </div>
             ) : categoriesLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-10">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="aspect-square bg-muted animate-pulse rounded-3xl" />
                 ))}
@@ -301,7 +301,7 @@ export default function Home() {
                 <p className="text-muted-foreground">Категории не найдены</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-10">
                 {categoriesWithImages.map((category: CategoryWithImages) => (
                   <CategoryCard
                     key={category.id}
