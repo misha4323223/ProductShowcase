@@ -310,6 +310,7 @@ export default function Home() {
                     webpImage={category.webpImage}
                     onClick={() => setLocation(`/category/${category.slug}`)}
                     theme={theme}
+                    isDarkMode={theme === 'dark'}
                   />
                 ))}
               </div>
