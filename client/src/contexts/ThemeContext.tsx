@@ -105,9 +105,32 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
       
       if (imageUrl) {
-        // Улучшенный iOS detection (platform + touch support)
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        // Надежный iOS detection с несколькими fallback методами
+        const detectIOS = (): boolean => {
+          // Метод 1: navigator.userAgentData (новый API)
+          if ('userAgentData' in navigator) {
+            const uaData = (navigator as any).userAgentData;
+            if (uaData?.platform === 'iOS') return true;
+          }
+          
+          // Метод 2: классический userAgent
+          if (/iPad|iPhone|iPod/.test(navigator.userAgent)) return true;
+          
+          // Метод 3: MacIntel + touch support (iPad в desktop режиме)
+          if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return true;
+          
+          // Метод 4: проверка touchstart event (последний fallback)
+          if ('ontouchstart' in window && navigator.maxTouchPoints > 0) {
+            // Дополнительная проверка что это не Android
+            if (!/Android/.test(navigator.userAgent)) {
+              return true;
+            }
+          }
+          
+          return false;
+        };
+        
+        const isIOS = detectIOS();
         
         if (isIOS && isMobile) {
           // Для iOS: используем ::before псевдоэлемент с contain вместо cover
