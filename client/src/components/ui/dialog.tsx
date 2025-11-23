@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-[99998] bg-black/50 backdrop-blur-sm dialog-overlay data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-[99998] bg-black/50 backdrop-blur-sm dialog-overlay data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 flex items-center justify-center",
       className
     )}
     {...props}
@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-0 z-[99999] flex items-center justify-center border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-lg",
+        "z-[99999] border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-lg w-[95vw] max-w-lg max-h-[85vh] p-6 gap-4 flex flex-col",
         // Базовые цвета для светлой и тёмной темы
         "bg-white dark:bg-slate-950 text-black dark:text-white",
         // Сезонные темы - явные светлые фоны
@@ -48,15 +48,6 @@ const DialogContent = React.forwardRef<
         "[html.autumn_&]:bg-white [html.autumn_&]:text-black",
         className
       )}
-      style={{
-        maxWidth: '95vw',
-        maxHeight: '85vh',
-        width: 'auto',
-        padding: '1.5rem',
-        gap: '1rem',
-        display: 'flex',
-        flexDirection: 'column'
-      } as React.CSSProperties}
       {...props}
     >
       {children}
