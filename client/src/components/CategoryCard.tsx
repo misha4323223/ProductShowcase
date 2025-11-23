@@ -20,7 +20,7 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
-      <Card className={`overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-3 ${isNewYear ? 'new-year-category-card-image border-2 border-red-600/40 shadow-red-900/30' : 'border-0 hover:shadow-pink-300/50'}`}>
+      <Card className={`overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-3 bg-transparent ${isNewYear ? 'new-year-category-card-image border-2 border-red-600/40 shadow-red-900/30' : 'border-0 hover:shadow-pink-300/50'}`}>
         <div className={`aspect-[4/3] overflow-hidden rounded-xl ${isNewYear ? '' : 'sugar-crystals'}`}>
           <OptimizedImage
             src={image}
