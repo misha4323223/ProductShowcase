@@ -304,14 +304,18 @@ html.sakura {
 html.sakura body {
   background-image: url('/sakura-bg.png');
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-attachment: fixed;
+  background-repeat: no-repeat;
   background-color: transparent;
-  image-rendering: high-quality;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
   filter: contrast(1.05) brightness(1.02);
+  width: 100%;
+  min-height: 100vh;
 
   --background: 340 70% 96%;
 
@@ -555,14 +559,18 @@ html.spring {
 html.spring body {
   background-image: url('/spring-bg.png');
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-attachment: fixed;
+  background-repeat: no-repeat;
   background-color: transparent;
-  image-rendering: high-quality;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
   filter: contrast(1.05) brightness(1.02);
+  width: 100%;
+  min-height: 100vh;
 
   --background: 120 50% 97%;
   --foreground: 120 40% 25%;
@@ -638,14 +646,18 @@ html.autumn {
 html.autumn body {
   background-image: url('/autumn-bg.png');
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-attachment: fixed;
+  background-repeat: no-repeat;
   background-color: transparent;
-  image-rendering: high-quality;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
   filter: contrast(1.05) brightness(1.02);
+  width: 100%;
+  min-height: 100vh;
 
   --background: 25 50% 12%;
   --foreground: 25 50% 90%;
