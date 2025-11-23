@@ -53,9 +53,7 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
   background-color: white;
 }
 
-/* ===== DIALOG ЦЕНТРИРОВАНИЕ - ГЛОБАЛЬНЫЙ ФИКС ===== */
-
-/* Основной селектор Radix UI */
+/* Dialog ВСЕГДА в центре экрана - ТОЛЬКО ПОЗИЦИОНИРОВАНИЕ */
 [data-radix-dialog-content] {
   position: fixed !important;
   inset: auto !important;
@@ -63,31 +61,6 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
   left: 50vw !important;
   translate: -50% -50% !important;
   transform: none !important;
-  right: auto !important;
-  bottom: auto !important;
-}
-
-/* Universal fallback для всех dialog-like элементов */
-div[role="alertdialog"],
-div[role="dialog"],
-[role="dialog"],
-[role="alertdialog"] {
-  position: fixed !important;
-  inset: auto !important;
-  top: 50vh !important;
-  left: 50vw !important;
-  translate: -50% -50% !important;
-  transform: none !important;
-}
-
-/* Переопределяем Tailwind fixed класс если он остался */
-[data-radix-dialog-content].fixed,
-div[role="dialog"].fixed,
-div[role="alertdialog"].fixed {
-  position: fixed !important;
-  top: 50vh !important;
-  left: 50vw !important;
-  translate: -50% -50% !important;
 }
 
 html.light body {
