@@ -286,7 +286,7 @@ export async function getWheelStatus(userId: string): Promise<WheelStatusRespons
 }
 
 // Крутить рулетку
-export async function spinWheel(): Promise<SpinWheelResponse> {
+export async function spinWheel(userId: string): Promise<SpinWheelResponse> {
   const token = localStorage.getItem('authToken');
   
   const response = await fetch(`${API_BASE_URL}/wheel/spin`, {
@@ -295,6 +295,7 @@ export async function spinWheel(): Promise<SpinWheelResponse> {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify({ id: userId }),
   });
 
   if (!response.ok) {
