@@ -23,9 +23,8 @@ html, body {
 /* Новогодняя тема - портретный фон для мобильных */
 @media (max-width: 1024px) {
   html.new-year body {
-    background-image: url('/new-year-mobile-slide.png') !important;
     background-size: contain !important;
-    background-position: center center !important;
+    background-position: center top !important;
     background-attachment: scroll !important;
     background-repeat: no-repeat !important;
   }
@@ -34,7 +33,6 @@ html, body {
 /* На десктопе новогодняя тема - ландшафтный фон */
 @media (min-width: 1025px) {
   html.new-year body {
-    background-image: url('/new-year-bg.png') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-attachment: fixed !important;
@@ -424,11 +422,6 @@ html.new-year {
 }
 
 html.new-year body {
-  background-image: url('/new-year-bg.png');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
   background-color: transparent;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
