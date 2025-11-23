@@ -230,8 +230,22 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.add(theme);
     console.log('🎨 Theme applied:', theme);
 
-    // Apply background для новой темы (когда тема измениласьс)
-    if (backgroundSettings && Object.keys(backgroundSettings).length > 0) {
+    // Clear background for light/dark themes, apply for seasonal themes
+    if (['light', 'dark'].includes(theme)) {
+      // Очищаем фон для светлых/тёмных тем
+      root.style.setProperty('background-image', 'none', 'important');
+      root.style.setProperty('background-color', 'transparent', 'important');
+      document.body.style.setProperty('background-image', 'none', 'important');
+      document.body.style.setProperty('background-color', 'transparent', 'important');
+      const rootElement = document.getElementById('root');
+      if (rootElement) {
+        rootElement.classList.remove('ios-background');
+        rootElement.style.setProperty('background-image', 'none', 'important');
+        rootElement.style.setProperty('background-color', 'transparent', 'important');
+      }
+      console.log('🧹 Background cleared for theme:', theme);
+    } else if (backgroundSettings && Object.keys(backgroundSettings).length > 0) {
+      // Apply background для сезонных тем
       applyBackgroundToTheme(theme, backgroundSettings);
     }
 
