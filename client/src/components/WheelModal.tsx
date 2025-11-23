@@ -200,7 +200,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 text-black dark:text-white">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Левая колонка - Инструкция */}
               <div className="space-y-3">
