@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 
 interface Sunflare {
   id: number;
+  top: number;
   left: number;
   delay: number;
   duration: number;
   width: number;
   height: number;
-  swingAmount: number;
 }
 
 export default function SunflareParticles() {
@@ -17,14 +17,14 @@ export default function SunflareParticles() {
 
   useEffect(() => {
     if (theme === 'spring') {
-      const newSunflares = Array.from({ length: 35 }, (_, i) => ({
+      const newSunflares = Array.from({ length: 30 }, (_, i) => ({
         id: i,
-        left: Math.random() * 100,
-        delay: Math.random() * 10,
-        duration: 22 + Math.random() * 18,
-        width: 8 + Math.random() * 25,
-        height: 60 + Math.random() * 100,
-        swingAmount: 40 + Math.random() * 100,
+        top: Math.random() * 80,
+        left: Math.random() * 90,
+        delay: Math.random() * 12,
+        duration: 4 + Math.random() * 3,
+        width: 8 + Math.random() * 20,
+        height: 50 + Math.random() * 80,
       }));
       setSunflares(newSunflares);
       console.log('☀️ Солнечные зайчики активированы!');
@@ -42,12 +42,11 @@ export default function SunflareParticles() {
           key={flare.id}
           className="sunflare"
           style={{
+            top: `${flare.top}%`,
             left: `${flare.left}%`,
             animationDelay: `${flare.delay}s`,
             animationDuration: `${flare.duration}s`,
-            '--flare-swing': `${flare.swingAmount}px`,
-          } as React.CSSProperties & { '--flare-swing': string }
-          }
+          }}
         >
           <svg
             viewBox="0 0 20 100"
