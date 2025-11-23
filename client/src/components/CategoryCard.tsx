@@ -20,7 +20,7 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
       onClick={onClick}
       data-testid={`card-category-${name.toLowerCase()}`}
     >
-      <Card className={`overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 ${isNewYear ? 'new-year-category-card-image' : 'hover:shadow-pink-300/50'}`}>
+      <Card className={`overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${isNewYear ? 'new-year-category-card-image border-2 border-red-600/40 shadow-red-900/30' : 'border-0 hover:shadow-pink-300/50'}`}>
         <div className={`aspect-[4/3] overflow-hidden rounded-2xl ${isNewYear ? '' : 'sugar-crystals'}`}>
           <OptimizedImage
             src={image}
@@ -34,10 +34,12 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme }: Categ
       </Card>
       
       <div className={`mt-4 text-center ${isNewYear ? 'new-year-category-title' : ''}`}>
-        <h3 className={`font-serif text-xl md:text-2xl font-bold transition-transform duration-300 group-hover:scale-105 ${isNewYear ? 'text-white' : 'text-foreground'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
+        <h3 className={`font-serif text-xl md:text-2xl font-bold transition-transform duration-300 group-hover:scale-105 ${isNewYear ? '' : 'text-foreground'}`} data-testid={`text-category-name-${name.toLowerCase()}`}>
+          {isNewYear && <Sparkles className="inline-block w-5 h-5 mr-1 text-yellow-400 animate-pulse" />}
           {name}
+          {isNewYear && <Sparkles className="inline-block w-5 h-5 ml-1 text-yellow-400 animate-pulse" />}
         </h3>
-        <div className={`h-1 w-16 rounded-full mx-auto mt-2 transition-all duration-300 ${isNewYear ? 'bg-gradient-to-r from-yellow-300 to-orange-300' : 'bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400'}`} />
+        <div className={`h-1 w-16 rounded-full mx-auto mt-2 transition-all duration-300 ${isNewYear ? 'bg-gradient-to-r from-red-500 via-yellow-300 to-red-500' : 'bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400'}`} />
       </div>
     </div>
   );
