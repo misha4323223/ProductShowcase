@@ -110,9 +110,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         htmlElement.style.setProperty('background-image', `url('${imageUrl}')`, 'important');
         htmlElement.style.setProperty('background-repeat', 'no-repeat', 'important');
         htmlElement.style.setProperty('background-color', 'transparent', 'important');
-        htmlElement.style.setProperty('background-size', 'cover', 'important');
-        htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
-        htmlElement.style.setProperty('background-position', 'center center', 'important');
+        
+        // Обнаруживаем iOS устройство
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        
+        if (isIOS && isMobile) {
+          // Специально для iPhone: contain + scroll (fixed вызывает растяжение на iOS Safari)
+          htmlElement.style.setProperty('background-size', 'contain', 'important');
+          htmlElement.style.setProperty('background-attachment', 'scroll', 'important');
+          htmlElement.style.setProperty('background-position', 'top center', 'important');
+          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', 'iPhone (contain+scroll)', 'URL:', imageUrl);
+        } else {
+          // Для Android и десктопа: cover + fixed (старый код)
+          htmlElement.style.setProperty('background-size', 'cover', 'important');
+          htmlElement.style.setProperty('background-attachment', 'fixed', 'important');
+          htmlElement.style.setProperty('background-position', 'center center', 'important');
+          console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Android/Mobile' : 'Desktop', 'URL:', imageUrl);
+        }
         
         // Body прозрачный
         document.body.style.setProperty('background-color', 'transparent', 'important');
@@ -124,8 +138,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           (rootElement as HTMLElement).style.setProperty('background-color', 'transparent', 'important');
           (rootElement as HTMLElement).style.setProperty('background-image', 'none', 'important');
         }
-        
-        console.log('🖼️ Background applied for theme:', currentTheme, 'Device:', isMobile ? 'Mobile' : 'Desktop', 'URL:', imageUrl);
       }
     }
   };
