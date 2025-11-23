@@ -106,27 +106,33 @@ html.light body {
   background-color: white;
 }
 
-@keyframes chameleon-shift {
+@keyframes chameleon-gradient {
   0% {
-    background-color: #0f172a;
+    background: linear-gradient(135deg, #0f172a, #1a2463, #1a2463, #0f172a);
+    background-position: 0% 50%;
   }
   25% {
-    background-color: #1a2463;
+    background: linear-gradient(135deg, #1a2463, #1e3a5f, #2d5a7b, #1a2463);
+    background-position: 25% 50%;
   }
   50% {
-    background-color: #1e3a5f;
+    background: linear-gradient(135deg, #1e3a5f, #2d5a7b, #1a2463, #1e3a5f);
+    background-position: 50% 50%;
   }
   75% {
-    background-color: #1a2463;
+    background: linear-gradient(135deg, #1a2463, #1e3a5f, #2d5a7b, #1a2463);
+    background-position: 75% 50%;
   }
   100% {
-    background-color: #0f172a;
+    background: linear-gradient(135deg, #0f172a, #1a2463, #1a2463, #0f172a);
+    background-position: 100% 50%;
   }
 }
 
 html.dark {
-  background-color: #0f172a;
-  animation: chameleon-shift 8s ease-in-out infinite;
+  background: linear-gradient(135deg, #0f172a, #1a2463, #1a2463, #0f172a);
+  background-size: 400% 400%;
+  animation: chameleon-gradient 8s ease-in-out infinite;
 }
 
 html.dark body {
