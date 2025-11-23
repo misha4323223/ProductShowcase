@@ -34,20 +34,14 @@ html, body {
 /* На десктопе новогодняя тема - ландшафтный фон */
 @media (min-width: 1025px) {
   html.new-year body {
+    background-image: url('/new-year-bg.png') !important;
     background-size: cover !important;
     background-position: center center !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+    width: 100% !important;
     min-height: 100vh !important;
   }
-}
-
-/* Дополнительная фиксация для новогодней темы на всех разрешениях */
-html.new-year body {
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  width: 100% !important;
-  min-height: 100vh !important;
 }
 
 /* Default background для светлой темы */
