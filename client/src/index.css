@@ -23,10 +23,10 @@ html, body {
 /* Новогодняя тема - портретный фон для мобильных */
 @media (max-width: 1024px) {
   html.new-year body {
-    background-size: cover !important;
-    background-position: center center !important;
+    background-size: 100% auto !important;
+    background-position: center top !important;
     background-attachment: scroll !important;
-    background-repeat: no-repeat !important;
+    background-repeat: repeat-y !important;
   }
 }
 
