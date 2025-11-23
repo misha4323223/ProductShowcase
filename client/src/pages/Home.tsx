@@ -270,7 +270,7 @@ export default function Home() {
         {/* Волнистый разделитель между слайдером и категориями */}
         <WaveDivider />
 
-        <section className="py-16 candy-stripe">
+        <section className={`py-16 ${theme === 'new-year' ? 'bg-transparent' : 'candy-stripe'}`}>
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
               <h2 
@@ -317,7 +317,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-16 bg-gradient-to-b from-pink-50/30 via-purple-50/20 to-background relative pastel-dots">
+        <section className={`py-16 ${theme === 'new-year' ? 'bg-transparent' : 'bg-gradient-to-b from-pink-50/30 via-purple-50/20 to-background'} relative ${theme === 'new-year' ? '' : 'pastel-dots'}`}>
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-12">
               <h2 
