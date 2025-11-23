@@ -38,7 +38,14 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-[10001] translate-x-[-50%] translate-y-[-50%] border bg-white dark:bg-slate-950 text-black dark:text-white shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg w-[95vw] max-w-lg max-h-[85vh] p-6 gap-4 flex flex-col",
+        "fixed left-[50%] top-[50%] z-[10001] translate-x-[-50%] translate-y-[-50%] border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg w-[95vw] max-w-lg max-h-[85vh] p-6 gap-4 flex flex-col",
+        // Базовые цвета для светлой и тёмной темы
+        "bg-white dark:bg-slate-950 text-black dark:text-white",
+        // Сезонные темы - явные светлые фоны
+        "[html.sakura_&]:bg-white [html.sakura_&]:text-black",
+        "[html.new-year_&]:bg-white [html.new-year_&]:text-black",
+        "[html.spring_&]:bg-white [html.spring_&]:text-black",
+        "[html.autumn_&]:bg-white [html.autumn_&]:text-black",
         className
       )}
       {...props}
