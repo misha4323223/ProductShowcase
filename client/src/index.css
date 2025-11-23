@@ -61,6 +61,7 @@ html.light body {
 @keyframes autumn-leaf-fall {
   0% {
     transform: translateY(-100px) translateX(0) rotateZ(0deg);
+    opacity: 1;
   }
   25% {
     transform: translateY(30vh) translateX(var(--leaf-swing)) rotateZ(90deg);
@@ -73,6 +74,7 @@ html.light body {
   }
   100% {
     transform: translateY(150vh) translateX(0) rotateZ(360deg);
+    opacity: 0;
   }
 }
 
