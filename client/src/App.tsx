@@ -17,6 +17,7 @@ import LegalDialog from "@/components/LegalDialog";
 import { useLegalDialog } from "@/contexts/LegalDialogContext";
 import { useScrollPause } from "@/hooks/use-scroll-pause";
 import { initAnalytics } from "@/lib/analytics";
+import AutumnRain from "@/components/AutumnRain";
 
 // Главная страница загружается сразу (критичная для первого отображения)
 import Home from "@/pages/Home";
@@ -110,6 +111,7 @@ function App() {
                 <WheelProvider>
                   <LegalDialogProvider>
                     <TooltipProvider>
+                      <AutumnRain />
                       <Toaster />
                       <CookieBanner />
                       <Router />
