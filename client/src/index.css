@@ -106,20 +106,8 @@ html.light body {
   background-color: white;
 }
 
-html.dark body {
+html.dark {
   background-color: #0f172a;
-  position: relative;
-  overflow-x: hidden;
-}
-
-
-html.dark body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   background-image: 
     radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(255, 255, 255, 0.4)),
     radial-gradient(1px 1px at 60px 70px, #ffffff, rgba(255, 255, 255, 0.5)),
@@ -151,8 +139,13 @@ html.dark body::before {
     30px 70px,
     70px 40px;
   background-repeat: repeat;
-  z-index: 1;
-  pointer-events: none;
+  background-attachment: fixed;
+}
+
+html.dark body {
+  background-color: transparent;
+  position: relative;
+  overflow-x: hidden;
 }
 
 /* SUNFLARE PARTICLES ANIMATION - Real Sun Reflections */
