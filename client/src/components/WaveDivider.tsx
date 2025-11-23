@@ -12,6 +12,10 @@ export function WaveDivider() {
         return '#90EE90'; // Светло-зелёный для весны
       case 'autumn':
         return '#CD853F'; // Коричнево-оранжевый для осени
+      case 'dark':
+        return '#1a2463'; // Тёмно-синий для тёмной темы
+      case 'light':
+        return '#f3f4f6'; // Светло-серый для светлой темы
       case 'sakura':
       default:
         return '#FFB6D9'; // Розовый для сакуры

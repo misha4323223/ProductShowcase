@@ -108,27 +108,25 @@ html.light body {
 
 @keyframes chameleon-shift {
   0% {
-    background: linear-gradient(135deg, #0f172a 0%, #1a2463 25%, #0f172a 50%, #1a2463 75%, #0f172a 100%);
+    background-color: #0f172a;
   }
   25% {
-    background: linear-gradient(135deg, #1a2463 0%, #1e3a5f 25%, #1a2463 50%, #1e3a5f 75%, #1a2463 100%);
+    background-color: #1a2463;
   }
   50% {
-    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 25%, #1e3a5f 50%, #2d5a7b 75%, #1e3a5f 100%);
+    background-color: #1e3a5f;
   }
   75% {
-    background: linear-gradient(135deg, #1a2463 0%, #1e3a5f 25%, #1a2463 50%, #1e3a5f 75%, #1a2463 100%);
+    background-color: #1a2463;
   }
   100% {
-    background: linear-gradient(135deg, #0f172a 0%, #1a2463 25%, #0f172a 50%, #1a2463 75%, #0f172a 100%);
+    background-color: #0f172a;
   }
 }
 
 html.dark {
-  background: linear-gradient(135deg, #0f172a 0%, #1a2463 25%, #0f172a 50%, #1a2463 75%, #0f172a 100%);
+  background-color: #0f172a;
   animation: chameleon-shift 8s ease-in-out infinite;
-  background-size: 400% 400%;
-  background-attachment: fixed;
 }
 
 html.dark body {
