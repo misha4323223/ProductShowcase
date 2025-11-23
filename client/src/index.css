@@ -683,6 +683,13 @@ html.autumn body {
 
   html {
     font-size: 16px;
+    height: auto;
+  }
+
+  @media only screen and (max-width: 1024px) {
+    html {
+      height: auto !important;
+    }
   }
 
   body {
@@ -706,10 +713,12 @@ html.autumn body {
     }
   }
 
-  /* На мобилях НЕ ограничиваем высоту чтобы contain работал правильно */
+  /* На мобилях снимаем все ограничения высоты для правильного отображения фона */
   @media only screen and (max-width: 1024px) {
     body {
+      height: auto !important;
       min-height: auto !important;
+      max-height: none !important;
     }
   }
 
