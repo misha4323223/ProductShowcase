@@ -232,18 +232,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     // Clear background for light/dark themes, apply for seasonal themes
     if (['light', 'dark'].includes(theme)) {
-      // Очищаем фон для светлых/тёмных тем
+      // Очищаем фон для светлых/тёмных тем и устанавливаем правильный цвет
+      const bgColor = theme === 'dark' ? '#0f172a' : '#ffffff';
       root.style.setProperty('background-image', 'none', 'important');
-      root.style.setProperty('background-color', 'transparent', 'important');
+      root.style.setProperty('background-color', bgColor, 'important');
       document.body.style.setProperty('background-image', 'none', 'important');
-      document.body.style.setProperty('background-color', 'transparent', 'important');
+      document.body.style.setProperty('background-color', bgColor, 'important');
       const rootElement = document.getElementById('root');
       if (rootElement) {
         rootElement.classList.remove('ios-background');
         rootElement.style.setProperty('background-image', 'none', 'important');
         rootElement.style.setProperty('background-color', 'transparent', 'important');
       }
-      console.log('🧹 Background cleared for theme:', theme);
+      console.log('🧹 Background cleared and color set for theme:', theme);
     } else if (backgroundSettings && Object.keys(backgroundSettings).length > 0) {
       // Apply background для сезонных тем
       applyBackgroundToTheme(theme, backgroundSettings);
