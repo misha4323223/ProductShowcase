@@ -38,27 +38,23 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-0 z-[99999] flex items-center justify-center duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 p-4",
-        className
-      )}
-      {...props}
-    >
-      <div className={cn(
-        "border shadow-lg rounded-lg w-full max-w-lg max-h-[85vh] p-6 gap-4 flex flex-col overflow-auto",
+        "fixed z-[99999] border shadow-lg rounded-lg w-[95vw] max-w-lg max-h-[85vh] p-6 gap-4 flex flex-col overflow-auto duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         // Базовые цвета для светлой и тёмной темы
         "bg-white dark:bg-slate-950 text-black dark:text-white",
         // Сезонные темы - явные светлые фоны
         "[html.sakura_&]:bg-white [html.sakura_&]:text-black",
         "[html.new-year_&]:bg-white [html.new-year_&]:text-black",
         "[html.spring_&]:bg-white [html.spring_&]:text-black",
-        "[html.autumn_&]:bg-white [html.autumn_&]:text-black"
-      )}>
-        {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-      </div>
+        "[html.autumn_&]:bg-white [html.autumn_&]:text-black",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
 ))

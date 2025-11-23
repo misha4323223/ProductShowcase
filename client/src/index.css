@@ -53,13 +53,13 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
   background-color: white;
 }
 
-/* Dialog должен быть в центре экрана, независимо от скролла */
-[role="dialog"] {
+/* Dialog ВСЕГДА в центре экрана */
+[data-radix-dialog-content] {
   position: fixed !important;
-}
-
-[role="presentation"] {
-  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  inset: auto !important;
 }
 
 html.light body {
