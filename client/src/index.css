@@ -35,7 +35,19 @@ html, body {
 @media (min-width: 1025px) {
   html.new-year body {
     background-size: cover !important;
+    background-position: center center !important;
+    min-height: 100vh !important;
   }
+}
+
+/* Дополнительная фиксация для новогодней темы на всех разрешениях */
+html.new-year body {
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  width: 100% !important;
+  min-height: 100vh !important;
 }
 
 /* Default background для светлой темы */
@@ -416,14 +428,18 @@ html.new-year {
 html.new-year body {
   background-image: url('/new-year-bg.png');
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-attachment: fixed;
+  background-repeat: no-repeat;
   background-color: transparent;
-  image-rendering: high-quality;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
   filter: contrast(1.05) brightness(1.02);
+  width: 100%;
+  min-height: 100vh;
 
   --background: 0 10% 10%;
 
@@ -704,6 +720,8 @@ html.autumn body {
   body {
     overflow-x: hidden;
     max-width: 100vw;
+    width: 100%;
+    min-height: 100vh;
   }
 
   body {
