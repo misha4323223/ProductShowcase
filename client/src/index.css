@@ -53,6 +53,13 @@ body:not(html.sakura *):not(html.new-year *):not(html.spring *):not(html.autumn 
   background-color: white;
 }
 
+/* Dialog - видим в viewport */
+[data-radix-dialog-content] {
+  position: fixed !important;
+  top: auto !important;
+  left: auto !important;
+}
+
 html.light body {
   background-color: white;
 }
