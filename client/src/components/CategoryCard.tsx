@@ -9,10 +9,12 @@ interface CategoryCardProps {
   webpImage: string;
   onClick?: () => void;
   theme: string;
+  isDarkMode?: boolean;
 }
 
-function CategoryCardComponent({ name, image, webpImage, onClick, theme }: CategoryCardProps) {
+function CategoryCardComponent({ name, image, webpImage, onClick, theme, isDarkMode = false }: CategoryCardProps) {
   const isNewYear = useMemo(() => theme === 'new-year', [theme]);
+  const showNewYearStyle = isNewYear && !isDarkMode;
   
   return (
     <div 
