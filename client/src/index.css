@@ -13,6 +13,22 @@ html, body {
   body {
     background-attachment: scroll !important;
   }
+
+  /* На мобильных используем object-contain для правильного отображения портретных картинок */
+  .hero-slide-image {
+    object-fit: cover !important;
+  }
+}
+
+/* Новогодняя тема - портретный фон для мобильных */
+@media (max-width: 1024px) {
+  html.new-year body {
+    background-image: url('/new-year-mobile-slide.png') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-attachment: scroll !important;
+    background-repeat: no-repeat !important;
+  }
 }
 
 /* Default background для светлой темы */
