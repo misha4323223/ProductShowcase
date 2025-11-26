@@ -669,7 +669,6 @@ html.new-year body {
 html.new-year [data-testid^="accordion-order-"] {
   border-width: 2px !important;
   border-color: hsl(48 100% 50%) !important;
-  opacity: 0.4 !important;
 }
 
 html.new-year [data-testid^="accordion-order-"] span,
