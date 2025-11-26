@@ -15,7 +15,7 @@ const docClient = DynamoDBDocumentClient.from(client);
 exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
-    const { code, orderTotal } = body;
+    const { code, orderTotal, deliveryPrice } = body;
 
     if (!code || orderTotal === undefined) {
       return {
@@ -92,10 +92,10 @@ exports.handler = async (event) => {
           discountValue = 100;
           discountAmount = 0; // Будет рассчитано на основе конкретного товара
         } else if (wheelPrize.prizeType === 'delivery') {
-          // Бесплатная доставка - фиксированная скидка
+          // Бесплатная доставка - используем реальную стоимость доставки
           discountType = 'fixed';
-          discountValue = 300; // Примерная стоимость доставки
-          discountAmount = 300;
+          discountValue = deliveryPrice || 300; // Реальная стоимость или 300р по умолчанию
+          discountAmount = deliveryPrice || 300;
         } else if (wheelPrize.prizeType === 'points') {
           // Баллы не дают скидку на заказ
           return {

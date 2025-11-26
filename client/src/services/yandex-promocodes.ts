@@ -2,7 +2,7 @@ import type { PromoCode } from "@/types/firebase-types";
 
 const API_GATEWAY_URL = 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
 
-export async function validatePromoCode(code: string, orderTotal?: number): Promise<{ 
+export async function validatePromoCode(code: string, orderTotal?: number, deliveryPrice?: number): Promise<{ 
   valid: boolean; 
   discount?: number;
   promoCode?: PromoCode;
@@ -12,7 +12,7 @@ export async function validatePromoCode(code: string, orderTotal?: number): Prom
   const response = await fetch(`${API_GATEWAY_URL}/promocodes/validate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code, orderTotal }),
+    body: JSON.stringify({ code, orderTotal, deliveryPrice }),
   });
   
   if (!response.ok) {

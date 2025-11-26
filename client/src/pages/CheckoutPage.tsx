@@ -173,7 +173,7 @@ export default function CheckoutPage() {
 
     setIsCheckingPromo(true);
     try {
-      const result = await validatePromoCode(promoCodeInput, subtotal);
+      const result = await validatePromoCode(promoCodeInput, subtotal, deliveryPrice);
       
       if (result.valid && result.promoCode && result.discountAmount) {
         setPromoCode(result.promoCode.code);
