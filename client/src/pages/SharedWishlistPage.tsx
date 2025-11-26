@@ -28,23 +28,14 @@ export default function SharedWishlistPage() {
   const urlParts = window.location.pathname.split("/");
   const shareUserId = urlParts[urlParts.length - 1];
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  // Загружаем wishlist когда компонент монтируется
-  useEffect(() => {
-    loadSharedWishlist();
-  }, [shareUserId]);
-
-  const loadSharedWishlist = async () => {
+  const loadSharedWishlist = async (userId: string) => {
     try {
-      console.log("📋 Загрузка shared wishlist для userId:", shareUserId);
-      const items = await getPublicWishlist(shareUserId);
+      console.log("📋 Загрузка shared wishlist для userId:", userId);
+      const items = await getPublicWishlist(userId);
       console.log("✅ Получено товаров из wishlist:", items.length, items);
       setWishlistItems(items.map(item => item.productId));
       // Генерируем имя на основе userId (в реальном приложении это будет из профиля)
-      setUserName(`Список желаний #${shareUserId.slice(0, 8)}`);
+      setUserName(`Список желаний #${userId.slice(0, 8)}`);
       setLoading(false);
     } catch (error: any) {
       console.error("❌ Ошибка загрузки списка:", error);
@@ -53,6 +44,18 @@ export default function SharedWishlistPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Загружаем wishlist когда компонент монтируется или shareUserId меняется
+  useEffect(() => {
+    if (shareUserId && shareUserId !== 'share') {
+      console.log("🎯 Запуск загрузки wishlist для userId:", shareUserId);
+      loadSharedWishlist(shareUserId);
+    }
+  }, [shareUserId]);
 
   const wishlistProducts = products.filter(p => wishlistItems.includes(p.id));
   
