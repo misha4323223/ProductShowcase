@@ -33,6 +33,7 @@ import { getAllProducts, initRobokassaPayment } from "@/services/api-client";
 import { DeliverySelector } from "@/components/DeliverySelector";
 import { CdekPointSelector } from "@/components/CdekPointSelector";
 import { DeliveryCalculator } from "@/components/DeliveryCalculator";
+import { CitySearchSelector } from "@/components/CitySearchSelector";
 
 interface CartItem {
   id: string;
@@ -74,6 +75,7 @@ export default function CheckoutPage() {
   
   const [deliveryService, setDeliveryService] = useState<string | null>(null);
   const [deliveryType, setDeliveryType] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<{ code: number; name: string } | null>(null);
   const [selectedCdekPoint, setSelectedCdekPoint] = useState<any>(null);
   const [cdekDeliveryCost, setCdekDeliveryCost] = useState<number>(0);
   const [cdekTariffCode, setCdekTariffCode] = useState<number | null>(null);
@@ -630,10 +632,22 @@ export default function CheckoutPage() {
                         }}
                       />
 
-                      {deliveryService === 'CDEK' && deliveryType === 'PICKUP' && (
+                      {deliveryService === 'CDEK' && !selectedCity && (
+                        <CitySearchSelector
+                          onSelect={(city) => {
+                            setSelectedCity(city);
+                            setSelectedCdekPoint(null);
+                            setCdekDeliveryCost(0);
+                            setCdekTariffCode(null);
+                            setCdekEstimatedDays(null);
+                          }}
+                        />
+                      )}
+
+                      {deliveryService === 'CDEK' && deliveryType === 'PICKUP' && selectedCity && (
                         <>
                           <CdekPointSelector
-                            cityCode={270}
+                            cityCode={selectedCity.code}
                             onSelect={(point) => {
                               setSelectedCdekPoint(point);
                               setCdekDeliveryCost(0);
@@ -657,9 +671,9 @@ export default function CheckoutPage() {
                         </>
                       )}
 
-                      {deliveryService === 'CDEK' && deliveryType === 'DOOR' && (
+                      {deliveryService === 'CDEK' && deliveryType === 'DOOR' && selectedCity && (
                         <DeliveryCalculator
-                          cityCode={270}
+                          cityCode={selectedCity.code}
                           packages={deliveryPackages}
                           deliveryType="DOOR"
                           onCalculated={(cost, days, tariffCode) => {
