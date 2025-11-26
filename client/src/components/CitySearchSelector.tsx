@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { MapPin, Loader2 } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface City {
   code: number;
@@ -20,6 +19,7 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
   const [showResults, setShowResults] = useState(false);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Вызываем CDEK API для поиска городов
   const { data: citiesData, isLoading, error: queryError } = useQuery<{ success: boolean; data: City[] }>({
@@ -27,42 +27,25 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
     enabled: searchQuery.length >= 2,
   });
 
-  // Логируем ошибки
   if (queryError) {
     console.error('🔴 Ошибка поиска городов:', queryError);
-    console.error('💥 Ошибка детали:', {
-      message: (queryError as any)?.message,
-      status: (queryError as any)?.status,
-      statusCode: (queryError as any)?.statusCode,
-      response: (queryError as any)?.response,
-      toString: queryError?.toString?.()
-    });
   }
 
   const cities = citiesData?.data || [];
 
-  console.log('🔍 City Search:', { searchQuery, isLoading, citiesCount: cities.length, error: queryError });
+  console.log('🔍 City Search:', { searchQuery, isLoading, citiesCount: cities.length });
 
   const handleSelectCity = (city: City) => {
-    console.log('✅ CITY SELECTED! City object:', city);
-    console.log('✅ City code:', city.code);
-    console.log('✅ City name:', city.name);
-    
-    if (!city.code) {
-      console.error('❌ ОШИБКА: city.code не определен!', city);
-      return;
-    }
-    
+    console.log('✅ CITY SELECTED:', city);
     setSelectedCity(city);
     setSearchQuery(city.name);
     setShowResults(false);
     onSelect(city);
-    console.log('✅ onSelect callback вызван с городом:', city);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setShowResults(false);
       }
     };
@@ -72,10 +55,10 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
   }, []);
 
   return (
-    <div className="space-y-3" data-testid="city-search-selector">
+    <div className="space-y-3" data-testid="city-search-selector" ref={containerRef}>
       <h3 className="text-lg font-semibold">Выберите ваш город</h3>
       
-      <div className="relative">
+      <div className="relative z-40">
         <Input
           ref={inputRef}
           type="text"
@@ -91,53 +74,48 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
         />
 
         {showResults && (
-          <Card className="absolute top-full left-0 right-0 mt-1 z-50 p-0 shadow-lg">
-            {isLoading ? (
+          <div className="absolute top-full left-0 right-0 mt-1 z-[9999] bg-white dark:bg-slate-950 border border-border rounded-lg shadow-lg overflow-hidden">
+            {isLoading && (
               <div className="p-4 flex items-center gap-2 text-muted-foreground">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Поиск городов...
               </div>
-            ) : searchQuery.length < 2 ? (
+            )}
+            
+            {!isLoading && searchQuery.length < 2 && (
               <div className="p-4 text-sm text-muted-foreground">
                 Введите минимум 2 символа для поиска
               </div>
-            ) : cities.length === 0 ? (
+            )}
+            
+            {!isLoading && searchQuery.length >= 2 && cities.length === 0 && (
               <div className="p-4 text-sm text-muted-foreground">
                 Город не найден. Попробуйте другое название
               </div>
-            ) : (
-              <ScrollArea className="h-[300px] w-full">
-                <div className="space-y-1 p-2">
-                  {cities.slice(0, 20).map((city, index) => (
-                    <button
-                      key={`${city.code || index}`}
-                      type="button"
-                      onClick={() => {
-                        console.log('🖱️ onClick fired for city:', city);
-                        handleSelectCity(city);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          console.log('⌨️ Enter key pressed for city:', city);
-                          handleSelectCity(city);
-                        }
-                      }}
-                      className="w-full p-3 rounded-md cursor-pointer hover:bg-accent flex items-start gap-2 text-sm text-left hover-elevate transition-colors"
-                      data-testid={`city-option-${city.code || index}`}
-                    >
-                      <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="font-medium">{city.name}</div>
-                        {city.region && (
-                          <div className="text-xs text-muted-foreground">{city.region}</div>
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </ScrollArea>
             )}
-          </Card>
+            
+            {!isLoading && cities.length > 0 && (
+              <div className="max-h-[300px] overflow-y-auto">
+                {cities.slice(0, 20).map((city, index) => (
+                  <button
+                    key={`${city.code || index}`}
+                    type="button"
+                    onClick={() => handleSelectCity(city)}
+                    className="w-full p-3 text-left hover:bg-accent flex items-start gap-2 text-sm border-b border-border last:border-b-0 transition-colors"
+                    data-testid={`city-option-${city.code || index}`}
+                  >
+                    <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium">{city.name}</div>
+                      {city.region && (
+                        <div className="text-xs text-muted-foreground">{city.region}</div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         )}
       </div>
 
