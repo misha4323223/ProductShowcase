@@ -109,45 +109,24 @@ exports.handler = async (event) => {
     const baseUrl = isTest ? 'https://api.edu.cdek.ru/v2' : 'https://api.cdek.ru/v2';
     
     const token = await getCdekToken(clientId, clientSecret, isTest);
-    
-    // Загружаем 3 батча по 1000 городов каждый
-    let allCities = [];
-    for (let offset = 0; offset < 3000; offset += 1000) {
-      try {
-        const url = `${baseUrl}/location/cities?offset=${offset}&limit=1000`;
-        console.log(`📄 Загружаю батч offset=${offset}...`);
-        
-        const citiesResponse = await makeRequest(
-          url,
-          'GET',
-          null,
-          { 'Authorization': `Bearer ${token}` }
-        );
+    const citiesResponse = await makeRequest(
+      `${baseUrl}/location/cities`,
+      'GET',
+      null,
+      { 'Authorization': `Bearer ${token}` }
+    );
 
-        let batch = Array.isArray(citiesResponse) 
-          ? citiesResponse 
-          : (citiesResponse.data && Array.isArray(citiesResponse.data))
-            ? citiesResponse.data
-            : [];
+    const citiesData = Array.isArray(citiesResponse) 
+      ? citiesResponse 
+      : (citiesResponse.data && Array.isArray(citiesResponse.data))
+        ? citiesResponse.data
+        : [];
 
-        if (batch.length === 0) {
-          console.log(`   ✓ Батч пуст, загрузка завершена`);
-          break;
-        }
-
-        console.log(`   ✓ Загружено ${batch.length} городов`);
-        allCities = allCities.concat(batch);
-      } catch (error) {
-        console.error(`   ⚠️ Ошибка батча offset=${offset}: ${error.message}`);
-        break;
-      }
-    }
-
-    console.log(`🏙️ Всего городов CDEK: ${allCities.length}`);
+    console.log(`🏙️ Всего городов CDEK: ${citiesData.length}`);
 
     // Фильтруем по поисковому запросу
     const searchLower = query.toLowerCase();
-    const filtered = allCities
+    const filtered = citiesData
       .filter(city => {
         const cityName = (city.city || city.name || '').toLowerCase();
         return cityName.includes(searchLower);
