@@ -78,9 +78,7 @@ class RobokassaClient {
       urlParams.append(key, value);
     });
 
-    // СБП поддерживается только в боевом режиме (IsTest=0)
-    // В тестовом режиме используем только карты
-    if (paymentMethod === 'sbp' && !this.isTest) {
+    if (paymentMethod === 'sbp') {
       urlParams.append('PaymentMethods', 'sbp');
     }
 
