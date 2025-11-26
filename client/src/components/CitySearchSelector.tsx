@@ -23,7 +23,7 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
 
   // Вызываем CDEK API для поиска городов
   const { data: citiesData, isLoading, error: queryError } = useQuery<{ success: boolean; data: City[] }>({
-    queryKey: ['/api/delivery/cdek/search-city', searchQuery],
+    queryKey: ['/api/delivery/cdek/search-city', `?q=${searchQuery}`],
     enabled: searchQuery.length >= 2,
   });
 
