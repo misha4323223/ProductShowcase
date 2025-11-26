@@ -149,6 +149,7 @@ export default function CheckoutPage() {
 
   const paymentOptions = [
     { id: "card", name: "Банковская карта", description: "Оплата онлайн картой" },
+    { id: "sbp", name: "СБП (Быстрые платежи)", description: "Платёж через приложение банка по QR коду" },
   ];
 
   const POST_RUSSIA_PRICE = 200;
