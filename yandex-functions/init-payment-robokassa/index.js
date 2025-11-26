@@ -189,6 +189,7 @@ exports.handler = async (event) => {
       description: description || `Оплата заказа #${orderId.substring(0, 8)}`,
       email: email || undefined,
       culture: 'ru',
+      paymentMethod: body.paymentMethod,
       additionalParams
     });
 
