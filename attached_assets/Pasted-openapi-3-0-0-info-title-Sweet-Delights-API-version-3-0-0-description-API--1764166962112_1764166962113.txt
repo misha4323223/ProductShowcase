@@ -1,0 +1,1508 @@
+openapi: 3.0.0
+info:
+  title: Sweet Delights API
+  version: 3.0.0
+  description: Полный API для интернет-магазина сладостей
+
+servers:
+- url: https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net
+paths:
+   # ========== PRODUCTS ==========
+  /products:
+    get:
+      summary: Получить все товары
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e4idepedeld78laqoc
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список товаров
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    post:
+      summary: Создать товар
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e7ckel7qhqbpfe4bed
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Товар создан
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /products/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Получить товар по ID
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e456gq1squ9ai8diod
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Товар
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: Обновить товар
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e5oksvmessk4oqvpcf
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Товар обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      summary: Удалить товар
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4esrv1g01lkk42oui5s
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Товар удален
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  # ========== CATEGORIES (ПРАВИЛЬНАЯ ВЕРСИЯ) ==========
+  /categories:
+    get:
+      summary: Получить все категории
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e2ld9g5nijdfj1533f
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список категорий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    post:
+      summary: Создать категорию
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ell676278ilsv3p613
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Категория создана
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /categories/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      summary: Обновить категорию
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e9k30qmtekul9dkinj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Категория обновлена
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      summary: Удалить категорию
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e3f9uaj7cpro1dbi6r
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Категория удалена
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  # ========== REVIEWS ==========
+  /reviews:
+    get:
+      summary: Получить отзывы
+      parameters:
+        - name: productId
+          in: query
+          required: false
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ebvaaosp0rgq42lgtt
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список отзывов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    post:
+      summary: Создать отзыв
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e5rtbinbsuejlvpccr
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Отзыв создан
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /reviews/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: Удалить отзыв
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4evki4lg1pk0lvtpefv
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Отзыв удален
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== PROMO CODES ==========
+  /promocodes:
+    get:
+      summary: Получить все промокоды
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ecp2o90p3muttclklo
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список промокодов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    post:
+      summary: Создать промокод
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e7rih2fc2crfnuk4gs
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Промокод создан
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /promocodes/validate:
+    post:
+      summary: Валидировать промокод
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e40g65ao5k8qm4s1t0
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Результат валидации
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /promocodes/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      summary: Обновить промокод
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eid0ja8kcvi9pgquhj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Промокод обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      summary: Удалить промокод
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e0npv20cddnaeub43d
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Промокод удален
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'PUT, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== CART ==========
+  /cart/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Получить корзину
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4esojcuk9b5n3t778dj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Корзина
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /cart:
+    post:
+      summary: Сохранить корзину
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ehmac1vf3aaurmkd4v
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Корзина сохранена
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== WISHLIST ==========
+  /wishlist/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Получить избранное
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eejdpj1c0dkf7lol5f
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Избранное пользователя
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      summary: Обновить избранное
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e3lqn3hen9e35nu1vk
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Избранное обновлено
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, PUT, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== ORDERS ==========
+  /orders:
+    get:
+      summary: Получить все заказы (для админки)
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ealrgnc0j0dbckf0al
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список всех заказов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    post:
+      summary: Создать заказ
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4endddm1udm56n8ilqm
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Заказ создан
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /orders/user/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Получить заказы пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e3i8vbihb62gg0lece
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Заказы пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /orders/{id}/status:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      summary: Обновить статус заказа
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4en5d1n2qjq9ha2qtse
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Статус обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'PUT, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /orders/{id}/hide:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      summary: Скрыть заказ
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e3blt2bq3njqj9p98u
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Заказ скрыт
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'PUT, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /orders/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: Удалить заказ
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ej0takv92d3e144oqj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Заказ удален
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+          
+         # ========== EMAIL SENDING ==========
+  /send-email:
+    post:
+      summary: Отправить email через Postbox
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ernub48bbkv8rgsa6l
+        service_account_id: aje47rf2630q59equess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - to
+              properties:
+                type:
+                  type: string
+                  description: Тип письма (order_confirmation, stock_notification, newsletter, welcome_newsletter)
+                to:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                  description: Email получателя или массив email'ов
+                data:
+                  type: object
+                  description: Данные для шаблона письма
+      responses:
+        '200':
+          description: Email успешно отправлен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+# ========== NEWSLETTER SUBSCRIPTIONS ==========
+  /subscribe-newsletter:
+    post:
+      summary: Подписаться на рассылку новостей
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eib9soupsav59r8ctj
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Подписка успешно оформлена
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /newsletter-subscriptions:
+    get:
+      summary: Получить все подписки на рассылку
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e4ne7d0i4o37m1non7
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список всех email-подписчиков
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
+  /newsletter-subscriptions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: Отписаться от рассылки
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4evtc291foo3u13i78q
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Подписка удалена
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
+          
+  # ========== STOCK NOTIFICATIONS ==========
+  /create-stock-notification:
+    post:
+      summary: Создать уведомление о наличии товара
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e2o85n9e54amdudjl3
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '201':
+          description: Уведомление создано
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /get-stock-notifications:
+    get:
+      summary: Получить все уведомления о наличии
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4epbrnpn9omoa3bl857
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список уведомлений
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /delete-stock-notification/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: Удалить уведомление о наличии
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4evtc291foo3u13i78q
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Уведомление удалено
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== NEWSLETTER SUBSCRIPTIONS (ADMIN) ==========
+  /newsletter-subscriptions:
+    get:
+      summary: Получить все подписки на рассылку (админ)
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e4ne7d0i4o37m1non7
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список подписок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /newsletter-subscriptions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      summary: Удалить подписку на рассылку
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4egt9okrp50sfgjhp33
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Подписка удалена
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+            # ========== AUTHENTICATION ==========
+  /auth/register:
+    post:
+      summary: Регистрация нового пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e78ffslu1cki771350
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Пользователь зарегистрирован
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /auth/login:
+    post:
+      summary: Вход пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4es0325rdki0lq6ikn0
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Вход выполнен
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /auth/reset-password:
+    post:
+      summary: Сброс пароля
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e5ialgivnb0lggm58m
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Код отправлен или пароль изменен
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /auth/verify-token:
+    post:
+      summary: Проверка токена
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4euarol8nq2costjglt
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Токен валиден
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+# ========== UPLOAD IMAGE ==========
+  /upload-image:
+    post:
+      summary: Загрузка изображения
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4en9dqhqmuokv8s4p8k
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Изображение загружено
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+            # ========== WHEEL (РУЛЕТКА) ==========
+  /wheel/spin:
+    post:
+      summary: Вращение рулетки
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4evfmh44v1e9hvp2bc6
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Результат вращения
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /wheel/status:
+    get:
+      summary: Получить статус рулетки
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e46jgrn86ug3r0d2js
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Статус рулетки
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /wheel/history:
+    get:
+      summary: Получить историю выигрышей
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4esim58losrlasmlin2
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: История выигрышей
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== ROBOKASSA PAYMENT ==========
+  /api/payment/robokassa/init:
+    post:
+      summary: Инициализация платежа через Робокассу
+      description: Генерирует ссылку на оплату и возвращает URL для перенаправления пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eupj3kbpcsnonp69dp
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Ссылка на оплату успешно создана
+        '400':
+          description: Неверные параметры запроса
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /api/payment/robokassa/callback:
+    post:
+      summary: Callback от Робокассы о подтверждении оплаты
+      description: Принимает уведомление от Робокассы, проверяет подпись и обновляет статус заказа
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eha1ftk57d8rcv6ff8
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Платеж подтвержден
+        '400':
+          description: Неверная подпись или параметры
+        '500':
+          description: Ошибка обработки
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /api/payment/robokassa/check:
+    get:
+      summary: Проверка статуса платежа
+      description: Возвращает текущий статус платежа для указанного заказа
+      parameters:
+        - name: orderId
+          in: query
+          required: true
+          description: ID заказа для проверки
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e5c75417pgh84icrrq
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Информация о платеже
+        '400':
+          description: Отсутствует orderId
+        '404':
+          description: Заказ не найден
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== CDEK DELIVERY ==========
+  /api/delivery/cdek/calculate:
+    post:
+      summary: Рассчитать стоимость доставки СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e97hu512s5fr3e8j0l
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Расчет стоимости доставки
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /api/delivery/cdek/points:
+    get:
+      summary: Получить пункты выдачи СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4el2qd1ihlbmguis1iv
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список ПВЗ
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /api/delivery/cdek/order:
+    post:
+      summary: Создать заказ в СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eucofr7pvms8rfc9us
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Заказ создан
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  /api/delivery/cdek/track:
+    get:
+      summary: Отследить заказ СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e21ufg8q98n5o0nlti
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Статус заказа
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+     # === Получение настроек сайта (get-site-settings) ===
+  /site-settings:
+    get:
+      summary: Get site settings
+      operationId: getSiteSettings
+      parameters:
+        - name: key
+          in: query
+          required: false
+          schema:
+            type: string
+            default: current_theme
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ev5s477n19t0c5f5ad
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Site settings retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+
+    # === Установка настроек сайта (set-site-settings) ===
+    post:
+      summary: Set site settings
+      operationId: setSiteSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - settingKey
+                - settingValue
+              properties:
+                settingKey:
+                  type: string
+                settingValue:
+                  type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e9o7ktbi27mfuu01du
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Setting saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+    # === CORS preflight ===
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
