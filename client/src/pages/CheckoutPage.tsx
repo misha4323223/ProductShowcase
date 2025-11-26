@@ -586,19 +586,19 @@ export default function CheckoutPage() {
                         )}
                       />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="city"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Город</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-city" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <div>
+                          <Label className="text-base font-medium mb-2 block">Город</Label>
+                          <CitySearchSelector
+                            onSelect={(city) => {
+                              form.setValue('city', city.name);
+                              setSelectedCity(city);
+                              setSelectedCdekPoint(null);
+                              setCdekDeliveryCost(0);
+                              setCdekTariffCode(null);
+                              setCdekEstimatedDays(null);
+                            }}
+                          />
+                        </div>
                         <FormField
                           control={form.control}
                           name="postalCode"
@@ -631,18 +631,6 @@ export default function CheckoutPage() {
                           setCdekEstimatedDays(null);
                         }}
                       />
-
-                      {deliveryService === 'CDEK' && !selectedCity && (
-                        <CitySearchSelector
-                          onSelect={(city) => {
-                            setSelectedCity(city);
-                            setSelectedCdekPoint(null);
-                            setCdekDeliveryCost(0);
-                            setCdekTariffCode(null);
-                            setCdekEstimatedDays(null);
-                          }}
-                        />
-                      )}
 
                       {deliveryService === 'CDEK' && deliveryType === 'PICKUP' && selectedCity && (
                         <>
