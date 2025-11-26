@@ -665,6 +665,19 @@ html.new-year body {
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* NEW YEAR THEME - Account Page Styling */
+html.new-year [data-testid="text-account-title"] {
+  color: hsl(48 100% 60%) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.new-year [data-testid="text-user-email"] {
+  color: #000 !important;
+  font-weight: 900 !important;
+  font-size: 1.125rem !important;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.6) !important;
+}
+
 /* NEW YEAR THEME - Orders Styling */
 html.new-year [data-testid^="accordion-order-"] {
   border-width: 2px !important;
