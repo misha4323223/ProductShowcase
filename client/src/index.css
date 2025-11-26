@@ -710,7 +710,6 @@ html.new-year section p {
   backdrop-filter: blur(10px) !important;
   padding: 8px 16px !important;
   border-radius: 8px !important;
-  display: inline-block !important;
 }
 
 /* NEW YEAR THEME - Orders Styling */
