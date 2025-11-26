@@ -10,11 +10,12 @@ import { useCart } from "@/contexts/CartContext";
 import { useProducts } from "@/hooks/use-products";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingBag, ChevronRight } from "lucide-react";
+import { Heart, ShoppingBag, ChevronRight, Share2, Check } from "lucide-react";
 
 export default function WishlistPage() {
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { user } = useAuth();
   const { wishlistItems } = useWishlist();
   const { products } = useProducts();
@@ -24,6 +25,17 @@ export default function WishlistPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handleShareWishlist = () => {
+    const shareLink = `${window.location.origin}/shared-wishlist/${user?.userId}`;
+    navigator.clipboard.writeText(shareLink);
+    setCopied(true);
+    toast({
+      title: "Ссылка скопирована!",
+      description: "Поделитесь ссылкой на ваше избранное с друзьями",
+    });
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const wishlistProducts = products.filter(p => 
     wishlistItems.some(item => item.productId === p.id)
@@ -117,11 +129,30 @@ export default function WishlistPage() {
                 Избранное
               </span>
             </div>
-            <div className="flex items-center gap-4 mb-4">
-              <Heart className="h-10 w-10 text-pink-500 fill-pink-500" />
-              <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid="text-page-title">
-                Избранное
-              </h1>
+            <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
+              <div className="flex items-center gap-4">
+                <Heart className="h-10 w-10 text-pink-500 fill-pink-500" />
+                <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid="text-page-title">
+                  Избранное
+                </h1>
+              </div>
+              <Button
+                onClick={handleShareWishlist}
+                className="gap-2 bg-gradient-to-r from-pink-500 to-primary hover:shadow-lg"
+                data-testid="button-share-wishlist"
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    Скопирована!
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="h-4 w-4" />
+                    Поделиться
+                  </>
+                )}
+              </Button>
             </div>
             <p className="text-muted-foreground" data-testid="text-wishlist-count">
               {wishlistProducts.length === 0 

@@ -33,6 +33,7 @@ const SearchPage = lazy(() => import("@/pages/SearchPage"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const AccountPage = lazy(() => import("@/pages/AccountPage"));
 const WishlistPage = lazy(() => import("@/pages/WishlistPage"));
+const SharedWishlistPage = lazy(() => import("@/pages/SharedWishlistPage"));
 const AdminPage = lazy(() => import("@/pages/AdminPage")); // 76 KB - самая тяжелая!
 const PrivacyPage = lazy(() => import("@/pages/PrivacyPage"));
 const TermsPage = lazy(() => import("@/pages/TermsPage"));
@@ -67,6 +68,7 @@ function Router() {
           <Route path="/login" component={LoginPage} />
           <Route path="/account" component={AccountPage} />
           <Route path="/wishlist" component={WishlistPage} />
+          <Route path="/shared-wishlist/:userId" component={SharedWishlistPage} />
           <Route path="/privacy" component={PrivacyPage} />
           <Route path="/terms" component={TermsPage} />
           <Route path="/faq" component={FaqPage} />

@@ -48,3 +48,17 @@ export async function isInWishlist(userId: string, productId: string): Promise<b
   const wishlistItems = await getWishlist(userId);
   return wishlistItems.some(item => item.productId === productId);
 }
+
+export async function getPublicWishlist(userId: string): Promise<WishlistItem[]> {
+  const response = await fetch(`${API_GATEWAY_URL}/wishlist/${userId}`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to get public wishlist');
+  }
+  
+  const data = await response.json();
+  return (data.items || []).map((item: any) => ({
+    productId: item.productId,
+    addedAt: new Date(item.addedAt),
+  }));
+}
