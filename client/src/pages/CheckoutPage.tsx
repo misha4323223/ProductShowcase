@@ -28,6 +28,7 @@ import { createOrder } from "@/services/yandex-orders";
 import { validatePromoCode } from "@/services/yandex-promocodes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { useWheel } from "@/contexts/WheelContext";
 import { getAllProducts, initRobokassaPayment } from "@/services/api-client";
 import { DeliverySelector } from "@/components/DeliverySelector";
 import { CdekPointSelector } from "@/components/CdekPointSelector";
@@ -67,6 +68,10 @@ export default function CheckoutPage() {
   const [validPromoCodeId, setValidPromoCodeId] = useState<string | null>(null);
   const [validatedPromoCode, setValidatedPromoCode] = useState<{ code: string; discountAmount: number; discountType: 'percentage' | 'fixed' } | null>(null);
   
+  const [bonusDiscount, setBonusDiscount] = useState(0);
+  const [bonusInput, setBonusInput] = useState("");
+  const [isBonusApplied, setIsBonusApplied] = useState(false);
+  
   const [deliveryService, setDeliveryService] = useState<string | null>(null);
   const [deliveryType, setDeliveryType] = useState<string | null>(null);
   const [selectedCdekPoint, setSelectedCdekPoint] = useState<any>(null);
@@ -77,6 +82,7 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { cartItems, clearCart } = useCart();
+  const { loyaltyPoints } = useWheel();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -152,7 +158,8 @@ export default function CheckoutPage() {
       ? POST_RUSSIA_PRICE 
       : 0;
   const subtotal = total + deliveryPrice;
-  const finalTotal = Math.max(0, subtotal - promoDiscount);
+  const totalDiscount = promoDiscount + bonusDiscount;
+  const finalTotal = Math.max(0, subtotal - totalDiscount);
   
   const totalWeight = cartItems.reduce((sum, item) => sum + (item.quantity * 250), 0);
   const deliveryPackages = [{
@@ -214,6 +221,43 @@ export default function CheckoutPage() {
     setValidatedPromoCode(null);
     toast({
       title: "Промокод удалён",
+    });
+  };
+
+  const handleApplyBonus = () => {
+    const requestedBonus = parseInt(bonusInput) || 0;
+    
+    if (requestedBonus <= 0) {
+      toast({
+        title: "Введите количество баллов",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (requestedBonus > loyaltyPoints) {
+      toast({
+        title: "Недостаточно баллов",
+        description: `У вас есть только ${loyaltyPoints} баллов`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setBonusDiscount(requestedBonus);
+    setIsBonusApplied(true);
+    toast({
+      title: "Баллы применены!",
+      description: `Скидка: ${requestedBonus}₽`,
+    });
+  };
+
+  const handleRemoveBonus = () => {
+    setBonusDiscount(0);
+    setBonusInput("");
+    setIsBonusApplied(false);
+    toast({
+      title: "Баллы удалены",
     });
   };
 
@@ -733,6 +777,12 @@ export default function CheckoutPage() {
                         <span data-testid="text-discount">-{promoDiscount}₽</span>
                       </div>
                     )}
+                    {bonusDiscount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>Скидка баллами</span>
+                        <span data-testid="text-bonus-discount">-{bonusDiscount}₽</span>
+                      </div>
+                    )}
                   </div>
 
                   <Separator />
@@ -744,43 +794,87 @@ export default function CheckoutPage() {
 
                   <Separator />
 
-                  <div className="space-y-2">
-                    <Label>Промокод</Label>
-                    {!promoCode ? (
-                      <div className="flex gap-2">
-                        <Input
-                          placeholder="Введите промокод"
-                          value={promoCodeInput}
-                          onChange={(e) => setPromoCodeInput(e.target.value)}
-                          data-testid="input-promo-code"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={handleApplyPromoCode}
-                          disabled={isCheckingPromo}
-                          data-testid="button-apply-promo"
-                        >
-                          {isCheckingPromo ? "..." : "Применить"}
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-                        <div className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span className="text-sm font-medium text-green-600">{promoCode}</span>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Промокод</Label>
+                      {!promoCode ? (
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Введите промокод"
+                            value={promoCodeInput}
+                            onChange={(e) => setPromoCodeInput(e.target.value)}
+                            data-testid="input-promo-code"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleApplyPromoCode}
+                            disabled={isCheckingPromo}
+                            data-testid="button-apply-promo"
+                          >
+                            {isCheckingPromo ? "..." : "Применить"}
+                          </Button>
                         </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleRemovePromoCode}
-                          data-testid="button-remove-promo"
-                        >
-                          Удалить
-                        </Button>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                          <div className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-green-600" />
+                            <span className="text-sm font-medium text-green-600">{promoCode}</span>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleRemovePromoCode}
+                            data-testid="button-remove-promo"
+                          >
+                            Удалить
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Бонусные баллы <span className="text-muted-foreground">({loyaltyPoints} доступно)</span></Label>
+                      {!isBonusApplied ? (
+                        <div className="flex gap-2">
+                          <Input
+                            type="number"
+                            placeholder="Введите количество баллов"
+                            value={bonusInput}
+                            onChange={(e) => setBonusInput(e.target.value)}
+                            min="0"
+                            max={loyaltyPoints}
+                            data-testid="input-bonus-amount"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleApplyBonus}
+                            disabled={loyaltyPoints === 0}
+                            data-testid="button-apply-bonus"
+                          >
+                            Применить
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                          <div className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-blue-600" />
+                            <span className="text-sm font-medium text-blue-600">{bonusDiscount} баллов</span>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleRemoveBonus}
+                            data-testid="button-remove-bonus"
+                          >
+                            Удалить
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
