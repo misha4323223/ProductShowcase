@@ -193,6 +193,6 @@ Preferred communication style: Simple, everyday language.
 ### Backend Services
 - **Yandex Cloud YDB**: Products, categories, shopping cart, wishlist, orders, reviews, promo codes, stock notifications, newsletter subscriptions.
 - **Yandex Object Storage**: Product images.
-- **Firebase Authentication**: User authentication (email/password).
+- **Yandex Authentication**: User authentication via Yandex ID (email/password).
 - **Yandex Cloud Postbox**: Email notifications.
 - **CDEK API**: Nationwide delivery integration (4 Cloud Functions: calculate, get pickup points, create order, track order).
