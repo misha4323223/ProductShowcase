@@ -50,7 +50,7 @@ exports.handler = async (event) => {
 
     // Парсинг входных данных
     const body = JSON.parse(event.body || '{}');
-    const { orderId, amount, email, description } = body;
+    const { orderId, amount, email, description, paymentMethod } = body;
 
     // Валидация обязательных полей
     if (!orderId || !amount) {
