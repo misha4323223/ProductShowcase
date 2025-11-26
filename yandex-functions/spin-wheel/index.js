@@ -77,10 +77,10 @@ exports.handler = async (event) => {
       return errorResponse(400, 'Недостаточно спинов');
     }
 
-    // 3. Получить корзину
+    // 3. Получить корзину (ключ: id, значение = userId)
     const cartResult = await docClient.send(new GetCommand({
       TableName: "carts",
-      Key: { userId }
+      Key: { id: userId }
     }));
 
     const cartItems = cartResult.Item?.items || [];

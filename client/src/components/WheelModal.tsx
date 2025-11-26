@@ -97,15 +97,6 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       return;
     }
 
-    if (wishlistCount === 0) {
-      toast({
-        title: "Пустой вишлист",
-        description: "Добавьте товары в избранное, чтобы получить персонализированные призы!",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsSpinning(true);
 
     try {
