@@ -155,28 +155,35 @@ exports.handler = async (event) => {
     // Если использован промокод рулетки, помечаем его как использованный
     if (orderData.promoCode) {
       try {
-        const wheelPrizesResult = await docClient.send(new ScanCommand({
-          TableName: "wheelPrizes",
-        }));
+        // Промокод может быть строкой или объектом { code: "..." }
+        const promoCodeStr = typeof orderData.promoCode === 'string' 
+          ? orderData.promoCode 
+          : orderData.promoCode?.code;
         
-        const normalizedPromoCode = orderData.promoCode.trim().toUpperCase();
-        const wheelPrize = (wheelPrizesResult.Items || []).find(p => 
-          p.promoCode && p.promoCode.trim().toUpperCase() === normalizedPromoCode
-        );
-
-        if (wheelPrize && !wheelPrize.used) {
-          // Помечаем приз как использованный
-          await docClient.send(new UpdateCommand({
+        if (promoCodeStr) {
+          const wheelPrizesResult = await docClient.send(new ScanCommand({
             TableName: "wheelPrizes",
-            Key: { id: wheelPrize.id },
-            UpdateExpression: "SET used = :true, usedAt = :usedAt, orderId = :orderId",
-            ExpressionAttributeValues: {
-              ":true": true,
-              ":usedAt": new Date().toISOString(),
-              ":orderId": id
-            }
           }));
-          console.log(`Wheel prize ${wheelPrize.id} marked as used for order ${id}`);
+          
+          const normalizedPromoCode = promoCodeStr.trim().toUpperCase();
+          const wheelPrize = (wheelPrizesResult.Items || []).find(p => 
+            p.promoCode && p.promoCode.trim().toUpperCase() === normalizedPromoCode
+          );
+
+          if (wheelPrize && !wheelPrize.used) {
+            // Помечаем приз как использованный
+            await docClient.send(new UpdateCommand({
+              TableName: "wheelPrizes",
+              Key: { id: wheelPrize.id },
+              UpdateExpression: "SET used = :true, usedAt = :usedAt, orderId = :orderId",
+              ExpressionAttributeValues: {
+                ":true": true,
+                ":usedAt": new Date().toISOString(),
+                ":orderId": id
+              }
+            }));
+            console.log(`Wheel prize ${wheelPrize.id} marked as used for order ${id}`);
+          }
         }
       } catch (error) {
         console.error('Error marking wheel prize as used:', error);

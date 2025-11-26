@@ -126,9 +126,9 @@ function determinePrize(randomValue, currentSpins) {
 function calculateExpiryDate(prizeType) {
   const now = new Date();
   const daysToAdd = {
-    'discount_10': 14,    // 14 дней
+    'discount_10': 21,    // 21 день
     'discount_20': 21,    // 21 день
-    'points': 365,        // 12 месяцев
+    'points': 182,        // ~6 месяцев (половина года)
     'delivery': 60,       // 60 дней
     'free_item': 10,      // 10 дней
     'jackpot': 2          // 48 часов
