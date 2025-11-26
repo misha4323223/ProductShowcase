@@ -37,15 +37,6 @@ export default function SharedWishlistPage() {
     loadSharedWishlist();
   }, [shareUserId]);
 
-  // Обновляем loading состояние когда товары загружены и есть wishlist items
-  useEffect(() => {
-    if (!productsLoading && wishlistItems.length > 0) {
-      setLoading(false);
-    } else if (!productsLoading && notFound) {
-      setLoading(false);
-    }
-  }, [productsLoading, wishlistItems, notFound]);
-
   const loadSharedWishlist = async () => {
     try {
       console.log("📋 Загрузка shared wishlist для userId:", shareUserId);
@@ -54,6 +45,7 @@ export default function SharedWishlistPage() {
       setWishlistItems(items.map(item => item.productId));
       // Генерируем имя на основе userId (в реальном приложении это будет из профиля)
       setUserName(`Список желаний #${shareUserId.slice(0, 8)}`);
+      setLoading(false);
     } catch (error: any) {
       console.error("❌ Ошибка загрузки списка:", error);
       console.error("Детали ошибки:", error?.message, error?.response);
@@ -115,7 +107,7 @@ export default function SharedWishlistPage() {
     );
   }
 
-  if (notFound) {
+  if (notFound || (wishlistItems.length === 0 && !loading)) {
     return (
       <div className="min-h-screen flex flex-col candy-pattern">
         <Header 
@@ -126,10 +118,10 @@ export default function SharedWishlistPage() {
           <div className="text-center max-w-md mx-auto px-4">
             <Heart className="h-24 w-24 mx-auto text-pink-300 mb-6 opacity-50" />
             <h1 className="text-3xl font-serif font-bold mb-4 text-foreground">
-              Список не найден
+              {notFound ? "Список не найден" : "Список пуст"}
             </h1>
             <p className="text-muted-foreground mb-8">
-              К сожалению, этот список желаний больше не доступен
+              {notFound ? "К сожалению, этот список желаний больше не доступен" : "В этом списке пока нет товаров"}
             </p>
             <Button 
               size="lg"
