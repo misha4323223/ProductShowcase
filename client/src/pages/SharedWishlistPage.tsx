@@ -156,6 +156,9 @@ export default function SharedWishlistPage() {
       <ShoppingCart 
         isOpen={cartOpen}
         onClose={() => setCartOpen(false)}
+        items={cartItems}
+        onUpdateQuantity={() => {}}
+        onRemoveItem={() => {}}
         onCheckout={handleCheckout}
       />
       
