@@ -36,12 +36,15 @@ export default function SharedWishlistPage() {
   const loadSharedWishlist = async () => {
     try {
       setLoading(true);
+      console.log("📋 Загрузка shared wishlist для userId:", shareUserId);
       const items = await getPublicWishlist(shareUserId);
+      console.log("✅ Получено товаров:", items.length, items);
       setWishlistItems(items.map(item => item.productId));
       // Генерируем имя на основе userId (в реальном приложении это будет из профиля)
       setUserName(`Список желаний #${shareUserId.slice(0, 8)}`);
-    } catch (error) {
-      console.error("Ошибка загрузки списка:", error);
+    } catch (error: any) {
+      console.error("❌ Ошибка загрузки списка:", error);
+      console.error("Детали ошибки:", error?.message, error?.response);
       setNotFound(true);
     } finally {
       setLoading(false);
