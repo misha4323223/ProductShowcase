@@ -414,6 +414,7 @@ export default function CheckoutPage() {
         userEmail: orderData.userEmail,
         customerEmail: orderData.customerEmail,
         total: orderData.total,
+        bonusPointsUsed: orderData.bonusPointsUsed || 0,
         user_email: user?.email,
         data_email: data.email,
       });
