@@ -8,12 +8,15 @@ Preferred communication style: Simple, everyday language.
 
 ## Latest Updates (November 26, 2025)
 
-✅ **Orders Table Visibility in Winter Theme Fixed - Nov 26, 2025**:
-- **Problem**: Order table in profile "Мои заказы" section was poorly visible in winter theme
-- **Root Cause**: Card background too dark (`--card: 0 15% 15%` = 15% lightness)
-- **Solution**: Increased card brightness to 22% (`--card: 0 15% 22%`)
-- **Result**: Orders now clearly visible with excellent contrast while maintaining festive winter aesthetic
-- **Files Modified**: `client/src/index.css` (line 577)
+✅ **Orders Table Visibility & Styling in Winter Theme - Nov 26, 2025 (FINAL)**:
+- **Problem**: Order table in profile "Мои заказы" section was poorly visible in winter theme - no contrast
+- **Solutions Applied**:
+  1. **Brightness**: Increased card background brightness from 15% to 28% (`--card: 0 10% 28%`)
+  2. **Borders**: Added thick 2px golden borders (`border-color: hsl(48 100% 50%)`) to each order accordion
+  3. **Text Color**: Changed all text from white (95%) to black (#000)
+  4. **Font Weight**: Set to 1200 (maximum boldness) for maximum readability
+- **Result**: Orders table now highly visible with strong contrast, clear borders, and bold readable text
+- **Files Modified**: `client/src/index.css` (lines 577, 671-686)
 
 ✅ **Lottery Wheel - Promo Codes & Expiry Dates Fixed - Nov 26, 2025**:
 - **Changes Made**:

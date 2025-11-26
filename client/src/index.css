@@ -675,7 +675,8 @@ html.new-year [data-testid^="accordion-order-"] span,
 html.new-year [data-testid^="accordion-order-"] p,
 html.new-year [data-testid^="accordion-order-"] div {
   color: #000 !important;
-  font-weight: 700 !important;
+  font-weight: 900 !important;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.6) !important;
 }
 
 html.new-year [data-testid^="accordion-order-"] [data-testid^="badge-status-"] {
