@@ -99,40 +99,76 @@ export function DeliveryCalculator({
         
         // Фильтруем по выбранному типу доставки
         if (deliveryType === 'PICKUP') {
-          // Только Склад-Склад для пункта выдачи
-          const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4);
+          // Только Склад-Склад для пункта выдачи - показываем до 2 тарифов
+          const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4)
+            .sort((a, b) => a.delivery_sum - b.delivery_sum);
+          
+          // Берём первый (обычный) и второй (экспресс) тарифы
           if (pickupTariffs.length > 0) {
-            const cheapestPickup = pickupTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
-            cheapestPickup.tariff_name = 'До пункта выдачи СДЭК';
-            cheapestPickup.tariff_description = 'Заберите заказ в удобном пункте выдачи';
-            filteredTariffs.push(cheapestPickup);
+            const normalTariff = pickupTariffs[0];
+            normalTariff.tariff_name = 'До пункта выдачи СДЭК';
+            normalTariff.tariff_description = 'Заберите заказ в удобном пункте выдачи';
+            filteredTariffs.push(normalTariff);
+          }
+          
+          if (pickupTariffs.length > 1) {
+            const expressTariff = pickupTariffs[1];
+            expressTariff.tariff_name = 'Экспресс - Склад-Склад';
+            expressTariff.tariff_description = 'Ускоренная доставка до пункта выдачи';
+            filteredTariffs.push(expressTariff);
           }
         } else if (deliveryType === 'DOOR') {
-          // Только Склад-Дверь для курьерской доставки
-          const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3);
+          // Только Склад-Дверь для курьерской доставки - показываем до 2 тарифов
+          const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3)
+            .sort((a, b) => a.delivery_sum - b.delivery_sum);
+          
+          // Берём первый (обычный) и второй (экспресс) тарифы
           if (courierTariffs.length > 0) {
-            const cheapestCourier = courierTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
-            cheapestCourier.tariff_name = 'Экспресс доставка до двери';
-            cheapestCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
-            filteredTariffs.push(cheapestCourier);
+            const normalCourier = courierTariffs[0];
+            normalCourier.tariff_name = 'Доставка до двери';
+            normalCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
+            filteredTariffs.push(normalCourier);
+          }
+          
+          if (courierTariffs.length > 1) {
+            const expressCourier = courierTariffs[1];
+            expressCourier.tariff_name = 'Экспресс - Склад-Дверь';
+            expressCourier.tariff_description = 'Ускоренная доставка курьером до двери';
+            filteredTariffs.push(expressCourier);
           }
         } else {
-          // Если тип не выбран, показываем оба варианта
-          const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4);
-          const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3);
+          // Если тип не выбран, показываем по 2 варианта для каждого типа
+          const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4)
+            .sort((a, b) => a.delivery_sum - b.delivery_sum);
+          const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3)
+            .sort((a, b) => a.delivery_sum - b.delivery_sum);
           
           if (pickupTariffs.length > 0) {
-            const cheapestPickup = pickupTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
-            cheapestPickup.tariff_name = 'До пункта выдачи СДЭК';
-            cheapestPickup.tariff_description = 'Заберите заказ в удобном пункте выдачи';
-            filteredTariffs.push(cheapestPickup);
+            const normalPickup = pickupTariffs[0];
+            normalPickup.tariff_name = 'До пункта выдачи СДЭК';
+            normalPickup.tariff_description = 'Заберите заказ в удобном пункте выдачи';
+            filteredTariffs.push(normalPickup);
+          }
+          
+          if (pickupTariffs.length > 1) {
+            const expressPickup = pickupTariffs[1];
+            expressPickup.tariff_name = 'Экспресс - Склад-Склад';
+            expressPickup.tariff_description = 'Ускоренная доставка до пункта выдачи';
+            filteredTariffs.push(expressPickup);
           }
           
           if (courierTariffs.length > 0) {
-            const cheapestCourier = courierTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
-            cheapestCourier.tariff_name = 'Экспресс доставка до двери';
-            cheapestCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
-            filteredTariffs.push(cheapestCourier);
+            const normalCourier = courierTariffs[0];
+            normalCourier.tariff_name = 'Доставка до двери';
+            normalCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
+            filteredTariffs.push(normalCourier);
+          }
+          
+          if (courierTariffs.length > 1) {
+            const expressCourier = courierTariffs[1];
+            expressCourier.tariff_name = 'Экспресс - Склад-Дверь';
+            expressCourier.tariff_description = 'Ускоренная доставка курьером до двери';
+            filteredTariffs.push(expressCourier);
           }
         }
         
