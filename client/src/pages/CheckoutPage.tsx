@@ -50,7 +50,7 @@ const checkoutSchema = z.object({
   address: z.string().min(5, "Адрес должен содержать минимум 5 символов"),
   city: z.string().min(2, "Город должен содержать минимум 2 символа"),
   postalCode: z.string().min(5, "Некорректный почтовый индекс"),
-  payment: z.literal("card"),
+  payment: z.enum(["card", "sbp"]),
   privacyConsent: z.boolean().refine((val) => val === true, {
     message: "Необходимо согласие на обработку персональных данных",
   }),
@@ -430,7 +430,8 @@ export default function CheckoutPage() {
           orderId, 
           finalTotal, 
           data.email,
-          `Заказ #${orderId.substring(0, 8).toUpperCase()}`
+          `Заказ #${orderId.substring(0, 8).toUpperCase()}`,
+          data.payment
         );
         
         if (paymentResult.success && paymentResult.paymentUrl) {
