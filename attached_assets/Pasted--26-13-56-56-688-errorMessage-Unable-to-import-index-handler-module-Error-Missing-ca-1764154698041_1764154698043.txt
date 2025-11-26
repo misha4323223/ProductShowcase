@@ -1,0 +1,109 @@
+
+
+26 нояб. 13:56:56.688
+{"errorMessage":"Unable to import index.handler module. Error: Missing catch or finally after try","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+26 нояб. 13:56:56.687
+REPORT RequestID: 0efd0ab2-557e-4314-bd70-f195b2f0d1a0 Duration: 33.806 ms Billed Duration: 100 ms Memory Size: 256 MB Queuing Duration: 0.037 ms
+
+26 нояб. 13:56:56.687
+ERROR RequestID: 0efd0ab2-557e-4314-bd70-f195b2f0d1a0 Code: 502 Message: Error during function invocation
+
+26 нояб. 13:56:56.687
+END RequestID: 0efd0ab2-557e-4314-bd70-f195b2f0d1a0
+
+26 нояб. 13:56:56.686
+Unable to import index.handler module. Error: Missing catch or finally after try Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+26 нояб. 13:56:56.529
+START RequestID: 0efd0ab2-557e-4314-bd70-f195b2f0d1a0 Version: d4ed4faihd3peg1vq2mt
+
+26 нояб. 13:56:50.414
+{"errorMessage":"Unable to import index.handler module. Error: Missing catch or finally after try","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+26 нояб. 13:56:50.413
+REPORT RequestID: 3bd073a4-0336-4ba0-833e-54bbbe8de32b Duration: 31.585 ms Billed Duration: 100 ms Memory Size: 256 MB Queuing Duration: 0.026 ms
+
+26 нояб. 13:56:50.413
+ERROR RequestID: 3bd073a4-0336-4ba0-833e-54bbbe8de32b Code: 502 Message: Error during function invocation
+
+26 нояб. 13:56:50.413
+END RequestID: 3bd073a4-0336-4ba0-833e-54bbbe8de32b
+
+26 нояб. 13:56:50.412
+Unable to import index.handler module. Error: Missing catch or finally after try Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+26 нояб. 13:56:50.337
+START RequestID: 3bd073a4-0336-4ba0-833e-54bbbe8de32b Version: d4ed4faihd3peg1vq2mt
+
+26 нояб. 13:55:37.236
+{"errorMessage":"Unable to import index.handler module. Error: Missing catch or finally after try","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+26 нояб. 13:55:37.236
+REPORT RequestID: 5a873dbb-2e72-4412-81de-8e760ce10ed6 Duration: 239.105 ms Billed Duration: 300 ms Memory Size: 256 MB Max Memory Used: 71 MB Queuing Duration: 0.020 ms CPU Usage: 10.449 %
+
+26 нояб. 13:55:37.236
+ERROR RequestID: 5a873dbb-2e72-4412-81de-8e760ce10ed6 Code: 502 Message: Error during function invocation
+
+26 нояб. 13:55:37.236
+END RequestID: 5a873dbb-2e72-4412-81de-8e760ce10ed6
+
+26 нояб. 13:55:37.224
+Unable to import index.handler module. Error: Missing catch or finally after try Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+26 нояб. 13:55:36.994
+START RequestID: 5a873dbb-2e72-4412-81de-8e760ce10ed6 Version: d4ed4faihd3peg1vq2mt
+
+26 нояб. 13:55:18.339
+REPORT RequestID: b701e2be-77c1-488b-ac7d-416837b24276 Duration: 231.114 ms Billed Duration: 300 ms Memory Size: 256 MB Max Memory Used: 71 MB Queuing Duration: 0.022 ms CPU Usage: 11.230 %
+
+26 нояб. 13:55:18.339
+ERROR RequestID: b701e2be-77c1-488b-ac7d-416837b24276 Code: 502 Message: Error during function invocation
+
+26 нояб. 13:55:18.339
+END RequestID: b701e2be-77c1-488b-ac7d-416837b24276
+
+26 нояб. 13:55:18.339
+{"errorMessage":"Unable to import index.handler module. Error: Missing catch or finally after try","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+26 нояб. 13:55:18.326
+Unable to import index.handler module. Error: Missing catch or finally after try Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+26 нояб. 13:55:18.104
+START RequestID: b701e2be-77c1-488b-ac7d-416837b24276 Version: d4ed4faihd3peg1vq2mt
+
+26 нояб. 13:54:56.515
+{"errorMessage":"Unable to import index.handler module. Error: Missing catch or finally after try","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+26 нояб. 13:54:56.515
+REPORT RequestID: 3235c74d-5279-423a-8d34-722d3651fdda Duration: 29.931 ms Billed Duration: 100 ms Memory Size: 256 MB Queuing Duration: 0.024 ms
+
+26 нояб. 13:54:56.515
+ERROR RequestID: 3235c74d-5279-423a-8d34-722d3651fdda Code: 502 Message: Error during function invocation
+
+26 нояб. 13:54:56.515
+END RequestID: 3235c74d-5279-423a-8d34-722d3651fdda
+
+26 нояб. 13:54:56.514
+Unable to import index.handler module. Error: Missing catch or finally after try Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+26 нояб. 13:54:56.442
+START RequestID: 3235c74d-5279-423a-8d34-722d3651fdda Version: d4ed4faihd3peg1vq2mt
+
+26 нояб. 13:54:45.982
+{"errorMessage":"Unable to import index.handler module. Error: Missing catch or finally after try","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+26 нояб. 13:54:45.982
+REPORT RequestID: 4292fde6-9fc3-4663-83f3-8f8032e03d80 Duration: 35.349 ms Billed Duration: 100 ms Memory Size: 256 MB Queuing Duration: 0.023 ms
+
+26 нояб. 13:54:45.982
+ERROR RequestID: 4292fde6-9fc3-4663-83f3-8f8032e03d80 Code: 502 Message: Error during function invocation
+
+26 нояб. 13:54:45.982
+END RequestID: 4292fde6-9fc3-4663-83f3-8f8032e03d80
+
+26 нояб. 13:54:45.980
+Unable to import index.handler module. Error: Missing catch or finally after try Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+26 нояб. 13:54:45.842
+START RequestID: 4292fde6-9fc3-4663-83f3-8f8032e03d80 Version: d4ed4faihd3peg1vq2mt
