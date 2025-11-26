@@ -3,111 +3,207 @@
  * Ищет города по названию и возвращает city_code для использования в других функциях
  */
 
-const { CdekClient } = require('../lib/cdek-client');
+const https = require('https');
+
+function makeRequest(url, method = 'GET', data = null, headers = {}) {
+  return new Promise((resolve, reject) => {
+    console.log(`📡 Запрос: ${method} ${url}`);
+    
+    const urlObj = new URL(url);
+    const options = {
+      hostname: urlObj.hostname,
+      path: urlObj.pathname + urlObj.search,
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(body);
+          console.log(`✅ Ответ получен, статус: ${res.statusCode}`);
+          resolve(parsed);
+        } catch (e) {
+          console.log(`✅ Ответ получен (текст), статус: ${res.statusCode}`);
+          resolve(body);
+        }
+      });
+    });
+
+    req.on('error', (err) => {
+      console.error(`❌ Ошибка запроса: ${err.message}`);
+      reject(err);
+    });
+    
+    if (data) req.write(JSON.stringify(data));
+    req.end();
+  });
+}
+
+async function getCdekToken(clientId, clientSecret, isTest) {
+  console.log(`🔐 Получение токена CDEK (тест: ${isTest})`);
+  
+  const baseUrl = isTest 
+    ? 'https://api.edu.cdek.ru/v2'
+    : 'https://api.cdek.ru/v2';
+
+  const params = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: clientId,
+    client_secret: clientSecret
+  }).toString();
+
+  try {
+    const response = await makeRequest(
+      `${baseUrl}/oauth/token?${params}`,
+      'POST',
+      null,
+      { 'Content-Type': 'application/x-www-form-urlencoded' }
+    );
+
+    if (response.access_token) {
+      console.log(`✅ Токен получен`);
+      return response.access_token;
+    } else {
+      throw new Error('No access_token in response');
+    }
+  } catch (error) {
+    console.error(`❌ Ошибка получения токена: ${error.message}`);
+    throw error;
+  }
+}
 
 exports.handler = async (event) => {
+  console.log('🚀 Начало обработки запроса search-cities-cdek');
+  console.log('📝 Event:', JSON.stringify(event, null, 2));
+  
   try {
-    // Получаем параметры из переменных окружения
     const clientId = process.env.CDEK_CLIENT_ID;
     const clientSecret = process.env.CDEK_CLIENT_SECRET;
     const isTest = process.env.CDEK_TEST_MODE === 'true';
 
+    console.log(`⚙️ Конфигурация: тест=${isTest}, clientId=${clientId ? 'установлен' : 'НЕ установлен'}`);
+
     if (!clientId || !clientSecret) {
+      console.error('❌ Отсутствуют CDEK kredencials');
       return {
         statusCode: 500,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          error: 'CDEK API credentials not configured' 
-        }),
+        body: JSON.stringify({ error: 'CDEK API credentials not configured' }),
       };
     }
 
-    // Получаем поисковый запрос из параметров
-    const query = event.queryStringParameters?.q || '';
+    // Пытаемся получить параметр 'q' разными способами
+    let query = '';
+    
+    // Способ 1: queryStringParameters (стандартный)
+    if (event.queryStringParameters?.q) {
+      query = event.queryStringParameters.q;
+      console.log(`📍 Параметр найден в queryStringParameters: "${query}"`);
+    }
+    // Способ 2: multiValueQueryStringParameters
+    else if (event.multiValueQueryStringParameters?.q?.[0]) {
+      query = event.multiValueQueryStringParameters.q[0];
+      console.log(`📍 Параметр найден в multiValueQueryStringParameters: "${query}"`);
+    }
+    // Способ 3: из path (если что-то пошло не так)
+    else if (event.rawQueryString) {
+      const params = new URLSearchParams(event.rawQueryString);
+      query = params.get('q') || '';
+      console.log(`📍 Параметр извлечен из rawQueryString: "${query}"`);
+    }
 
-    if (!query || query.trim().length < 2) {
+    query = query.trim();
+    console.log(`🔍 Финальный поисковый запрос: "${query}"`);
+
+    if (query.length < 2) {
+      console.warn(`⚠️ Запрос слишком короткий (${query.length} символов)`);
       return {
         statusCode: 400,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          error: 'Search query must be at least 2 characters' 
-        }),
+        body: JSON.stringify({ error: 'Search query must be at least 2 characters' }),
       };
     }
 
-    // Инициализируем клиент СДЭК
-    const cdek = new CdekClient(clientId, clientSecret, isTest);
-
-    // Получаем список всех городов и фильтруем по поисковому запросу
-    // Примечание: CDEK API не имеет эндпоинта для поиска городов,
-    // поэтому мы используем фиксированный список популярных городов
-    // и фильтруем его клиентской стороной
+    const baseUrl = isTest ? 'https://api.edu.cdek.ru/v2' : 'https://api.cdek.ru/v2';
     
-    // Получаем токен для авторизации
-    const token = await cdek.getToken();
-    
-    // CDEK API не имеет специального эндпоинта для поиска городов,
-    // но у нас есть endpoint /location/cities для получения списка городов
-    const citiesData = await cdek._request('GET', '/location/cities', null, {
-      'Authorization': `Bearer ${token}`
-    });
+    console.log(`🔑 Получение токена для получения городов...`);
+    const token = await getCdekToken(clientId, clientSecret, isTest);
 
-    // Фильтруем города по поисковому запросу (регистронезависимый поиск)
+    console.log(`📋 Запрос списка всех городов из CDEK...`);
+    const citiesResponse = await makeRequest(
+      `${baseUrl}/location/cities`,
+      'GET',
+      null,
+      { 'Authorization': `Bearer ${token}` }
+    );
+
+    console.log(`📥 Получено ответа, тип: ${Array.isArray(citiesResponse) ? 'массив' : 'объект'}`);
+
+    const citiesData = Array.isArray(citiesResponse) 
+      ? citiesResponse 
+      : (citiesResponse.data && Array.isArray(citiesResponse.data))
+        ? citiesResponse.data
+        : [];
+
+    console.log(`🏙️ Всего городов в БД CDEK: ${citiesData.length}`);
+
+    // Фильтруем по поисковому запросу
     const searchLower = query.toLowerCase();
-    const filteredCities = Array.isArray(citiesData) 
-      ? citiesData.filter(city => 
-          city.city && city.city.toLowerCase().includes(searchLower)
-        )
-      : [];
+    const filtered = citiesData
+      .filter(city => {
+        const cityName = (city.city || '').toLowerCase();
+        return cityName.includes(searchLower);
+      })
+      .slice(0, 50)
+      .map(city => ({
+        code: city.city_code,
+        name: city.city,
+        region: city.region
+      }));
 
-    // Форматируем результаты
-    const results = filteredCities.slice(0, 50).map(city => ({
-      code: city.city_code,
-      name: city.city,
-      region: city.region
-    }));
+    console.log(`✅ Найдено городов: ${filtered.length}`);
+    console.log(`📊 Результаты: ${JSON.stringify(filtered.slice(0, 3))}`);
 
     return {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         success: true,
-        data: results
+        data: filtered
       }),
     };
 
   } catch (error) {
-    console.error('Error searching CDEK cities:', error);
-    
-    // Sanitize error response
-    const errorResponse = {
-      error: error.message || 'Failed to search cities',
-      statusCode: error.statusCode,
-      code: error.code
-    };
-    
-    if (error.errors) {
-      errorResponse.errors = error.errors;
-    }
+    console.error(`💥 Критическая ошибка: ${error.message}`);
+    console.error(`📍 Stack: ${error.stack}`);
     
     return {
-      statusCode: error.statusCode || 500,
+      statusCode: 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(errorResponse),
+      body: JSON.stringify({ 
+        error: error.message || 'Internal error',
+        details: error.toString()
+      }),
     };
   }
 };

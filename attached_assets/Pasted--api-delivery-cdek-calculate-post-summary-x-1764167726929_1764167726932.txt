@@ -1,0 +1,131 @@
+/api/delivery/cdek/calculate:
+    post:
+      summary: Рассчитать стоимость доставки СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e97hu512s5fr3e8j0l
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Расчет стоимости доставки
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /api/delivery/cdek/points:
+    get:
+      summary: Получить пункты выдачи СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4el2qd1ihlbmguis1iv
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список ПВЗ
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /api/delivery/cdek/search-city:
+    get:
+      summary: Поиск городов СДЭК
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Поисковый запрос (минимум 2 символа)
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e47bktlrbiuok8not5
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Список найденных городов
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /api/delivery/cdek/order:
+    post:
+      summary: Создать заказ в СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eucofr7pvms8rfc9us
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Заказ создан
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /api/delivery/cdek/track:
+    get:
+      summary: Отследить заказ СДЭК
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e21ufg8q98n5o0nlti
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Статус заказа
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
