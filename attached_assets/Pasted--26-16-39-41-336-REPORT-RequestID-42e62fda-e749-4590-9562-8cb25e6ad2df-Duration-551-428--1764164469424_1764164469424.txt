@@ -1,0 +1,283 @@
+
+
+26 нояб. 16:39:41.336
+REPORT RequestID: 42e62fda-e749-4590-9562-8cb25e6ad2df Duration: 551.428 ms Billed Duration: 600 ms Memory Size: 128 MB Max Memory Used: 104 MB Queuing Duration: 0.053 ms Function Init Duration: 217.063 ms CPU Usage: 16.895 %
+
+26 нояб. 16:39:41.336
+END RequestID: 42e62fda-e749-4590-9562-8cb25e6ad2df
+
+26 нояб. 16:39:41.334
+Order mig1x7ou1mrdygyf3wa updated with payment info
+
+26 нояб. 16:39:41.240
+Using numeric InvId: 1764164381006267 with orderId in Shp_OrderId: mig1x7ou1mrdygyf3wa
+
+26 нояб. 16:39:41.240
+Payment URL generated: https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=sweetdelights&OutSum=250.00&InvId=1764164381006267&Description=%D0%97%D0%B0%D0%BA%D0%B0%D0%B7+%23MIG1X7OU&SignatureValue=6A4C57D6BD9A02D2E82CB2D5E4A6EDE65BACE3DAE2FD309B3082551A9DA286B5&Culture=ru&Email=pimashin2015%40gmail.com&IsTest=1&Shp_OrderId=mig1x7ou1mrdygyf3wa&PaymentMethods=sbp
+
+26 нояб. 16:39:41.007
+Generated numeric InvId: 1764164381006267 for order: mig1x7ou1mrdygyf3wa
+
+26 нояб. 16:39:41.007
+}
+
+26 нояб. 16:39:41.006
+path: '/api/payment/robokassa/init'
+
+26 нояб. 16:39:41.006
+isBase64Encoded: false,
+
+26 нояб. 16:39:41.006
+body: '{"orderId":"mig1x7ou1mrdygyf3wa","amount":250,"email":"pimashin2015@gmail.com","description":"Заказ #MIG1X7OU","paymentMethod":"sbp"}',
+
+26 нояб. 16:39:41.006
+},
+
+26 нояб. 16:39:41.006
+requestTimeEpoch: 1764164380
+
+26 нояб. 16:39:41.006
+requestTime: '26/Nov/2025:13:39:40 +0000',
+
+26 нояб. 16:39:41.006
+requestId: 'ba87d7d3-4c9b-4208-bef6-8ae55a788dc9',
+
+26 нояб. 16:39:41.006
+httpMethod: 'POST',
+
+26 нояб. 16:39:41.006
+},
+
+26 нояб. 16:39:41.006
+userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+26 нояб. 16:39:41.006
+sourceIp: '62.141.68.106',
+
+26 нояб. 16:39:41.006
+identity: {
+
+26 нояб. 16:39:41.006
+requestContext: {
+
+26 нояб. 16:39:41.006
+multiValueQueryStringParameters: {},
+
+26 нояб. 16:39:41.006
+queryStringParameters: {},
+
+26 нояб. 16:39:41.006
+},
+
+26 нояб. 16:39:41.006
+'X-Trace-Id': [ '79333f9e-a3ac-4920-a532-1eda7820f929' ]
+
+26 нояб. 16:39:41.006
+'X-Serverless-Gateway-Id': [ 'd5dimdj7itkijbl4s0g4' ],
+
+26 нояб. 16:39:41.006
+'X-Serverless-Certificate-Ids': [ '{}' ],
+
+26 нояб. 16:39:41.006
+'X-Request-Id': [ 'ba87d7d3-4c9b-4208-bef6-8ae55a788dc9' ],
+
+26 нояб. 16:39:41.006
+'X-Real-Remote-Address': [ '62.141.68.106:57314' ],
+
+26 нояб. 16:39:41.006
+'X-Forwarded-Proto': [ 'https' ],
+
+26 нояб. 16:39:41.006
+'X-Forwarded-For': [ '62.141.68.106' ],
+
+26 нояб. 16:39:41.006
+'X-Envoy-Original-Path': [ '/api/payment/robokassa/init' ],
+
+26 нояб. 16:39:41.006
+'X-Envoy-External-Address': [ '62.141.68.106' ],
+
+26 нояб. 16:39:41.006
+'X-Api-Gateway-Function-Id': [ 'd4eo70h7u5qevjl70hup' ],
+
+26 нояб. 16:39:41.006
+],
+
+26 нояб. 16:39:41.006
+'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+26 нояб. 16:39:41.006
+'User-Agent': [
+
+26 нояб. 16:39:41.006
+'Uber-Trace-Id': [ '65f7757a19e68384:277b8d566f7d22a4:3fd1a2359308ece1:1' ],
+
+26 нояб. 16:39:41.006
+'Sec-Fetch-Site': [ 'cross-site' ],
+
+26 нояб. 16:39:41.006
+'Sec-Fetch-Mode': [ 'cors' ],
+
+26 нояб. 16:39:41.006
+'Sec-Fetch-Dest': [ 'empty' ],
+
+26 нояб. 16:39:41.006
+'Sec-Ch-Ua-Platform': [ '"Windows"' ],
+
+26 нояб. 16:39:41.006
+'Sec-Ch-Ua-Mobile': [ '?0' ],
+
+26 нояб. 16:39:41.006
+],
+
+26 нояб. 16:39:41.006
+'"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"'
+
+26 нояб. 16:39:41.006
+'Sec-Ch-Ua': [
+
+26 нояб. 16:39:41.006
+],
+
+26 нояб. 16:39:41.006
+'https://ae6b39a8-96c4-4d30-8475-e95bcfcb41c9-00-1d6o4p5kpjpoi.sisko.replit.dev/'
+
+26 нояб. 16:39:41.006
+Referer: [
+
+26 нояб. 16:39:41.006
+Priority: [ 'u=1, i' ],
+
+26 нояб. 16:39:41.006
+],
+
+26 нояб. 16:39:41.006
+'https://ae6b39a8-96c4-4d30-8475-e95bcfcb41c9-00-1d6o4p5kpjpoi.sisko.replit.dev'
+
+26 нояб. 16:39:41.006
+Origin: [
+
+26 нояб. 16:39:41.006
+Host: [ 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net' ],
+
+26 нояб. 16:39:41.006
+'Content-Type': [ 'application/json' ],
+
+26 нояб. 16:39:41.006
+'Content-Length': [ '138' ],
+
+26 нояб. 16:39:41.006
+'Accept-Language': [ 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7' ],
+
+26 нояб. 16:39:41.006
+'Accept-Encoding': [ 'gzip, deflate, br, zstd' ],
+
+26 нояб. 16:39:41.006
+Accept: [ '*/*' ],
+
+26 нояб. 16:39:41.006
+multiValueHeaders: {
+
+26 нояб. 16:39:41.006
+pathParams: {},
+
+26 нояб. 16:39:41.006
+multiValueParams: {},
+
+26 нояб. 16:39:41.006
+params: {},
+
+26 нояб. 16:39:41.006
+url: '/api/payment/robokassa/init?',
+
+26 нояб. 16:39:41.006
+},
+
+26 нояб. 16:39:41.006
+'X-Trace-Id': '79333f9e-a3ac-4920-a532-1eda7820f929'
+
+26 нояб. 16:39:41.006
+'X-Serverless-Gateway-Id': 'd5dimdj7itkijbl4s0g4',
+
+26 нояб. 16:39:41.006
+'X-Serverless-Certificate-Ids': '{}',
+
+26 нояб. 16:39:41.006
+'X-Request-Id': 'ba87d7d3-4c9b-4208-bef6-8ae55a788dc9',
+
+26 нояб. 16:39:41.006
+'X-Real-Remote-Address': '62.141.68.106:57314',
+
+26 нояб. 16:39:41.006
+'X-Forwarded-Proto': 'https',
+
+26 нояб. 16:39:41.006
+'X-Forwarded-For': '62.141.68.106',
+
+26 нояб. 16:39:41.006
+'X-Envoy-Original-Path': '/api/payment/robokassa/init',
+
+26 нояб. 16:39:41.006
+'X-Envoy-External-Address': '62.141.68.106',
+
+26 нояб. 16:39:41.006
+'X-Api-Gateway-Function-Id': 'd4eo70h7u5qevjl70hup',
+
+26 нояб. 16:39:41.006
+'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+
+26 нояб. 16:39:41.006
+'Uber-Trace-Id': '65f7757a19e68384:277b8d566f7d22a4:3fd1a2359308ece1:1',
+
+26 нояб. 16:39:41.006
+'Sec-Fetch-Site': 'cross-site',
+
+26 нояб. 16:39:41.006
+'Sec-Fetch-Mode': 'cors',
+
+26 нояб. 16:39:41.006
+'Sec-Fetch-Dest': 'empty',
+
+26 нояб. 16:39:41.005
+'Sec-Ch-Ua-Platform': '"Windows"',
+
+26 нояб. 16:39:41.005
+'Sec-Ch-Ua-Mobile': '?0',
+
+26 нояб. 16:39:41.005
+'Sec-Ch-Ua': '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+
+26 нояб. 16:39:41.005
+Referer: 'https://ae6b39a8-96c4-4d30-8475-e95bcfcb41c9-00-1d6o4p5kpjpoi.sisko.replit.dev/',
+
+26 нояб. 16:39:41.005
+Priority: 'u=1, i',
+
+26 нояб. 16:39:41.005
+Origin: 'https://ae6b39a8-96c4-4d30-8475-e95bcfcb41c9-00-1d6o4p5kpjpoi.sisko.replit.dev',
+
+26 нояб. 16:39:41.005
+Host: 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net',
+
+26 нояб. 16:39:41.005
+'Content-Type': 'application/json',
+
+26 нояб. 16:39:41.005
+'Content-Length': '138',
+
+26 нояб. 16:39:41.005
+'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+
+26 нояб. 16:39:41.005
+'Accept-Encoding': 'gzip, deflate, br, zstd',
+
+26 нояб. 16:39:41.005
+Accept: '*/*',
+
+26 нояб. 16:39:41.005
+headers: {
+
+26 нояб. 16:39:41.005
+httpMethod: 'POST',
+
+26 нояб. 16:39:41.005
+Init payment request: {
