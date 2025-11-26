@@ -158,19 +158,26 @@ exports.handler = async (event) => {
         : [];
 
     console.log(`🏙️ Всего городов в БД CDEK: ${citiesData.length}`);
+    
+    // Логируем структуру первого города чтобы понять поля
+    if (citiesData.length > 0) {
+      console.log(`📊 Структура первого города:`, JSON.stringify(citiesData[0], null, 2));
+    }
 
     // Фильтруем по поисковому запросу
     const searchLower = query.toLowerCase();
     const filtered = citiesData
       .filter(city => {
-        const cityName = (city.city || '').toLowerCase();
+        // Пытаемся найти название города в разных полях
+        const cityName = (city.city || city.cityName || city.name || '').toLowerCase();
         return cityName.includes(searchLower);
       })
       .slice(0, 50)
       .map(city => ({
-        code: city.city_code,
-        name: city.city,
-        region: city.region
+        // Пытаемся получить code из разных полей
+        code: city.city_code || city.cityCode || city.code || city.id,
+        name: city.city || city.cityName || city.name,
+        region: city.region || city.regionName || city.oblast
       }));
 
     console.log(`✅ Найдено городов: ${filtered.length}`);
