@@ -28,13 +28,50 @@ export default function WishlistPage() {
 
   const handleShareWishlist = () => {
     const shareLink = `${window.location.origin}/shared-wishlist/${user?.userId}`;
-    navigator.clipboard.writeText(shareLink);
-    setCopied(true);
-    toast({
-      title: "Ссылка скопирована!",
-      description: "Поделитесь ссылкой на ваше избранное с друзьями",
-    });
-    setTimeout(() => setCopied(false), 2000);
+    
+    // Попробовать Clipboard API (для современных браузеров)
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(shareLink).then(() => {
+        setCopied(true);
+        toast({
+          title: "Ссылка скопирована!",
+          description: "Поделитесь ссылкой на ваше избранное с друзьями",
+        });
+        setTimeout(() => setCopied(false), 2000);
+      }).catch(() => {
+        // Fallback если Clipboard API не сработал
+        copyToClipboardFallback(shareLink);
+      });
+    } else {
+      // Fallback для старых браузеров
+      copyToClipboardFallback(shareLink);
+    }
+  };
+
+  const copyToClipboardFallback = (text: string) => {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      setCopied(true);
+      toast({
+        title: "Ссылка скопирована!",
+        description: "Поделитесь ссылкой на ваше избранное с друзьями",
+      });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({
+        title: "Ошибка копирования",
+        description: "Не удалось скопировать ссылку",
+        variant: "destructive",
+      });
+    } finally {
+      document.body.removeChild(textarea);
+    }
   };
 
   const wishlistProducts = products.filter(p => 
