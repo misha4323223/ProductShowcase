@@ -6,7 +6,27 @@ Sweet Delights is an e-commerce platform specializing in sweets (chocolates, can
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
-## Latest Updates (November 23, 2025)
+## Latest Updates (November 26, 2025)
+
+✅ **Lottery Wheel - Promo Codes & Expiry Dates Fixed - Nov 26, 2025**:
+- **Changes Made**:
+  - **Expiry Dates Updated**: 
+    - `discount_10`: 14 days → **21 days**
+    - `points`: 365 days → **182 days** (~6 months)
+    - Other prizes unchanged (discount_20: 21 days, delivery: 60 days, free_item: 10 days, jackpot: 2 days)
+  - **One-Time Use Enforcement**: 
+    - Fixed promo code reuse bug: now properly extracts code from object/string format
+    - `create-order` function now correctly marks wheel prizes as `used: true` after order creation
+    - `validate-promo` checks `used` flag and rejects already-used codes
+  - **Wishlist Requirement Removed**:
+    - Frontend check removed from `WheelModal.tsx` (lines 100-107)
+    - Wheel now requires only **cart items**, not wishlist items
+    - Matches backend validation (cart-only requirement)
+- **Files Modified**:
+  - `yandex-functions/lib/wheel-utils.js`: Updated expiry date calculations (lines 131-138)
+  - `yandex-functions/create-order/index.js`: Fixed promo code extraction and one-time use marking (lines 158-195)
+  - `yandex-functions/spin-wheel/index.js`: Fixed cart key to `id: userId` (lines 83-87)
+  - `client/src/components/WheelModal.tsx`: Removed wishlist validation check
 
 ✅ **iOS Safari Background Fix - Nov 23, 2025 (FINAL SOLUTION)**:
 - **Problem**: Background images "stuck at top" on iOS Safari, not scrolling with content. Android worked fine.
