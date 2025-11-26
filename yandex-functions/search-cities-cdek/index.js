@@ -138,29 +138,35 @@ exports.handler = async (event) => {
         region: city.region
       }));
 
-    // ЛОГИРОВАНИЕ: показываем города которые частично совпадают с поиском
+    // ЛОГИРОВАНИЕ: если не найдено, показываем ВСЕ похожие города
     if (filtered.length === 0 && query.length >= 2) {
-      console.log(`\n🔴 НЕ НАЙДЕНО: "${query}"`);
-      console.log(`📍 Ищу похожие города в CDEK...`);
+      console.log(`\n🔴 НЕ НАЙДЕНО ТОЧНОЕ СОВПАДЕНИЕ: "${query}"`);
+      console.log(`📍 Ищу ВСЕ города в CDEK которые содержат этот текст...`);
       
+      // Показываем города которые содержат первые 3 буквы
       const partialMatches = citiesData
         .filter(city => {
           const cityName = (city.city || city.name || '').toLowerCase();
-          // Ищем города которые содержат первые 3 буквы от поиска
           return cityName.includes(searchLower.substring(0, 3));
-        })
-        .slice(0, 20)
-        .map(city => `${city.city || city.name} (${city.region || 'регион'})`);
+        });
       
       if (partialMatches.length > 0) {
-        console.log(`📌 Похожие города в CDEK:`);
-        partialMatches.forEach(c => console.log(`   - ${c}`));
+        console.log(`\n✅ НАЙДЕНО ${partialMatches.length} городов которые начинаются с "${searchLower.substring(0, 3)}":`);
+        partialMatches.slice(0, 50).forEach((city, idx) => {
+          const name = city.city || city.name || 'UNKNOWN';
+          const code = city.city_code || city.code || 'NO_CODE';
+          const region = city.region || 'UNKNOWN_REGION';
+          console.log(`   [${idx + 1}] ${name} (код: ${code}) - ${region}`);
+        });
+        if (partialMatches.length > 50) {
+          console.log(`   ... и ещё ${partialMatches.length - 50} городов`);
+        }
       } else {
-        console.log(`❌ Похожих городов не найдено вообще`);
+        console.log(`❌ Городов с таким началом не найдено в CDEK`);
       }
     }
 
-    console.log(`✅ Найдено: ${filtered.length} городов`);
+    console.log(`✅ Найдено: ${filtered.length} городов по запросу "${query}"`);
 
     return {
       statusCode: 200,
