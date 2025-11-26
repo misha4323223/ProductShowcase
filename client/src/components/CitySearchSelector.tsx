@@ -30,6 +30,13 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
   // Логируем ошибки
   if (queryError) {
     console.error('🔴 Ошибка поиска городов:', queryError);
+    console.error('💥 Ошибка детали:', {
+      message: (queryError as any)?.message,
+      status: (queryError as any)?.status,
+      statusCode: (queryError as any)?.statusCode,
+      response: (queryError as any)?.response,
+      toString: queryError?.toString?.()
+    });
   }
 
   const cities = citiesData?.data || [];
