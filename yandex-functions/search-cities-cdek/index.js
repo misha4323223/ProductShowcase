@@ -80,7 +80,6 @@ async function getCdekToken(clientId, clientSecret, isTest) {
 
 exports.handler = async (event) => {
   console.log('🚀 Начало обработки запроса search-cities-cdek');
-  console.log('📝 Event:', JSON.stringify(event, null, 2));
   
   try {
     const clientId = process.env.CDEK_CLIENT_ID;
@@ -104,18 +103,13 @@ exports.handler = async (event) => {
     // Пытаемся получить параметр 'q' разными способами
     let query = '';
     
-    // Способ 1: queryStringParameters (стандартный)
     if (event.queryStringParameters?.q) {
       query = event.queryStringParameters.q;
       console.log(`📍 Параметр найден в queryStringParameters: "${query}"`);
-    }
-    // Способ 2: multiValueQueryStringParameters
-    else if (event.multiValueQueryStringParameters?.q?.[0]) {
+    } else if (event.multiValueQueryStringParameters?.q?.[0]) {
       query = event.multiValueQueryStringParameters.q[0];
       console.log(`📍 Параметр найден в multiValueQueryStringParameters: "${query}"`);
-    }
-    // Способ 3: из path (если что-то пошло не так)
-    else if (event.rawQueryString) {
+    } else if (event.rawQueryString) {
       const params = new URLSearchParams(event.rawQueryString);
       query = params.get('q') || '';
       console.log(`📍 Параметр извлечен из rawQueryString: "${query}"`);
@@ -159,29 +153,41 @@ exports.handler = async (event) => {
 
     console.log(`🏙️ Всего городов в БД CDEK: ${citiesData.length}`);
     
-    // Логируем структуру первого города чтобы понять поля
+    // КРИТИЧНО: Логируем РЕАЛЬНУЮ структуру первого города
     if (citiesData.length > 0) {
-      console.log(`📊 Структура первого города:`, JSON.stringify(citiesData[0], null, 2));
+      console.log(`\n📊📊📊 СТРУКТУРА ПЕРВОГО ГОРОДА ИЗ CDEK API 📊📊📊:`);
+      console.log(JSON.stringify(citiesData[0], null, 2));
+      console.log(`ВСЕ КЛЮЧИ ГОРОДА:`, Object.keys(citiesData[0]));
+      console.log(`\n`);
     }
 
     // Фильтруем по поисковому запросу
     const searchLower = query.toLowerCase();
     const filtered = citiesData
       .filter(city => {
-        // Пытаемся найти название города в разных полях
-        const cityName = (city.city || city.cityName || city.name || '').toLowerCase();
+        const cityName = (city.city || city.name || '').toLowerCase();
         return cityName.includes(searchLower);
       })
       .slice(0, 50)
-      .map(city => ({
-        // Пытаемся получить code из разных полей
-        code: city.city_code || city.cityCode || city.code || city.id,
-        name: city.city || city.cityName || city.name,
-        region: city.region || city.regionName || city.oblast
-      }));
+      .map(city => {
+        console.log(`📌 Обработка города:`, {
+          city_code: city.city_code,
+          city: city.city,
+          name: city.name,
+          code: city.code,
+          region: city.region,
+          allKeys: Object.keys(city)
+        });
+        
+        return {
+          code: city.city_code || city.code,
+          name: city.city || city.name,
+          region: city.region
+        };
+      });
 
     console.log(`✅ Найдено городов: ${filtered.length}`);
-    console.log(`📊 Результаты: ${JSON.stringify(filtered.slice(0, 3))}`);
+    console.log(`📦 Результаты для фронтенда:`, JSON.stringify(filtered.slice(0, 3)));
 
     return {
       statusCode: 200,
