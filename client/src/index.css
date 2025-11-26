@@ -701,17 +701,16 @@ html.new-year [data-testid="breadcrumb-wishlist"] {
   color: #000 !important;
 }
 
-/* Wishlist page - blurred background */
-html.new-year main > div:not([data-testid]) {
-  backdrop-filter: blur(10px) !important;
-}
-
 /* Wishlist empty state messages */
 html.new-year section h2,
 html.new-year section p {
   color: #000 !important;
   font-weight: 900 !important;
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  display: inline-block !important;
 }
 
 /* NEW YEAR THEME - Orders Styling */
