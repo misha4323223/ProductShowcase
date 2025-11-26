@@ -30,6 +30,7 @@ interface CdekTariff {
 interface DeliveryCalculatorProps {
   cityCode: number;
   packages: Package[];
+  deliveryType?: 'PICKUP' | 'DOOR' | null;
   onCalculated?: (cost: number, days: number, tariffCode: number) => void;
 }
 
@@ -43,6 +44,7 @@ const deliveryModeLabels: Record<number, { icon: any; label: string }> = {
 export function DeliveryCalculator({ 
   cityCode, 
   packages,
+  deliveryType,
   onCalculated 
 }: DeliveryCalculatorProps) {
   const [availableTariffs, setAvailableTariffs] = useState<CdekTariff[]>([]);
@@ -93,28 +95,45 @@ export function DeliveryCalculator({
           !t.tariff_name.toLowerCase().includes('сборный груз')
         );
         
-        // Берём только 2 варианта - самый дешевый для каждого типа доставки
-        const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4); // Склад-Склад
-        const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3); // Склад-Дверь
+        let filteredTariffs: CdekTariff[] = [];
         
-        const filteredTariffs = [];
-        
-        // Добавляем самый дешевый вариант до пункта выдачи
-        if (pickupTariffs.length > 0) {
-          const cheapestPickup = pickupTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
-          // Переименовываем для понятного отображения
-          cheapestPickup.tariff_name = 'До пункта выдачи СДЭК';
-          cheapestPickup.tariff_description = 'Заберите заказ в удобном пункте выдачи';
-          filteredTariffs.push(cheapestPickup);
-        }
-        
-        // Добавляем самый дешевый вариант курьерской доставки
-        if (courierTariffs.length > 0) {
-          const cheapestCourier = courierTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
-          // Переименовываем для понятного отображения
-          cheapestCourier.tariff_name = 'Курьером до двери';
-          cheapestCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
-          filteredTariffs.push(cheapestCourier);
+        // Фильтруем по выбранному типу доставки
+        if (deliveryType === 'PICKUP') {
+          // Только Склад-Склад для пункта выдачи
+          const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4);
+          if (pickupTariffs.length > 0) {
+            const cheapestPickup = pickupTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
+            cheapestPickup.tariff_name = 'До пункта выдачи СДЭК';
+            cheapestPickup.tariff_description = 'Заберите заказ в удобном пункте выдачи';
+            filteredTariffs.push(cheapestPickup);
+          }
+        } else if (deliveryType === 'DOOR') {
+          // Только Склад-Дверь для курьерской доставки
+          const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3);
+          if (courierTariffs.length > 0) {
+            const cheapestCourier = courierTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
+            cheapestCourier.tariff_name = 'Экспресс доставка до двери';
+            cheapestCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
+            filteredTariffs.push(cheapestCourier);
+          }
+        } else {
+          // Если тип не выбран, показываем оба варианта
+          const pickupTariffs = customerTariffs.filter(t => t.delivery_mode === 4);
+          const courierTariffs = customerTariffs.filter(t => t.delivery_mode === 3);
+          
+          if (pickupTariffs.length > 0) {
+            const cheapestPickup = pickupTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
+            cheapestPickup.tariff_name = 'До пункта выдачи СДЭК';
+            cheapestPickup.tariff_description = 'Заберите заказ в удобном пункте выдачи';
+            filteredTariffs.push(cheapestPickup);
+          }
+          
+          if (courierTariffs.length > 0) {
+            const cheapestCourier = courierTariffs.sort((a, b) => a.delivery_sum - b.delivery_sum)[0];
+            cheapestCourier.tariff_name = 'Экспресс доставка до двери';
+            cheapestCourier.tariff_description = 'СДЭК доставит заказ по указанному адресу';
+            filteredTariffs.push(cheapestCourier);
+          }
         }
         
         setAvailableTariffs(filteredTariffs);

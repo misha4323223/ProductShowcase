@@ -646,6 +646,7 @@ export default function CheckoutPage() {
                             <DeliveryCalculator
                               cityCode={selectedCdekPoint.location.city_code}
                               packages={deliveryPackages}
+                              deliveryType="PICKUP"
                               onCalculated={(cost, days, tariffCode) => {
                                 setCdekDeliveryCost(cost);
                                 setCdekEstimatedDays(days);
@@ -660,6 +661,7 @@ export default function CheckoutPage() {
                         <DeliveryCalculator
                           cityCode={270}
                           packages={deliveryPackages}
+                          deliveryType="DOOR"
                           onCalculated={(cost, days, tariffCode) => {
                             setCdekDeliveryCost(cost);
                             setCdekEstimatedDays(days);
