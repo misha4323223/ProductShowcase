@@ -82,7 +82,7 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { cartItems, clearCart } = useCart();
-  const { loyaltyPoints } = useWheel();
+  const { loyaltyPoints, refreshStatus } = useWheel();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -434,6 +434,9 @@ export default function CheckoutPage() {
         
         if (paymentResult.success && paymentResult.paymentUrl) {
           localStorage.setItem('pendingPaymentOrderId', orderId);
+          
+          // Обновляем статус рулетки (баллы будут пересчитаны на сервере)
+          await refreshStatus();
           
           toast({
             title: "Заказ успешно оформлен!",
