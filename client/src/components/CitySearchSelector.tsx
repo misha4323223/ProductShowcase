@@ -44,11 +44,20 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
   console.log('🔍 City Search:', { searchQuery, isLoading, citiesCount: cities.length, error: queryError });
 
   const handleSelectCity = (city: City) => {
-    console.log('✅ Selected city:', city);
+    console.log('✅ CITY SELECTED! City object:', city);
+    console.log('✅ City code:', city.code);
+    console.log('✅ City name:', city.name);
+    
+    if (!city.code) {
+      console.error('❌ ОШИБКА: city.code не определен!', city);
+      return;
+    }
+    
     setSelectedCity(city);
     setSearchQuery(city.name);
     setShowResults(false);
     onSelect(city);
+    console.log('✅ onSelect callback вызван с городом:', city);
   };
 
   useEffect(() => {
@@ -97,14 +106,24 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
                 Город не найден. Попробуйте другое название
               </div>
             ) : (
-              <ScrollArea className="h-[300px]">
+              <ScrollArea className="h-[300px] w-full">
                 <div className="space-y-1 p-2">
-                  {cities.slice(0, 20).map((city) => (
-                    <div
-                      key={city.code}
-                      className="p-3 rounded-md cursor-pointer hover:bg-accent flex items-start gap-2 text-sm"
-                      onClick={() => handleSelectCity(city)}
-                      data-testid={`city-option-${city.code}`}
+                  {cities.slice(0, 20).map((city, index) => (
+                    <button
+                      key={`${city.code || index}`}
+                      type="button"
+                      onClick={() => {
+                        console.log('🖱️ onClick fired for city:', city);
+                        handleSelectCity(city);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          console.log('⌨️ Enter key pressed for city:', city);
+                          handleSelectCity(city);
+                        }
+                      }}
+                      className="w-full p-3 rounded-md cursor-pointer hover:bg-accent flex items-start gap-2 text-sm text-left hover-elevate transition-colors"
+                      data-testid={`city-option-${city.code || index}`}
                     >
                       <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground flex-shrink-0" />
                       <div className="flex-1">
@@ -113,7 +132,7 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
                           <div className="text-xs text-muted-foreground">{city.region}</div>
                         )}
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </ScrollArea>
