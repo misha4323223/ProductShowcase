@@ -183,13 +183,11 @@ export default function SharedWishlistPage() {
                 Список желаний
               </span>
             </div>
-            <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
-              <div className="flex items-center gap-4">
-                <Heart className="h-10 w-10 text-pink-500 fill-pink-500" />
-                <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid="text-shared-wishlist-title">
-                  {userName}
-                </h1>
-              </div>
+            <div className="flex items-center gap-4 mb-4">
+              <Heart className="h-10 w-10 text-pink-500 fill-pink-500" />
+              <h1 className="font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600 drop-shadow-sm" data-testid="text-shared-wishlist-title">
+                {userName}
+              </h1>
             </div>
             <p className="text-muted-foreground" data-testid="text-shared-wishlist-count">
               {wishlistProducts.length === 0 
