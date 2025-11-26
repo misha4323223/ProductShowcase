@@ -224,6 +224,8 @@ export default function CheckoutPage() {
     });
   };
 
+  const maxBonusAllowed = Math.floor(subtotal * 0.5);
+
   const handleApplyBonus = () => {
     const requestedBonus = parseInt(bonusInput) || 0;
     
@@ -239,6 +241,15 @@ export default function CheckoutPage() {
       toast({
         title: "Недостаточно баллов",
         description: `У вас есть только ${loyaltyPoints} баллов`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (requestedBonus > maxBonusAllowed) {
+      toast({
+        title: "Превышен лимит на использование баллов",
+        description: `Максимум ${maxBonusAllowed}₽ (50% от суммы заказа)`,
         variant: "destructive",
       });
       return;
@@ -837,26 +848,29 @@ export default function CheckoutPage() {
                     <div className="space-y-2">
                       <Label>Бонусные баллы <span className="text-muted-foreground">({loyaltyPoints} доступно)</span></Label>
                       {!isBonusApplied ? (
-                        <div className="flex gap-2">
-                          <Input
-                            type="number"
-                            placeholder="Введите количество баллов"
-                            value={bonusInput}
-                            onChange={(e) => setBonusInput(e.target.value)}
-                            min="0"
-                            max={loyaltyPoints}
-                            data-testid="input-bonus-amount"
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handleApplyBonus}
-                            disabled={loyaltyPoints === 0}
-                            data-testid="button-apply-bonus"
-                          >
-                            Применить
-                          </Button>
-                        </div>
+                        <>
+                          <div className="flex gap-2">
+                            <Input
+                              type="number"
+                              placeholder="Введите количество баллов"
+                              value={bonusInput}
+                              onChange={(e) => setBonusInput(e.target.value)}
+                              min="0"
+                              max={maxBonusAllowed}
+                              data-testid="input-bonus-amount"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={handleApplyBonus}
+                              disabled={loyaltyPoints === 0}
+                              data-testid="button-apply-bonus"
+                            >
+                              Применить
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground">Максимум можно потратить: <span className="font-semibold text-primary">{maxBonusAllowed}₽</span> (50% от суммы заказа)</p>
+                        </>
                       ) : (
                         <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
                           <div className="flex items-center gap-2">
