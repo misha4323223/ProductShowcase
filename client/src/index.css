@@ -712,6 +712,15 @@ html.new-year section p {
   border-radius: 8px !important;
 }
 
+/* NEW YEAR THEME - Footer Styling */
+html.new-year footer {
+  backdrop-filter: blur(10px) !important;
+}
+
+html.new-year footer .absolute {
+  opacity: 0 !important;
+}
+
 /* NEW YEAR THEME - Orders Styling */
 html.new-year [data-testid^="accordion-order-"] {
   border-width: 2px !important;
