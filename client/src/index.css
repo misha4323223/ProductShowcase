@@ -685,7 +685,9 @@ html.new-year [data-testid="text-user-email"] {
 
 /* NEW YEAR THEME - Wishlist Page Styling */
 html.new-year [data-testid="text-page-title"],
-html.new-year [data-testid="text-wishlist-count"] {
+html.new-year [data-testid="text-shared-wishlist-title"],
+html.new-year [data-testid="text-wishlist-count"],
+html.new-year [data-testid="text-shared-wishlist-count"] {
   color: #000 !important;
   font-weight: 900 !important;
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.6) !important;
