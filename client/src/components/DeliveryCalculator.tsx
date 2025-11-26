@@ -272,14 +272,18 @@ export function DeliveryCalculator({
                       <Badge variant="secondary">
                         {modeInfo.label}
                       </Badge>
-                      {tariff.period_min > 0 && (
+                      {tariff.delivery_date_range?.max ? (
+                        <span>
+                          • Доставка до: {new Date(tariff.delivery_date_range.max).toLocaleDateString('ru-RU', { month: 'short', day: 'numeric' })}
+                        </span>
+                      ) : tariff.period_min > 0 ? (
                         <span>
                           • Доставка: {tariff.period_min}
                           {tariff.period_max && tariff.period_max !== tariff.period_min 
                             ? `-${tariff.period_max}` 
                             : ''} дн.
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                   
@@ -287,16 +291,18 @@ export function DeliveryCalculator({
                     <div className="text-xl font-bold" data-testid={`text-tariff-price-${tariff.tariff_code}`}>
                       {tariff.delivery_sum} ₽
                     </div>
-                    {(tariff.period_max || tariff.period_min) && (
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {(() => {
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {tariff.delivery_date_range?.max ? (
+                        <>до {new Date(tariff.delivery_date_range.max).toLocaleDateString('ru-RU')}</>
+                      ) : (tariff.period_max || tariff.period_min) ? (
+                        (() => {
                           const daysToAdd = tariff.period_max || tariff.period_min;
                           const deliveryDate = new Date();
                           deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
                           return `до ${deliveryDate.toLocaleDateString('ru-RU')}`;
-                        })()}
-                      </div>
-                    )}
+                        })()
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </Card>
