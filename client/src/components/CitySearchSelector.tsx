@@ -22,14 +22,22 @@ export function CitySearchSelector({ onSelect }: CitySearchSelectorProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Вызываем CDEK API для поиска городов
-  const { data: citiesData, isLoading } = useQuery<{ success: boolean; data: City[] }>({
+  const { data: citiesData, isLoading, error: queryError } = useQuery<{ success: boolean; data: City[] }>({
     queryKey: ['/api/delivery/cdek/search-city', searchQuery],
     enabled: searchQuery.length >= 2,
   });
 
+  // Логируем ошибки
+  if (queryError) {
+    console.error('🔴 Ошибка поиска городов:', queryError);
+  }
+
   const cities = citiesData?.data || [];
 
+  console.log('🔍 City Search:', { searchQuery, isLoading, citiesCount: cities.length, error: queryError });
+
   const handleSelectCity = (city: City) => {
+    console.log('✅ Selected city:', city);
     setSelectedCity(city);
     setSearchQuery(city.name);
     setShowResults(false);
