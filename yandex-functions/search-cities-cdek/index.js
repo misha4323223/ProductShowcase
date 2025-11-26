@@ -72,14 +72,19 @@ async function getCdekToken(clientId, clientSecret, isTest) {
 
 async function getAllCdekCities(baseUrl, token) {
   let allCities = [];
-  let page = 0;
-  let pageSize = 100;
-  let hasMore = true;
+  let offset = 0;
+  let pageSize = 1000; // CDEK может вернуть до 1000 за раз
+  let totalLoaded = 0;
 
-  while (hasMore) {
+  console.log(`\n📥 НАЧИНАЮ ЗАГРУЗКУ ВСЕХ ГОРОДОВ CDEK...`);
+  console.log(`📄 Размер страницы: ${pageSize}`);
+
+  while (true) {
     try {
-      const url = `${baseUrl}/location/cities?page=${page}&size=${pageSize}`;
-      console.log(`📄 Загружаю страницу ${page + 1}...`);
+      // Пробуем разные варианты пагинации
+      let url = `${baseUrl}/location/cities?offset=${offset}&limit=${pageSize}`;
+      console.log(`\n📌 Запрос: offset=${offset}, limit=${pageSize}`);
+      console.log(`   URL: ${url}`);
       
       const response = await makeRequest(
         url,
@@ -88,30 +93,54 @@ async function getAllCdekCities(baseUrl, token) {
         { 'Authorization': `Bearer ${token}` }
       );
 
+      console.log(`📨 Структура ответа:`, Object.keys(response));
+      
       let citiesPage = [];
       
+      // Пробуем разные ключи где могут быть города
       if (Array.isArray(response)) {
+        console.log(`   ✓ Ответ - это массив`);
         citiesPage = response;
       } else if (response.data && Array.isArray(response.data)) {
+        console.log(`   ✓ Ответ в response.data (${response.data.length} городов)`);
         citiesPage = response.data;
       } else if (response.citiesList && Array.isArray(response.citiesList)) {
+        console.log(`   ✓ Ответ в response.citiesList (${response.citiesList.length} городов)`);
         citiesPage = response.citiesList;
+      } else if (response.cities && Array.isArray(response.cities)) {
+        console.log(`   ✓ Ответ в response.cities (${response.cities.length} городов)`);
+        citiesPage = response.cities;
       }
 
-      if (citiesPage.length === 0) {
-        hasMore = false;
-        console.log(`✅ Все страницы загружены!`);
-      } else {
-        console.log(`   ✓ Загружено ${citiesPage.length} городов на странице ${page + 1}`);
-        allCities = allCities.concat(citiesPage);
-        page++;
+      if (!citiesPage || citiesPage.length === 0) {
+        console.log(`\n✅ ЗАГРУЗКА ЗАВЕРШЕНА!`);
+        console.log(`   Всего загружено городов: ${totalLoaded}`);
+        console.log(`   Попыток загрузки: ${offset / pageSize}`);
+        break;
       }
+
+      console.log(`   ✓ Загружено ${citiesPage.length} городов на этой странице`);
+      totalLoaded += citiesPage.length;
+      console.log(`   Всего загружено: ${totalLoaded}`);
+      
+      allCities = allCities.concat(citiesPage);
+      
+      // Если получили меньше чем запросили - это последняя страница
+      if (citiesPage.length < pageSize) {
+        console.log(`\n✅ ЗАГРУЗКА ЗАВЕРШЕНА! (получено меньше чем запросили)`);
+        console.log(`   ИТОГО ГОРОДОВ: ${totalLoaded}`);
+        break;
+      }
+      
+      offset += pageSize;
+      
     } catch (error) {
-      console.error(`⚠️ Ошибка загрузки страницы ${page + 1}: ${error.message}`);
-      hasMore = false;
+      console.error(`\n⚠️ Ошибка на offset=${offset}: ${error.message}`);
+      break;
     }
   }
 
+  console.log(`\n🏙️ ФИНАЛЬНЫЙ РЕЗУЛЬТАТ: ${allCities.length} городов загружено`);
   return allCities;
 }
 
@@ -157,10 +186,9 @@ exports.handler = async (event) => {
     console.log(`🔑 Получен токен CDEK`);
 
     // Загружаем ВСЕ города с пагинацией
-    console.log(`📥 Начинаю загрузку ВСЕх городов CDEK...`);
     const citiesData = await getAllCdekCities(baseUrl, token);
     
-    console.log(`🏙️ ВСЕГО ЗАГРУЖЕНО городов: ${citiesData.length}`);
+    console.log(`\n📊 ИТОГО В СИСТЕМЕ: ${citiesData.length} городов`);
 
     // Фильтруем по поисковому запросу
     const searchLower = query.toLowerCase();
