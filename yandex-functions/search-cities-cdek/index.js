@@ -70,80 +70,6 @@ async function getCdekToken(clientId, clientSecret, isTest) {
   }
 }
 
-async function getAllCdekCities(baseUrl, token) {
-  let allCities = [];
-  let offset = 0;
-  let pageSize = 1000; // CDEK может вернуть до 1000 за раз
-  let totalLoaded = 0;
-
-  console.log(`\n📥 НАЧИНАЮ ЗАГРУЗКУ ВСЕХ ГОРОДОВ CDEK...`);
-  console.log(`📄 Размер страницы: ${pageSize}`);
-
-  while (true) {
-    try {
-      // Пробуем разные варианты пагинации
-      let url = `${baseUrl}/location/cities?offset=${offset}&limit=${pageSize}`;
-      console.log(`\n📌 Запрос: offset=${offset}, limit=${pageSize}`);
-      console.log(`   URL: ${url}`);
-      
-      const response = await makeRequest(
-        url,
-        'GET',
-        null,
-        { 'Authorization': `Bearer ${token}` }
-      );
-
-      console.log(`📨 Структура ответа:`, Object.keys(response));
-      
-      let citiesPage = [];
-      
-      // Пробуем разные ключи где могут быть города
-      if (Array.isArray(response)) {
-        console.log(`   ✓ Ответ - это массив`);
-        citiesPage = response;
-      } else if (response.data && Array.isArray(response.data)) {
-        console.log(`   ✓ Ответ в response.data (${response.data.length} городов)`);
-        citiesPage = response.data;
-      } else if (response.citiesList && Array.isArray(response.citiesList)) {
-        console.log(`   ✓ Ответ в response.citiesList (${response.citiesList.length} городов)`);
-        citiesPage = response.citiesList;
-      } else if (response.cities && Array.isArray(response.cities)) {
-        console.log(`   ✓ Ответ в response.cities (${response.cities.length} городов)`);
-        citiesPage = response.cities;
-      }
-
-      if (!citiesPage || citiesPage.length === 0) {
-        console.log(`\n✅ ЗАГРУЗКА ЗАВЕРШЕНА!`);
-        console.log(`   Всего загружено городов: ${totalLoaded}`);
-        console.log(`   Попыток загрузки: ${offset / pageSize}`);
-        break;
-      }
-
-      console.log(`   ✓ Загружено ${citiesPage.length} городов на этой странице`);
-      totalLoaded += citiesPage.length;
-      console.log(`   Всего загружено: ${totalLoaded}`);
-      
-      allCities = allCities.concat(citiesPage);
-      
-      // Если получили меньше чем запросили - это последняя страница
-      if (citiesPage.length < pageSize) {
-        console.log(`\n✅ ЗАГРУЗКА ЗАВЕРШЕНА! (получено меньше чем запросили)`);
-        console.log(`   ИТОГО ГОРОДОВ: ${totalLoaded}`);
-        break;
-      }
-      
-      offset += pageSize;
-      
-    } catch (error) {
-      console.error(`\n⚠️ Ошибка на offset=${offset}: ${error.message}`);
-      break;
-    }
-  }
-
-  console.log(`\n🏙️ ФИНАЛЬНЫЙ РЕЗУЛЬТАТ: ${allCities.length} городов загружено`);
-  return allCities;
-}
-
 exports.handler = async (event) => {
   try {
     const clientId = process.env.CDEK_CLIENT_ID;
@@ -183,12 +109,20 @@ exports.handler = async (event) => {
     const baseUrl = isTest ? 'https://api.edu.cdek.ru/v2' : 'https://api.cdek.ru/v2';
     
     const token = await getCdekToken(clientId, clientSecret, isTest);
-    console.log(`🔑 Получен токен CDEK`);
+    const citiesResponse = await makeRequest(
+      `${baseUrl}/location/cities`,
+      'GET',
+      null,
+      { 'Authorization': `Bearer ${token}` }
+    );
 
-    // Загружаем ВСЕ города с пагинацией
-    const citiesData = await getAllCdekCities(baseUrl, token);
-    
-    console.log(`\n📊 ИТОГО В СИСТЕМЕ: ${citiesData.length} городов`);
+    const citiesData = Array.isArray(citiesResponse) 
+      ? citiesResponse 
+      : (citiesResponse.data && Array.isArray(citiesResponse.data))
+        ? citiesResponse.data
+        : [];
+
+    console.log(`🏙️ Всего городов CDEK: ${citiesData.length}`);
 
     // Фильтруем по поисковому запросу
     const searchLower = query.toLowerCase();
@@ -203,34 +137,6 @@ exports.handler = async (event) => {
         name: city.city || city.name,
         region: city.region
       }));
-
-    // ЛОГИРОВАНИЕ: если не найдено, показываем ВСЕ похожие города
-    if (filtered.length === 0 && query.length >= 2) {
-      console.log(`\n🔴 НЕ НАЙДЕНО ТОЧНОЕ СОВПАДЕНИЕ: "${query}"`);
-      console.log(`📍 Ищу ВСЕ города в CDEK которые содержат этот текст...`);
-      
-      // Показываем города которые содержат первые 3 буквы
-      const partialMatches = citiesData
-        .filter(city => {
-          const cityName = (city.city || city.name || '').toLowerCase();
-          return cityName.includes(searchLower.substring(0, 3));
-        });
-      
-      if (partialMatches.length > 0) {
-        console.log(`\n✅ НАЙДЕНО ${partialMatches.length} городов которые начинаются с "${searchLower.substring(0, 3)}":`);
-        partialMatches.slice(0, 50).forEach((city, idx) => {
-          const name = city.city || city.name || 'UNKNOWN';
-          const code = city.city_code || city.code || 'NO_CODE';
-          const region = city.region || 'UNKNOWN_REGION';
-          console.log(`   [${idx + 1}] ${name} (код: ${code}) - ${region}`);
-        });
-        if (partialMatches.length > 50) {
-          console.log(`   ... и ещё ${partialMatches.length - 50} городов`);
-        }
-      } else {
-        console.log(`❌ Городов с таким началом не найдено в CDEK`);
-      }
-    }
 
     console.log(`✅ Найдено: ${filtered.length} городов по запросу "${query}"`);
 
