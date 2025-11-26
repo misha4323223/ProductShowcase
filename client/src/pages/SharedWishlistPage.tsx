@@ -20,7 +20,7 @@ export default function SharedWishlistPage() {
   const [userName, setUserName] = useState("Пользователь");
   const [notFound, setNotFound] = useState(false);
   const { user } = useAuth();
-  const { products } = useProducts();
+  const { products, isLoading: productsLoading } = useProducts();
   const { addToCart, cartItems, cartCount } = useCart();
   const { toast } = useToast();
 
@@ -30,15 +30,27 @@ export default function SharedWishlistPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  // Загружаем wishlist когда компонент монтируется
+  useEffect(() => {
     loadSharedWishlist();
   }, [shareUserId]);
 
+  // Обновляем loading состояние когда товары загружены и есть wishlist items
+  useEffect(() => {
+    if (!productsLoading && wishlistItems.length > 0) {
+      setLoading(false);
+    } else if (!productsLoading && notFound) {
+      setLoading(false);
+    }
+  }, [productsLoading, wishlistItems, notFound]);
+
   const loadSharedWishlist = async () => {
     try {
-      setLoading(true);
       console.log("📋 Загрузка shared wishlist для userId:", shareUserId);
       const items = await getPublicWishlist(shareUserId);
-      console.log("✅ Получено товаров:", items.length, items);
+      console.log("✅ Получено товаров из wishlist:", items.length, items);
       setWishlistItems(items.map(item => item.productId));
       // Генерируем имя на основе userId (в реальном приложении это будет из профиля)
       setUserName(`Список желаний #${shareUserId.slice(0, 8)}`);
@@ -46,12 +58,20 @@ export default function SharedWishlistPage() {
       console.error("❌ Ошибка загрузки списка:", error);
       console.error("Детали ошибки:", error?.message, error?.response);
       setNotFound(true);
-    } finally {
       setLoading(false);
     }
   };
 
   const wishlistProducts = products.filter(p => wishlistItems.includes(p.id));
+  
+  console.log("🔍 Debug info:", {
+    wishlistItems: wishlistItems.length,
+    productsTotal: products.length,
+    wishlistProducts: wishlistProducts.length,
+    productsLoading,
+    loading,
+    notFound
+  });
 
   const handleAddToCart = (productId: string) => {
     const product = products.find(p => p.id === productId);
