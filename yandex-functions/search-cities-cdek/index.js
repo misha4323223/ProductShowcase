@@ -70,6 +70,51 @@ async function getCdekToken(clientId, clientSecret, isTest) {
   }
 }
 
+async function getAllCdekCities(baseUrl, token) {
+  let allCities = [];
+  let page = 0;
+  let pageSize = 100;
+  let hasMore = true;
+
+  while (hasMore) {
+    try {
+      const url = `${baseUrl}/location/cities?page=${page}&size=${pageSize}`;
+      console.log(`📄 Загружаю страницу ${page + 1}...`);
+      
+      const response = await makeRequest(
+        url,
+        'GET',
+        null,
+        { 'Authorization': `Bearer ${token}` }
+      );
+
+      let citiesPage = [];
+      
+      if (Array.isArray(response)) {
+        citiesPage = response;
+      } else if (response.data && Array.isArray(response.data)) {
+        citiesPage = response.data;
+      } else if (response.citiesList && Array.isArray(response.citiesList)) {
+        citiesPage = response.citiesList;
+      }
+
+      if (citiesPage.length === 0) {
+        hasMore = false;
+        console.log(`✅ Все страницы загружены!`);
+      } else {
+        console.log(`   ✓ Загружено ${citiesPage.length} городов на странице ${page + 1}`);
+        allCities = allCities.concat(citiesPage);
+        page++;
+      }
+    } catch (error) {
+      console.error(`⚠️ Ошибка загрузки страницы ${page + 1}: ${error.message}`);
+      hasMore = false;
+    }
+  }
+
+  return allCities;
+}
+
 exports.handler = async (event) => {
   try {
     const clientId = process.env.CDEK_CLIENT_ID;
@@ -109,20 +154,13 @@ exports.handler = async (event) => {
     const baseUrl = isTest ? 'https://api.edu.cdek.ru/v2' : 'https://api.cdek.ru/v2';
     
     const token = await getCdekToken(clientId, clientSecret, isTest);
-    const citiesResponse = await makeRequest(
-      `${baseUrl}/location/cities`,
-      'GET',
-      null,
-      { 'Authorization': `Bearer ${token}` }
-    );
+    console.log(`🔑 Получен токен CDEK`);
 
-    const citiesData = Array.isArray(citiesResponse) 
-      ? citiesResponse 
-      : (citiesResponse.data && Array.isArray(citiesResponse.data))
-        ? citiesResponse.data
-        : [];
-
-    console.log(`🏙️ Всего городов CDEK: ${citiesData.length}`);
+    // Загружаем ВСЕ города с пагинацией
+    console.log(`📥 Начинаю загрузку ВСЕх городов CDEK...`);
+    const citiesData = await getAllCdekCities(baseUrl, token);
+    
+    console.log(`🏙️ ВСЕГО ЗАГРУЖЕНО городов: ${citiesData.length}`);
 
     // Фильтруем по поисковому запросу
     const searchLower = query.toLowerCase();
