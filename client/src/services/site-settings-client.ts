@@ -239,14 +239,14 @@ export async function getPreferredTheme(): Promise<string> {
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch preferred theme from server, using default');
+      console.error('❌ Failed to fetch preferred theme - Status:', response.status, response.statusText);
       return 'sakura';
     }
 
     const data: SiteSetting = await response.json();
     return data.settingValue || 'sakura';
   } catch (error) {
-    console.error('Error fetching preferred theme:', error);
+    console.error('❌ Error fetching preferred theme:', error, '| URL:', `${API_BASE_URL}/site-settings?key=preferred_theme`);
     return 'sakura';
   }
 }
