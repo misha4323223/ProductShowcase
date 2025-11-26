@@ -665,6 +665,22 @@ html.new-year body {
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* NEW YEAR THEME - Orders Styling */
+html.new-year [data-testid^="accordion-order-"] {
+  border-width: 2px !important;
+  border-color: hsl(48 100% 50%) !important;
+}
+
+html.new-year [data-testid^="accordion-order-"] span,
+html.new-year [data-testid^="accordion-order-"] p,
+html.new-year [data-testid^="accordion-order-"] div {
+  color: #000 !important;
+}
+
+html.new-year [data-testid^="accordion-order-"] [data-testid^="badge-status-"] {
+  color: inherit !important;
+}
+
 /* SPRING THEME - Fresh Blooming Aesthetic 🌱 */
 html.spring {
   --button-outline: rgba(76, 175, 80, .15);
