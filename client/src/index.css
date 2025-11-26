@@ -695,11 +695,25 @@ html.new-year [data-testid="text-wishlist-count"] {
   display: inline-block !important;
 }
 
-html.new-year [data-testid="text-shared-wishlist-title"],
+html.new-year [data-testid="text-shared-wishlist-title"] {
+  color: #000 !important;
+  font-weight: 900 !important;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.6) !important;
+}
+
 html.new-year [data-testid="text-shared-wishlist-count"] {
   color: #000 !important;
   font-weight: 900 !important;
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.6) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  padding: 0 8px !important;
+  border-radius: 9999px !important;
+  background: hsl(48 100% 50%) !important;
+  font-size: 0.875rem !important;
 }
 
 html.new-year [data-testid="breadcrumb-home"],
