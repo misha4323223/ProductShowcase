@@ -373,6 +373,10 @@ export default function CheckoutPage() {
         orderData.promoCode = validatedPromoCode;
       }
 
+      if (bonusDiscount > 0) {
+        orderData.bonusPointsUsed = bonusDiscount;
+      }
+
       if (deliveryService === 'CDEK') {
         orderData.deliveryService = 'CDEK';
         orderData.deliveryType = deliveryType;
