@@ -165,7 +165,7 @@ export default function ProductCard({
         data-testid={`card-product-${id}`}
       >
         <div className={`${!isNewYear && 'sparkle-dots'}`}></div>
-      <div className={`relative aspect-square overflow-hidden ${isNewYear ? 'bg-gradient-to-br from-blue-100 via-white to-blue-50' : 'bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50'} rounded-t-3xl ${!isNewYear && 'sugar-crystals'}`} onClick={() => onClick(id)}>
+      <div className={`relative aspect-square overflow-visible ${isNewYear ? 'bg-gradient-to-br from-blue-100 via-white to-blue-50' : 'bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50'} rounded-t-3xl ${!isNewYear && 'sugar-crystals'}`} onClick={() => onClick(id)}>
         <div className="w-full h-full overflow-hidden rounded-t-3xl">
         {image ? (
           <img
@@ -181,7 +181,7 @@ export default function ProductCard({
           </div>
         )}
         </div>
-
+        
         <Button
           size="icon"
           variant="ghost"
