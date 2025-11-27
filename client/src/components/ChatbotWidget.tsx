@@ -5,33 +5,74 @@ import ChatbotWindow from './ChatbotWindow';
 
 export default function ChatbotWidget() {
   const { isOpen, toggleChatbot } = useChatbot();
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
 
-  // Цвета для каждой темы
-  const themeColors: Record<string, { gradient: string; shadow: string; hoverGradient?: string }> = {
-    sakura: {
-      gradient: 'from-pink-300 via-rose-400 to-red-500',
-      shadow: 'shadow-rose-400/60',
-      hoverGradient: 'from-pink-400 via-rose-500 to-red-600'
+  // Цвета для каждой темы (светлая и тёмная)
+  const themeColors: Record<string, Record<string, { start: string; mid: string; end: string; labelStart: string; labelEnd: string }>> = {
+    light: {
+      sakura: {
+        start: '#fbbbca',
+        mid: '#f472b6',
+        end: '#ef4444',
+        labelStart: '#ec4899',
+        labelEnd: '#ef4444'
+      },
+      'new-year': {
+        start: '#bfdbfe',
+        mid: '#67e8f9',
+        end: '#1e40af',
+        labelStart: '#0ea5e9',
+        labelEnd: '#1e40af'
+      },
+      spring: {
+        start: '#86efac',
+        mid: '#6ee7b7',
+        end: '#166534',
+        labelStart: '#22c55e',
+        labelEnd: '#166534'
+      },
+      autumn: {
+        start: '#fed7aa',
+        mid: '#fbbf24',
+        end: '#d97706',
+        labelStart: '#f97316',
+        labelEnd: '#d97706'
+      }
     },
-    'new-year': {
-      gradient: 'from-blue-300 via-cyan-400 to-blue-600',
-      shadow: 'shadow-blue-400/60',
-      hoverGradient: 'from-blue-400 via-cyan-500 to-blue-700'
-    },
-    spring: {
-      gradient: 'from-green-300 via-emerald-400 to-green-600',
-      shadow: 'shadow-green-400/60',
-      hoverGradient: 'from-green-400 via-emerald-500 to-green-700'
-    },
-    autumn: {
-      gradient: 'from-orange-300 via-amber-400 to-orange-600',
-      shadow: 'shadow-orange-400/60',
-      hoverGradient: 'from-orange-400 via-amber-500 to-orange-700'
+    dark: {
+      sakura: {
+        start: '#9f1239',
+        mid: '#be123c',
+        end: '#7c2d12',
+        labelStart: '#be123c',
+        labelEnd: '#7c2d12'
+      },
+      'new-year': {
+        start: '#1e3a8a',
+        mid: '#1e40af',
+        end: '#0c4a6e',
+        labelStart: '#1e40af',
+        labelEnd: '#0c4a6e'
+      },
+      spring: {
+        start: '#15803d',
+        mid: '#166534',
+        end: '#14532d',
+        labelStart: '#16a34a',
+        labelEnd: '#15803d'
+      },
+      autumn: {
+        start: '#92400e',
+        mid: '#b45309',
+        end: '#7c2d12',
+        labelStart: '#b45309',
+        labelEnd: '#7c2d12'
+      }
     }
   };
 
-  const colors = themeColors[theme] || themeColors['sakura'];
+  const colorMode = isDarkMode ? 'dark' : 'light';
+  const colors = themeColors[colorMode][theme] || themeColors[colorMode]['sakura'];
 
   return (
     <>
@@ -52,31 +93,15 @@ export default function ChatbotWidget() {
             style={{
               background: isOpen
                 ? `linear-gradient(135deg, #dc2626, #be123c)`
-                : `linear-gradient(135deg, var(--chatbot-${theme}-gradient-start, #ec4899), var(--chatbot-${theme}-gradient-mid, #f97316), var(--chatbot-${theme}-gradient-end, #ef4444))`,
-              boxShadow: isOpen ? '0 20px 25px -5px rgba(220, 38, 38, 0.5)' : undefined,
+                : `linear-gradient(135deg, ${colors.start}, ${colors.mid}, ${colors.end})`,
+              boxShadow: isOpen
+                ? '0 20px 25px -5px rgba(220, 38, 38, 0.5)'
+                : isDarkMode
+                ? '0 20px 25px -5px rgba(0, 0, 0, 0.7)'
+                : undefined,
             }}
-            className={`absolute inset-0 rounded-[30px] shadow-2xl transition-all duration-300 ${
-              !isOpen && colors.shadow
-            }`}
-          >
-            {/* Применяем CSS переменные для градиентов через style */}
-            <div
-              style={{
-                '--chatbot-sakura-gradient-start': '#fbbbca',
-                '--chatbot-sakura-gradient-mid': '#f472b6',
-                '--chatbot-sakura-gradient-end': '#ef4444',
-                '--chatbot-new-year-gradient-start': '#bfdbfe',
-                '--chatbot-new-year-gradient-mid': '#67e8f9',
-                '--chatbot-new-year-gradient-end': '#1e40af',
-                '--chatbot-spring-gradient-start': '#86efac',
-                '--chatbot-spring-gradient-mid': '#6ee7b7',
-                '--chatbot-spring-gradient-end': '#166534',
-                '--chatbot-autumn-gradient-start': '#fed7aa',
-                '--chatbot-autumn-gradient-mid': '#fbbf24',
-                '--chatbot-autumn-gradient-end': '#d97706',
-              } as React.CSSProperties}
-            />
-          </div>
+            className="absolute inset-0 rounded-[30px] shadow-2xl transition-all duration-300"
+          />
 
           {/* Блик (для эффекта конфеты) */}
           {!isOpen && (
@@ -101,13 +126,7 @@ export default function ChatbotWidget() {
           {!isOpen && (
             <div
               style={{
-                background: theme === 'sakura'
-                  ? 'linear-gradient(135deg, #ec4899, #ef4444)'
-                  : theme === 'new-year'
-                  ? 'linear-gradient(135deg, #0ea5e9, #1e40af)'
-                  : theme === 'spring'
-                  ? 'linear-gradient(135deg, #22c55e, #166534)'
-                  : 'linear-gradient(135deg, #f97316, #d97706)',
+                background: `linear-gradient(135deg, ${colors.labelStart}, ${colors.labelEnd})`,
               }}
               className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
             >
