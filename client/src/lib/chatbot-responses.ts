@@ -13,13 +13,13 @@ interface BotResponse {
   products: Product[];
 }
 
-// Примеры категоризации товаров
-const productCategories = {
-  romantic: ['Трюфели премиум', 'Бельгийский шоколад ассорти'],
-  birthday: ['Трюфели премиум', 'Французские макаронс', 'Жевательные мармеладки'],
-  budget: ['Жевательные мармеладки', 'Леденцы ручной работы', 'Печенье с шоколадной крошкой'],
-  premium: ['Трюфели премиум', 'Бельгийский шоколад ассорти', 'Французские макаронс'],
-  noChocolate: ['Жевательные мармеладки', 'Леденцы ручной работы', 'Французские макаронс'],
+// Категории товаров для разных намерений
+const productCategoryMap = {
+  romantic: ['chocolate', 'gift-box'], // Шоколад и подарочные наборы
+  birthday: ['gift-box', 'candies', 'cookies-pastries'], // Наборы, конфеты, печенье
+  budget: ['candies', 'napitki', 'marmalade'], // Конфеты, напитки, мармелад
+  premium: ['chocolate', 'gift-box'], // Шоколад и премиум наборы
+  noChocolate: ['cookies-pastries', 'candies', 'mochi-marshmallow', 'marmalade'], // Печенье, конфеты, моти, мармелад
 };
 
 // Ключевые слова для распознавания намерений
@@ -58,15 +58,15 @@ export function getResponseText(intent: string): string {
   return responses[intent] || responses['default'];
 }
 
-export function getRecommendedProductNames(intent: string): string[] {
+export function getRecommendedCategories(intent: string): string[] {
   const categories: Record<string, string[]> = {
-    romantic: productCategories.romantic,
-    birthday: productCategories.birthday,
-    cheap: productCategories.budget,
-    premium: productCategories.premium,
-    noChocolate: productCategories.noChocolate,
-    greeting: productCategories.premium,
-    default: ['Трюфели премиум', 'Бельгийский шоколад ассорти', 'Французские макаронс'],
+    romantic: productCategoryMap.romantic,
+    birthday: productCategoryMap.birthday,
+    cheap: productCategoryMap.budget,
+    premium: productCategoryMap.premium,
+    noChocolate: productCategoryMap.noChocolate,
+    greeting: productCategoryMap.premium,
+    default: ['chocolate', 'gift-box', 'candies'],
   };
 
   return categories[intent] || categories['default'];
@@ -75,15 +75,20 @@ export function getRecommendedProductNames(intent: string): string[] {
 export function generateBotResponse(userMessage: string, allProducts: Product[]): BotResponse {
   const intent = detectIntent(userMessage);
   const responseText = getResponseText(intent);
-  const recommendedNames = getRecommendedProductNames(intent);
+  const recommendedCategories = getRecommendedCategories(intent);
 
-  // Фильтруем товары по рекомендованным названиям
+  // Фильтруем товары по рекомендованным категориям
   const recommendedProducts = allProducts.filter(product =>
-    recommendedNames.some(name => product.name.includes(name) || name.includes(product.name))
+    recommendedCategories.includes(product.category)
   );
+
+  // Если ничего не нашли, берём все товары
+  const finalProducts = recommendedProducts.length > 0 
+    ? recommendedProducts 
+    : allProducts;
 
   return {
     text: responseText,
-    products: recommendedProducts.slice(0, 4), // Максимум 4 товара
+    products: finalProducts.slice(0, 4), // Максимум 4 товара
   };
 }
