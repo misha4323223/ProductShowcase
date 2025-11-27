@@ -205,7 +205,10 @@ export default function ChatbotWindow() {
                     {/* Кнопки */}
                     <div className="flex gap-2">
                       <button
-                        onClick={() => handleAddToCart(product.id, product.name)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product.id, product.name);
+                        }}
                         className="flex-1 text-white font-semibold py-2 text-sm rounded-lg transition-colors duration-200"
                         style={{
                           backgroundColor: currentColors.bg,
@@ -217,7 +220,10 @@ export default function ChatbotWindow() {
                         ➕ Корзина
                       </button>
                       <button
-                        onClick={() => handleToggleWishlist(product.id, product.name)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleWishlist(product.id, product.name);
+                        }}
                         className="px-3 text-white font-semibold py-2 text-sm rounded-lg transition-colors duration-200 flex items-center gap-1"
                         style={{
                           backgroundColor: currentColors.bg,
