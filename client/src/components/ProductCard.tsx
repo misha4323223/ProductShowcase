@@ -230,19 +230,19 @@ export default function ProductCard({
             <Heart className={`h-4 w-4 ${inWishlist ? 'fill-current' : ''}`} />
           </Button>
           {isOutOfStock ? (
-            <Badge variant="destructive" className="text-xs shrink-0" data-testid={`badge-out-of-stock-${id}`}>
+            <Badge variant="destructive" className="text-xs shrink-0 -ml-2" data-testid={`badge-out-of-stock-${id}`}>
               Нет в наличии
             </Badge>
           ) : isLowStock ? (
-            <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 shrink-0" data-testid={`badge-low-stock-${id}`}>
+            <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 shrink-0 -ml-2" data-testid={`badge-low-stock-${id}`}>
               Мало
             </Badge>
           ) : hasUnlimitedStock ? (
-            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0 -ml-2" data-testid={`badge-in-stock-${id}`}>
               В наличии
             </Badge>
           ) : (
-            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0 -ml-2" data-testid={`badge-in-stock-${id}`}>
               {stock} шт
             </Badge>
           )}
