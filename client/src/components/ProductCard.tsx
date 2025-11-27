@@ -221,9 +221,8 @@ export default function ProductCard({
           </div>
           <div className="flex items-center gap-2">
             <Button
-              size="icon"
               variant="ghost"
-              className={`w-9 h-9 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl border-2 border-white ${
+              className={`px-3 py-2 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl border-2 border-white flex items-center gap-1 ${
                 inWishlist
                   ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
                   : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
