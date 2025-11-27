@@ -165,20 +165,7 @@ export default function ProductCard({
         data-testid={`card-product-${id}`}
       >
         <div className={`${!isNewYear && 'sparkle-dots'}`}></div>
-      <div className={`relative aspect-square overflow-visible ${isNewYear ? 'bg-gradient-to-br from-blue-100 via-white to-blue-50' : 'bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50'} rounded-t-3xl ${!isNewYear && 'sugar-crystals'}`} onClick={() => onClick(id)}>
-        <Button
-          size="icon"
-          variant="ghost"
-          className={`absolute top-3 right-16 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
-            inWishlist
-              ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
-              : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
-          }`}
-          onClick={handleToggleWishlist}
-          data-testid={`button-wishlist-${id}`}
-        >
-          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
-        </Button>
+      <div className={`relative aspect-square overflow-hidden ${isNewYear ? 'bg-gradient-to-br from-blue-100 via-white to-blue-50' : 'bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50'} rounded-t-3xl ${!isNewYear && 'sugar-crystals'}`} onClick={() => onClick(id)}>
         <div className="w-full h-full overflow-hidden rounded-t-3xl">
         {image ? (
           <img
@@ -193,6 +180,21 @@ export default function ProductCard({
             <ShoppingCart className="h-16 w-16" />
           </div>
         )}
+        </div>
+
+        <Button
+          size="icon"
+          variant="ghost"
+          className={`absolute top-3 left-3 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
+            inWishlist
+              ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
+              : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
+          }`}
+          onClick={handleToggleWishlist}
+          data-testid={`button-wishlist-${id}`}
+        >
+          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
+        </Button>
 
         {hasDiscount && !isNewYear && (
           <div className="absolute top-3 right-3 w-16 h-16 lollipop-swirl-badge rounded-full flex items-center justify-center shadow-2xl shadow-red-500/50 animate-rotate-slow border-4 border-white" data-testid={`badge-discount-${id}`}>
@@ -211,7 +213,6 @@ export default function ProductCard({
             <Sparkles className="h-12 w-12 text-white animate-sparkle drop-shadow-2xl" />
           </div>
         )}
-        </div>
       </div>
       <div className={`p-4 space-y-3 ${isNewYear ? 'bg-gradient-to-b from-red-50/50 via-white to-orange-50/50 dark:from-red-950/50 dark:via-slate-900 dark:to-orange-950/50' : 'bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'} relative ${!isNewYear && 'caramel-drip'}`}>
         <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
