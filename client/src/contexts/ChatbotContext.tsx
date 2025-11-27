@@ -11,6 +11,7 @@ export interface ChatMessage {
     price: number;
     image: string;
   }>;
+  showWheelButton?: boolean;
 }
 
 interface ChatbotContextType {

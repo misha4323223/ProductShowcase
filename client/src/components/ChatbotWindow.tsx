@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, X, Heart } from 'lucide-react';
+import { Send, X, Heart, Sparkles } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { useChatbot } from '@/contexts/ChatbotContext';
 import { useProducts } from '@/hooks/use-products';
@@ -86,6 +86,7 @@ export default function ChatbotWindow() {
           type: 'bot',
           text: response.text,
           products: response.products,
+          showWheelButton: response.showWheelButton,
         });
       } else {
         addMessage({
@@ -178,6 +179,25 @@ export default function ChatbotWindow() {
                 {message.text}
               </div>
             </div>
+
+            {/* Кнопка рулетки */}
+            {message.showWheelButton && (
+              <div className="mb-4 pr-2">
+                <button
+                  onClick={() => setLocation('/account?tab=wheel')}
+                  className="w-full text-white font-semibold py-3 text-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                  style={{
+                    backgroundColor: currentColors.bg,
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = currentColors.hover)}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = currentColors.bg)}
+                  data-testid="button-go-to-wheel"
+                >
+                  <Sparkles className="w-5 h-5" />
+                  Крутить рулетку! 🎡
+                </button>
+              </div>
+            )}
 
             {/* Товары (если есть) */}
             {message.products && message.products.length > 0 && (

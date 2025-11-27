@@ -11,6 +11,7 @@ export interface Product {
 interface BotResponse {
   text: string;
   products: Product[];
+  showWheelButton?: boolean;
 }
 
 // Категории товаров для разных намерений
@@ -79,6 +80,15 @@ export function generateBotResponse(userMessage: string, allProducts: Product[])
   const intent = detectIntent(userMessage);
   const responseText = getResponseText(intent);
   const recommendedCategories = getRecommendedCategories(intent);
+
+  // Если это про рулетку, показываем кнопку вместо товаров
+  if (intent === 'wheel') {
+    return {
+      text: responseText,
+      products: [],
+      showWheelButton: true,
+    };
+  }
 
   // Фильтруем товары по рекомендованным категориям
   const recommendedProducts = allProducts.filter(product =>
