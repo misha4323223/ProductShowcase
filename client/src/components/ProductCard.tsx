@@ -219,10 +219,14 @@ export default function ProductCard({
           )}
           <Button
             variant="ghost"
-            className={`px-3 py-2 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl border-2 border-white flex items-center gap-1 -ml-3 ${
-              inWishlist
-                ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
-                : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
+            className={`px-3 py-2 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl border-2 flex items-center gap-1 -ml-3 ${
+              isNewYear
+                ? inWishlist
+                  ? 'border-orange-300 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500/50 hover:from-red-600 hover:via-orange-600 hover:to-yellow-600/50 text-white shadow-orange-500/50'
+                  : 'border-orange-300 bg-orange-500/30 hover:bg-orange-600/30 text-orange-600 shadow-orange-400/30'
+                : inWishlist
+                ? 'border-white bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
+                : 'border-white bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
             }`}
             onClick={handleToggleWishlist}
             data-testid={`button-wishlist-${id}`}
