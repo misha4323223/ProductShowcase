@@ -11,9 +11,11 @@ import { WishlistProvider } from "@/contexts/WishlistContext";
 import { WheelProvider } from "@/contexts/WheelContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LegalDialogProvider } from "@/contexts/LegalDialogContext";
+import { ChatbotProvider } from "@/contexts/ChatbotContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import CookieBanner from "@/components/CookieBanner";
 import LegalDialog from "@/components/LegalDialog";
+import ChatbotWidget from "@/components/ChatbotWidget";
 import { useLegalDialog } from "@/contexts/LegalDialogContext";
 import { useScrollPause } from "@/hooks/use-scroll-pause";
 import { initAnalytics } from "@/lib/analytics";
@@ -113,14 +115,17 @@ function App() {
               <WishlistProvider>
                 <WheelProvider>
                   <LegalDialogProvider>
-                    <TooltipProvider>
-                      <AutumnRain />
-                      <SunflareParticles />
-                      <Toaster />
-                      <CookieBanner />
-                      <Router />
-                      <LegalDialogContainer />
-                    </TooltipProvider>
+                    <ChatbotProvider>
+                      <TooltipProvider>
+                        <AutumnRain />
+                        <SunflareParticles />
+                        <Toaster />
+                        <CookieBanner />
+                        <Router />
+                        <LegalDialogContainer />
+                        <ChatbotWidget />
+                      </TooltipProvider>
+                    </ChatbotProvider>
                   </LegalDialogProvider>
                 </WheelProvider>
               </WishlistProvider>
