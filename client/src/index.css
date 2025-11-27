@@ -683,9 +683,8 @@ html.new-year [data-testid="text-user-email"] {
   display: inline-block !important;
 }
 
-/* NEW YEAR THEME - Wishlist Page Styling */
-html.new-year [data-testid="text-page-title"],
-html.new-year [data-testid="text-wishlist-count"] {
+/* NEW YEAR THEME - Wishlist Page Title */
+html.new-year [data-testid="text-page-title"] {
   color: #000 !important;
   font-weight: 900 !important;
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 0.6) !important;
@@ -693,6 +692,16 @@ html.new-year [data-testid="text-wishlist-count"] {
   padding: 8px 16px !important;
   border-radius: 8px !important;
   display: inline-block !important;
+}
+
+/* Header Wishlist Count Badge */
+html.new-year [data-testid="text-wishlist-count"] {
+  position: absolute !important;
+  top: -8px !important;
+  right: -8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 html.new-year [data-testid="text-shared-wishlist-title"] {
