@@ -107,10 +107,7 @@ export default function ProductPage() {
 
   const breadcrumbItems = useMemo(() => {
     if (!product) return [];
-    return [
-      ...(category ? [{ name: category.name, url: `/category/${category.slug}` }] : []),
-      { name: product.name, url: `/product/${product.id}` }
-    ];
+    return category ? [{ name: category.name, url: `/category/${category.slug}` }] : [];
   }, [category, product]);
 
   const productSchema = useMemo(() => {
