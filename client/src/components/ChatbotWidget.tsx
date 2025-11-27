@@ -89,19 +89,35 @@ export default function ChatbotWidget() {
           aria-label={isOpen ? 'Закрыть чат' : 'Открыть чат'}
         >
           {/* Основная конфета */}
-          <div
-            style={{
-              background: isOpen
-                ? `linear-gradient(135deg, #dc2626, #be123c)`
-                : `linear-gradient(135deg, ${colors.start}, ${colors.mid}, ${colors.end})`,
-              boxShadow: isOpen
-                ? '0 20px 25px -5px rgba(220, 38, 38, 0.5)'
-                : isDarkMode
-                ? '0 20px 25px -5px rgba(0, 0, 0, 0.7)'
-                : undefined,
-            }}
-            className="absolute inset-0 rounded-[30px] shadow-2xl transition-all duration-300"
-          />
+          {theme === 'new-year' && !isOpen ? (
+            // Полупрозрачный размытой эффект для зимней темы
+            <div
+              className="absolute inset-0 rounded-[30px] shadow-2xl transition-all duration-300 backdrop-blur-lg"
+              style={{
+                background: isDarkMode
+                  ? 'rgba(30, 58, 138, 0.6)'
+                  : 'rgba(191, 219, 254, 0.5)',
+                boxShadow: isDarkMode
+                  ? '0 8px 32px 0 rgba(30, 58, 138, 0.3)'
+                  : '0 8px 32px 0 rgba(191, 219, 254, 0.3)',
+              }}
+            />
+          ) : (
+            // Обычный градиент для остальных тем
+            <div
+              style={{
+                background: isOpen
+                  ? `linear-gradient(135deg, #dc2626, #be123c)`
+                  : `linear-gradient(135deg, ${colors.start}, ${colors.mid}, ${colors.end})`,
+                boxShadow: isOpen
+                  ? '0 20px 25px -5px rgba(220, 38, 38, 0.5)'
+                  : isDarkMode
+                  ? '0 20px 25px -5px rgba(0, 0, 0, 0.7)'
+                  : undefined,
+              }}
+              className="absolute inset-0 rounded-[30px] shadow-2xl transition-all duration-300"
+            />
+          )}
 
           {/* Блик (для эффекта конфеты) */}
           {!isOpen && (
