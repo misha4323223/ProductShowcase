@@ -249,7 +249,7 @@ export default function ProductPage() {
           <Breadcrumbs items={breadcrumbItems} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 mb-4 md:mb-16">
-            <div className="relative w-full aspect-square rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 shadow-md md:shadow-2xl candy-wrapper sugar-crystals" data-testid="product-image-container">
+            <div className="relative w-full h-48 md:h-auto md:aspect-square rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 shadow-md md:shadow-2xl candy-wrapper sugar-crystals" data-testid="product-image-container">
               {product.image ? (
                 <img
                   src={product.image}
