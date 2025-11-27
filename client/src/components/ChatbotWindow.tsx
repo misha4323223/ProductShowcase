@@ -78,7 +78,7 @@ export default function ChatbotWindow() {
 
   return (
     <div
-      className="fixed bottom-20 right-2 w-[calc(100vw-1rem)] h-[50vh] md:w-96 md:h-[600px] md:right-6 bg-white dark:bg-slate-950 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col z-40 animate-in fade-in slide-in-from-bottom-2 duration-300"
+      className="fixed bottom-20 right-2 w-[calc(100vw-1rem)] h-[75vh] md:w-96 md:h-[600px] md:right-6 bg-white dark:bg-slate-950 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col z-40 animate-in fade-in slide-in-from-bottom-2 duration-300"
       data-testid="chatbot-window"
     >
       {/* Заголовок */}
