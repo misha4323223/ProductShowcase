@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, X, Heart } from 'lucide-react';
+import { useLocation } from 'wouter';
 import { useChatbot } from '@/contexts/ChatbotContext';
 import { useProducts } from '@/hooks/use-products';
 import { generateBotResponse } from '@/lib/chatbot-responses';
@@ -20,6 +21,7 @@ export default function ChatbotWindow() {
   const { theme, isDarkMode } = useTheme();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -183,7 +185,8 @@ export default function ChatbotWindow() {
                 {message.products.map(product => (
                   <div
                     key={product.id}
-                    className={`bg-gradient-to-br ${currentColors.cardBg} p-3 rounded-xl border-2 ${currentColors.cardBorder} shadow-md hover:shadow-lg transition-shadow`}
+                    className={`bg-gradient-to-br ${currentColors.cardBg} p-3 rounded-xl border-2 ${currentColors.cardBorder} shadow-md hover:shadow-lg transition-shadow cursor-pointer`}
+                    onClick={() => setLocation(`/product/${product.id}`)}
                     data-testid={`product-card-${product.id}`}
                   >
                     {/* Картинка товара */}
