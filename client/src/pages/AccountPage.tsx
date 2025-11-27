@@ -227,6 +227,13 @@ export default function AccountPage() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [orderToHide, setOrderToHide] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('openWheelTab')) {
+      localStorage.removeItem('openWheelTab');
+      return 'wheel';
+    }
+    return 'orders';
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -367,7 +374,7 @@ export default function AccountPage() {
           </button>
         </div>
 
-        <Tabs defaultValue="orders" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="mb-6">
             <TabsTrigger value="orders" data-testid="tab-orders">
               <Package className="h-4 w-4 mr-2" />

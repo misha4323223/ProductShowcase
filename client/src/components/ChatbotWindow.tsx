@@ -184,7 +184,10 @@ export default function ChatbotWindow() {
             {message.showWheelButton && (
               <div className="mb-4 pr-2">
                 <button
-                  onClick={() => setLocation('/account?tab=wheel')}
+                  onClick={() => {
+                    localStorage.setItem('openWheelTab', 'true');
+                    setLocation('/account');
+                  }}
                   className="w-full text-white font-semibold py-3 text-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                   style={{
                     backgroundColor: currentColors.bg,
