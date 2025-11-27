@@ -67,7 +67,7 @@ export function getRecommendedCategories(intent: string): string[] {
     cheap: productCategoryMap.budget,
     premium: productCategoryMap.premium,
     noChocolate: productCategoryMap.noChocolate,
-    wheel: ['chocolate', 'gift-box', 'candies'], // Показываем популярные товары вместе с информацией о рулетке
+    wheel: [], // Нет товаров для информации о рулетке
     greeting: productCategoryMap.premium,
     default: ['chocolate', 'gift-box', 'candies'],
   };
