@@ -202,7 +202,7 @@ export default function ProductCard({
         <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-8">
           {hasDiscount ? (
             <>
               <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm translate-y-1`} data-testid={`text-sale-price-${id}`}>
