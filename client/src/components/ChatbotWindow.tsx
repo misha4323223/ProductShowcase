@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, X } from 'lucide-react';
+import { Send, X, Heart } from 'lucide-react';
 import { useChatbot } from '@/contexts/ChatbotContext';
 import { useProducts } from '@/hooks/use-products';
 import { generateBotResponse } from '@/lib/chatbot-responses';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -16,6 +18,8 @@ export default function ChatbotWindow() {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const { theme, isDarkMode } = useTheme();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { user } = useAuth();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -108,6 +112,30 @@ export default function ChatbotWindow() {
     }
   };
 
+  const handleToggleWishlist = async (productId: string, productName: string) => {
+    if (!user) {
+      toast({
+        title: 'Нужна авторизация',
+        description: 'Пожалуйста, войдите в аккаунт',
+      });
+      return;
+    }
+
+    try {
+      await toggleWishlist(productId);
+      const inWishlist = isInWishlist(productId);
+      toast({
+        title: inWishlist ? 'Удалено из избранного' : 'Добавлено в избранное',
+        description: productName,
+      });
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось обновить избранное',
+      });
+    }
+  };
+
   return (
     <div
       className="fixed bottom-4 right-2 w-[calc(100vw-1rem)] h-[75vh] md:w-96 md:h-[600px] md:right-6 bg-white dark:bg-slate-950 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col z-40 animate-in fade-in slide-in-from-bottom-2 duration-300"
@@ -171,19 +199,36 @@ export default function ChatbotWindow() {
                     <p className="font-bold text-gray-900 dark:text-white text-sm mb-1">{product.name}</p>
                     <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">{product.price}₽</p>
                     
-                    {/* Кнопка */}
-                    <button
-                      onClick={() => handleAddToCart(product.id, product.name)}
-                      className="w-full text-white font-semibold py-2 text-sm rounded-lg transition-colors duration-200"
-                      style={{
-                        backgroundColor: currentColors.bg,
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = currentColors.hover)}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = currentColors.bg)}
-                      data-testid={`button-add-to-cart-${product.id}`}
-                    >
-                      ➕ Добавить в корзину
-                    </button>
+                    {/* Кнопки */}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleAddToCart(product.id, product.name)}
+                        className="flex-1 text-white font-semibold py-2 text-sm rounded-lg transition-colors duration-200"
+                        style={{
+                          backgroundColor: currentColors.bg,
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = currentColors.hover)}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = currentColors.bg)}
+                        data-testid={`button-add-to-cart-${product.id}`}
+                      >
+                        ➕ Корзина
+                      </button>
+                      <button
+                        onClick={() => handleToggleWishlist(product.id, product.name)}
+                        className="px-3 text-white font-semibold py-2 text-sm rounded-lg transition-colors duration-200 flex items-center gap-1"
+                        style={{
+                          backgroundColor: currentColors.bg,
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = currentColors.hover)}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = currentColors.bg)}
+                        data-testid={`button-toggle-wishlist-${product.id}`}
+                      >
+                        <Heart
+                          className="w-4 h-4"
+                          fill={isInWishlist(product.id) ? 'currentColor' : 'none'}
+                        />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
