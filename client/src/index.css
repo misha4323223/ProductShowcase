@@ -107,7 +107,7 @@ html.light body {
 }
 
 html.dark {
-  background: linear-gradient(135deg, #0f172a 0%, #000000 100%);
+  background: #000000;
 }
 
 html.dark body {
