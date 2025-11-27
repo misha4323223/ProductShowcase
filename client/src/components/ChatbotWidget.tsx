@@ -1,4 +1,4 @@
-import { MessageCircle, X, Sparkles } from 'lucide-react';
+import { MessageCircle, X } from 'lucide-react';
 import { useChatbot } from '@/contexts/ChatbotContext';
 import ChatbotWindow from './ChatbotWindow';
 
@@ -7,38 +7,49 @@ export default function ChatbotWidget() {
 
   return (
     <>
-      {/* Плавающая кнопка */}
+      {/* Плавающая кнопка в стиле Candy */}
       <div className="fixed bottom-6 right-6 z-40">
         <button
           onClick={toggleChatbot}
-          className={`relative w-14 h-14 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center group ${
+          className={`relative w-16 h-16 transition-all duration-300 flex items-center justify-center group ${
             isOpen
-              ? 'bg-gradient-to-br from-pink-500 to-red-500 shadow-pink-500/50'
-              : 'bg-gradient-to-br from-amber-400 via-orange-400 to-pink-500 hover:shadow-lg hover:scale-110'
+              ? 'scale-95'
+              : 'hover:scale-110 hover:-translate-y-1'
           }`}
           data-testid="button-chatbot-toggle"
           aria-label={isOpen ? 'Закрыть чат' : 'Открыть чат'}
         >
-          {/* Светящееся кольцо (только когда закрыто) */}
+          {/* Основная конфета (зад) */}
+          <div className={`absolute inset-0 rounded-[30px] shadow-2xl transition-all duration-300 ${
+            isOpen
+              ? 'bg-gradient-to-br from-red-400 to-pink-600 shadow-red-400/50'
+              : 'bg-gradient-to-br from-yellow-300 via-orange-400 to-pink-500 shadow-orange-400/60 group-hover:shadow-3xl'
+          }`} />
+
+          {/* Блик (для эффекта конфеты) */}
           {!isOpen && (
-            <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-amber-300 via-orange-300 to-pink-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
+            <div className="absolute top-2 left-3 w-5 h-5 rounded-full bg-white/40 blur-sm group-hover:bg-white/60 transition-all" />
           )}
 
           {/* Иконка */}
-          <div className="relative z-10 text-white">
+          <div className="relative z-10 text-white flex items-center justify-center">
             {isOpen ? (
-              <X className="w-6 h-6" />
+              <X className="w-7 h-7 drop-shadow-lg" />
             ) : (
-              <div className="flex items-center gap-1">
-                <Sparkles className="w-5 h-5" />
-                <MessageCircle className="w-5 h-5 -ml-1" />
-              </div>
+              <MessageCircle className="w-7 h-7 drop-shadow-lg" />
             )}
           </div>
 
-          {/* Анимация пульса (только когда закрыто) */}
+          {/* Мини-пульс вокруг кнопки */}
           {!isOpen && (
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-pink-500 opacity-75 -z-10 animate-pulse" />
+            <div className="absolute inset-0 rounded-[30px] border-2 border-white/20 animate-pulse group-hover:border-white/40" />
+          )}
+
+          {/* Метка "Помощник" */}
+          {!isOpen && (
+            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pink-500 to-red-500 text-white px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              Помощник
+            </div>
           )}
         </button>
       </div>
