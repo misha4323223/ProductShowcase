@@ -78,7 +78,7 @@ export default function ChatbotWindow() {
 
   return (
     <div
-      className="fixed bottom-20 right-6 w-80 h-96 bg-white dark:bg-slate-950 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col z-40 animate-in fade-in slide-in-from-bottom-2 duration-300"
+      className="fixed bottom-20 right-6 w-96 h-[600px] bg-white dark:bg-slate-950 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col z-40 animate-in fade-in slide-in-from-bottom-2 duration-300"
       data-testid="chatbot-window"
     >
       {/* Заголовок */}
@@ -109,22 +109,34 @@ export default function ChatbotWindow() {
 
             {/* Товары (если есть) */}
             {message.products && message.products.length > 0 && (
-              <div className="mb-4 space-y-2">
+              <div className="mb-4 space-y-3 pr-2">
                 {message.products.map(product => (
                   <div
                     key={product.id}
-                    className="bg-gray-50 dark:bg-gray-800 p-2 rounded-lg text-xs border border-gray-200 dark:border-gray-700"
+                    className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 p-3 rounded-xl border-2 border-blue-200 dark:border-blue-900 shadow-md hover:shadow-lg transition-shadow"
                     data-testid={`product-card-${product.id}`}
                   >
-                    <p className="font-semibold text-gray-900 dark:text-white">{product.name}</p>
-                    <p className="text-gray-600 dark:text-gray-300">{product.price}₽</p>
+                    {/* Картинка товара */}
+                    {product.image && (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-24 object-cover rounded-lg mb-2"
+                      />
+                    )}
+                    
+                    {/* Название и цена */}
+                    <p className="font-bold text-gray-900 dark:text-white text-sm mb-1">{product.name}</p>
+                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">{product.price}₽</p>
+                    
+                    {/* Кнопка */}
                     <Button
                       size="sm"
-                      className="w-full mt-1 h-7 text-xs"
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 text-sm"
                       onClick={() => handleAddToCart(product.id, product.name)}
                       data-testid={`button-add-to-cart-${product.id}`}
                     >
-                      Добавить в корзину
+                      ➕ Добавить в корзину
                     </Button>
                   </div>
                 ))}
