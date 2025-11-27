@@ -198,11 +198,11 @@ export default function ProductCard({
           </div>
         )}
       </div>
-      <div className={`p-4 space-y-3 ${isNewYear ? 'bg-gradient-to-b from-red-50/50 via-white to-orange-50/50 dark:from-red-950/50 dark:via-slate-900 dark:to-orange-950/50' : 'bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'} relative ${!isNewYear && 'caramel-drip'}`}>
+      <div className={`p-4 flex flex-col ${isNewYear ? 'bg-gradient-to-b from-red-50/50 via-white to-orange-50/50 dark:from-red-950/50 dark:via-slate-900 dark:to-orange-950/50' : 'bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'} relative ${!isNewYear && 'caramel-drip'}`}>
         <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 mt-auto">
           <div className="flex items-center gap-2">
             {hasDiscount ? (
               <>
