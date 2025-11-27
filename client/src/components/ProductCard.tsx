@@ -202,7 +202,7 @@ export default function ProductCard({
         <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
-        <div className="flex items-center justify-between gap-2 mt-auto mb-3">
+        <div className="flex items-center justify-between gap-2 mb-4">
           <div className="flex items-center gap-2">
             {hasDiscount ? (
               <>
@@ -253,7 +253,7 @@ export default function ProductCard({
         </div>
         {isOutOfStock ? (
           <Button
-            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-red-600 hover:from-red-700 hover:via-orange-600 hover:to-red-700' : 'gummy-button bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600'}`}
+            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 mt-6 ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-red-600 hover:from-red-700 hover:via-orange-600 hover:to-red-700' : 'gummy-button bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600'}`}
             onClick={handleNotifyClick}
             data-testid={`button-notify-${id}`}
           >
@@ -262,7 +262,7 @@ export default function ProductCard({
           </Button>
         ) : (
           <Button
-            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 hover:from-red-700 hover:via-orange-600 hover:to-yellow-600' : `gummy-button bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 ${isAdding ? 'jelly-add-animation' : ''}`}`}
+            className={`w-full rounded-full squish-active text-white font-semibold text-sm py-6 mt-6 ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 hover:from-red-700 hover:via-orange-600 hover:to-yellow-600' : `gummy-button bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 ${isAdding ? 'jelly-add-animation' : ''}`}`}
             onClick={handleAddToCart}
             data-testid={`button-add-to-cart-${id}`}
           >
