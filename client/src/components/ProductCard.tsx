@@ -202,7 +202,7 @@ export default function ProductCard({
         <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
-        <div className="flex items-center justify-between gap-2 mt-6">
+        <div className="flex items-center justify-between gap-2 mt-auto">
           <div className="flex items-center gap-2">
             {hasDiscount ? (
               <>
