@@ -244,12 +244,12 @@ export default function ProductPage() {
         onCartClick={() => setCartOpen(true)}
       />
       
-      <main className="flex-1 relative z-10 py-4 md:py-8">
-        <div className="max-w-7xl mx-auto px-3 md:px-8">
+      <main className="flex-1 relative z-10 py-2 md:py-8">
+        <div className="max-w-7xl mx-auto px-2 md:px-8">
           <Breadcrumbs items={breadcrumbItems} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-8 md:mb-16">
-            <div className="relative w-full aspect-square rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 shadow-lg md:shadow-2xl candy-wrapper sugar-crystals" data-testid="product-image-container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 mb-4 md:mb-16">
+            <div className="relative w-full aspect-square rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 shadow-md md:shadow-2xl candy-wrapper sugar-crystals" data-testid="product-image-container">
               {product.image ? (
                 <img
                   src={product.image}
@@ -273,94 +273,94 @@ export default function ProductPage() {
             </div>
 
             <div className="flex flex-col">
-              <div className="mb-6">
+              <div className="mb-3 md:mb-6">
                 {category && (
                   <Link href={`/category/${category.slug}`} data-testid="link-category">
-                    <Badge className="mb-3 hover-elevate cursor-pointer" variant="secondary">
+                    <Badge className="mb-2 hover-elevate cursor-pointer text-xs md:text-sm" variant="secondary">
                       {category.name}
                     </Badge>
                   </Link>
                 )}
-                <h1 className="font-serif text-2xl md:text-4xl font-bold mb-3 md:mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600" data-testid="text-product-name">
+                <h1 className="font-serif text-xl md:text-4xl font-bold mb-2 md:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600" data-testid="text-product-name">
                   {product.name}
                 </h1>
-                <div className="h-1 w-20 md:w-24 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mb-4 md:mb-6 shadow-lg shadow-pink-200" />
+                <div className="h-1 w-16 md:w-24 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mb-2 md:mb-4 shadow-lg shadow-pink-200" />
               </div>
 
-              <div className="mb-4 md:mb-6">
-                <p className="text-sm md:text-base text-muted-foreground leading-relaxed" data-testid="text-product-description">
+              <div className="mb-2 md:mb-4">
+                <p className="text-xs md:text-base text-muted-foreground leading-tight md:leading-relaxed line-clamp-3 md:line-clamp-none" data-testid="text-product-description">
                   {product.description}
                 </p>
               </div>
 
               {rating.totalReviews > 0 && (
-                <div className="mb-4 md:mb-6 flex items-center gap-3">
+                <div className="mb-2 md:mb-4 flex items-center gap-2">
                   <StarRating rating={rating.averageRating} size="md" dataTestIdPrefix="product-rating" />
                   <span className="text-xs md:text-sm font-medium">
-                    {rating.averageRating.toFixed(1)} ({rating.totalReviews} {rating.totalReviews === 1 ? 'отзыв' : rating.totalReviews < 5 ? 'отзыва' : 'отзывов'})
+                    {rating.averageRating.toFixed(1)} ({rating.totalReviews})
                   </span>
                 </div>
               )}
 
-              <Card className="p-4 md:p-6 mb-4 md:mb-6 bg-gradient-to-br from-pink-50/50 to-purple-50/50 border-2 border-pink-100 dark:from-gray-800 dark:to-gray-800 dark:border-gray-700">
-                <div className="flex items-baseline gap-3 mb-4 md:mb-6">
+              <Card className="p-3 md:p-6 mb-3 md:mb-6 bg-gradient-to-br from-pink-50/50 to-purple-50/50 border-2 border-pink-100 dark:from-gray-800 dark:to-gray-800 dark:border-gray-700">
+                <div className="flex items-baseline gap-2 mb-2 md:mb-4">
                   {hasDiscount ? (
                     <>
-                      <span className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-sale-price">
+                      <span className="text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-sale-price">
                         {product.salePrice} ₽
                       </span>
-                      <span className="text-lg md:text-xl text-muted-foreground line-through" data-testid="text-original-price">
-                        {product.price} ₽
+                      <span className="text-xs md:text-xl text-muted-foreground line-through" data-testid="text-original-price">
+                        {product.price}₽
                       </span>
                     </>
                   ) : (
-                    <span className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-price">
+                    <span className="text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-price">
                       {product.price} ₽
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="text-sm font-medium text-muted-foreground">Количество:</span>
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 mb-3 md:mb-4">
+                  <span className="text-xs md:text-sm font-medium text-muted-foreground">Кол-во:</span>
+                  <div className="flex items-center gap-1">
                     <Button
                       size="icon"
                       variant="outline"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1}
-                      className="rounded-full shadow-md hover:shadow-lg transition-all active:shadow-sm"
+                      className="rounded-full shadow-sm hover:shadow-md transition-all active:shadow-xs h-7 w-7 md:h-9 md:w-9"
                       data-testid="button-decrease-quantity"
                     >
-                      <Minus className="h-4 w-4" />
+                      <Minus className="h-3 w-3 md:h-4 md:w-4" />
                     </Button>
-                    <span className="w-12 text-center font-semibold text-lg" data-testid="text-quantity">
+                    <span className="w-6 text-center font-semibold text-sm md:text-lg" data-testid="text-quantity">
                       {quantity}
                     </span>
                     <Button
                       size="icon"
                       variant="outline"
                       onClick={() => setQuantity(quantity + 1)}
-                      className="rounded-full shadow-md hover:shadow-lg transition-all active:shadow-sm"
+                      className="rounded-full shadow-sm hover:shadow-md transition-all active:shadow-xs h-7 w-7 md:h-9 md:w-9"
                       data-testid="button-increase-quantity"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus className="h-3 w-3 md:h-4 md:w-4" />
                     </Button>
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <Button 
-                    className="flex-1 rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold py-6 text-lg" 
+                    className="flex-1 rounded-full gummy-button squish-active bg-gradient-to-r from-primary via-pink-500 to-accent hover:from-pink-600 hover:via-primary hover:to-purple-500 text-white font-semibold py-3 md:py-6 text-sm md:text-lg" 
                     onClick={handleAddToCart}
                     data-testid="button-add-to-cart"
                   >
-                    <ShoppingCartIcon className="h-5 w-5 mr-2" />
-                    Добавить в корзину
+                    <ShoppingCartIcon className="h-4 w-4 md:h-5 md:w-5 mr-1 md:mr-2" />
+                    Добавить
                   </Button>
                   <Button
                     size="icon"
                     variant="outline"
-                    className={`rounded-full shadow-lg hover:shadow-xl transition-all active:shadow-md min-h-[56px] min-w-[56px] ${
+                    className={`rounded-full shadow-md hover:shadow-lg transition-all active:shadow-sm min-h-[40px] min-w-[40px] md:min-h-[56px] md:min-w-[56px] ${
                       isInWishlist(productId)
                         ? 'bg-pink-500 hover:bg-pink-600 text-white border-pink-500'
                         : 'bg-white hover:bg-pink-50 text-pink-500 border-pink-200'
@@ -368,16 +368,16 @@ export default function ProductPage() {
                     onClick={handleToggleWishlist}
                     data-testid="button-wishlist"
                   >
-                    <Heart className={`h-6 w-6 ${isInWishlist(productId) ? 'fill-current' : ''}`} />
+                    <Heart className={`h-5 w-5 md:h-6 md:w-6 ${isInWishlist(productId) ? 'fill-current' : ''}`} />
                   </Button>
                 </div>
               </Card>
             </div>
           </div>
 
-          <section className="py-12 border-t">
-            <h2 className="font-serif text-2xl md:text-3xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600">
-              Отзывы и рейтинг
+          <section className="py-6 md:py-12 border-t">
+            <h2 className="font-serif text-xl md:text-3xl font-bold mb-4 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600">
+              Отзывы
             </h2>
             
             <Tabs defaultValue="reviews" className="w-full">
@@ -410,9 +410,9 @@ export default function ProductPage() {
           </section>
 
           {relatedProducts.length > 0 && (
-            <section className="py-12 border-t">
-              <h2 className="font-serif text-2xl md:text-3xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600" data-testid="text-related-title">
-                Похожие товары
+            <section className="py-6 md:py-12 border-t">
+              <h2 className="font-serif text-xl md:text-3xl font-bold mb-4 md:mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600" data-testid="text-related-title">
+                Похожие
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 {relatedProducts.map((relatedProduct) => (
