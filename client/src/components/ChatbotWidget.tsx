@@ -12,7 +12,7 @@ export default function ChatbotWidget() {
       <Button
         onClick={toggleChatbot}
         size="icon"
-        className="fixed bottom-6 right-6 rounded-full shadow-lg hover:shadow-xl transition-shadow z-40"
+        className="fixed bottom-6 right-6 left-auto rounded-full shadow-lg hover:shadow-xl transition-shadow z-40"
         data-testid="button-chatbot-toggle"
         aria-label={isOpen ? 'Закрыть чат' : 'Открыть чат'}
       >
