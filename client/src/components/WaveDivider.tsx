@@ -4,25 +4,25 @@ export function WaveDivider() {
   const { theme } = useTheme();
 
   // Определяю цвет волны для каждой темы - красиво гармонирует с темой
-  const getWaveColor = () => {
+  const getWaveGradient = () => {
     switch (theme) {
-      case 'new-year':
-        return '#C41E3A'; // Насыщенный новогодний красный
-      case 'spring':
-        return '#90EE90'; // Светло-зелёный для весны
-      case 'autumn':
-        return '#CD853F'; // Коричнево-оранжевый для осени
       case 'dark':
-        return '#1a2463'; // Тёмно-синий для тёмной темы
+        return { id: 'darkWaveGradient', stops: [{ offset: '0%', color: '#ec4899' }, { offset: '100%', color: '#a855f7' }] }; // Розовый -> Фиолетовый для тёмной темы
+      case 'new-year':
+        return { id: 'newyearWaveGradient', stops: [{ offset: '0%', color: '#C41E3A' }] };
+      case 'spring':
+        return { id: 'springWaveGradient', stops: [{ offset: '0%', color: '#90EE90' }] };
+      case 'autumn':
+        return { id: 'autumnWaveGradient', stops: [{ offset: '0%', color: '#CD853F' }] };
       case 'light':
-        return '#f3f4f6'; // Светло-серый для светлой темы
+        return { id: 'lightWaveGradient', stops: [{ offset: '0%', color: '#f3f4f6' }] };
       case 'sakura':
       default:
-        return '#FFB6D9'; // Розовый для сакуры
+        return { id: 'sakuraWaveGradient', stops: [{ offset: '0%', color: '#FFB6D9' }] };
     }
   };
 
-  const waveColor = getWaveColor();
+  const gradientConfig = getWaveGradient();
 
   return (
     <div className="w-full overflow-hidden -mt-0.5">
@@ -32,10 +32,17 @@ export function WaveDivider() {
         className="w-full h-auto"
         style={{ display: 'block', minHeight: '80px' }}
       >
+        <defs>
+          <linearGradient id={gradientConfig.id} x1="0%" y1="0%" x2="100%" y2="0%">
+            {gradientConfig.stops.map((stop, index) => (
+              <stop key={index} offset={stop.offset} stopColor={stop.color} />
+            ))}
+          </linearGradient>
+        </defs>
         {/* Одна красивая волна - сверху ровно, снизу волнистая */}
         <path
           d="M 0,0 L 1200,0 L 1200,35 Q 1050,55 900,40 T 600,40 T 300,40 T 0,35 L 0,0 Z"
-          fill={waveColor}
+          fill={`url(#${gradientConfig.id})`}
           opacity="1"
         />
       </svg>
