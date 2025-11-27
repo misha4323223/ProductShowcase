@@ -5,6 +5,7 @@ import { useProducts } from '@/hooks/use-products';
 import { generateBotResponse } from '@/lib/chatbot-responses';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -14,9 +15,40 @@ export default function ChatbotWindow() {
   const { products } = useProducts();
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const { theme, isDarkMode } = useTheme();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Цвета кнопок для каждой темы
+  const buttonColors: Record<string, { bg: string; hover: string; cardBg: string; cardBorder: string }> = {
+    sakura: {
+      bg: isDarkMode ? '#be123c' : '#ec4899',
+      hover: isDarkMode ? '#9f1239' : '#db2777',
+      cardBg: isDarkMode ? 'from-pink-900/40 to-pink-800/40' : 'from-pink-50 to-pink-100',
+      cardBorder: isDarkMode ? 'border-pink-900' : 'border-pink-200'
+    },
+    'new-year': {
+      bg: isDarkMode ? '#1e40af' : '#0ea5e9',
+      hover: isDarkMode ? '#1e3a8a' : '#0284c7',
+      cardBg: isDarkMode ? 'from-blue-900/40 to-blue-800/40' : 'from-blue-50 to-blue-100',
+      cardBorder: isDarkMode ? 'border-blue-900' : 'border-blue-200'
+    },
+    spring: {
+      bg: isDarkMode ? '#16a34a' : '#22c55e',
+      hover: isDarkMode ? '#15803d' : '#16a34a',
+      cardBg: isDarkMode ? 'from-green-900/40 to-green-800/40' : 'from-green-50 to-green-100',
+      cardBorder: isDarkMode ? 'border-green-900' : 'border-green-200'
+    },
+    autumn: {
+      bg: isDarkMode ? '#b45309' : '#f97316',
+      hover: isDarkMode ? '#92400e' : '#ea580c',
+      cardBg: isDarkMode ? 'from-orange-900/40 to-orange-800/40' : 'from-orange-50 to-orange-100',
+      cardBorder: isDarkMode ? 'border-orange-900' : 'border-orange-200'
+    }
+  };
+
+  const currentColors = buttonColors[theme] || buttonColors['sakura'];
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -113,7 +145,7 @@ export default function ChatbotWindow() {
                 {message.products.map(product => (
                   <div
                     key={product.id}
-                    className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 p-3 rounded-xl border-2 border-blue-200 dark:border-blue-900 shadow-md hover:shadow-lg transition-shadow"
+                    className={`bg-gradient-to-br ${currentColors.cardBg} p-3 rounded-xl border-2 ${currentColors.cardBorder} shadow-md hover:shadow-lg transition-shadow`}
                     data-testid={`product-card-${product.id}`}
                   >
                     {/* Картинка товара */}
@@ -127,17 +159,21 @@ export default function ChatbotWindow() {
                     
                     {/* Название и цена */}
                     <p className="font-bold text-gray-900 dark:text-white text-sm mb-1">{product.name}</p>
-                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">{product.price}₽</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">{product.price}₽</p>
                     
                     {/* Кнопка */}
-                    <Button
-                      size="sm"
-                      className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 text-sm"
+                    <button
                       onClick={() => handleAddToCart(product.id, product.name)}
+                      className="w-full text-white font-semibold py-2 text-sm rounded-lg transition-colors duration-200"
+                      style={{
+                        backgroundColor: currentColors.bg,
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = currentColors.hover)}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = currentColors.bg)}
                       data-testid={`button-add-to-cart-${product.id}`}
                     >
                       ➕ Добавить в корзину
-                    </Button>
+                    </button>
                   </div>
                 ))}
               </div>
