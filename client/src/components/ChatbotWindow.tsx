@@ -185,8 +185,8 @@ export default function ChatbotWindow() {
               <div className="mb-4 pr-2">
                 <button
                   onClick={() => {
-                    localStorage.setItem('openWheelTab', 'true');
-                    setLocation('/account');
+                    localStorage.setItem('openWheelModal', 'true');
+                    setLocation('/');
                   }}
                   className="w-full text-white font-semibold py-3 text-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                   style={{

@@ -81,6 +81,12 @@ export default function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
 
+    // Проверяем флаг открытия рулетки из чатбота
+    if (typeof window !== 'undefined' && localStorage.getItem('openWheelModal')) {
+      localStorage.removeItem('openWheelModal');
+      setWheelOpen(true);
+    }
+
     const preloadLink = document.createElement('link');
     preloadLink.rel = 'preload';
     preloadLink.as = 'image';
