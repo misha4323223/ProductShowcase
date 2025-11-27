@@ -183,7 +183,7 @@ export default function ProductCard({
         <Button
           size="icon"
           variant="ghost"
-          className={`absolute top-3 left-3 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
+          className={`absolute bottom-3 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
             inWishlist
               ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
               : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
