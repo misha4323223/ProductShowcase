@@ -202,23 +202,21 @@ export default function ProductCard({
         <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
           {name}
         </h3>
-        <div className="flex items-center justify-between gap-2 mb-4">
-          <div className="flex items-center gap-2">
-            {hasDiscount ? (
-              <>
-                <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-sale-price-${id}`}>
-                  {salePrice}₽
-                </span>
-                <span className={`text-sm line-through ${isNewYear ? 'text-gray-500 dark:text-gray-400' : 'text-muted-foreground'}`} data-testid={`text-original-price-${id}`}>
-                  {price}₽
-                </span>
-              </>
-            ) : (
-              <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-red-500 to-orange-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-price-${id}`}>
+        <div className="flex items-center gap-3 mb-4">
+          {hasDiscount ? (
+            <>
+              <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-sale-price-${id}`}>
+                {salePrice}₽
+              </span>
+              <span className={`text-sm line-through ${isNewYear ? 'text-gray-500 dark:text-gray-400' : 'text-muted-foreground'}`} data-testid={`text-original-price-${id}`}>
                 {price}₽
               </span>
-            )}
-          </div>
+            </>
+          ) : (
+            <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-red-500 to-orange-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm`} data-testid={`text-price-${id}`}>
+              {price}₽
+            </span>
+          )}
           <Button
             variant="ghost"
             className={`px-3 py-2 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl border-2 border-white flex items-center gap-1 ${
@@ -231,25 +229,23 @@ export default function ProductCard({
           >
             <Heart className={`h-4 w-4 ${inWishlist ? 'fill-current' : ''}`} />
           </Button>
-          <div className="flex items-center gap-2">
-            {isOutOfStock ? (
-              <Badge variant="destructive" className="text-xs shrink-0" data-testid={`badge-out-of-stock-${id}`}>
-                Нет в наличии
-              </Badge>
-            ) : isLowStock ? (
-              <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 shrink-0" data-testid={`badge-low-stock-${id}`}>
-                Мало
-              </Badge>
-            ) : hasUnlimitedStock ? (
-              <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
-                В наличии
-              </Badge>
-            ) : (
-              <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
-                {stock} шт
-              </Badge>
-            )}
-          </div>
+          {isOutOfStock ? (
+            <Badge variant="destructive" className="text-xs shrink-0" data-testid={`badge-out-of-stock-${id}`}>
+              Нет в наличии
+            </Badge>
+          ) : isLowStock ? (
+            <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 shrink-0" data-testid={`badge-low-stock-${id}`}>
+              Мало
+            </Badge>
+          ) : hasUnlimitedStock ? (
+            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+              В наличии
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+              {stock} шт
+            </Badge>
+          )}
         </div>
         {isOutOfStock ? (
           <Button
