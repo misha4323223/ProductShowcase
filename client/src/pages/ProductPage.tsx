@@ -244,12 +244,12 @@ export default function ProductPage() {
         onCartClick={() => setCartOpen(true)}
       />
       
-      <main className="flex-1 relative z-10 py-8">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+      <main className="flex-1 relative z-10 py-4 md:py-8">
+        <div className="max-w-7xl mx-auto px-3 md:px-8">
           <Breadcrumbs items={breadcrumbItems} />
 
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="relative aspect-square rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 shadow-2xl candy-wrapper sugar-crystals" data-testid="product-image-container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-8 md:mb-16">
+            <div className="relative w-full aspect-square rounded-2xl md:rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 shadow-lg md:shadow-2xl candy-wrapper sugar-crystals" data-testid="product-image-container">
               {product.image ? (
                 <img
                   src={product.image}
@@ -281,40 +281,40 @@ export default function ProductPage() {
                     </Badge>
                   </Link>
                 )}
-                <h1 className="font-serif text-3xl md:text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600" data-testid="text-product-name">
+                <h1 className="font-serif text-2xl md:text-4xl font-bold mb-3 md:mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-primary to-purple-600" data-testid="text-product-name">
                   {product.name}
                 </h1>
-                <div className="h-1 w-24 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mb-6 shadow-lg shadow-pink-200" />
+                <div className="h-1 w-20 md:w-24 bg-gradient-to-r from-pink-400 via-primary to-purple-400 rounded-full mb-4 md:mb-6 shadow-lg shadow-pink-200" />
               </div>
 
-              <div className="mb-6">
-                <p className="text-muted-foreground leading-relaxed" data-testid="text-product-description">
+              <div className="mb-4 md:mb-6">
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed" data-testid="text-product-description">
                   {product.description}
                 </p>
               </div>
 
               {rating.totalReviews > 0 && (
-                <div className="mb-6 flex items-center gap-3">
+                <div className="mb-4 md:mb-6 flex items-center gap-3">
                   <StarRating rating={rating.averageRating} size="md" dataTestIdPrefix="product-rating" />
-                  <span className="text-sm font-medium">
+                  <span className="text-xs md:text-sm font-medium">
                     {rating.averageRating.toFixed(1)} ({rating.totalReviews} {rating.totalReviews === 1 ? 'отзыв' : rating.totalReviews < 5 ? 'отзыва' : 'отзывов'})
                   </span>
                 </div>
               )}
 
-              <Card className="p-6 mb-6 bg-gradient-to-br from-pink-50/50 to-purple-50/50 border-2 border-pink-100 dark:from-gray-800 dark:to-gray-800 dark:border-gray-700">
-                <div className="flex items-baseline gap-3 mb-6">
+              <Card className="p-4 md:p-6 mb-4 md:mb-6 bg-gradient-to-br from-pink-50/50 to-purple-50/50 border-2 border-pink-100 dark:from-gray-800 dark:to-gray-800 dark:border-gray-700">
+                <div className="flex items-baseline gap-3 mb-4 md:mb-6">
                   {hasDiscount ? (
                     <>
-                      <span className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-sale-price">
+                      <span className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-sale-price">
                         {product.salePrice} ₽
                       </span>
-                      <span className="text-xl text-muted-foreground line-through" data-testid="text-original-price">
+                      <span className="text-lg md:text-xl text-muted-foreground line-through" data-testid="text-original-price">
                         {product.price} ₽
                       </span>
                     </>
                   ) : (
-                    <span className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-price">
+                    <span className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-primary" data-testid="text-price">
                       {product.price} ₽
                     </span>
                   )}
