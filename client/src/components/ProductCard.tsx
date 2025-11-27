@@ -205,7 +205,7 @@ export default function ProductCard({
         <div className="flex items-center gap-3 mb-8">
           {hasDiscount ? (
             <>
-              <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm translate-y-1`} data-testid={`text-sale-price-${id}`}>
+              <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm translate-y-1 -ml-2`} data-testid={`text-sale-price-${id}`}>
                 {salePrice}₽
               </span>
               <span className={`text-sm line-through ${isNewYear ? 'text-gray-500 dark:text-gray-400' : 'text-muted-foreground'}`} data-testid={`text-original-price-${id}`}>
@@ -213,7 +213,7 @@ export default function ProductCard({
               </span>
             </>
           ) : (
-            <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-red-500 to-orange-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm translate-y-1`} data-testid={`text-price-${id}`}>
+            <span className={`text-xl font-bold text-transparent bg-clip-text ${isNewYear ? 'bg-gradient-to-r from-red-600 via-red-500 to-orange-500' : 'bg-gradient-to-r from-pink-600 via-primary to-purple-600'} drop-shadow-sm translate-y-1 -ml-2`} data-testid={`text-price-${id}`}>
               {price}₽
             </span>
           )}
