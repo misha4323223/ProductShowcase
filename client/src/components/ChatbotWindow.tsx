@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, X } from 'lucide-react';
 import { useChatbot } from '@/contexts/ChatbotContext';
 import { useProducts } from '@/hooks/use-products';
 import { generateBotResponse } from '@/lib/chatbot-responses';
@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function ChatbotWindow() {
-  const { messages, addMessage } = useChatbot();
+  const { messages, addMessage, toggleChatbot } = useChatbot();
   const { products } = useProducts();
   const { addToCart } = useCart();
   const { toast } = useToast();
@@ -114,9 +114,19 @@ export default function ChatbotWindow() {
       data-testid="chatbot-window"
     >
       {/* Заголовок */}
-      <div className="bg-gradient-to-r from-primary to-pink-500 text-white p-4 rounded-t-lg">
-        <h3 className="font-semibold text-sm">Sweet Delights Помощник</h3>
-        <p className="text-xs opacity-90">Помогу найти идеальную сладость</p>
+      <div className="bg-gradient-to-r from-primary to-pink-500 text-white p-4 rounded-t-lg flex items-start justify-between">
+        <div>
+          <h3 className="font-semibold text-sm">Sweet Delights Помощник</h3>
+          <p className="text-xs opacity-90">Помогу найти идеальную сладость</p>
+        </div>
+        <button
+          onClick={toggleChatbot}
+          className="text-white hover:bg-white/20 p-1 rounded transition-colors"
+          data-testid="button-close-chatbot"
+          aria-label="Закрыть чат"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Сообщения */}
