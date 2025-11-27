@@ -179,20 +179,6 @@ export default function ProductCard({
             <ShoppingCart className="h-16 w-16" />
           </div>
         )}
-        
-        <Button
-          size="icon"
-          variant="ghost"
-          className={`absolute bottom-3 left-1/2 -translate-x-1/2 w-11 h-11 rounded-full backdrop-blur-md transition-all duration-300 z-50 shadow-xl border-2 border-white ${
-            inWishlist
-              ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
-              : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
-          }`}
-          onClick={handleToggleWishlist}
-          data-testid={`button-wishlist-${id}`}
-        >
-          <Heart className={`h-5 w-5 ${inWishlist ? 'fill-current' : ''}`} />
-        </Button>
 
         {hasDiscount && !isNewYear && (
           <div className="absolute top-3 right-3 w-16 h-16 lollipop-swirl-badge rounded-full flex items-center justify-center shadow-2xl shadow-red-500/50 animate-rotate-slow border-4 border-white" data-testid={`badge-discount-${id}`}>
@@ -233,23 +219,38 @@ export default function ProductCard({
               </span>
             )}
           </div>
-          {isOutOfStock ? (
-            <Badge variant="destructive" className="text-xs shrink-0" data-testid={`badge-out-of-stock-${id}`}>
-              Нет в наличии
-            </Badge>
-          ) : isLowStock ? (
-            <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 shrink-0" data-testid={`badge-low-stock-${id}`}>
-              Мало
-            </Badge>
-          ) : hasUnlimitedStock ? (
-            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
-              В наличии
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
-              {stock} шт
-            </Badge>
-          )}
+          <div className="flex items-center gap-2">
+            <Button
+              size="icon"
+              variant="ghost"
+              className={`w-9 h-9 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl border-2 border-white ${
+                inWishlist
+                  ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-pink-500/50'
+                  : 'bg-white hover:bg-white text-pink-500 shadow-pink-200/30'
+              }`}
+              onClick={handleToggleWishlist}
+              data-testid={`button-wishlist-${id}`}
+            >
+              <Heart className={`h-4 w-4 ${inWishlist ? 'fill-current' : ''}`} />
+            </Button>
+            {isOutOfStock ? (
+              <Badge variant="destructive" className="text-xs shrink-0" data-testid={`badge-out-of-stock-${id}`}>
+                Нет в наличии
+              </Badge>
+            ) : isLowStock ? (
+              <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-700 shrink-0" data-testid={`badge-low-stock-${id}`}>
+                Мало
+              </Badge>
+            ) : hasUnlimitedStock ? (
+              <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+                В наличии
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-xs border-green-500 text-green-700 shrink-0" data-testid={`badge-in-stock-${id}`}>
+                {stock} шт
+              </Badge>
+            )}
+          </div>
         </div>
         {isOutOfStock ? (
           <Button
