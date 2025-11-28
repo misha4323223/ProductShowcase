@@ -41,11 +41,11 @@ export default function ChatbotWidget() {
     },
     dark: {
       sakura: {
-        start: '#9f1239',
-        mid: '#be123c',
-        end: '#7c2d12',
-        labelStart: '#be123c',
-        labelEnd: '#7c2d12'
+        start: '#f472b6',
+        mid: '#ec4899',
+        end: '#be185d',
+        labelStart: '#ec4899',
+        labelEnd: '#be185d'
       },
       'new-year': {
         start: '#1e3a8a',
