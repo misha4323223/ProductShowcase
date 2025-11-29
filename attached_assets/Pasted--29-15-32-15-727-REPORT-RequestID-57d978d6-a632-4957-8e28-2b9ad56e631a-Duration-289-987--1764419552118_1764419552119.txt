@@ -1,0 +1,256 @@
+
+
+29 нояб. 15:32:15.727
+REPORT RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a Duration: 289.987 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 54 MB Queuing Duration: 0.084 ms CPU Usage: 13.379 %
+
+29 нояб. 15:32:15.727
+ERROR RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:15.727
+END RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a
+
+29 нояб. 15:32:15.727
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:15.718
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:15.434
+START RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:13.391
+REPORT RequestID: d6b501af-62c7-4676-ae76-573d44f5d278 Duration: 303.013 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 53 MB Queuing Duration: 214.692 ms CPU Usage: 12.598 %
+
+29 нояб. 15:32:13.391
+ERROR RequestID: d6b501af-62c7-4676-ae76-573d44f5d278 Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:13.391
+END RequestID: d6b501af-62c7-4676-ae76-573d44f5d278
+
+29 нояб. 15:32:13.390
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:13.381
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:13.177
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:13.125
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:13.027
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:12.870
+START RequestID: d6b501af-62c7-4676-ae76-573d44f5d278 Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:12.827
+REPORT RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19 Duration: 21.922 ms Billed Duration: 100 ms Memory Size: 128 MB Queuing Duration: 0.081 ms
+
+29 нояб. 15:32:12.827
+ERROR RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19 Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:12.827
+END RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19
+
+29 нояб. 15:32:12.827
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:12.825
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:12.802
+START RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19 Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:30:04.158
+REPORT RequestID: 46e4ffcc-ef6a-4967-811b-80093ebf547d Duration: 30.560 ms Billed Duration: 100 ms Memory Size: 128 MB Queuing Duration: 0.073 ms Function Init Duration: 22.260 ms
+
+29 нояб. 15:30:04.158
+END RequestID: 46e4ffcc-ef6a-4967-811b-80093ebf547d
+
+29 нояб. 15:30:04.156
+}
+
+29 нояб. 15:30:04.156
+"isBase64Encoded": false
+
+29 нояб. 15:30:04.156
+"body": "{\"update_id\":87832869,\n\"message\":{\"message_id\":4,\"from\":{\"id\":821150521,\"is_bot\":false,\"first_name\":\"Misha\",\"username\":\"BOOOMERANGSOPT\",\"language_code\":\"ru\"},\"chat\":{\"id\":821150521,\"first_name\":\"Misha\",\"username\":\"BOOOMERANGSOPT\",\"type\":\"private\"},\"date\":1764419403,\"text\":\"/start\",\"entities\":[{\"offset\":0,\"length\":6,\"type\":\"bot_command\"}]}}",
+
+29 нояб. 15:30:04.156
+},
+
+29 нояб. 15:30:04.156
+"requestTimeEpoch": 1764419404
+
+29 нояб. 15:30:04.156
+"requestTime": "29/Nov/2025:12:30:04 +0000",
+
+29 нояб. 15:30:04.156
+"requestId": "46e4ffcc-ef6a-4967-811b-80093ebf547d",
+
+29 нояб. 15:30:04.156
+"httpMethod": "POST",
+
+29 нояб. 15:30:04.156
+},
+
+29 нояб. 15:30:04.156
+"userAgent": ""
+
+29 нояб. 15:30:04.156
+"sourceIp": "91.108.5.140",
+
+29 нояб. 15:30:04.156
+"identity": {
+
+29 нояб. 15:30:04.156
+"requestContext": {
+
+29 нояб. 15:30:04.156
+"multiValueQueryStringParameters": {},
+
+29 нояб. 15:30:04.156
+"queryStringParameters": {},
+
+29 нояб. 15:30:04.156
+},
+
+29 нояб. 15:30:04.156
+]
+
+29 нояб. 15:30:04.156
+"fa26cccb-93b9-41b0-81cc-15da9ebbb231"
+
+29 нояб. 15:30:04.156
+"X-Trace-Id": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"46e4ffcc-ef6a-4967-811b-80093ebf547d"
+
+29 нояб. 15:30:04.156
+"X-Request-Id": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"[91.108.5.140]:17114"
+
+29 нояб. 15:30:04.156
+"X-Real-Remote-Address": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"91.108.5.140"
+
+29 нояб. 15:30:04.156
+"X-Forwarded-For": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"2caf6fa3899b8445:ccbe2df380b711fe:2caf6fa3899b8445:1"
+
+29 нояб. 15:30:04.156
+"Uber-Trace-Id": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"functions.yandexcloud.net"
+
+29 нояб. 15:30:04.156
+"Host": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"application/json"
+
+29 нояб. 15:30:04.156
+"Content-Type": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"341"
+
+29 нояб. 15:30:04.156
+"Content-Length": [
+
+29 нояб. 15:30:04.156
+],
+
+29 нояб. 15:30:04.156
+"gzip, deflate"
+
+29 нояб. 15:30:04.156
+"Accept-Encoding": [
+
+29 нояб. 15:30:04.156
+"multiValueHeaders": {
+
+29 нояб. 15:30:04.156
+"pathParams": {},
+
+29 нояб. 15:30:04.156
+"multiValueParams": {},
+
+29 нояб. 15:30:04.156
+"params": {},
+
+29 нояб. 15:30:04.156
+"url": "",
+
+29 нояб. 15:30:04.156
+},
+
+29 нояб. 15:30:04.156
+"X-Trace-Id": "fa26cccb-93b9-41b0-81cc-15da9ebbb231"
+
+29 нояб. 15:30:04.156
+"X-Request-Id": "46e4ffcc-ef6a-4967-811b-80093ebf547d",
+
+29 нояб. 15:30:04.156
+"X-Real-Remote-Address": "[91.108.5.140]:17114",
+
+29 нояб. 15:30:04.156
+"X-Forwarded-For": "91.108.5.140",
+
+29 нояб. 15:30:04.156
+"Uber-Trace-Id": "2caf6fa3899b8445:ccbe2df380b711fe:2caf6fa3899b8445:1",
+
+29 нояб. 15:30:04.156
+"Host": "functions.yandexcloud.net",
+
+29 нояб. 15:30:04.155
+"Content-Type": "application/json",
+
+29 нояб. 15:30:04.155
+"Content-Length": "341",
+
+29 нояб. 15:30:04.155
+"Accept-Encoding": "gzip, deflate",
+
+29 нояб. 15:30:04.155
+"headers": {
+
+29 нояб. 15:30:04.155
+"httpMethod": "POST",
+
+29 нояб. 15:30:04.155
+📨 Received webhook: {
+
+29 нояб. 15:30:04.124
+START RequestID: 46e4ffcc-ef6a-4967-811b-80093ebf547d Version: d4e4ispb1c1tbv1ems39
