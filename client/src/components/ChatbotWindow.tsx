@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, X, Heart, Sparkles } from 'lucide-react';
+import { Send, X, Heart, Sparkles, Cake } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { useChatbot } from '@/contexts/ChatbotContext';
 import { useProducts } from '@/hooks/use-products';
@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { getProfile, isBirthdayToday } from '@/services/profile-api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -24,7 +25,43 @@ export default function ChatbotWindow() {
   const [, setLocation] = useLocation();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userGreeted, setUserGreeted] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [isBirthday, setIsBirthday] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Загружаем профиль и проверяем день рождения
+  useEffect(() => {
+    if (user && !userGreeted) {
+      loadUserProfile();
+    }
+  }, [user, userGreeted]);
+
+  const loadUserProfile = async () => {
+    try {
+      const profile = await getProfile(user?.email || '');
+      if (profile.firstName) {
+        setUserName(profile.firstName);
+      }
+      if (isBirthdayToday(profile.birthDate)) {
+        setIsBirthday(true);
+      }
+      setUserGreeted(true);
+
+      // Отправляем приветствие с днём рождения, если это день рождения
+      if (isBirthdayToday(profile.birthDate)) {
+        const greeting = profile.firstName
+          ? `С днём рождения, ${profile.firstName}! 🎊 Дарим Вам скидку 15%! Может быть, вы хотели бы выбрать что-нибудь вкусное?`
+          : `С днём рождения! 🎊 Дарим Вам скидку 15%! Может быть, вы хотели бы выбрать что-нибудь вкусное?`;
+        addMessage({ type: 'bot', text: greeting });
+      } else if (profile.firstName) {
+        const greeting = `Привет, ${profile.firstName}! Чем я могу тебе помочь?`;
+        addMessage({ type: 'bot', text: greeting });
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки профиля:', error);
+    }
+  };
 
   // Цвета кнопок для каждой темы
   const buttonColors: Record<string, { bg: string; hover: string; cardBg: string; cardBorder: string }> = {
@@ -145,10 +182,13 @@ export default function ChatbotWindow() {
       data-testid="chatbot-window"
     >
       {/* Заголовок */}
-      <div className="bg-gradient-to-r from-primary to-pink-500 text-white p-4 rounded-t-lg flex items-start justify-between">
-        <div>
-          <h3 className="font-semibold text-sm">Sweet Delights Помощник</h3>
-          <p className="text-xs opacity-90">Помогу найти идеальную сладость</p>
+      <div className={`${isBirthday ? 'bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400' : 'bg-gradient-to-r from-primary to-pink-500'} text-white p-4 rounded-t-lg flex items-start justify-between`}>
+        <div className="flex items-center gap-2">
+          {isBirthday && <Cake className="w-5 h-5" />}
+          <div>
+            <h3 className="font-semibold text-sm">Sweet Delights Помощник</h3>
+            <p className="text-xs opacity-90">{isBirthday ? 'С днём рождения!' : 'Помогу найти идеальную сладость'}</p>
+          </div>
         </div>
         <button
           onClick={toggleChatbot}
