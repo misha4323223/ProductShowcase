@@ -17,7 +17,7 @@ const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
-  const { signIn, resetPassword, requestEmailVerification, verifyEmailCode } = useAuth();
+  const { signIn, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram } = useAuth();
   const { toast } = useToast();
   const { isInMiniApp, telegramUser } = useTelegramApp();
   
@@ -183,13 +183,11 @@ export default function LoginPage() {
             const loginResult = await loginWithTelegramId();
             if (loginResult.success && loginResult.token) {
               console.log('✅ Auto-login successful, redirecting to home');
-              // Store token in session/context
+              await loginWithTelegram(loginResult.token);
               setLoginEmail("");
               setLocation("/");
             } else {
-              console.log('ℹ️ Auto-login not available, stay on login page');
-              // User linked but no auto-login endpoint yet
-              // They can manually login with email/password
+              console.log('ℹ️ Auto-login not available, redirecting to home');
               setTimeout(() => setLocation("/"), 2000);
             }
           } catch (error) {

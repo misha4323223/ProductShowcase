@@ -17,6 +17,7 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   requestEmailVerification: (email: string, password: string) => Promise<void>;
   verifyEmailCode: (email: string, password: string, verificationCode: string) => Promise<void>;
+  loginWithTelegram: (token: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -106,6 +107,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const loginWithTelegram = async (token: string) => {
+    localStorage.setItem('authToken', token);
+    const verifyResponse = await fetch(`${API_BASE_URL}/auth/verify-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+
+    if (verifyResponse.ok) {
+      const data = await verifyResponse.json();
+      if (data.valid && data.user) {
+        setUser(data.user);
+      }
+    }
+  };
+
   const resetPassword = async (email: string) => {
     const trimmedEmail = email.trim().toLowerCase();
     
@@ -165,7 +182,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram }}>
       {children}
     </AuthContext.Provider>
   );
