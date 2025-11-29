@@ -8,7 +8,36 @@ Preferred communication style: Simple, everyday language.
 
 ## Latest Updates (November 29, 2025)
 
-✅ **ЭТАП 1: Telegram Mini App Preparation - Nov 29, 2025 (IN PROGRESS)**:
+✅ **ЭТАП 2: Backend для Telegram - Nov 29, 2025 (COMPLETED)**:
+- **Функция 1: telegram-auth (ID: d4em719picvakgi4ng2s)**:
+  - Проверка подписи от Telegram Web App (HMAC-SHA256)
+  - Привязка Telegram ID к аккаунту пользователя
+  - Обновление полей: telegramId, telegramFirstName, telegramLastName, telegramUsername, telegramLinkedAt
+  - Возвращает подтвержденные данные пользователя
+  - Endpoint: POST /api/telegram/auth
+
+- **Функция 2: send-order-to-user-telegram (ID: d4epu4u7dq6u9ni5tfbo)**:
+  - Отправка уведомления о заказе в личный Telegram чат пользователя
+  - Поиск telegramId пользователя по email из заказа
+  - Красивое форматирование сообщения (товары, цена, доставка, адрес)
+  - Обработка ошибок: если нет telegramId → пропускает (не ошибка)
+  - Endpoint: POST /api/send-order-to-user-telegram
+
+- **YDB Schema Updates**:
+  - Новые поля в таблице users:
+    - telegramId (String) - ID пользователя в Telegram
+    - telegramFirstName (String) - Имя из Telegram
+    - telegramLastName (String) - Фамилия из Telegram
+    - telegramUsername (String) - Юзернейм (@username)
+    - telegramLinkedAt (String) - ISO timestamp привязки
+
+- **API Gateway Routes**: ✅ Созданы в API_GATEWAY_TELEGRAM_ROUTES.yaml
+  - POST /api/telegram/auth
+  - POST /api/send-order-to-user-telegram
+
+- **Next Step**: ЭТАП 3 - Адаптация фронта для Telegram Mini App
+
+✅ **ЭТАП 1: Telegram Mini App Preparation - Nov 29, 2025 (COMPLETED)**:
 - **Telegram Bot Setup**:
   - Bot Created: @SweetWeb71_bot
   - Bot ID: 8527959863
@@ -17,10 +46,7 @@ Preferred communication style: Simple, everyday language.
   - Web App URL: https://sweetdelights.store
   - Web App Status: ✅ Configured
   - Mini App Settings: ✅ Updated
-- **Next Steps**:
-  - Save BOT_TOKEN to environment variables
-  - Create backend Yandex Cloud Functions for Telegram auth
-  - Adapt frontend for Telegram Mini App
+  - BOT_TOKEN: ✅ Saved to secrets
 
 ## System Architecture
 
