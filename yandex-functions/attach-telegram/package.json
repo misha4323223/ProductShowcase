@@ -1,5 +1,10 @@
 {
   "name": "attach-telegram",
   "version": "1.0.0",
-  "main": "index.js"
+  "description": "Attach Telegram to email account",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.565.0",
+    "@aws-sdk/lib-dynamodb": "^3.565.0"
+  }
 }

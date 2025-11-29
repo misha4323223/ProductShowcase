@@ -1,0 +1,35 @@
+
+
+30 нояб. 00:49:58.858
+REPORT RequestID: 6d38c5c4-ef1a-413d-b1d6-ff215a25d529 Duration: 33.765 ms Billed Duration: 100 ms Memory Size: 128 MB Queuing Duration: 0.040 ms
+
+30 нояб. 00:49:58.858
+ERROR RequestID: 6d38c5c4-ef1a-413d-b1d6-ff215a25d529 Code: 502 Message: Error during function invocation
+ERROR RequestID: 6d38c5c4-ef1a-413d-b1d6-ff215a25d529 Code: 502 Message: Error during function invocation
+"request_id""6d38c5c4-ef1a-413d-b1d6-ff215a25d529"
+"source""system"
+"version_id""d4esg4i9otu86su18usk"
+
+30 нояб. 00:49:58.858
+END RequestID: 6d38c5c4-ef1a-413d-b1d6-ff215a25d529
+
+30 нояб. 00:49:58.858
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '@aws-sdk/client-dynamodb'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+30 нояб. 00:49:58.856
+Unable to import index.handler module. Error: Cannot find module '@aws-sdk/client-dynamodb' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+Unable to import index.handler module. Error: Cannot find module '@aws-sdk/client-dynamodb'
+Require stack:
+- /function/code/index.js
+Stack: Require stack:
+- /function/code/index.js
+    at he.<anonymous> (/function/runtime/bootstrap:178:47)
+    at Generator.throw (<anonymous>)
+    at a (/function/runtime/bootstrap:158:184)
+"category""default"
+"request_id""6d38c5c4-ef1a-413d-b1d6-ff215a25d529"
+"source""user"
+"version_id""d4esg4i9otu86su18usk"
+
+30 нояб. 00:49:58.712
+START RequestID: 6d38c5c4-ef1a-413d-b1d6-ff215a25d529 Version: d4esg4i9otu86su18usk

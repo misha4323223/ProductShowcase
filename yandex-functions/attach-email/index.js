@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand, ScanCommand, DeleteCommand, PutCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
 
 const client = new DynamoDBClient({
@@ -120,30 +120,45 @@ exports.handler = async (event) => {
       }
     }
 
-    // Update user profile with email and password hash
-    const passwordHash = hashPassword(password);
-    
-    const updateCommand = new UpdateCommand({
+    // For DynamoDB, if email is the primary key, we need to delete old and create new
+    // First, get the full user record to preserve all fields
+    const getUserCommand = new ScanCommand({
       TableName: "users",
-      Key: { email: tokenPayload.email }, // Use original email from token as key
-      UpdateExpression: "SET #email = :newEmail, #passwordHash = :passwordHash, #emailVerified = :emailVerified, #emailAttachedAt = :emailAttachedAt",
-      ExpressionAttributeNames: {
-        '#email': 'email',
-        '#passwordHash': 'passwordHash',
-        '#emailVerified': 'emailVerified',
-        '#emailAttachedAt': 'emailAttachedAt',
-      },
-      ExpressionAttributeValues: {
-        ':newEmail': trimmedEmail,
-        ':passwordHash': passwordHash,
-        ':emailVerified': true,
-        ':emailAttachedAt': new Date().toISOString(),
-      },
-      ReturnValues: "ALL_NEW",
+      FilterExpression: "email = :email",
+      ExpressionAttributeValues: { ":email": tokenPayload.email },
     });
 
-    const updateResult = await docClient.send(updateCommand);
-    const updatedUser = updateResult.Attributes;
+    const getUserResult = await docClient.send(getUserCommand);
+    if (!getUserResult.Items || getUserResult.Items.length === 0) {
+      return createResponse(401, { error: 'User not found with that token' });
+    }
+
+    const userRecord = getUserResult.Items[0];
+    const passwordHash = hashPassword(password);
+
+    // Delete old record and create new one with updated email
+    await docClient.send(new DeleteCommand({
+      TableName: "users",
+      Key: { email: tokenPayload.email },
+    }));
+
+    console.log('🗑️ Old email record deleted');
+
+    // Create new record with updated email
+    const updatedUser = {
+      ...userRecord,
+      email: trimmedEmail,
+      passwordHash,
+      emailVerified: true,
+      emailAttachedAt: new Date().toISOString(),
+    };
+
+    await docClient.send(new PutCommand({
+      TableName: "users",
+      Item: updatedUser,
+    }));
+
+    console.log('✅ New email record created');
 
     console.log('✅ Email attached to account:', trimmedEmail);
 
