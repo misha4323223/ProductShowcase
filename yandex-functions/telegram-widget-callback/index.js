@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, QueryCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
 
 const client = new DynamoDBClient({
@@ -100,15 +100,15 @@ exports.handler = async (event) => {
     const telegramId = String(data.id);
     console.log('🔍 Looking up user with telegramId:', telegramId);
 
-    const queryCommand = new QueryCommand({
+    // Используем Scan вместо Query так как индекса может не быть
+    const scanCommand = new ScanCommand({
       TableName: "users",
-      IndexName: "telegramId-index",
-      KeyConditionExpression: "telegramId = :telegramId",
+      FilterExpression: "telegramId = :telegramId",
       ExpressionAttributeValues: { ":telegramId": telegramId },
     });
 
-    let result = await docClient.send(queryCommand);
-    console.log('📊 Query result:', result.Items?.length || 0, 'items');
+    let result = await docClient.send(scanCommand);
+    console.log('📊 Scan result:', result.Items?.length || 0, 'items');
 
     if (result.Items && result.Items.length > 0) {
       const user = result.Items[0];
