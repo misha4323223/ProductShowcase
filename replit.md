@@ -181,3 +181,24 @@ Preferred communication style: Simple, everyday language.
 - **Yandex Cloud Postbox**: Email notifications.
 - **CDEK API**: Nationwide delivery integration (4 Cloud Functions: calculate, get pickup points, create order, track order).
 - **Telegram Bot API**: Mini App integration and notifications.
+
+## Telegram Mini App Integration (ЭТАП 3-4 ЗАВЕРШЕНЫ)
+
+### Yandex Cloud Functions
+| Функция | ID | Статус |
+|---------|----|----|
+| telegram-auth | d4em719picvakgi4ng2s | ✅ Развернута |
+| send-order-to-user-telegram | d4epu4u7dq6u9ni5tfbo | ✅ Развернута |
+| telegram-bot | d4er16qnr74l1ecu8ks1 | ✅ Развернута |
+
+### Bot Details
+- Bot: @SweetWeb71_bot (ID: 8527959863)
+- Mini App URL: https://sweetdelights.store/telegram
+- Webhook: установлена ✅
+- Commands: /start, /shop, /orders
+
+### Frontend Components
+- `client/src/lib/telegram.ts` - Telegram utilities
+- `client/src/hooks/useTelegramApp.ts` - Mini App hook
+- `client/src/pages/TelegramPage.tsx` - Mini App entry point
+- `client/src/App.tsx` - route /telegram added
