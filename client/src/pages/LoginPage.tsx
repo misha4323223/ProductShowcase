@@ -33,7 +33,7 @@ export default function LoginPage() {
   // Обработчик callback от Telegram Login Widget
   useEffect(() => {
     // Callback для Telegram Login Widget
-    window.onTelegramAuth = async (user: any) => {
+    (window as any).onTelegramAuth = async (user: any) => {
       console.log('✅ Telegram widget auth successful:', user);
       try {
         const response = await fetch(`${API_BASE_URL}/api/telegram/widget-callback`, {
@@ -44,12 +44,14 @@ export default function LoginPage() {
 
         const data = await response.json();
         if (data.success && data.token) {
+          console.log('✅ Got token from backend:', data.token);
           await loginWithTelegram(data.token);
           toast({
             title: "Добро пожаловать!",
-            description: "Вы вошли через Telegram",
+            description: "Вы успешно вошли через Telegram",
           });
-          setLocation("/");
+          // Даём время на сохранение токена перед редиректом
+          setTimeout(() => setLocation("/"), 500);
         } else {
           toast({
             title: "Ошибка",
@@ -58,6 +60,7 @@ export default function LoginPage() {
           });
         }
       } catch (error: any) {
+        console.error('❌ Telegram auth error:', error);
         toast({
           title: "Ошибка",
           description: error.message || "Ошибка при входе",
@@ -67,9 +70,10 @@ export default function LoginPage() {
     };
 
     return () => {
-      delete window.onTelegramAuth;
+      delete (window as any).onTelegramAuth;
     };
-  }, []);
+  }, [loginWithTelegram, setLocation, toast]);
+
 
   
   const [loginEmail, setLoginEmail] = useState("");
@@ -453,7 +457,18 @@ export default function LoginPage() {
           {/* Telegram Login Button */}
           <Button 
             type="button"
-            onClick={() => window.open('https://t.me/SweetWeb71_bot', '_blank')}
+            onClick={() => {
+              const width = 500;
+              const height = 600;
+              const left = window.innerWidth / 2 - width / 2;
+              const top = window.innerHeight / 2 - height / 2;
+              
+              window.open(
+                `https://oauth.telegram.org/login?bot_id=8527959863&origin=${encodeURIComponent(window.location.origin)}&return_to=${encodeURIComponent(window.location.origin + '/login')}`,
+                'telegram_login',
+                `width=${width},height=${height},left=${left},top=${top}`
+              );
+            }}
             className="w-full bg-[#0088cc] hover:bg-[#0077aa] text-white font-semibold h-9 text-sm transition-all flex items-center justify-center gap-2"
             data-testid="button-telegram-login"
           >
