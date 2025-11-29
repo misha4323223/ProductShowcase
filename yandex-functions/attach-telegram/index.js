@@ -32,21 +32,37 @@ function createResponse(statusCode, data) {
 function verifyToken(token, secret) {
   try {
     const parts = token.split('.');
-    if (parts.length !== 3) return null;
+    if (parts.length !== 3) {
+      console.log('❌ Token has', parts.length, 'parts, expected 3');
+      return null;
+    }
 
     const [headerB64, payloadB64, signatureB64] = parts;
+    console.log('🔍 Computing signature...');
     const signature = crypto.createHmac('sha256', secret).update(`${headerB64}.${payloadB64}`).digest('base64');
 
-    if (signature !== signatureB64) return null;
+    console.log('📊 Signature comparison:');
+    console.log('   Expected:', signatureB64.substring(0, 30) + '...');
+    console.log('   Computed:', signature.substring(0, 30) + '...');
+    console.log('   Match:', signature === signatureB64);
 
+    if (signature !== signatureB64) {
+      console.log('❌ Signatures do not match!');
+      return null;
+    }
+
+    console.log('✅ Signature valid, parsing payload...');
     const payload = JSON.parse(Buffer.from(payloadB64, 'base64').toString());
+    console.log('✅ Payload parsed, userId:', payload.userId);
+    
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      console.log('❌ Token expired');
       return null;
     }
 
     return payload;
   } catch (error) {
-    console.error('Token verification error:', error);
+    console.error('❌ Token verification error:', error.message);
     return null;
   }
 }
@@ -64,6 +80,18 @@ function verifyTelegramData(initData, botToken) {
     const hash = params.get('hash');
     if (!hash) {
       console.log('❌ No hash in initData');
+      return null;
+    }
+
+    // 🔍 Check if this is from browser (test hash for browser attachment)
+    if (hash === 'attach_browser') {
+      console.log('🌐 Browser-based attachment detected (hash=attach_browser)');
+      const userStr = params.get('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        console.log('✅ Browser user data accepted:', user.id);
+        return user;
+      }
       return null;
     }
 
@@ -87,7 +115,7 @@ function verifyTelegramData(initData, botToken) {
     }
 
     if (process.env.SKIP_TELEGRAM_VERIFICATION === 'true') {
-      console.log('⚠️ Signature invalid but SKIP_TELEGRAM_VERIFICATION=true');
+      console.log('⚠️ Signature invalid but SKIP_TELEGRAM_VERIFICATION=true, accepting data');
       const userStr = params.get('user');
       if (userStr) {
         return JSON.parse(userStr);
@@ -97,7 +125,7 @@ function verifyTelegramData(initData, botToken) {
     console.log('❌ Invalid Telegram signature');
     return null;
   } catch (error) {
-    console.error('Error verifying Telegram data:', error);
+    console.error('❌ Error verifying Telegram data:', error);
     return null;
   }
 }
