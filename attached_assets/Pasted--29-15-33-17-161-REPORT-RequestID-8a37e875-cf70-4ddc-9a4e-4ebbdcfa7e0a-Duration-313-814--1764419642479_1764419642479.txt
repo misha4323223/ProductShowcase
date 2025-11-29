@@ -1,0 +1,136 @@
+
+
+29 нояб. 15:33:17.161
+REPORT RequestID: 8a37e875-cf70-4ddc-9a4e-4ebbdcfa7e0a Duration: 313.814 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 51 MB Queuing Duration: 0.076 ms CPU Usage: 13.965 %
+
+29 нояб. 15:33:17.161
+ERROR RequestID: 8a37e875-cf70-4ddc-9a4e-4ebbdcfa7e0a Code: 502 Message: Error during function invocation
+
+29 нояб. 15:33:17.161
+END RequestID: 8a37e875-cf70-4ddc-9a4e-4ebbdcfa7e0a
+
+29 нояб. 15:33:17.160
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:33:17.150
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:33:16.843
+START RequestID: 8a37e875-cf70-4ddc-9a4e-4ebbdcfa7e0a Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:44.779
+REPORT RequestID: 81e23959-1d25-4a05-a619-dd80577c3088 Duration: 293.852 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 54 MB Queuing Duration: 0.080 ms CPU Usage: 12.695 %
+
+29 нояб. 15:32:44.779
+ERROR RequestID: 81e23959-1d25-4a05-a619-dd80577c3088 Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:44.779
+END RequestID: 81e23959-1d25-4a05-a619-dd80577c3088
+
+29 нояб. 15:32:44.779
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:44.769
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:44.482
+START RequestID: 81e23959-1d25-4a05-a619-dd80577c3088 Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:28.418
+REPORT RequestID: 182f9366-6560-4fb9-a43b-e847ac9fba3b Duration: 290.137 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 53 MB Queuing Duration: 0.072 ms CPU Usage: 12.598 %
+
+29 нояб. 15:32:28.418
+ERROR RequestID: 182f9366-6560-4fb9-a43b-e847ac9fba3b Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:28.418
+END RequestID: 182f9366-6560-4fb9-a43b-e847ac9fba3b
+
+29 нояб. 15:32:28.418
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:28.409
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:28.125
+START RequestID: 182f9366-6560-4fb9-a43b-e847ac9fba3b Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:20.079
+REPORT RequestID: e3ca3f3b-d5e2-4afe-a88e-34b369da9182 Duration: 303.764 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 52 MB Queuing Duration: 0.036 ms CPU Usage: 12.793 %
+
+29 нояб. 15:32:20.079
+ERROR RequestID: e3ca3f3b-d5e2-4afe-a88e-34b369da9182 Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:20.079
+END RequestID: e3ca3f3b-d5e2-4afe-a88e-34b369da9182
+
+29 нояб. 15:32:20.079
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:20.070
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:19.773
+START RequestID: e3ca3f3b-d5e2-4afe-a88e-34b369da9182 Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:15.727
+REPORT RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a Duration: 289.987 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 54 MB Queuing Duration: 0.084 ms CPU Usage: 13.379 %
+
+29 нояб. 15:32:15.727
+ERROR RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:15.727
+END RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a
+
+29 нояб. 15:32:15.727
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:15.718
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:15.434
+START RequestID: 57d978d6-a632-4957-8e28-2b9ad56e631a Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:13.391
+REPORT RequestID: d6b501af-62c7-4676-ae76-573d44f5d278 Duration: 303.013 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 53 MB Queuing Duration: 214.692 ms CPU Usage: 12.598 %
+
+29 нояб. 15:32:13.391
+ERROR RequestID: d6b501af-62c7-4676-ae76-573d44f5d278 Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:13.391
+END RequestID: d6b501af-62c7-4676-ae76-573d44f5d278
+
+29 нояб. 15:32:13.390
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:13.381
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:13.177
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:13.125
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:13.027
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:12.870
+START RequestID: d6b501af-62c7-4676-ae76-573d44f5d278 Version: d4eo09459kfqvgt6a4as
+
+29 нояб. 15:32:12.827
+REPORT RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19 Duration: 21.922 ms Billed Duration: 100 ms Memory Size: 128 MB Queuing Duration: 0.081 ms
+
+29 нояб. 15:32:12.827
+ERROR RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19 Code: 502 Message: Error during function invocation
+
+29 нояб. 15:32:12.827
+END RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19
+
+29 нояб. 15:32:12.827
+{"errorMessage":"Unable to import index.handler module. Error: r is not defined","errorType":"Error","stackTrace":[{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+29 нояб. 15:32:12.825
+Unable to import index.handler module. Error: r is not defined Stack: at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+29 нояб. 15:32:12.802
+START RequestID: 0fd94249-d447-4bd3-8414-0f9f9a3b9a19 Version: d4eo09459kfqvgt6a4as
