@@ -899,6 +899,7 @@ export default function AccountPage() {
                     )}
                     Привязать Telegram
                   </Button>
+                  <div id="attach-telegram-widget-container" className="flex justify-center my-2" />
                 </CardContent>
               </Card>
             )}
