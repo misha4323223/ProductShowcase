@@ -832,7 +832,6 @@ paths:
         '200':
           description: OK
 
-  # ========== SITE SETTINGS (Настройки сайта) ==========
   /api/telegram/login:
     post:
       summary: Вход через Telegram ID
@@ -923,7 +922,6 @@ paths:
         '200':
           description: OK
 
-  # Привязка Email к Telegram аккаунту
   /api/users/attach-email:
     post:
       summary: Привязать Email и пароль к Telegram аккаунту
