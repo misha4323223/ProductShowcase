@@ -15,6 +15,9 @@ import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useWheel } from "@/contexts/WheelContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { getProfile, isBirthdayToday } from "@/services/profile-api";
+import { Cake } from "lucide-react";
 import WheelModal from "@/components/WheelModal";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
@@ -52,8 +55,10 @@ export default function Home() {
   const [, setLocation] = useLocation();
   const [cartOpen, setCartOpen] = useState(false);
   const [wheelOpen, setWheelOpen] = useState(false);
+  const [isBirthday, setIsBirthday] = useState(false);
   const { toast } = useToast();
   const { theme, isDarkMode } = useTheme();
+  const { user } = useAuth();
   const { products, isLoading: productsLoading } = useProducts();
   const { cartItems, addToCart, updateQuantity, removeItem, cartCount } = useCart();
   const { wishlistCount } = useWishlist();
@@ -77,6 +82,23 @@ export default function Home() {
     refetchOnMount: true,
     refetchOnWindowFocus: true, // Обновлять при возврате на вкладку
   });
+
+  useEffect(() => {
+    if (user) {
+      checkBirthday();
+    }
+  }, [user]);
+
+  const checkBirthday = async () => {
+    try {
+      const profile = await getProfile(user?.email || '');
+      if (isBirthdayToday(profile.birthDate)) {
+        setIsBirthday(true);
+      }
+    } catch (error) {
+      console.error('Ошибка проверки дня рождения:', error);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -232,6 +254,20 @@ export default function Home() {
       />
 
       <main className="flex-1 relative z-10">
+        {/* Баннер поздравления на день рождения */}
+        {isBirthday && (
+          <div className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 py-4 px-4 text-center border-b-2 border-pink-300">
+            <div className="flex items-center justify-center gap-2 max-w-7xl mx-auto">
+              <Cake className="h-6 w-6 text-white flex-shrink-0" />
+              <div>
+                <p className="text-white font-bold text-lg">С днём рождения! 🎊</p>
+                <p className="text-white text-sm">Дарим Вам скидку 15%</p>
+              </div>
+              <Cake className="h-6 w-6 text-white flex-shrink-0" />
+            </div>
+          </div>
+        )}
+
         {/* Coming Soon Banner - скрыт в новогодней теме */}
         {theme !== 'new-year' && (
           <div className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 py-2 sm:py-3 md:py-4 animate-gradient backdrop-blur-sm">
