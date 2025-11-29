@@ -56,6 +56,7 @@ export default function Home() {
   const [cartOpen, setCartOpen] = useState(false);
   const [wheelOpen, setWheelOpen] = useState(false);
   const [isBirthday, setIsBirthday] = useState(false);
+  const [userName, setUserName] = useState("");
   const { toast } = useToast();
   const { theme, isDarkMode } = useTheme();
   const { user } = useAuth();
@@ -92,6 +93,9 @@ export default function Home() {
   const checkBirthday = async () => {
     try {
       const profile = await getProfile(user?.email || '');
+      if (profile.firstName) {
+        setUserName(profile.firstName);
+      }
       if (isBirthdayToday(profile.birthDate)) {
         setIsBirthday(true);
       }
@@ -260,7 +264,9 @@ export default function Home() {
             <div className="flex items-center justify-center gap-2 max-w-7xl mx-auto">
               <Cake className="h-6 w-6 text-white flex-shrink-0" />
               <div>
-                <p className="text-white font-bold text-lg">С днём рождения! 🎊</p>
+                <p className="text-white font-bold text-lg">
+                  {userName ? `С днём рождения, ${userName}! 🎊` : "С днём рождения! 🎊"}
+                </p>
                 <p className="text-white text-sm">Дарим Вам скидку 15%</p>
               </div>
               <Cake className="h-6 w-6 text-white flex-shrink-0" />
