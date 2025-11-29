@@ -41,6 +41,7 @@ const AdminPage = lazy(() => import("@/pages/AdminPage")); // 76 KB - самая
 const PrivacyPage = lazy(() => import("@/pages/PrivacyPage"));
 const TermsPage = lazy(() => import("@/pages/TermsPage"));
 const FaqPage = lazy(() => import("@/pages/FaqPage"));
+const TelegramPage = lazy(() => import("@/pages/TelegramPage"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Компонент загрузки для Suspense
@@ -63,6 +64,7 @@ function Router() {
       <Suspense fallback={<PageLoader />}>
         <Switch>
           <Route path="/" component={Home} />
+          <Route path="/telegram" component={TelegramPage} />
           <Route path="/category/:slug" component={CategoryPage} />
           <Route path="/product/:id" component={ProductPage} />
           <Route path="/checkout" component={CheckoutPage} />
