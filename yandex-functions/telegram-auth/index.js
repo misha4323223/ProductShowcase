@@ -1,3 +1,4 @@
+
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
@@ -71,14 +72,30 @@ function parseTelegramInitData(initData) {
       language_code: userData.language_code || 'ru',
     };
   } catch (error) {
+    console.error("Error parsing Telegram init data:", error);
     return null;
   }
 }
 
 exports.handler = async (event) => {
+  console.log("telegram-auth function called", { 
+    method: event.httpMethod,
+    hasBody: !!event.body 
+  });
+
+  // Handle OPTIONS request for CORS
+  if (event.httpMethod === 'OPTIONS') {
+    return createResponse(200, {});
+  }
+
   try {
     const body = JSON.parse(event.body || '{}');
     const { initData, email } = body;
+
+    console.log("Request data:", { 
+      hasInitData: !!initData, 
+      email: email ? email.substring(0, 3) + '***' : 'missing' 
+    });
 
     if (!initData || !email) {
       return createResponse(400, { 
@@ -89,6 +106,7 @@ exports.handler = async (event) => {
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     if (!botToken) {
+      console.error("TELEGRAM_BOT_TOKEN not configured");
       return createResponse(500, { 
         error: "Telegram bot token not configured",
         code: "CONFIG_ERROR"
@@ -96,6 +114,7 @@ exports.handler = async (event) => {
     }
 
     if (!verifyTelegramSignature(initData, botToken)) {
+      console.error("Invalid Telegram signature");
       return createResponse(401, { 
         error: "Неверная подпись от Telegram",
         code: "INVALID_SIGNATURE"
@@ -110,6 +129,8 @@ exports.handler = async (event) => {
       });
     }
 
+    console.log("Telegram user parsed:", { id: telegramUser.id });
+
     const trimmedEmail = email.trim().toLowerCase();
     const telegramId = String(telegramUser.id);
 
@@ -120,6 +141,7 @@ exports.handler = async (event) => {
 
     const result = await docClient.send(getCommand);
     if (!result.Item) {
+      console.log("User not found:", trimmedEmail);
       return createResponse(404, { 
         error: "Пользователь не найден",
         code: "USER_NOT_FOUND"
@@ -129,6 +151,7 @@ exports.handler = async (event) => {
     const user = result.Item;
 
     if (user.telegramId && user.telegramId !== telegramId) {
+      console.log("Telegram ID conflict");
       return createResponse(409, { 
         error: "К этому аккаунту уже привязан другой Telegram ID",
         code: "TELEGRAM_ID_CONFLICT"
@@ -158,6 +181,8 @@ exports.handler = async (event) => {
     const updateResult = await docClient.send(updateCommand);
     const updatedUser = updateResult.Attributes;
 
+    console.log("Telegram ID linked successfully");
+
     return createResponse(200, {
       success: true,
       message: "Telegram ID успешно привязан",
@@ -170,10 +195,11 @@ exports.handler = async (event) => {
     });
 
   } catch (error) {
-    console.error("Internal error");
+    console.error("Internal error:", error.message);
     return createResponse(500, { 
       error: "Ошибка при привязке Telegram ID",
-      code: "INTERNAL_ERROR"
+      code: "INTERNAL_ERROR",
+      details: error.message
     });
   }
 };
