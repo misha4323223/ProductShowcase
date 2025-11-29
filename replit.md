@@ -6,115 +6,26 @@ Sweet Delights is an e-commerce platform specializing in sweets (chocolates, can
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
-## Latest Updates (November 26, 2025)
+## Latest Updates (November 29, 2025)
 
-✅ **Orders Table Visibility & Styling in Winter Theme - Nov 26, 2025 (FINAL)**:
-- **Problem**: Order table in profile "Мои заказы" section was poorly visible in winter theme - no contrast
-- **Solutions Applied**:
-  1. **Brightness**: Increased card background brightness from 15% to 28% (`--card: 0 10% 28%`)
-  2. **Borders**: Added thick 2px golden borders (`border-color: hsl(48 100% 50%)`) to each order accordion
-  3. **Text Color**: Changed all text from white (95%) to black (#000)
-  4. **Font Weight**: Set to 1200 (maximum boldness) for maximum readability
-- **Result**: Orders table now highly visible with strong contrast, clear borders, and bold readable text
-- **Files Modified**: `client/src/index.css` (lines 577, 671-686)
-
-✅ **Lottery Wheel - Promo Codes & Expiry Dates Fixed - Nov 26, 2025**:
-- **Changes Made**:
-  - **Expiry Dates Updated**: 
-    - `discount_10`: 14 days → **21 days**
-    - `points`: 365 days → **182 days** (~6 months)
-    - Other prizes unchanged (discount_20: 21 days, delivery: 60 days, free_item: 10 days, jackpot: 2 days)
-  - **One-Time Use Enforcement**: 
-    - Fixed promo code reuse bug: now properly extracts code from object/string format
-    - `create-order` function now correctly marks wheel prizes as `used: true` after order creation
-    - `validate-promo` checks `used` flag and rejects already-used codes
-  - **Wishlist Requirement Removed**:
-    - Frontend check removed from `WheelModal.tsx` (lines 100-107)
-    - Wheel now requires only **cart items**, not wishlist items
-    - Matches backend validation (cart-only requirement)
-- **Files Modified**:
-  - `yandex-functions/lib/wheel-utils.js`: Updated expiry date calculations (lines 131-138)
-  - `yandex-functions/create-order/index.js`: Fixed promo code extraction and one-time use marking (lines 158-195)
-  - `yandex-functions/spin-wheel/index.js`: Fixed cart key to `id: userId` (lines 83-87)
-  - `client/src/components/WheelModal.tsx`: Removed wishlist validation check
-
-✅ **iOS Safari Background Fix - Nov 23, 2025 (FINAL SOLUTION)**:
-- **Problem**: Background images "stuck at top" on iOS Safari, not scrolling with content. Android worked fine.
-- **Root Cause**: 
-  - iOS detection failed (showed "Android/Mobile" in logs even on iPhone)
-  - Safari on iOS doesn't handle `background-attachment: fixed` properly on `<html>` element
-  - Applying `cover` to flex containers (#root) caused zooming/scaling issues on iOS
-- **Solution Implemented** (Platform-Specific Approach):
-  - **iOS (iPhone/iPad)**:
-    - Robust 4-method detection: `navigator.userAgentData`, userAgent regex, MacIntel+touch, ontouchstart fallback
-    - Background applied via `#root::before` pseudo-element with:
-      - `position: fixed` - stays in viewport
-      - `background-size: cover` - fills screen completely
-      - `background-attachment: scroll` - scrolls with content
-      - `z-index: -1` - behind all content
-    - CSS custom property `--ios-bg-image` set dynamically
-    - Class `ios-background` added to #root element
-  - **Android/Desktop**:
-    - Background applied to `<html>` element with:
-      - `background-size: cover`
-      - `background-attachment: fixed` - parallax effect
-      - `background-position: center center`
-    - Works perfectly as before, no changes needed
-- **Result**: Background images now work flawlessly on BOTH iOS and Android with separate optimized code paths
-- **Files Modified**:
-  - `client/src/index.css`: Added `#root.ios-background::before` CSS rules
-  - `client/src/contexts/ThemeContext.tsx`: Enhanced iOS detection + platform-specific background application logic
-- **Technical Notes**:
-  - Mobile breakpoint: 1024px (matches CSS media queries)
-  - iOS Safari requires different rendering strategy than Android Chrome
-  - Never use `background-attachment: fixed` on iOS - it causes rendering bugs
-  - ::before pseudo-element with fixed positioning is the most reliable solution for iOS
-
-✅ **Mobile Background Support Added - Nov 23, 2025**:
-- **Feature**: Separate mobile and desktop background images for each theme
-- **Implementation**:
-  - Added `mobileImage` and `mobileWebpImage` fields to BackgroundSetting interface
-  - Admin panel now allows uploading separate mobile backgrounds (portrait 9:16 recommended)
-  - ThemeContext automatically selects mobile (≤1024px) or desktop backgrounds
-  - Storage: Desktop backgrounds in `backgrounds/[theme-name]`, mobile in `backgrounds/[theme-name]/mobile`
-  - Fallback: Desktop version used if mobile not uploaded
-- **Files Modified**:
-  - `shared/schema.ts`: Updated BackgroundSetting interface
-  - `client/src/pages/AdminPage.tsx`: Added mobile background upload UI with validation
-  - `client/src/contexts/ThemeContext.tsx`: Device detection and background selection logic
-  - `client/src/services/site-settings-client.ts`: Enhanced logging for debugging
-
-✅ **Theme Flicker Issue Fixed - Nov 22, 2025 (Final)**:
-- **Root Cause**: Theme + background being applied repeatedly every 3 seconds (polling re-applied same values)
-- **Solution Implemented**:
-  - **Pre-loading in index.html**: Theme + background fetch and CSS application BEFORE React mounts (eliminates flicker)
-  - **ThemeContext optimization**: Initializes with pre-loaded theme (no refetch on mount), polling starts AFTER init
-  - **Removed background polling**: Backgrounds load once on mount, apply only when theme changes (not every 3 sec)
-  - **Smart state updates**: Only setState if value actually changed (prevents unnecessary re-renders)
-- **Result**: Theme + background visible instantly with ZERO flicker on page load and navigation
-- **Files Modified**:
-  - `client/index.html`: Added async pre-load script that fetches current_theme + background_settings before React mounts
-  - `client/src/main.tsx`: Added Promise.race to wait for pre-load completion before React render
-  - `client/src/contexts/ThemeContext.tsx`: Removed polling on initial load, sync starts after ThemeProvider mount, background load only once
-
-✅ **Theme System Redesigned - Nov 22, 2025**:
-- **Preferred Theme System**: Users now have a "preferred seasonal theme" that persists in YDB
-- **Theme Toggle Logic**: Changed from cycling (light→dark→sakura) to simple binary toggle (preferred ↔ dark)
-- **Admin Panel**: Added UI section to select default preferred theme (4 buttons: Sakura, New Year, Spring, Autumn)
-- **Real-time Sync**: Theme synced every 3 seconds via polling (only updates if changed)
-- **API Functions**: 
-  - `getPreferredTheme()`: Fetches user's preferred theme (defaults to 'sakura')
-  - `setPreferredTheme(theme)`: Saves preferred theme to YDB and applies it immediately
-- **Files Modified**: 
-  - `client/src/contexts/ThemeContext.tsx`: Added preferredTheme state and optimized polling
-  - `client/src/components/ThemeToggle.tsx`: Simplified to binary toggle with emoji indicators
-  - `client/src/pages/AdminPage.tsx`: Added theme selector UI (🎨 section)
-  - `client/src/services/site-settings-client.ts`: Added new API functions
+✅ **ЭТАП 1: Telegram Mini App Preparation - Nov 29, 2025 (IN PROGRESS)**:
+- **Telegram Bot Setup**:
+  - Bot Created: @SweetWeb71_bot
+  - Bot ID: 8527959863
+  - Bot Name: SweetWeb
+  - Bot Username: SweetWeb71_bot
+  - Web App URL: https://sweetdelights.store
+  - Web App Status: ✅ Configured
+  - Mini App Settings: ✅ Updated
+- **Next Steps**:
+  - Save BOT_TOKEN to environment variables
+  - Create backend Yandex Cloud Functions for Telegram auth
+  - Adapt frontend for Telegram Mini App
 
 ## System Architecture
 
 ### Frontend
-- **Type**: Static React 18 + TypeScript application (no local server needed).
+- **Type**: Static React 18 + TypeScript application deployed on GitHub Pages.
 - **Routing**: Wouter for lightweight client-side navigation.
 - **State Management**: TanStack React Query for server state, localStorage for theme persistence, local React state for UI.
 - **UI/Styling**: Shadcn UI (Radix UI + Tailwind CSS) with a custom design system featuring a warm, playful color palette, Playfair Display and Inter fonts, and responsive design with iOS Safari compatibility.
@@ -134,7 +45,7 @@ Preferred communication style: Simple, everyday language.
   - Supports two delivery types: PICKUP (to pickup point) and DOOR (courier to door).
 
 ### Backend
-- **Architecture**: Yandex Cloud Functions + YDB (no local Express server).
+- **Architecture**: Yandex Cloud Functions + YDB (serverless).
 - **Frontend-Backend Communication**: Frontend makes direct calls to Yandex Cloud API Gateway endpoints (configured via `VITE_API_GATEWAY_URL`).
 - **All API endpoints**: Defined in Yandex Cloud Functions, not in local code.
 
@@ -144,7 +55,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Build and Deployment
 - **Build Process**: Frontend-only build with Vite.
-- **Deployment**: Static frontend deployed on Replit or hosted service. Backend services run on Yandex Cloud.
+- **Deployment**: Static frontend deployed on GitHub Pages. Backend services run on Yandex Cloud.
 
 ### SEO and Performance
 - **SEO Component**: Universal `SEO.tsx` component supporting dynamic meta tags, Open Graph, Twitter Cards, and Schema.org structured data.
@@ -156,6 +67,19 @@ Preferred communication style: Simple, everyday language.
 - **Primary Method**: All user notifications via Yandex Cloud Postbox (AWS SES-compatible).
 - **Notifications**: Order confirmations, stock availability, newsletter subscriptions, welcome emails.
 - **Architecture**: Browser → API Gateway → Yandex Cloud Function → YDB + Postbox.
+
+### Telegram Mini App Integration (NEW)
+- **Bot Status**: @SweetWeb71_bot (ID: 8527959863)
+- **Web App URL**: https://sweetdelights.store
+- **Architecture**: 
+  - Frontend: React Mini App in Telegram iframe
+  - Backend: Yandex Cloud Functions for Telegram auth/webhooks
+  - Database: YDB with TelegramUsers table
+- **Features Planned**:
+  - Telegram Web App SDK integration
+  - Automatic user auth via Telegram ID
+  - Order notifications in Telegram
+  - Back button + Main button support
 
 ### Legal Compliance
 - Dedicated Privacy Policy and Terms of Service pages (in Russian, compliant with Russian consumer laws).
@@ -196,3 +120,4 @@ Preferred communication style: Simple, everyday language.
 - **Yandex Authentication**: User authentication via Yandex ID (email/password).
 - **Yandex Cloud Postbox**: Email notifications.
 - **CDEK API**: Nationwide delivery integration (4 Cloud Functions: calculate, get pickup points, create order, track order).
+- **Telegram Bot API**: Mini App integration and notifications.
