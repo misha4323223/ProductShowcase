@@ -30,7 +30,40 @@ export default function LoginPage() {
   const { toast } = useToast();
   const { isInMiniApp, telegramUser } = useTelegramApp();
 
+  
+
+
+  
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+  const [signupStep, setSignupStep] = useState(1);
+  const [signupVerificationCode, setSignupVerificationCode] = useState("");
+  const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [isResetLoading, setIsResetLoading] = useState(false);
+  const [resetStep, setResetStep] = useState(1);
+  const [resetCode, setResetCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
+  const [isTelegramAuthLoading, setIsTelegramAuthLoading] = useState(false);
+  const [isLoginTelegramLoading, setIsLoginTelegramLoading] = useState(false);
+
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Загрузка Telegram Login Widget
+  useEffect(() => {
+    // Создаем глобальный callback
     (window as any).onTelegramAuth = async (user: any) => {
       console.log('✅ Telegram auth callback received:', user);
       try {
@@ -66,39 +99,25 @@ export default function LoginPage() {
       }
     };
 
+    // Загружаем скрипт Telegram виджета
+    const script = document.createElement('script');
+    script.src = 'https://telegram.org/js/telegram-widget.js?22';
+    script.async = true;
+    script.setAttribute('data-telegram-login', 'SweetWeb71');
+    script.setAttribute('data-size', 'large');
+    script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+    script.setAttribute('data-request-access', 'write');
+    
+    const container = document.getElementById('telegram-login-container');
+    if (container) {
+      container.innerHTML = ''; // Очищаем контейнер
+      container.appendChild(script);
+    }
+
     return () => {
       delete (window as any).onTelegramAuth;
     };
   }, [loginWithTelegram, setLocation, toast]);
-
-
-  
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [signupEmail, setSignupEmail] = useState("");
-  const [signupPassword, setSignupPassword] = useState("");
-  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
-  const [signupStep, setSignupStep] = useState(1);
-  const [signupVerificationCode, setSignupVerificationCode] = useState("");
-  const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [resetEmail, setResetEmail] = useState("");
-  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
-  const [isResetLoading, setIsResetLoading] = useState(false);
-  const [resetStep, setResetStep] = useState(1);
-  const [resetCode, setResetCode] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [showSignupPassword, setShowSignupPassword] = useState(false);
-  const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
-  const [isTelegramAuthLoading, setIsTelegramAuthLoading] = useState(false);
-  const [isLoginTelegramLoading, setIsLoginTelegramLoading] = useState(false);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -452,15 +471,7 @@ export default function LoginPage() {
           </Button>
 
           {/* Telegram Login Widget */}
-          <script 
-            async 
-            src="https://telegram.org/js/telegram-widget.js?22" 
-            data-telegram-login="SweetWeb71" 
-            data-size="large" 
-            data-onauth="onTelegramAuth" 
-            data-request-access="write"
-          ></script>
-          <div id="telegram-login-button"></div>
+          <div id="telegram-login-container" className="flex justify-center my-2"></div>
 
           <Button 
             variant="ghost" 
