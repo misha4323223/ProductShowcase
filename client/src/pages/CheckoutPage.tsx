@@ -92,33 +92,6 @@ export default function CheckoutPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      checkBirthdayDiscount();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (subtotal > 0 && birthdayDiscount > 0) {
-      const discount = Math.round(subtotal * 0.15);
-      setBirthdayDiscount(discount);
-    }
-  }, [subtotal]);
-
-  const checkBirthdayDiscount = async () => {
-    if (!user) return;
-    
-    try {
-      const profile = await getProfile(user.email);
-      if (isBirthdayToday(profile.birthDate)) {
-        const discount = Math.round(subtotal * 0.15);
-        setBirthdayDiscount(discount);
-      }
-    } catch (error) {
-      console.error('Ошибка проверки дня рождения:', error);
-    }
-  };
-
   // Guard: проверка старых pendingPaymentOrderId
   useEffect(() => {
     const checkPendingPayment = async () => {
@@ -190,8 +163,29 @@ export default function CheckoutPage() {
       ? POST_RUSSIA_PRICE 
       : 0;
   const subtotal = total + deliveryPrice;
-  const totalDiscount = promoDiscount + bonusDiscount + birthdayDiscount;
+  const birthdayDiscountAmount = birthdayDiscount === -1 ? Math.round(subtotal * 0.15) : 0;
+  const totalDiscount = promoDiscount + bonusDiscount + birthdayDiscountAmount;
   const finalTotal = Math.max(0, subtotal - totalDiscount);
+
+  // Проверка дня рождения
+  useEffect(() => {
+    if (user && birthdayDiscount === 0) {
+      checkBirthdayDiscount();
+    }
+  }, [user]);
+
+  const checkBirthdayDiscount = async () => {
+    if (!user) return;
+    
+    try {
+      const profile = await getProfile(user.email);
+      if (isBirthdayToday(profile.birthDate)) {
+        setBirthdayDiscount(-1);
+      }
+    } catch (error) {
+      console.error('Ошибка проверки дня рождения:', error);
+    }
+  };
   
   const totalWeight = cartItems.reduce((sum, item) => sum + (item.quantity * 250), 0);
   const deliveryPackages = [{
@@ -837,10 +831,10 @@ export default function CheckoutPage() {
                         <span data-testid="text-bonus-discount">-{bonusDiscount}₽</span>
                       </div>
                     )}
-                    {birthdayDiscount > 0 && (
+                    {birthdayDiscountAmount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
                         <span>Скидка на день рождения (15%)</span>
-                        <span data-testid="text-birthday-discount">-{birthdayDiscount}₽</span>
+                        <span data-testid="text-birthday-discount">-{birthdayDiscountAmount}₽</span>
                       </div>
                     )}
                   </div>
