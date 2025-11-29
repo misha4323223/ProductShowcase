@@ -152,6 +152,54 @@ export default function LoginPage() {
     }
   };
 
+  const handleTelegramAuth = async () => {
+    if (!isInMiniApp) {
+      toast({
+        title: "Ошибка",
+        description: "Эта функция доступна только в Telegram Mini App",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!loginEmail) {
+      toast({
+        title: "Ошибка",
+        description: "Введите ваш email для привязки Telegram",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsTelegramAuthLoading(true);
+    try {
+      const result = await authenticateWithTelegram(loginEmail);
+      
+      if (result.success) {
+        toast({
+          title: "Успех!",
+          description: "Telegram ID успешно привязан к аккаунту",
+        });
+        setLoginEmail("");
+        // Auto-login would happen here in future
+      } else {
+        toast({
+          title: "Ошибка привязки",
+          description: result.error || result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Ошибка при привязке Telegram",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTelegramAuthLoading(false);
+    }
+  };
+
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsResetLoading(true);
@@ -304,6 +352,18 @@ export default function LoginPage() {
           >
             {isLoading ? "..." : "Войти"}
           </Button>
+
+          {isInMiniApp && (
+            <Button 
+              type="button"
+              className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold h-8 text-sm transition-all"
+              onClick={handleTelegramAuth}
+              disabled={isTelegramAuthLoading}
+              data-testid="button-telegram-auth"
+            >
+              {isTelegramAuthLoading ? "Привязка..." : "📱 Привязать Telegram"}
+            </Button>
+          )}
 
           <Button 
             variant="ghost" 
