@@ -29,9 +29,13 @@ function createResponse(statusCode, data) {
   };
 }
 
-// Normalize base64 URL-safe to standard base64
+// Normalize base64: URL-safe to standard + remove padding
 function normalizeBase64(b64) {
-  return b64.replace(/-/g, '+').replace(/_/g, '/');
+  // Convert URL-safe to standard
+  let normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
+  // Remove padding
+  normalized = normalized.replace(/=/g, '');
+  return normalized;
 }
 
 // ПРАВИЛЬНЫЙ алгоритм верификации токена
