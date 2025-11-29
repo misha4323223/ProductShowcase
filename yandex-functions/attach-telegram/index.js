@@ -29,6 +29,11 @@ function createResponse(statusCode, data) {
   };
 }
 
+// Normalize base64 URL-safe to standard base64
+function normalizeBase64(b64) {
+  return b64.replace(/-/g, '+').replace(/_/g, '/');
+}
+
 // ПРАВИЛЬНЫЙ алгоритм верификации токена
 function verifyToken(token, secret) {
   try {
@@ -47,12 +52,18 @@ function verifyToken(token, secret) {
     const dataToSign = `${headerB64}.${payloadB64}`;
     const signature = crypto.createHmac('sha256', secret).update(dataToSign).digest('base64');
 
-    console.log('📊 Received sig (first 30):', signatureB64.substring(0, 30));
-    console.log('📊 Computed sig (first 30):', signature.substring(0, 30));
-    console.log('📊 Full match:', signature === signatureB64 ? '✅ YES' : '❌ NO');
+    // Normalize both to standard base64 for comparison
+    const normalizedReceived = normalizeBase64(signatureB64);
+    const normalizedComputed = normalizeBase64(signature);
+
+    console.log('📊 Received sig norm (first 30):', normalizedReceived.substring(0, 30));
+    console.log('📊 Computed sig norm (first 30):', normalizedComputed.substring(0, 30));
+    console.log('📊 Full match:', normalizedComputed === normalizedReceived ? '✅ YES' : '❌ NO');
     
-    if (signature !== signatureB64) {
+    if (normalizedComputed !== normalizedReceived) {
       console.log('❌ MISMATCH!');
+      console.log('📝 Raw received:', signatureB64.substring(0, 50));
+      console.log('📝 Raw computed:', signature.substring(0, 50));
       return null;
     }
 
