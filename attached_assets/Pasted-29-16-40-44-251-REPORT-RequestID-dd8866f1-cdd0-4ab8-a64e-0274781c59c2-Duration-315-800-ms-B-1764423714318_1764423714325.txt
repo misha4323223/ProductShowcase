@@ -1,0 +1,527 @@
+29 нояб. 16:40:44.251
+REPORT RequestID: dd8866f1-cdd0-4ab8-a64e-0274781c59c2 Duration: 315.800 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 102 MB Queuing Duration: 0.048 ms Function Init Duration: 269.006 ms CPU Usage: 16.699 %
+
+29 нояб. 16:40:44.251
+END RequestID: dd8866f1-cdd0-4ab8-a64e-0274781c59c2
+
+29 нояб. 16:40:44.248
+Invalid Telegram signature
+
+29 нояб. 16:40:44.212
+Request data: { hasInitData: true, email: 'pim***' }
+
+29 нояб. 16:40:44.212
+}
+
+29 нояб. 16:40:44.212
+"X-Trace-Id": "4669a8c5-8735-43a7-84f8-39bb5cac71ea"
+
+29 нояб. 16:40:44.212
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+29 нояб. 16:40:44.212
+"X-Serverless-Certificate-Ids": "{}",
+
+29 нояб. 16:40:44.212
+"X-Requested-With": "org.telegram.messenger",
+
+29 нояб. 16:40:44.212
+"X-Request-Id": "1997393d-9879-46a7-9fae-68e2035e2bc0",
+
+29 нояб. 16:40:44.212
+"X-Real-Remote-Address": "176.59.36.98:23315",
+
+29 нояб. 16:40:44.212
+"X-Forwarded-Proto": "https",
+
+29 нояб. 16:40:44.212
+"X-Forwarded-For": "176.59.36.98",
+
+29 нояб. 16:40:44.212
+"X-Envoy-Original-Path": "/api/telegram/auth",
+
+29 нояб. 16:40:44.212
+"X-Envoy-External-Address": "176.59.36.98",
+
+29 нояб. 16:40:44.212
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+29 нояб. 16:40:44.212
+"User-Agent": "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.144 Mobile Safari/537.36 Telegram-Android/12.0.0 (Xiaomi M2004J19C; Android 11; SDK 30; AVERAGE)",
+
+29 нояб. 16:40:44.212
+"Uber-Trace-Id": "b2d81a12538bdab1:8cc7c05d390b37bd:779e50318afd424b:1",
+
+29 нояб. 16:40:44.212
+"Sec-Fetch-Site": "cross-site",
+
+29 нояб. 16:40:44.212
+"Sec-Fetch-Mode": "cors",
+
+29 нояб. 16:40:44.212
+"Sec-Fetch-Dest": "empty",
+
+29 нояб. 16:40:44.212
+"Sec-Ch-Ua-Platform": "\"Android\"",
+
+29 нояб. 16:40:44.212
+"Sec-Ch-Ua-Mobile": "?1",
+
+29 нояб. 16:40:44.212
+"Sec-Ch-Ua": "\"Not;A=Brand\";v=\"99\", \"Android WebView\";v=\"139\", \"Chromium\";v=\"139\"",
+
+29 нояб. 16:40:44.212
+"Referer": "https://sweetdelights.store/",
+
+29 нояб. 16:40:44.212
+"Priority": "u=1, i",
+
+29 нояб. 16:40:44.212
+"Origin": "https://sweetdelights.store",
+
+29 нояб. 16:40:44.212
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+29 нояб. 16:40:44.212
+"Content-Type": "application/json",
+
+29 нояб. 16:40:44.212
+"Content-Length": "601",
+
+29 нояб. 16:40:44.212
+"Accept-Language": "ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7",
+
+29 нояб. 16:40:44.212
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+29 нояб. 16:40:44.211
+"Accept": "*/*",
+
+29 нояб. 16:40:44.211
+Headers: {
+
+29 нояб. 16:40:44.211
+Body: {"initData":"query_id=AAE5w_EwAAAAADnD8TDCl9q4&user=%7B%22id%22%3A821150521%2C%22first_name%22%3A%22Misha%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22BOOOMERANGSOPT%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2FoKH9Yvw17NodnFkwQkyyTju-S3zS3TooZmNkEN6yiCg.svg%22%7D&auth_date=1764423602&signature=_V48ruSA2SRZb22hRax6NI5cEbLiOruTOnax3T1bkB3zI2Gs6Bfx0OKqufgf5Lvrs5Cy2e5rO1gbibz0eaI7DQ&hash=2751ba6db589c4fecf02728cf59bd8b2d556ee79e98d126223c973f32c99cba4","email":"pimashin2015@gmail.com"}
+
+29 нояб. 16:40:44.211
+Method: POST
+
+29 нояб. 16:40:44.211
+}
+
+29 нояб. 16:40:44.211
+"path": "/api/telegram/auth"
+
+29 нояб. 16:40:44.211
+"isBase64Encoded": false,
+
+29 нояб. 16:40:44.211
+"body": "{\"initData\":\"query_id=AAE5w_EwAAAAADnD8TDCl9q4&user=%7B%22id%22%3A821150521%2C%22first_name%22%3A%22Misha%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22BOOOMERANGSOPT%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2FoKH9Yvw17NodnFkwQkyyTju-S3zS3TooZmNkEN6yiCg.svg%22%7D&auth_date=1764423602&signature=_V48ruSA2SRZb22hRax6NI5cEbLiOruTOnax3T1bkB3zI2Gs6Bfx0OKqufgf5Lvrs5Cy2e5rO1gbibz0eaI7DQ&hash=2751ba6db589c4fecf02728cf59bd8b2d556ee79e98d126223c973f32c99cba4\",\"email\":\"pimashin2015@gmail.com\"}",
+
+29 нояб. 16:40:44.211
+},
+
+29 нояб. 16:40:44.211
+"requestTimeEpoch": 1764423643
+
+29 нояб. 16:40:44.211
+"requestTime": "29/Nov/2025:13:40:43 +0000",
+
+29 нояб. 16:40:44.211
+"requestId": "1997393d-9879-46a7-9fae-68e2035e2bc0",
+
+29 нояб. 16:40:44.211
+"httpMethod": "POST",
+
+29 нояб. 16:40:44.211
+},
+
+29 нояб. 16:40:44.211
+"userAgent": "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.144 Mobile Safari/537.36 Telegram-Android/12.0.0 (Xiaomi M2004J19C; Android 11; SDK 30; AVERAGE)"
+
+29 нояб. 16:40:44.211
+"sourceIp": "176.59.36.98",
+
+29 нояб. 16:40:44.211
+"identity": {
+
+29 нояб. 16:40:44.211
+"requestContext": {
+
+29 нояб. 16:40:44.211
+"multiValueQueryStringParameters": {},
+
+29 нояб. 16:40:44.211
+"queryStringParameters": {},
+
+29 нояб. 16:40:44.211
+},
+
+29 нояб. 16:40:44.211
+]
+
+29 нояб. 16:40:44.211
+"4669a8c5-8735-43a7-84f8-39bb5cac71ea"
+
+29 нояб. 16:40:44.211
+"X-Trace-Id": [
+
+29 нояб. 16:40:44.211
+],
+
+29 нояб. 16:40:44.211
+"d5dimdj7itkijbl4s0g4"
+
+29 нояб. 16:40:44.211
+"X-Serverless-Gateway-Id": [
+
+29 нояб. 16:40:44.211
+],
+
+29 нояб. 16:40:44.211
+"{}"
+
+29 нояб. 16:40:44.211
+"X-Serverless-Certificate-Ids": [
+
+29 нояб. 16:40:44.211
+],
+
+29 нояб. 16:40:44.211
+"org.telegram.messenger"
+
+29 нояб. 16:40:44.211
+"X-Requested-With": [
+
+29 нояб. 16:40:44.211
+],
+
+29 нояб. 16:40:44.211
+"1997393d-9879-46a7-9fae-68e2035e2bc0"
+
+29 нояб. 16:40:44.211
+"X-Request-Id": [
+
+29 нояб. 16:40:44.211
+],
+
+29 нояб. 16:40:44.211
+"176.59.36.98:23315"
+
+29 нояб. 16:40:44.211
+"X-Real-Remote-Address": [
+
+29 нояб. 16:40:44.211
+],
+
+29 нояб. 16:40:44.210
+"https"
+
+29 нояб. 16:40:44.210
+"X-Forwarded-Proto": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"176.59.36.98"
+
+29 нояб. 16:40:44.210
+"X-Forwarded-For": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"/api/telegram/auth"
+
+29 нояб. 16:40:44.210
+"X-Envoy-Original-Path": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"176.59.36.98"
+
+29 нояб. 16:40:44.210
+"X-Envoy-External-Address": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"d4eo70h7u5qevjl70hup"
+
+29 нояб. 16:40:44.210
+"X-Api-Gateway-Function-Id": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.144 Mobile Safari/537.36 Telegram-Android/12.0.0 (Xiaomi M2004J19C; Android 11; SDK 30; AVERAGE)"
+
+29 нояб. 16:40:44.210
+"User-Agent": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"b2d81a12538bdab1:8cc7c05d390b37bd:779e50318afd424b:1"
+
+29 нояб. 16:40:44.210
+"Uber-Trace-Id": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"cross-site"
+
+29 нояб. 16:40:44.210
+"Sec-Fetch-Site": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"cors"
+
+29 нояб. 16:40:44.210
+"Sec-Fetch-Mode": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"empty"
+
+29 нояб. 16:40:44.210
+"Sec-Fetch-Dest": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"\"Android\""
+
+29 нояб. 16:40:44.210
+"Sec-Ch-Ua-Platform": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"?1"
+
+29 нояб. 16:40:44.210
+"Sec-Ch-Ua-Mobile": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"\"Not;A=Brand\";v=\"99\", \"Android WebView\";v=\"139\", \"Chromium\";v=\"139\""
+
+29 нояб. 16:40:44.210
+"Sec-Ch-Ua": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"https://sweetdelights.store/"
+
+29 нояб. 16:40:44.210
+"Referer": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"u=1, i"
+
+29 нояб. 16:40:44.210
+"Priority": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"https://sweetdelights.store"
+
+29 нояб. 16:40:44.210
+"Origin": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net"
+
+29 нояб. 16:40:44.210
+"Host": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"application/json"
+
+29 нояб. 16:40:44.210
+"Content-Type": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"601"
+
+29 нояб. 16:40:44.210
+"Content-Length": [
+
+29 нояб. 16:40:44.210
+],
+
+29 нояб. 16:40:44.210
+"ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7"
+
+29 нояб. 16:40:44.210
+"Accept-Language": [
+
+29 нояб. 16:40:44.209
+],
+
+29 нояб. 16:40:44.209
+"gzip, deflate, br, zstd"
+
+29 нояб. 16:40:44.209
+"Accept-Encoding": [
+
+29 нояб. 16:40:44.209
+],
+
+29 нояб. 16:40:44.209
+"*/*"
+
+29 нояб. 16:40:44.209
+"Accept": [
+
+29 нояб. 16:40:44.209
+"multiValueHeaders": {
+
+29 нояб. 16:40:44.209
+"pathParams": {},
+
+29 нояб. 16:40:44.209
+"multiValueParams": {},
+
+29 нояб. 16:40:44.209
+"params": {},
+
+29 нояб. 16:40:44.209
+"url": "/api/telegram/auth?",
+
+29 нояб. 16:40:44.209
+},
+
+29 нояб. 16:40:44.209
+"X-Trace-Id": "4669a8c5-8735-43a7-84f8-39bb5cac71ea"
+
+29 нояб. 16:40:44.209
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+29 нояб. 16:40:44.209
+"X-Serverless-Certificate-Ids": "{}",
+
+29 нояб. 16:40:44.209
+"X-Requested-With": "org.telegram.messenger",
+
+29 нояб. 16:40:44.209
+"X-Request-Id": "1997393d-9879-46a7-9fae-68e2035e2bc0",
+
+29 нояб. 16:40:44.209
+"X-Real-Remote-Address": "176.59.36.98:23315",
+
+29 нояб. 16:40:44.209
+"X-Forwarded-Proto": "https",
+
+29 нояб. 16:40:44.209
+"X-Forwarded-For": "176.59.36.98",
+
+29 нояб. 16:40:44.209
+"X-Envoy-Original-Path": "/api/telegram/auth",
+
+29 нояб. 16:40:44.209
+"X-Envoy-External-Address": "176.59.36.98",
+
+29 нояб. 16:40:44.209
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+29 нояб. 16:40:44.209
+"User-Agent": "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.144 Mobile Safari/537.36 Telegram-Android/12.0.0 (Xiaomi M2004J19C; Android 11; SDK 30; AVERAGE)",
+
+29 нояб. 16:40:44.209
+"Uber-Trace-Id": "b2d81a12538bdab1:8cc7c05d390b37bd:779e50318afd424b:1",
+
+29 нояб. 16:40:44.209
+"Sec-Fetch-Site": "cross-site",
+
+29 нояб. 16:40:44.209
+"Sec-Fetch-Mode": "cors",
+
+29 нояб. 16:40:44.209
+"Sec-Fetch-Dest": "empty",
+
+29 нояб. 16:40:44.209
+"Sec-Ch-Ua-Platform": "\"Android\"",
+
+29 нояб. 16:40:44.209
+"Sec-Ch-Ua-Mobile": "?1",
+
+29 нояб. 16:40:44.209
+"Sec-Ch-Ua": "\"Not;A=Brand\";v=\"99\", \"Android WebView\";v=\"139\", \"Chromium\";v=\"139\"",
+
+29 нояб. 16:40:44.209
+"Referer": "https://sweetdelights.store/",
+
+29 нояб. 16:40:44.209
+"Priority": "u=1, i",
+
+29 нояб. 16:40:44.209
+"Origin": "https://sweetdelights.store",
+
+29 нояб. 16:40:44.209
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+29 нояб. 16:40:44.209
+"Content-Type": "application/json",
+
+29 нояб. 16:40:44.209
+"Content-Length": "601",
+
+29 нояб. 16:40:44.209
+"Accept-Language": "ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7",
+
+29 нояб. 16:40:44.209
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+29 нояб. 16:40:44.209
+"Accept": "*/*",
+
+29 нояб. 16:40:44.209
+"headers": {
+
+29 нояб. 16:40:44.209
+"httpMethod": "POST",
+
+29 нояб. 16:40:44.209
+Full event: {
+
+29 нояб. 16:40:44.208
+=== TELEGRAM AUTH FUNCTION START ===
+
+29 нояб. 16:40:43.824
+START RequestID: dd8866f1-cdd0-4ab8-a64e-0274781c59c2 Version: d4e6t9hsasm95g7en3ib

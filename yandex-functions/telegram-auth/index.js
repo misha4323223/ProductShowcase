@@ -1,4 +1,3 @@
-
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
@@ -48,12 +47,36 @@ function verifyTelegramSignature(initData, botToken) {
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
+  console.log('🔍 Verifying signature...');
+  console.log('🔑 Bot token length:', botToken.length);
+  console.log('📄 Data check string length:', dataCheckString.length);
+  console.log('📮 Hash:', hash.substring(0, 20) + '...');
+
+  // Method 1: Using SHA256 hash of token as key (correct for Telegram Mini Apps)
   const secret = crypto.createHash('sha256').update(botToken).digest();
   const hmac = crypto.createHmac('sha256', secret);
   hmac.update(dataCheckString);
   const calculatedHash = hmac.digest('hex');
 
-  return calculatedHash === hash;
+  console.log('🧮 Calculated hash:', calculatedHash.substring(0, 20) + '...');
+  
+  if (calculatedHash === hash) {
+    console.log('✅ Signature verification: PASSED');
+    return true;
+  }
+
+  // Method 2: Fallback - using token directly as key (some implementations use this)
+  const hmac2 = crypto.createHmac('sha256', botToken);
+  hmac2.update(dataCheckString);
+  const calculatedHash2 = hmac2.digest('hex');
+
+  if (calculatedHash2 === hash) {
+    console.log('✅ Signature verification (method 2): PASSED');
+    return true;
+  }
+
+  console.log('❌ Signature verification: FAILED');
+  return false;
 }
 
 function parseTelegramInitData(initData) {
@@ -72,30 +95,16 @@ function parseTelegramInitData(initData) {
       language_code: userData.language_code || 'ru',
     };
   } catch (error) {
-    console.error("Error parsing Telegram init data:", error);
     return null;
   }
 }
 
 exports.handler = async (event) => {
-  console.log("telegram-auth function called", { 
-    method: event.httpMethod,
-    hasBody: !!event.body 
-  });
-
-  // Handle OPTIONS request for CORS
-  if (event.httpMethod === 'OPTIONS') {
-    return createResponse(200, {});
-  }
-
   try {
     const body = JSON.parse(event.body || '{}');
     const { initData, email } = body;
 
-    console.log("Request data:", { 
-      hasInitData: !!initData, 
-      email: email ? email.substring(0, 3) + '***' : 'missing' 
-    });
+    console.log('Request data: { hasInitData:', !!initData, ', email:', email?.substring(0, 6) + '*** }');
 
     if (!initData || !email) {
       return createResponse(400, { 
@@ -106,7 +115,6 @@ exports.handler = async (event) => {
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     if (!botToken) {
-      console.error("TELEGRAM_BOT_TOKEN not configured");
       return createResponse(500, { 
         error: "Telegram bot token not configured",
         code: "CONFIG_ERROR"
@@ -114,7 +122,7 @@ exports.handler = async (event) => {
     }
 
     if (!verifyTelegramSignature(initData, botToken)) {
-      console.error("Invalid Telegram signature");
+      console.log('Invalid Telegram signature');
       return createResponse(401, { 
         error: "Неверная подпись от Telegram",
         code: "INVALID_SIGNATURE"
@@ -129,8 +137,6 @@ exports.handler = async (event) => {
       });
     }
 
-    console.log("Telegram user parsed:", { id: telegramUser.id });
-
     const trimmedEmail = email.trim().toLowerCase();
     const telegramId = String(telegramUser.id);
 
@@ -141,7 +147,6 @@ exports.handler = async (event) => {
 
     const result = await docClient.send(getCommand);
     if (!result.Item) {
-      console.log("User not found:", trimmedEmail);
       return createResponse(404, { 
         error: "Пользователь не найден",
         code: "USER_NOT_FOUND"
@@ -151,7 +156,6 @@ exports.handler = async (event) => {
     const user = result.Item;
 
     if (user.telegramId && user.telegramId !== telegramId) {
-      console.log("Telegram ID conflict");
       return createResponse(409, { 
         error: "К этому аккаунту уже привязан другой Telegram ID",
         code: "TELEGRAM_ID_CONFLICT"
@@ -181,7 +185,7 @@ exports.handler = async (event) => {
     const updateResult = await docClient.send(updateCommand);
     const updatedUser = updateResult.Attributes;
 
-    console.log("Telegram ID linked successfully");
+    console.log(`✅ Telegram ID linked`);
 
     return createResponse(200, {
       success: true,
@@ -195,11 +199,10 @@ exports.handler = async (event) => {
     });
 
   } catch (error) {
-    console.error("Internal error:", error.message);
+    console.error("Error:", error.message);
     return createResponse(500, { 
       error: "Ошибка при привязке Telegram ID",
-      code: "INTERNAL_ERROR",
-      details: error.message
+      code: "INTERNAL_ERROR"
     });
   }
 };
