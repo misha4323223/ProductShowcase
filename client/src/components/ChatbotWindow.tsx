@@ -30,10 +30,17 @@ export default function ChatbotWindow() {
   const [isBirthday, setIsBirthday] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Загружаем профиль и проверяем день рождения
+  // Загружаем профиль и проверяем день рождения только один раз за сессию
   useEffect(() => {
     if (user && !userGreeted) {
-      loadUserProfile();
+      const greetingKey = `chatbot_greeted_${user.email}`;
+      const alreadyGreeted = sessionStorage.getItem(greetingKey);
+      
+      if (!alreadyGreeted) {
+        loadUserProfile();
+      } else {
+        setUserGreeted(true);
+      }
     }
   }, [user, userGreeted]);
 
@@ -46,8 +53,7 @@ export default function ChatbotWindow() {
       if (isBirthdayToday(profile.birthDate)) {
         setIsBirthday(true);
       }
-      setUserGreeted(true);
-
+      
       // Отправляем приветствие с днём рождения, если это день рождения
       if (isBirthdayToday(profile.birthDate)) {
         const greeting = profile.firstName
@@ -58,8 +64,14 @@ export default function ChatbotWindow() {
         const greeting = `Привет, ${profile.firstName}! Чем я могу тебе помочь?`;
         addMessage({ type: 'bot', text: greeting });
       }
+      
+      // Сохраняем в sessionStorage, что приветствие уже было отправлено
+      const greetingKey = `chatbot_greeted_${user?.email}`;
+      sessionStorage.setItem(greetingKey, 'true');
+      setUserGreeted(true);
     } catch (error) {
       console.error('Ошибка загрузки профиля:', error);
+      setUserGreeted(true);
     }
   };
 
