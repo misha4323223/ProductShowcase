@@ -213,9 +213,12 @@ export async function loginWithTelegramId(): Promise<{
   };
   error?: string;
 }> {
+  console.log('🚀 loginWithTelegramId called');
   const initData = getTelegramInitData();
+  console.log('📱 Got initData:', !!initData);
   
   if (!initData) {
+    console.log('⚠️ No initData - not sending request');
     return {
       success: false,
       message: 'Not in Telegram Mini App',
@@ -225,6 +228,7 @@ export async function loginWithTelegramId(): Promise<{
 
   try {
     const url = `${API_GATEWAY_URL}/api/telegram/login`;
+    console.log('📡 Sending request to:', url);
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -233,8 +237,10 @@ export async function loginWithTelegramId(): Promise<{
       body: JSON.stringify({ initData }),
     });
 
+    console.log('✅ Response status:', response.status);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.log('❌ Error response:', errorData);
       return {
         success: false,
         message: 'Failed to login with Telegram',
@@ -243,6 +249,7 @@ export async function loginWithTelegramId(): Promise<{
     }
 
     const data = await response.json();
+    console.log('✅ Login success:', data);
     return {
       success: true,
       message: data.message || 'Logged in successfully',
