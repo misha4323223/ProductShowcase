@@ -1,6 +1,6 @@
 const https = require('https');
 
-const MINI_APP_URL = 'https://sweetdelights.store/telegram';
+const MINI_APP_URL = 'https://sweetdelights.store';
 
 async function sendTelegramMessage(chatId, message, replyMarkup) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
