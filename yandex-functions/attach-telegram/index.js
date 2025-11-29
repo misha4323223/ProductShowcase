@@ -198,19 +198,26 @@ exports.handler = async (event) => {
     console.log('✅ Telegram data verified for user:', telegramUser.id);
     const telegramId = String(telegramUser.id);
 
-    // Check if this Telegram ID is already linked to another account
-    const scanCommand = new ScanCommand({
+    // First, check if Telegram ID is linked to a DIFFERENT user
+    const checkOtherUserCommand = new ScanCommand({
       TableName: "users",
-      FilterExpression: "telegramId = :telegramId AND userId <> :userId",
+      FilterExpression: "telegramId = :telegramId",
       ExpressionAttributeValues: {
         ":telegramId": telegramId,
-        ":userId": tokenPayload.userId,
       },
     });
 
-    let result = await docClient.send(scanCommand);
-    if (result.Items && result.Items.length > 0) {
-      return createResponse(400, { error: 'This Telegram account is already linked to another account' });
+    const checkResult = await docClient.send(checkOtherUserCommand);
+    console.log('🔍 Found', checkResult.Items?.length || 0, 'records with this telegramId');
+    
+    if (checkResult.Items && checkResult.Items.length > 0) {
+      // Check if it belongs to another user
+      const otherUsers = checkResult.Items.filter(item => item.userId !== tokenPayload.userId);
+      if (otherUsers.length > 0) {
+        console.log('❌ This Telegram ID is linked to another user');
+        return createResponse(400, { error: 'This Telegram account is already linked to another account' });
+      }
+      console.log('✅ Telegram ID already linked to current user, will update');
     }
 
     // Get full user record first
@@ -227,15 +234,7 @@ exports.handler = async (event) => {
 
     const userRecord = getUserResult.Items[0];
 
-    // Delete old record and create new one with updated Telegram data
-    await docClient.send(new DeleteCommand({
-      TableName: "users",
-      Key: { email: tokenPayload.email },
-    }));
-
-    console.log('🗑️ Old email record deleted');
-
-    // Create new record with Telegram data
+    // Create updated record with Telegram data
     const updatedUser = {
       ...userRecord,
       telegramId,
@@ -245,6 +244,15 @@ exports.handler = async (event) => {
       telegramLinkedAt: new Date().toISOString(),
     };
 
+    // Delete old email record and put new one
+    await docClient.send(new DeleteCommand({
+      TableName: "users",
+      Key: { email: tokenPayload.email },
+    }));
+
+    console.log('🗑️ Old record deleted');
+
+    // Put the new record
     await docClient.send(new PutCommand({
       TableName: "users",
       Item: updatedUser,
