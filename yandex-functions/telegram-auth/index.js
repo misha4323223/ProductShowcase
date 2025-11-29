@@ -34,51 +34,33 @@ function createResponse(statusCode, data) {
   };
 }
 
-/**
- * Проверка подписи Telegram Web App
- */
 function verifyTelegramSignature(initData, botToken) {
-  try {
-    const params = new URLSearchParams(initData);
-    const hash = params.get('hash');
-    
-    if (!hash) {
-      return false;
-    }
+  const params = new URLSearchParams(initData);
+  const hash = params.get('hash');
+  
+  if (!hash) return false;
 
-    params.delete('hash');
+  params.delete('hash');
 
-    const dataCheckString = Array.from(params.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, value]) => `${key}=${value}`)
-      .join('\n');
+  const dataCheckString = Array.from(params.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, value]) => `${key}=${value}`)
+    .join('\n');
 
-    // ВАЖНО: Сначала хешируем токен, потом используем как ключ
-    const secret = crypto.createHash('sha256').update(botToken).digest();
-    const hmac = crypto.createHmac('sha256', secret);
-    hmac.update(dataCheckString);
-    const calculatedHash = hmac.digest('hex');
+  const secret = crypto.createHash('sha256').update(botToken).digest();
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(dataCheckString);
+  const calculatedHash = hmac.digest('hex');
 
-    const isValid = calculatedHash === hash;
-    console.log(`🔐 Signature verification: ${isValid ? '✅' : '❌'}`);
-    return isValid;
-  } catch (error) {
-    console.error('Error verifying signature:', error);
-    return false;
-  }
+  return calculatedHash === hash;
 }
 
-/**
- * Парсим initData для получения данных юзера
- */
 function parseTelegramInitData(initData) {
   try {
     const params = new URLSearchParams(initData);
     const userStr = params.get('user');
     
-    if (!userStr) {
-      return null;
-    }
+    if (!userStr) return null;
 
     const userData = JSON.parse(userStr);
     return {
@@ -89,7 +71,6 @@ function parseTelegramInitData(initData) {
       language_code: userData.language_code || 'ru',
     };
   } catch (error) {
-    console.error('Error parsing initData:', error);
     return null;
   }
 }
@@ -108,7 +89,6 @@ exports.handler = async (event) => {
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     if (!botToken) {
-      console.error('❌ TELEGRAM_BOT_TOKEN not configured');
       return createResponse(500, { 
         error: "Telegram bot token not configured",
         code: "CONFIG_ERROR"
@@ -178,8 +158,6 @@ exports.handler = async (event) => {
     const updateResult = await docClient.send(updateCommand);
     const updatedUser = updateResult.Attributes;
 
-    console.log(`✅ Telegram ID linked for: ${trimmedEmail}, telegramId: ${telegramId}`);
-
     return createResponse(200, {
       success: true,
       message: "Telegram ID успешно привязан",
@@ -192,10 +170,9 @@ exports.handler = async (event) => {
     });
 
   } catch (error) {
-    console.error("Error in telegram-auth:", error);
+    console.error("Internal error");
     return createResponse(500, { 
       error: "Ошибка при привязке Telegram ID",
-      details: error.message,
       code: "INTERNAL_ERROR"
     });
   }
