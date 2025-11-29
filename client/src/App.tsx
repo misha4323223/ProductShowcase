@@ -1,10 +1,10 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
@@ -22,6 +22,8 @@ import { initAnalytics } from "@/lib/analytics";
 import AutumnRain from "@/components/AutumnRain";
 import SunflareParticles from "@/components/SunflareParticles";
 import { useTelegramApp } from "@/hooks/useTelegramApp";
+
+const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
 // Главная страница загружается сразу (критичная для первого отображения)
 import Home from "@/pages/Home";
@@ -97,6 +99,46 @@ function LegalDialogContainer() {
       <LegalDialog isOpen={termsOpen} onClose={() => setTermsOpen(false)} type="terms" />
     </>
   );
+}
+
+// Auto-login component for Telegram Mini App
+function TelegramAutoLogin() {
+  const { loginWithTelegram } = useAuth();
+  const { isInMiniApp, initData } = useTelegramApp();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (isInMiniApp && initData && !isProcessing && loginWithTelegram) {
+      setIsProcessing(true);
+      
+      const autoLogin = async () => {
+        try {
+          console.log('🤖 Telegram Mini App detected - attempting auto-login');
+          const response = await fetch(`${API_BASE_URL}/api/telegram/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ initData }),
+          });
+
+          const data = await response.json();
+          if (data.success && data.token) {
+            console.log('✅ Mini App auto-login successful, user:', data.user?.email);
+            await loginWithTelegram(data.token);
+          } else {
+            console.warn('⚠️ Mini App login failed:', data.error);
+          }
+        } catch (error) {
+          console.error('❌ Mini App auto-login error:', error);
+        } finally {
+          setIsProcessing(false);
+        }
+      };
+
+      autoLogin();
+    }
+  }, [isInMiniApp, initData, loginWithTelegram, isProcessing]);
+
+  return null;
 }
 
 function App() {
