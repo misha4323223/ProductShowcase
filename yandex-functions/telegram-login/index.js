@@ -86,10 +86,11 @@ function parseTelegramInitData(initData) {
   }
 }
 
-function generateToken(userId, email) {
+function generateToken(userId, email, extraData = {}) {
   const payload = {
     userId,
     email,
+    ...extraData,
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 86400 * 30,
   };
@@ -152,7 +153,12 @@ exports.handler = async (event) => {
     if (result.Items && result.Items.length > 0) {
       const user = result.Items[0];
       console.log('✅ Found existing user:', user.email);
-      const token = generateToken(user.userId, user.email);
+      const token = generateToken(user.userId, user.email, {
+        telegramId: user.telegramId,
+        telegramUsername: user.telegramUsername,
+        telegramFirstName: user.telegramFirstName,
+        emailVerified: user.emailVerified,
+      });
 
       return createResponse(200, {
         success: true,
@@ -189,7 +195,12 @@ exports.handler = async (event) => {
 
     await docClient.send(putCommand);
     console.log('✅ User created:', userId);
-    const token = generateToken(userId, email);
+    const token = generateToken(userId, email, {
+      telegramId,
+      telegramUsername: telegramUser.username,
+      telegramFirstName: telegramUser.first_name,
+      emailVerified: true,
+    });
 
     return createResponse(200, {
       success: true,
