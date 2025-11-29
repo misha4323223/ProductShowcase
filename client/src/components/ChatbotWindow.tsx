@@ -226,6 +226,7 @@ export default function ChatbotWindow() {
                 <button
                   onClick={() => {
                     localStorage.setItem('openWheelModal', 'true');
+                    toggleChatbot();
                     setLocation('/');
                   }}
                   className="w-full text-white font-semibold py-3 text-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
