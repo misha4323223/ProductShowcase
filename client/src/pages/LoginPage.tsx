@@ -24,14 +24,7 @@ const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 export default function LoginPage() {
   const [, setLocation] = useLocation();
   const telegramWidgetRef = useRef<HTMLDivElement>(null);
-  
-  let auth: any = null;
-  try {
-    auth = useAuth();
-  } catch (e) {
-    console.error('AuthContext error:', e);
-    return <div className="flex items-center justify-center min-h-screen">Ошибка загрузки</div>;
-  }
+  const auth = useAuth();
   
   const { signIn, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram } = auth;
   const { toast } = useToast();
@@ -80,22 +73,23 @@ export default function LoginPage() {
 
   // Инициализация Telegram Login Widget
   useEffect(() => {
-    // Добавляем скрипт Telegram widget в контейнер
-    if (telegramWidgetRef.current && !(window as any).tg_widget_loaded) {
-      (window as any).tg_widget_loaded = true;
-      
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = 'https://telegram.org/js/telegram-widget.js?22';
-      script.setAttribute('data-telegram-login', 'SweetWeb71');
-      script.setAttribute('data-size', 'large');
-      script.setAttribute('data-radius', '8');
-      script.setAttribute('data-request-access', 'write');
-      script.setAttribute('data-onauth', 'onTelegramAuth');
-      
-      telegramWidgetRef.current.appendChild(script);
-      console.log('✅ Telegram widget script added');
-    }
+    if (!telegramWidgetRef.current) return;
+    
+    // Очищаем контейнер
+    telegramWidgetRef.current.innerHTML = '';
+    
+    // Создаём скрипт с правильными атрибутами
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://telegram.org/js/telegram-widget.js?22';
+    script.setAttribute('data-telegram-login', 'SweetWeb71');
+    script.setAttribute('data-size', 'large');
+    script.setAttribute('data-radius', '8');
+    script.setAttribute('data-request-access', 'write');
+    script.setAttribute('data-onauth', 'onTelegramAuth');
+    
+    telegramWidgetRef.current.appendChild(script);
+    console.log('✅ Telegram widget script added to container');
   }, []);
   
   const [loginEmail, setLoginEmail] = useState("");
