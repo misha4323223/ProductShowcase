@@ -119,7 +119,11 @@ export async function authenticateWithTelegram(email: string): Promise<{
 }> {
   const initData = getTelegramInitData();
   
+  console.log('📱 getTelegramInitData result:', !!initData);
+  console.log('📡 API_GATEWAY_URL:', API_GATEWAY_URL);
+  
   if (!initData) {
+    console.log('❌ No initData - not in Telegram Mini App');
     return {
       success: false,
       message: 'Telegram Mini App is not available',
@@ -128,7 +132,9 @@ export async function authenticateWithTelegram(email: string): Promise<{
   }
 
   try {
-    const response = await fetch(`${API_GATEWAY_URL}/api/telegram/auth`, {
+    const url = `${API_GATEWAY_URL}/api/telegram/auth`;
+    console.log('🚀 Sending request to:', url);
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

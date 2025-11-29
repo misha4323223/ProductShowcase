@@ -153,16 +153,10 @@ export default function LoginPage() {
   };
 
   const handleTelegramAuth = async () => {
-    if (!isInMiniApp) {
-      toast({
-        title: "Ошибка",
-        description: "Эта функция доступна только в Telegram Mini App",
-        variant: "destructive",
-      });
-      return;
-    }
+    console.log('🔔 handleTelegramAuth called, isInMiniApp:', isInMiniApp);
 
     if (!loginEmail) {
+      console.log('❌ Email not provided');
       toast({
         title: "Ошибка",
         description: "Введите ваш email для привязки Telegram",
@@ -173,6 +167,7 @@ export default function LoginPage() {
 
     setIsTelegramAuthLoading(true);
     try {
+      console.log('📤 Calling authenticateWithTelegram with email:', loginEmail);
       const result = await authenticateWithTelegram(loginEmail);
       
       if (result.success) {
