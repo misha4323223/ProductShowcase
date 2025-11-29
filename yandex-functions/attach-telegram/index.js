@@ -29,40 +29,25 @@ function createResponse(statusCode, data) {
   };
 }
 
+// ПРАВИЛЬНЫЙ алгоритм верификации токена - КОПИЯ ИЗ VERIFY-TOKEN
 function verifyToken(token, secret) {
   try {
     const parts = token.split('.');
-    if (parts.length !== 3) {
-      console.log('❌ Token has', parts.length, 'parts, expected 3');
-      return null;
-    }
+    if (parts.length !== 3) return null;
 
     const [headerB64, payloadB64, signatureB64] = parts;
-    console.log('🔍 Computing signature...');
     const signature = crypto.createHmac('sha256', secret).update(`${headerB64}.${payloadB64}`).digest('base64');
 
-    console.log('📊 Signature comparison:');
-    console.log('   Expected:', signatureB64.substring(0, 30) + '...');
-    console.log('   Computed:', signature.substring(0, 30) + '...');
-    console.log('   Match:', signature === signatureB64);
+    if (signature !== signatureB64) return null;
 
-    if (signature !== signatureB64) {
-      console.log('❌ Signatures do not match!');
-      return null;
-    }
-
-    console.log('✅ Signature valid, parsing payload...');
     const payload = JSON.parse(Buffer.from(payloadB64, 'base64').toString());
-    console.log('✅ Payload parsed, userId:', payload.userId);
-    
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
-      console.log('❌ Token expired');
       return null;
     }
 
     return payload;
   } catch (error) {
-    console.error('❌ Token verification error:', error.message);
+    console.error('Token verification error:', error);
     return null;
   }
 }
@@ -150,28 +135,18 @@ function generateToken(userId, email, extraData = {}) {
 exports.handler = async (event) => {
   try {
     console.log('📥 attach-telegram handler called');
-    console.log('📋 event.body:', event.body ? event.body.substring(0, 100) : 'empty');
-    
-    const body = JSON.parse(event.body || '{}');
-    console.log('✅ Body parsed');
-    console.log('🔑 token:', body.token ? body.token.substring(0, 50) + '...' : 'missing');
-    console.log('📦 initData length:', body.initData ? body.initData.length : 'missing');
-    
-    const { token, initData } = body;
+    const { token, initData } = JSON.parse(event.body || '{}');
 
     if (!token) {
-      console.log('❌ No token provided');
       return createResponse(401, { error: 'No token provided' });
     }
 
     if (!initData) {
-      console.log('❌ No initData provided');
       return createResponse(400, { error: 'No initData provided' });
     }
 
-    // Verify token
+    // Verify token - ПРАВИЛЬНЫЙ способ
     const secret = process.env.JWT_SECRET || 'telegram-secret-key';
-    console.log('🔐 Verifying token with secret length:', secret.length);
     const tokenPayload = verifyToken(token, secret);
     
     if (!tokenPayload) {
