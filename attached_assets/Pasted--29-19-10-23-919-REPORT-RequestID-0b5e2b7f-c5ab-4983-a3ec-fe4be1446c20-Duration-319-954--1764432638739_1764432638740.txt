@@ -1,0 +1,58 @@
+
+
+29 нояб. 19:10:23.919
+REPORT RequestID: 0b5e2b7f-c5ab-4983-a3ec-fe4be1446c20 Duration: 319.954 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 101 MB Queuing Duration: 0.036 ms Function Init Duration: 180.138 ms CPU Usage: 13.086 %
+
+29 нояб. 19:10:23.919
+END RequestID: 0b5e2b7f-c5ab-4983-a3ec-fe4be1446c20
+
+29 нояб. 19:10:23.918
+at async exports.handler [as handlerFn] (/function/code/index.js:110:18)
+
+29 нояб. 19:10:23.918
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+29 нояб. 19:10:23.918
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+29 нояб. 19:10:23.918
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+29 нояб. 19:10:23.918
+at async /function/code/node_modules/@aws-sdk/lib-dynamodb/dist-cjs/index.js:107:34
+
+29 нояб. 19:10:23.918
+at async /function/code/node_modules/@smithy/core/dist-cjs/submodules/schema/index.js:26:24
+
+29 нояб. 19:10:23.918
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+29 нояб. 19:10:23.917
+at AwsJson1_0Protocol.deserializeResponse (/function/code/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:473:24)
+
+29 нояб. 19:10:23.917
+at AwsJson1_0Protocol.handleError (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:678:65)
+
+29 нояб. 19:10:23.917
+at ProtocolLib.getErrorSchemaOrThrowBaseException (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:69:67)
+
+29 нояб. 19:10:23.917
+❌ Error: Index "telegramId-index" not found ValidationException: Index "telegramId-index" not found
+
+29 нояб. 19:10:23.782
+🔍 Looking up user with telegramId: 821150521
+
+29 нояб. 19:10:23.782
+✅ Signature verified
+
+29 нояб. 19:10:23.781
+🔐 Verifying Telegram widget data
+
+29 нояб. 19:10:23.781
+👤 Received user data: { id: 821150521, first_name: 'Misha', username: 'BOOOMERANGSOPT' }
+
+29 нояб. 19:10:23.781
+📥 telegram-widget-callback handler called
+
+29 нояб. 19:10:23.378
+START RequestID: 0b5e2b7f-c5ab-4983-a3ec-fe4be1446c20 Version: d4empklauu38ie0mtqvn
