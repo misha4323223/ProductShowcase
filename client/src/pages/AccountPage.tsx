@@ -284,11 +284,9 @@ export default function AccountPage() {
       });
       
       const isBday = isBirthdayToday(userProfile.birthDate);
-      console.log('👤 Профиль загружен, дата рождения:', userProfile.birthDate, 'isBday:', isBday);
       setIsBirthday(isBday);
       
       if (isBday) {
-        console.log('🎂 Активирована скидка на день рождения!');
         try {
           await markBirthdayGiftSent(user.email);
         } catch (error) {

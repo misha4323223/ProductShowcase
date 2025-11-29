@@ -179,9 +179,7 @@ export default function CheckoutPage() {
     
     try {
       const profile = await getProfile(user.email);
-      console.log('🛒 CheckoutPage: Профиль загружен, дата:', profile.birthDate);
       if (isBirthdayToday(profile.birthDate)) {
-        console.log('🎂 CheckoutPage: Активирована скидка на день рождения!');
         setBirthdayDiscount(-1);
       }
     } catch (error) {
