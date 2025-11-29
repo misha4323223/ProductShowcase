@@ -37,54 +37,73 @@ function createResponse(statusCode, data) {
 function verifyTelegramSignature(initData, botToken) {
   const params = new URLSearchParams(initData);
   
-  // Priority: use 'signature' (base64, newer) over 'hash' (hex, older)
   let checkValue = params.get('signature') || params.get('hash');
-  
   if (!checkValue) {
+    console.log('No signature found');
     return false;
   }
 
+  // Remove signature and hash before building data string
   params.delete('hash');
   params.delete('signature');
 
+  // Build the data check string - sort alphabetically
   const dataCheckString = Array.from(params.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
-  // If signature is base64, convert to hex for comparison
-  let expectedHex = checkValue;
-  if (checkValue.length > 40 && !checkValue.match(/^[0-9a-f]*$/i)) {
-    // Looks like base64, convert to hex
-    try {
-      expectedHex = Buffer.from(checkValue, 'base64').toString('hex');
-    } catch (e) {
-      expectedHex = checkValue;
-    }
+  console.log('=== VERIFICATION DEBUG ===');
+  console.log('Received signature (base64):', checkValue.substring(0, 50));
+  
+  // Convert base64 signature to hex for comparison
+  let receivedHex;
+  try {
+    receivedHex = Buffer.from(checkValue, 'base64').toString('hex');
+    console.log('Received signature (hex):', receivedHex.substring(0, 50));
+  } catch (e) {
+    console.log('Failed to decode base64:', e.message);
+    receivedHex = checkValue;
   }
 
-  // Method 1: SHA256(token) as key
+  console.log('Data string length:', dataCheckString.length);
+  console.log('Bot token length:', botToken.length);
+
+  // Method 1: HMAC-SHA256 with SHA256(token) as key
   const secret1 = crypto.createHash('sha256').update(botToken).digest();
-  const hmac1 = crypto.createHmac('sha256', secret1);
-  hmac1.update(dataCheckString);
-  const hash1 = hmac1.digest('hex');
-
-  if (hash1 === expectedHex) {
-    console.log('✅ Signature verification PASSED (Method 1)');
+  const computed1 = crypto.createHmac('sha256', secret1).update(dataCheckString).digest('hex');
+  console.log('Method 1 result:', computed1.substring(0, 50));
+  
+  if (computed1 === receivedHex) {
+    console.log('✅ VERIFICATION PASSED (Method 1: SHA256 key)');
     return true;
   }
 
-  // Method 2: Direct token as key  
-  const hmac2 = crypto.createHmac('sha256', botToken);
-  hmac2.update(dataCheckString);
-  const hash2 = hmac2.digest('hex');
-
-  if (hash2 === expectedHex) {
-    console.log('✅ Signature verification PASSED (Method 2)');
+  // Method 2: HMAC-SHA256 with token directly as key
+  const computed2 = crypto.createHmac('sha256', botToken).update(dataCheckString).digest('hex');
+  console.log('Method 2 result:', computed2.substring(0, 50));
+  
+  if (computed2 === receivedHex) {
+    console.log('✅ VERIFICATION PASSED (Method 2: Direct token)');
     return true;
   }
 
-  console.log('❌ Signature verification FAILED');
+  // Method 3: Maybe it's not base64, try hex directly
+  if (computed1 === checkValue) {
+    console.log('✅ VERIFICATION PASSED (Method 3: Hex match)');
+    return true;
+  }
+
+  if (computed2 === checkValue) {
+    console.log('✅ VERIFICATION PASSED (Method 4: Direct token hex)');
+    return true;
+  }
+
+  console.log('❌ ALL METHODS FAILED');
+  console.log('Expected (first 50):', (receivedHex || checkValue).substring(0, 50));
+  console.log('Method 1 got:', computed1.substring(0, 50));
+  console.log('Method 2 got:', computed2.substring(0, 50));
+  
   return false;
 }
 
