@@ -25,7 +25,7 @@ import {
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
 import { getProfile, updateProfile, type UserProfile, isBirthdayToday, markBirthdayGiftSent } from "@/services/profile-api";
 import type { Order, WheelPrize } from "@/types/firebase-types";
-import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3, Cake } from "lucide-react";
+import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3, Cake, Mail, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function WheelTab() {
@@ -223,7 +223,7 @@ function WheelTab() {
 }
 
 export default function AccountPage() {
-  const { user, signOut, loading } = useAuth();
+  const { user, signOut, loading, attachEmail, attachTelegram } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -250,6 +250,16 @@ export default function AccountPage() {
     birthDate: "",
     phone: "",
   });
+
+  const [isAttachingEmail, setIsAttachingEmail] = useState(false);
+  const [showAttachEmailForm, setShowAttachEmailForm] = useState(false);
+  const [attachEmailForm, setAttachEmailForm] = useState({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
+
+  const [isAttachingTelegram, setIsAttachingTelegram] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -404,6 +414,76 @@ export default function AccountPage() {
       });
     } finally {
       setOrderToHide(null);
+    }
+  };
+
+  const handleAttachEmail = async () => {
+    if (!attachEmailForm.email || !attachEmailForm.password || !attachEmailForm.passwordConfirm) {
+      toast({
+        title: "Ошибка",
+        description: "Заполните все поля",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAttachingEmail(true);
+    try {
+      await attachEmail(attachEmailForm.email, attachEmailForm.password, attachEmailForm.passwordConfirm);
+      toast({
+        title: "Успешно!",
+        description: "Email успешно привязан к вашему аккаунту",
+      });
+      setShowAttachEmailForm(false);
+      setAttachEmailForm({ email: "", password: "", passwordConfirm: "" });
+    } catch (error: any) {
+      toast({
+        title: "Ошибка привязки",
+        description: error.message || "Не удалось привязать email",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAttachingEmail(false);
+    }
+  };
+
+  const handleAttachTelegram = async () => {
+    setIsAttachingTelegram(true);
+    try {
+      if (!(window as any).Telegram?.WebApp) {
+        toast({
+          title: "Ошибка",
+          description: "Telegram Web App не доступно",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const initData = (window as any).Telegram.WebApp.initData;
+      if (!initData) {
+        toast({
+          title: "Ошибка",
+          description: "Не удалось получить данные от Telegram",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await attachTelegram(initData);
+      toast({
+        title: "Успешно!",
+        description: "Telegram успешно привязан к вашему аккаунту",
+      });
+      
+      setTimeout(() => setLocation("/account"), 600);
+    } catch (error: any) {
+      toast({
+        title: "Ошибка привязки",
+        description: error.message || "Не удалось привязать Telegram",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAttachingTelegram(false);
     }
   };
 
@@ -732,6 +812,140 @@ export default function AccountPage() {
                         {user.userId}
                       </p>
                     </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Привязка Telegram */}
+            {!user.email.includes('@telegram') && !user.email.includes('telegram_') && (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-5 w-5 text-primary" />
+                      <div>
+                        <CardTitle>Привязать Telegram</CardTitle>
+                        <CardDescription>Добавьте Telegram для удобного входа</CardDescription>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Привяжите Telegram аккаунт к вашему email профилю. После этого вы сможете входить через Telegram Бот.
+                  </p>
+                  <Button
+                    onClick={handleAttachTelegram}
+                    disabled={isAttachingTelegram}
+                    data-testid="button-attach-telegram"
+                  >
+                    {isAttachingTelegram ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Mail className="h-4 w-4 mr-2" />
+                    )}
+                    Привязать Telegram
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Привязка Email */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-5 w-5 text-primary" />
+                    <div>
+                      <CardTitle>Привязать Email</CardTitle>
+                      <CardDescription>Добавьте email и пароль для входа</CardDescription>
+                    </div>
+                  </div>
+                  {user.email.includes('@telegram') && !showAttachEmailForm && (
+                    <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">
+                      Требуется
+                    </span>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {showAttachEmailForm ? (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="attach-email">Email адрес</Label>
+                      <Input
+                        id="attach-email"
+                        type="email"
+                        placeholder="your@email.com"
+                        value={attachEmailForm.email}
+                        onChange={(e) => setAttachEmailForm({ ...attachEmailForm, email: e.target.value })}
+                        data-testid="input-attach-email"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="attach-password">Пароль</Label>
+                      <Input
+                        id="attach-password"
+                        type="password"
+                        placeholder="Минимум 6 символов"
+                        value={attachEmailForm.password}
+                        onChange={(e) => setAttachEmailForm({ ...attachEmailForm, password: e.target.value })}
+                        data-testid="input-attach-password"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="attach-password-confirm">Подтвердите пароль</Label>
+                      <Input
+                        id="attach-password-confirm"
+                        type="password"
+                        placeholder="Повторите пароль"
+                        value={attachEmailForm.passwordConfirm}
+                        onChange={(e) => setAttachEmailForm({ ...attachEmailForm, passwordConfirm: e.target.value })}
+                        data-testid="input-attach-password-confirm"
+                      />
+                    </div>
+                    <Separator />
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowAttachEmailForm(false);
+                          setAttachEmailForm({ email: "", password: "", passwordConfirm: "" });
+                        }}
+                        data-testid="button-cancel-attach-email"
+                      >
+                        Отмена
+                      </Button>
+                      <Button
+                        onClick={handleAttachEmail}
+                        disabled={isAttachingEmail}
+                        data-testid="button-save-attach-email"
+                      >
+                        {isAttachingEmail ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Check className="h-4 w-4 mr-2" />
+                        )}
+                        Привязать Email
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {user.email.includes('@telegram') 
+                        ? "Вы вошли через Telegram. Добавьте email и пароль для удобства входа."
+                        : "У вас уже есть email привязан к аккаунту."}
+                    </p>
+                    <Button
+                      onClick={() => setShowAttachEmailForm(true)}
+                      disabled={!user.email.includes('@telegram')}
+                      data-testid="button-open-attach-email-form"
+                    >
+                      <Mail className="h-4 w-4 mr-2" />
+                      Привязать Email
+                    </Button>
                   </div>
                 )}
               </CardContent>

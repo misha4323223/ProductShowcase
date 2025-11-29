@@ -19,6 +19,7 @@ interface AuthContextType {
   verifyEmailCode: (email: string, password: string, verificationCode: string) => Promise<void>;
   loginWithTelegram: (token: string) => Promise<void>;
   attachEmail: (email: string, password: string, passwordConfirm: string) => Promise<void>;
+  attachTelegram: (initData: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -220,8 +221,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(data.user);
   };
 
+  const attachTelegram = async (initData: string) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Пожалуйста, авторизуйтесь');
+    }
+
+    if (!initData) {
+      throw new Error('Telegram данные не получены');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/users/attach-telegram`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        token,
+        initData
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Ошибка привязки Telegram');
+    }
+
+    const data = await response.json();
+    localStorage.setItem('authToken', data.token);
+    setUser(data.user);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram, attachEmail }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram, attachEmail, attachTelegram }}>
       {children}
     </AuthContext.Provider>
   );
