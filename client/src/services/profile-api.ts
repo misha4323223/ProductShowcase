@@ -55,12 +55,25 @@ export async function updateProfile(profileData: UpdateProfileData): Promise<Use
 }
 
 export function isBirthdayToday(birthDate: string): boolean {
-  if (!birthDate) return false;
+  if (!birthDate) {
+    console.log('❌ Дата рождения пуста');
+    return false;
+  }
   try {
     const today = new Date();
     const birth = new Date(birthDate);
-    return today.getDate() === birth.getDate() && today.getMonth() === birth.getMonth();
-  } catch {
+    
+    console.log('📅 Проверка дня рождения:');
+    console.log('  Сегодня:', today.toLocaleDateString('ru-RU'), `(${today.getDate()}.${today.getMonth() + 1})`);
+    console.log('  День рождения:', birth.toLocaleDateString('ru-RU'), `(${birth.getDate()}.${birth.getMonth() + 1})`);
+    console.log('  Строка из БД:', birthDate);
+    
+    const isBday = today.getDate() === birth.getDate() && today.getMonth() === birth.getMonth();
+    console.log('  Результат:', isBday ? '✅ ДЕНЬ РОЖДЕНИЯ!' : '❌ Не совпадает');
+    
+    return isBday;
+  } catch (e) {
+    console.error('❌ Ошибка при парсинге даты:', e);
     return false;
   }
 }
