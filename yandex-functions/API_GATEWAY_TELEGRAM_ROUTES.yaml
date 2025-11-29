@@ -42,7 +42,7 @@ paths:
       x-yc-apigateway-integration:
         type: cloud_functions
         function_id: d4em719picvakgi4ng2s
-        service_account_id: <SERVICE_ACCOUNT_ID>
+        service_account_id: aje47rf2630q59equess
       responses:
         '200':
           description: Telegram ID успешно привязан
@@ -191,7 +191,7 @@ paths:
       x-yc-apigateway-integration:
         type: cloud_functions
         function_id: d4epu4u7dq6u9ni5tfbo
-        service_account_id: <SERVICE_ACCOUNT_ID>
+        service_account_id: aje47rf2630q59equess
       responses:
         '200':
           description: Уведомление успешно отправлено или пропущено
