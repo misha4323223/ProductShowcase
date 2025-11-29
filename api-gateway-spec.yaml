@@ -726,7 +726,7 @@ paths:
       responses:
         '200':
           description: OK
-          
+
          # ========== EMAIL SENDING ==========
   /send-email:
     post:
@@ -864,7 +864,7 @@ paths:
       responses:
         '200':
           description: OK
-          
+
   # ========== STOCK NOTIFICATIONS ==========
   /create-stock-notification:
     post:
@@ -1886,10 +1886,11 @@ paths:
       responses:
         '200':
           description: OK
-
+            # Привязка Email к Telegram аккаунту
   /api/users/attach-email:
     post:
-      summary: Привязать Email к аккаунту
+      summary: Привязать Email и пароль к Telegram аккаунту
+      description: Позволяет пользователю, зарегистрированному через Telegram, добавить Email и пароль к своему аккаунту
       operationId: attachEmail
       requestBody:
         required: true
@@ -1905,40 +1906,81 @@ paths:
               properties:
                 token:
                   type: string
+                  description: JWT токен пользователя
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 email:
                   type: string
+                  format: email
+                  description: Email который хочет привязать пользователь
+                  example: "user@example.com"
                 password:
                   type: string
+                  description: Новый пароль (минимум 6 символов)
+                  example: "securePassword123"
                 passwordConfirm:
                   type: string
+                  description: Подтверждение пароля
+                  example: "securePassword123"
       x-yc-apigateway-integration:
         type: cloud_functions
         function_id: d4eadnh9nmf7ni9359bq
         service_account_id: aje47rf2630q59equess
       responses:
         '200':
-          description: OK
+          description: Email успешно привязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                    description: Новый JWT токен с обновленными данными
+                  user:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                      email:
+                        type: string
+                      telegramId:
+                        type: string
         '400':
-          description: Bad request
+          description: Ошибка валидации (пароли не совпадают, email занят и т.д.)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '401':
-          description: Unauthorized
+          description: Неверный или истекший токен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '500':
-          description: Server error
-    options:
-      x-yc-apigateway-integration:
-        type: dummy
-        http_code: 200
-        http_headers:
-          'Access-Control-Allow-Origin': '*'
-          'Access-Control-Allow-Methods': 'POST, OPTIONS'
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      responses:
-        '200':
-          description: OK
-
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    # Привязать Telegram к email аккаунту
   /api/users/attach-telegram:
     post:
-      summary: Привязать Telegram к аккаунту
+      summary: Привязать Telegram к email аккаунту
+      description: Позволяет пользователю, зарегистрированному через email, добавить Telegram к своему аккаунту
       operationId: attachTelegram
       requestBody:
         required: true
@@ -1952,29 +1994,64 @@ paths:
               properties:
                 token:
                   type: string
+                  description: JWT токен пользователя
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 initData:
                   type: string
+                  description: Данные от Telegram Web App (window.Telegram.WebApp.initData)
+                  example: "query_id=AAHdF6IQAAAAO0Xng..."
       x-yc-apigateway-integration:
         type: cloud_functions
         function_id: d4eradehki5bndp1ehhc
         service_account_id: aje47rf2630q59equess
       responses:
         '200':
-          description: OK
+          description: Telegram успешно привязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                    description: Новый JWT токен с обновленными данными
+                  user:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                      email:
+                        type: string
+                      telegramId:
+                        type: string
         '400':
-          description: Bad request
+          description: Ошибка валидации (Telegram уже привязан к другому аккаунту и т.д.)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '401':
-          description: Unauthorized
+          description: Неверный или истекший токен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '500':
-          description: Server error
-    options:
-      x-yc-apigateway-integration:
-        type: dummy
-        http_code: 200
-        http_headers:
-          'Access-Control-Allow-Origin': '*'
-          'Access-Control-Allow-Methods': 'POST, OPTIONS'
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      responses:
-        '200':
-          description: OK
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
