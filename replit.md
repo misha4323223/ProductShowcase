@@ -8,6 +8,42 @@ Preferred communication style: Simple, everyday language.
 
 ## Latest Updates (November 29, 2025)
 
+✅ **ЭТАП 3: Frontend Telegram Mini App Integration - Nov 29, 2025 (COMPLETED)**:
+- **Core Libraries**:
+  - `client/src/lib/telegram.ts` - Полная библиотека Telegram Mini App (15+ функций):
+    - `isTelegramMiniApp()` - проверка запуска в Mini App
+    - `initTelegramWebApp()` - инициализация Web App SDK
+    - `authenticateWithTelegram(email)` - привязка Telegram ID
+    - `sendOrderNotificationToTelegram(orderData)` - отправка уведомлений
+    - `showMainButton()`, `hideMainButton()`, `showBackButton()`, `hideBackButton()`
+    - `closeMiniApp()` - закрытие Mini App
+
+- **React Hooks**:
+  - `client/src/hooks/useTelegramApp.ts` - управление Telegram Mini App:
+    - Детектирование наличия Mini App при монтировании
+    - Инициализация Web App SDK
+    - Возврат данных пользователя из Telegram
+    - Состояние: `isInMiniApp`, `telegramUser`, `initData`
+
+- **App.tsx Integration**:
+  - Загрузка `telegram-web-app.js` скрипта при монтировании
+  - Вызов `useTelegramApp()` для инициализации
+  - Автоматическая подготовка приложения для Telegram
+
+- **CheckoutPage Integration**:
+  - Автоматическая отправка уведомления о заказе в Telegram после оформления
+  - Передача полных данных заказа (товары, адрес, доставка, промокод, бонусы)
+  - Обработка ошибок: если пользователь не привязал Telegram → просто пропускается
+
+- **LoginPage UI**:
+  - Кнопка "📱 Привязать Telegram" - видна только в Telegram Mini App
+  - Обработчик `handleTelegramAuth()` для привязки Telegram ID
+  - Валидация email перед отправкой запроса
+
+- **Database**: YDB Users table готова с полями telegramId, telegramFirstName, telegramLastName, telegramUsername, telegramLinkedAt
+
+- **Status**: ✅ Приложение готово к тестированию в боте @SweetWeb71_bot
+
 ✅ **ЭТАП 2: Backend для Telegram - Nov 29, 2025 (COMPLETED)**:
 - **Функция 1: telegram-auth (ID: d4em719picvakgi4ng2s)**:
   - Проверка подписи от Telegram Web App (HMAC-SHA256)
@@ -34,8 +70,6 @@ Preferred communication style: Simple, everyday language.
 - **API Gateway Routes**: ✅ Созданы в API_GATEWAY_TELEGRAM_ROUTES.yaml
   - POST /api/telegram/auth
   - POST /api/send-order-to-user-telegram
-
-- **Next Step**: ЭТАП 3 - Адаптация фронта для Telegram Mini App
 
 ✅ **ЭТАП 1: Telegram Mini App Preparation - Nov 29, 2025 (COMPLETED)**:
 - **Telegram Bot Setup**:
