@@ -126,6 +126,19 @@ export default function Home() {
     };
   }, []);
 
+  // Слушаем событие открытия рулетки из чатбота
+  useEffect(() => {
+    const handleWheelOpen = () => {
+      if (localStorage.getItem('openWheelModal')) {
+        localStorage.removeItem('openWheelModal');
+        setWheelOpen(true);
+      }
+    };
+
+    window.addEventListener('wheelModalOpen', handleWheelOpen);
+    return () => window.removeEventListener('wheelModalOpen', handleWheelOpen);
+  }, []);
+
   const { data: heroSlidesData = [], isLoading: slidesLoading } = useQuery<HeroSlide[]>({
     queryKey: ["/api/hero-slides", theme],
     queryFn: () => getHeroSlides(theme),

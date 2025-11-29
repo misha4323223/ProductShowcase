@@ -238,6 +238,7 @@ export default function ChatbotWindow() {
                 <button
                   onClick={() => {
                     localStorage.setItem('openWheelModal', 'true');
+                    window.dispatchEvent(new Event('wheelModalOpen'));
                     toggleChatbot();
                     setLocation('/');
                   }}
