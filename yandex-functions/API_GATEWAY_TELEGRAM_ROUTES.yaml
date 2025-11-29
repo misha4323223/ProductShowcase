@@ -3,13 +3,14 @@
 # ========================================
 # 
 # ИНСТРУКЦИЯ:
-# 1. Скопируйте эти маршруты
-# 2. Вставьте их в ваш основной api-gateway-spec.yaml
-# 3. Замените плейсхолдеры на реальные ID:
-#    - <FUNCTION_ID_TELEGRAM_AUTH> = d4em719picvakgi4ng2s
-#    - <FUNCTION_ID_SEND_ORDER_TELEGRAM> = d4epu4u7dq6u9ni5tfbo
-#    - <SERVICE_ACCOUNT_ID> - ID вашего сервисного аккаунта
+# 1. Скопируйте ВСЕ маршруты (начиная с "paths:")
+# 2. Вставьте их в ваш основной api-gateway-spec.yaml в конец раздела paths
+# 3. Замените ТОЛЬКО <SERVICE_ACCOUNT_ID> на ID вашего сервисного аккаунта
 # 4. Сохраните и обновите API Gateway
+#
+# ФУНКЦИИ УЖЕ ВСТАВЛЕНЫ:
+# - telegram-auth: d4em719picvakgi4ng2s ✅
+# - send-order-to-user-telegram: d4epu4u7dq6u9ni5tfbo ✅
 #
 
 paths:
