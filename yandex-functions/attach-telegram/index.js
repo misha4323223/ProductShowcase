@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, UpdateCommand, ScanCommand, DeleteCommand, PutCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
 
 const client = new DynamoDBClient({
@@ -172,30 +172,44 @@ exports.handler = async (event) => {
       return createResponse(400, { error: 'This Telegram account is already linked to another account' });
     }
 
-    // Update user profile with Telegram data
-    const updateCommand = new UpdateCommand({
+    // Get full user record first
+    const getUserCommand = new ScanCommand({
       TableName: "users",
-      Key: { email: tokenPayload.email },
-      UpdateExpression: "SET #telegramId = :telegramId, #telegramUsername = :telegramUsername, #telegramFirstName = :telegramFirstName, #telegramLastName = :telegramLastName, #telegramLinkedAt = :telegramLinkedAt",
-      ExpressionAttributeNames: {
-        '#telegramId': 'telegramId',
-        '#telegramUsername': 'telegramUsername',
-        '#telegramFirstName': 'telegramFirstName',
-        '#telegramLastName': 'telegramLastName',
-        '#telegramLinkedAt': 'telegramLinkedAt',
-      },
-      ExpressionAttributeValues: {
-        ':telegramId': telegramId,
-        ':telegramUsername': telegramUser.username || '',
-        ':telegramFirstName': telegramUser.first_name || '',
-        ':telegramLastName': telegramUser.last_name || '',
-        ':telegramLinkedAt': new Date().toISOString(),
-      },
-      ReturnValues: "ALL_NEW",
+      FilterExpression: "email = :email",
+      ExpressionAttributeValues: { ":email": tokenPayload.email },
     });
 
-    const updateResult = await docClient.send(updateCommand);
-    const updatedUser = updateResult.Attributes;
+    const getUserResult = await docClient.send(getUserCommand);
+    if (!getUserResult.Items || getUserResult.Items.length === 0) {
+      return createResponse(401, { error: 'User not found with that token' });
+    }
+
+    const userRecord = getUserResult.Items[0];
+
+    // Delete old record and create new one with updated Telegram data
+    await docClient.send(new DeleteCommand({
+      TableName: "users",
+      Key: { email: tokenPayload.email },
+    }));
+
+    console.log('🗑️ Old email record deleted');
+
+    // Create new record with Telegram data
+    const updatedUser = {
+      ...userRecord,
+      telegramId,
+      telegramUsername: telegramUser.username || '',
+      telegramFirstName: telegramUser.first_name || '',
+      telegramLastName: telegramUser.last_name || '',
+      telegramLinkedAt: new Date().toISOString(),
+    };
+
+    await docClient.send(new PutCommand({
+      TableName: "users",
+      Item: updatedUser,
+    }));
+
+    console.log('✅ New record with Telegram data created');
 
     console.log('✅ Telegram attached to account:', tokenPayload.email);
 
