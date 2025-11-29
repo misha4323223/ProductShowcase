@@ -1,36 +1,69 @@
-const { verifyJWT } = require('../lib/auth-utils');
-const { createResponse } = require('../lib/response-helper');
+const crypto = require('crypto');
 
-module.exports.handler = async (event) => {
+function verifyToken(token, secret) {
   try {
-    const body = JSON.parse(event.body || '{}');
-    const { token } = body;
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
 
-    if (!token) {
-      return createResponse(400, { error: 'Токен обязателен' });
+    const [headerB64, payloadB64, signatureB64] = parts;
+    const signature = crypto.createHmac('sha256', secret).update(`${headerB64}.${payloadB64}`).digest('base64');
+
+    if (signature !== signatureB64) return null;
+
+    const payload = JSON.parse(Buffer.from(payloadB64, 'base64').toString());
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      return null;
     }
 
-    const verification = verifyJWT(token);
+    return payload;
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return null;
+  }
+}
 
-    if (!verification.valid) {
-      return createResponse(401, { error: verification.error || 'Неверный токен' });
+function createResponse(statusCode, data) {
+  return {
+    statusCode,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+}
+
+exports.handler = async (event) => {
+  try {
+    const { token } = JSON.parse(event.body || '{}');
+    
+    if (!token) {
+      return createResponse(400, { error: 'No token provided' });
+    }
+
+    const secret = process.env.JWT_SECRET || 'telegram-secret-key';
+    const payload = verifyToken(token, secret);
+
+    if (!payload) {
+      return createResponse(401, { valid: false, error: 'Invalid or expired token' });
     }
 
     return createResponse(200, {
       valid: true,
       user: {
-        userId: verification.payload.userId,
-        email: verification.payload.email,
-        role: verification.payload.role,
-        telegramId: verification.payload.telegramId,
-        telegramUsername: verification.payload.telegramUsername,
-        telegramFirstName: verification.payload.telegramFirstName,
-        emailVerified: verification.payload.emailVerified,
-      }
+        userId: payload.userId,
+        email: payload.email,
+        role: payload.role || 'user',
+        telegramId: payload.telegramId,
+        telegramUsername: payload.telegramUsername,
+        telegramFirstName: payload.telegramFirstName,
+        emailVerified: payload.emailVerified,
+      },
     });
-
   } catch (error) {
-    console.error('Token verification error:', error);
-    return createResponse(500, { error: 'Ошибка при проверке токена' });
+    console.error('Error:', error);
+    return createResponse(500, { error: 'Internal server error' });
   }
 };
