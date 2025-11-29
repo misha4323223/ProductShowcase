@@ -1,0 +1,77 @@
+'400':
+          description: Неверные параметры
+        '401':
+          description: Неверная подпись от Telegram
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+          # ========== TELEGRAM WIDGET CALLBACK ==========
+    /api/telegram/widget-callback:
+    post:
+      summary: Callback от Telegram Login Widget
+      operationId: telegramWidgetCallback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - first_name
+                - auth_date
+                - hash
+              properties:
+                id:
+                  type: integer
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                username:
+                  type: string
+                photo_url:
+                  type: string
+                auth_date:
+                  type: integer
+                hash:
+                  type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ea4vga6kcqndjl0mut
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Invalid signature
+        '500':
+          description: Server error
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
