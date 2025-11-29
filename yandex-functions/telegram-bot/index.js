@@ -1,31 +1,6 @@
 const https = require('https');
-const crypto = require('crypto');
 
-const MINI_APP_URL = 'https://sweetdelights.store';
-
-/**
- * Проверка подписи Telegram Web Hook
- * @param {object} body - тело запроса от Telegram
- * @param {string} botToken - токен бота
- * @returns {boolean} - верна ли подпись
- */
-function verifyTelegramWebhook(body, botToken) {
-  try {
-    const secretKey = crypto.createHash('sha256').update(botToken).digest();
-    const hash = body.update_id;
-    
-    if (!hash) {
-      console.log('❌ No hash in webhook');
-      return true; // Для тестирования без проверки подписи
-    }
-    
-    console.log('✅ Webhook signature verification passed');
-    return true;
-  } catch (error) {
-    console.error('Error verifying webhook:', error);
-    return true; // Для тестирования
-  }
-}
+const MINI_APP_URL = 'https://sweetdelights.store/telegram';
 
 /**
  * Отправка сообщения в Telegram через Bot API
@@ -205,16 +180,6 @@ async function handler(event, context) {
   console.log('📨 Received webhook:', JSON.stringify(event, null, 2));
 
   try {
-    // Проверка подписи
-    const botToken = process.env.TELEGRAM_BOT_TOKEN;
-    if (!verifyTelegramWebhook(event, botToken)) {
-      console.log('❌ Invalid webhook signature');
-      return {
-        statusCode: 403,
-        body: JSON.stringify({ error: 'Invalid signature' }),
-      };
-    }
-
     // Обработка сообщения
     if (event.message) {
       const message = event.message;
