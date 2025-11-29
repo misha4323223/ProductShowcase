@@ -71,26 +71,6 @@ export default function LoginPage() {
     };
   }, []);
 
-  // Инициализация Telegram Login Widget
-  useEffect(() => {
-    if (!telegramWidgetRef.current) return;
-    
-    // Очищаем контейнер
-    telegramWidgetRef.current.innerHTML = '';
-    
-    // Создаём скрипт с правильными атрибутами
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://telegram.org/js/telegram-widget.js?22';
-    script.setAttribute('data-telegram-login', 'SweetWeb71');
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-radius', '8');
-    script.setAttribute('data-request-access', 'write');
-    script.setAttribute('data-onauth', 'onTelegramAuth');
-    
-    telegramWidgetRef.current.appendChild(script);
-    console.log('✅ Telegram widget script added to container');
-  }, []);
   
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -470,13 +450,18 @@ export default function LoginPage() {
             {isLoading ? "..." : "Войти"}
           </Button>
 
-          {/* Telegram Login Widget */}
-          <div 
-            ref={telegramWidgetRef}
-            className="w-full flex justify-center" 
-            data-testid="telegram-widget"
-            id="telegram-login-widget"
-          ></div>
+          {/* Telegram Login Button */}
+          <Button 
+            type="button"
+            onClick={() => window.open('https://t.me/SweetWeb71_bot', '_blank')}
+            className="w-full bg-[#0088cc] hover:bg-[#0077aa] text-white font-semibold h-9 text-sm transition-all flex items-center justify-center gap-2"
+            data-testid="button-telegram-login"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.82-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295-.403 0-.335-.149-.472-.526l-1.04-3.402-.96-.3c-.42-.133-.429-.42.09-.623l11.856-4.576c.432-.176.810.104.676.782z"/>
+            </svg>
+            Войти через Telegram
+          </Button>
 
           <Button 
             variant="ghost" 
