@@ -455,7 +455,6 @@ export default function AccountPage() {
 
   const handleAttachTelegram = async () => {
     console.log('🔗 handleAttachTelegram called');
-    console.log('🔍 window.Telegram?.WebApp:', (window as any).Telegram?.WebApp);
     
     // Если в Mini App - использовать initData
     if ((window as any).Telegram?.WebApp) {
@@ -465,7 +464,6 @@ export default function AccountPage() {
         console.log('📦 initData получена:', initData ? 'есть' : 'нет');
         
         if (!initData) {
-          console.log('❌ initData отсутствует');
           toast({
             title: "Ошибка",
             description: "Не удалось получить данные от Telegram",
@@ -475,13 +473,11 @@ export default function AccountPage() {
           return;
         }
 
-        console.log('✅ Отправляем initData на сервер...');
         await attachTelegram(initData);
         toast({
           title: "Успешно!",
           description: "Telegram успешно привязан к вашему аккаунту",
         });
-        console.log('✅ Telegram успешно привязан');
         
         setTimeout(() => setLocation("/account"), 600);
       } catch (error: any) {
@@ -496,16 +492,15 @@ export default function AccountPage() {
       }
     } else {
       // Если в браузере - показать Telegram Login Widget
-      console.log('🌐 Браузер - показываю Telegram Login Widget');
+      console.log('🌐 Браузер - загружаю Telegram Login Widget');
+      setIsAttachingTelegram(true);
       
       // Создаем глобальный callback для widget
       (window as any).onTelegramAttachAuth = async (user: any) => {
-        console.log('✅ Telegram user получен для привязки:', user);
-        setIsAttachingTelegram(true);
+        console.log('✅ Telegram user получен:', user);
         try {
-          // Преобразуем user data в initData формат для attach-telegram
+          // Преобразуем user data в initData формат
           const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
-          console.log('📦 initData создана:', initDataStr);
           
           await attachTelegram(initDataStr);
           toast({
@@ -526,7 +521,7 @@ export default function AccountPage() {
         }
       };
 
-      // Загружаем Telegram Widget скрипт
+      // Создаем скрипт Telegram widget (как на LoginPage)
       const script = document.createElement('script');
       script.src = 'https://telegram.org/js/telegram-widget.js?22';
       script.async = true;
@@ -535,29 +530,7 @@ export default function AccountPage() {
       script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
       script.setAttribute('data-request-access', 'write');
       
-      script.onload = () => {
-        console.log('📱 Telegram Widget скрипт загружен');
-        const container = document.getElementById('attach-telegram-widget-container');
-        if (container) {
-          container.innerHTML = '';
-          container.appendChild(script.cloneNode(true));
-        } else {
-          document.head.appendChild(script);
-        }
-      };
-      
-      script.onerror = () => {
-        console.error('❌ Ошибка загрузки Telegram Widget');
-        toast({
-          title: "Ошибка",
-          description: "Не удалось загрузить Telegram Widget",
-          variant: "destructive",
-        });
-        setIsAttachingTelegram(false);
-        delete (window as any).onTelegramAttachAuth;
-      };
-      
-      document.head.appendChild(script);
+      document.body.appendChild(script);
     }
   };
 
