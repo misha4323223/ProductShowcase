@@ -42,6 +42,7 @@ export default function LoginPage() {
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
   const [isTelegramAuthLoading, setIsTelegramAuthLoading] = useState(false);
+  const [isLoginTelegramLoading, setIsLoginTelegramLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -149,6 +150,38 @@ export default function LoginPage() {
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const handleTelegramLogin = async () => {
+    console.log('🔐 handleTelegramLogin called');
+    setIsLoginTelegramLoading(true);
+    try {
+      const result = await loginWithTelegramId();
+      
+      if (result.success && result.token) {
+        console.log('✅ Telegram login successful');
+        await loginWithTelegram(result.token);
+        toast({
+          title: "Добро пожаловать!",
+          description: "Вы вошли через Telegram",
+        });
+        setLocation("/");
+      } else {
+        toast({
+          title: "Ошибка входа",
+          description: result.error || result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Ошибка при входе через Telegram",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoginTelegramLoading(false);
     }
   };
 
@@ -365,6 +398,18 @@ export default function LoginPage() {
           >
             {isLoading ? "..." : "Войти"}
           </Button>
+
+          {isInMiniApp && (
+            <Button 
+              type="button"
+              className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white font-semibold h-8 text-sm transition-all"
+              onClick={handleTelegramLogin}
+              disabled={isLoginTelegramLoading}
+              data-testid="button-telegram-login"
+            >
+              {isLoginTelegramLoading ? "Загрузка..." : "🚀 Войти через Telegram"}
+            </Button>
+          )}
 
           <Button 
             type="button"
