@@ -36,8 +36,10 @@ function createResponse(statusCode, data) {
 
 function verifyTelegramSignature(initData, botToken) {
   const params = new URLSearchParams(initData);
+  const allParams = Object.fromEntries(params.entries());
   
-  // Telegram sends either 'hash' (Mini Apps) or 'signature' (Legacy)
+  console.log('📋 All params:', JSON.stringify(allParams, null, 2).substring(0, 500));
+  
   let checkValue = params.get('hash') || params.get('signature');
   
   if (!checkValue) {
@@ -45,7 +47,8 @@ function verifyTelegramSignature(initData, botToken) {
     return false;
   }
 
-  // Remove hash/signature from params
+  console.log('🔐 Check value (first 40 chars):', checkValue.substring(0, 40));
+
   params.delete('hash');
   params.delete('signature');
 
@@ -54,33 +57,49 @@ function verifyTelegramSignature(initData, botToken) {
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
-  console.log('🔍 Verifying signature with dataCheckString length:', dataCheckString.length);
+  console.log('📝 Data check string (first 200):', dataCheckString.substring(0, 200));
+  console.log('🔑 Bot token (first 10):', botToken.substring(0, 10) + '...');
 
-  // Method 1: Using SHA256 hash of token as key (for Mini Apps)
-  const secret = crypto.createHash('sha256').update(botToken).digest();
-  const hmac = crypto.createHmac('sha256', secret);
-  hmac.update(dataCheckString);
-  const calculatedHash = hmac.digest('hex');
+  // Method 1: SHA256(token) as key
+  const secret1 = crypto.createHash('sha256').update(botToken).digest();
+  const hmac1 = crypto.createHmac('sha256', secret1);
+  hmac1.update(dataCheckString);
+  const hash1 = hmac1.digest('hex');
 
-  if (calculatedHash === checkValue) {
-    console.log('✅ Signature verification: PASSED (Method 1)');
+  console.log('Method 1 result:', hash1.substring(0, 40));
+
+  if (hash1 === checkValue) {
+    console.log('✅ PASSED Method 1');
     return true;
   }
 
-  // Method 2: Using token directly as key
+  // Method 2: Direct token as key  
   const hmac2 = crypto.createHmac('sha256', botToken);
   hmac2.update(dataCheckString);
-  const calculatedHash2 = hmac2.digest('hex');
+  const hash2 = hmac2.digest('hex');
 
-  if (calculatedHash2 === checkValue) {
-    console.log('✅ Signature verification: PASSED (Method 2)');
+  console.log('Method 2 result:', hash2.substring(0, 40));
+
+  if (hash2 === checkValue) {
+    console.log('✅ PASSED Method 2');
     return true;
   }
 
-  console.log('❌ Signature verification: FAILED');
-  console.log('Expected:', checkValue?.substring(0, 20));
-  console.log('Got (m1):', calculatedHash?.substring(0, 20));
-  console.log('Got (m2):', calculatedHash2?.substring(0, 20));
+  // Method 3: Maybe it's base64?
+  try {
+    const hash1Base64 = Buffer.from(hash1, 'hex').toString('base64');
+    const hash2Base64 = Buffer.from(hash2, 'hex').toString('base64');
+    
+    console.log('Method 1 (base64):', hash1Base64.substring(0, 40));
+    console.log('Method 2 (base64):', hash2Base64.substring(0, 40));
+    
+    if (hash1Base64 === checkValue || hash2Base64 === checkValue) {
+      console.log('✅ PASSED Method 3 (base64)');
+      return true;
+    }
+  } catch(e) {}
+
+  console.log('❌ ALL METHODS FAILED');
   return false;
 }
 
@@ -109,7 +128,7 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
     const { initData, email } = body;
 
-    console.log('Request data: { hasInitData:', !!initData, ', email:', email?.substring(0, 6) + '*** }');
+    console.log('Request data:', { hasInitData: !!initData, email: email?.substring(0, 6) + '***' });
 
     if (!initData || !email) {
       return createResponse(400, { 
