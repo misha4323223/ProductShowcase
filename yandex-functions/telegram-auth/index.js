@@ -59,8 +59,11 @@ function verifyTelegramSignature(initData, botToken) {
       .map(([key, value]) => `${key}=${value}`)
       .join('\n');
 
-    // Создаём подпись
-    const hmac = crypto.createHmac('sha256', botToken);
+    // Создаём SECRET из BOT_TOKEN (этот шаг был пропущен!)
+    const secret = crypto.createHash('sha256').update(botToken).digest();
+    
+    // Создаём подпись с правильным SECRET
+    const hmac = crypto.createHmac('sha256', secret);
     hmac.update(dataCheckString);
     const calculatedHash = hmac.digest('hex');
 
