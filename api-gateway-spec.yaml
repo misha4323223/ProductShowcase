@@ -923,6 +923,183 @@ paths:
         '200':
           description: OK
 
+  # Привязка Email к Telegram аккаунту
+  /api/users/attach-email:
+    post:
+      summary: Привязать Email и пароль к Telegram аккаунту
+      description: Позволяет пользователю, зарегистрированному через Telegram, добавить Email и пароль к своему аккаунту
+      operationId: attachEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - email
+                - password
+                - passwordConfirm
+              properties:
+                token:
+                  type: string
+                  description: JWT токен пользователя
+                email:
+                  type: string
+                  format: email
+                  description: Email который хочет привязать пользователь
+                password:
+                  type: string
+                  description: Новый пароль (минимум 6 символов)
+                passwordConfirm:
+                  type: string
+                  description: Подтверждение пароля
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eadnh9nmf7ni9359bq
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Email успешно привязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Неверный или истекший токен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # Привязать Telegram к email аккаунту
+  /api/users/attach-telegram:
+    post:
+      summary: Привязать Telegram к email аккаунту
+      description: Позволяет пользователю, зарегистрированному через email, добавить Telegram к своему аккаунту
+      operationId: attachTelegram
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - initData
+              properties:
+                token:
+                  type: string
+                  description: JWT токен пользователя
+                initData:
+                  type: string
+                  description: Данные от Telegram Web App (window.Telegram.WebApp.initData)
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eradehki5bndp1ehhc
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Telegram успешно привязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Неверный или истекший токен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
   /site-settings:
     get:
       summary: Получить настройки сайта
