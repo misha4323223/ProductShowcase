@@ -108,18 +108,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const loginWithTelegram = async (token: string) => {
+    console.log('🔑 loginWithTelegram: saving token...');
     localStorage.setItem('authToken', token);
+    
     const verifyResponse = await fetch(`${API_BASE_URL}/auth/verify-token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
     });
 
+    console.log('✅ Token verify response:', verifyResponse.status);
     if (verifyResponse.ok) {
       const data = await verifyResponse.json();
+      console.log('👤 Verify data:', data);
       if (data.valid && data.user) {
+        console.log('✅ Setting user:', data.user);
         setUser(data.user);
+      } else {
+        console.log('❌ Invalid token response:', data);
       }
+    } else {
+      console.log('❌ Verify failed:', verifyResponse.status);
     }
   };
 
