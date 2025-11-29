@@ -878,39 +878,47 @@ export default function AccountPage() {
             </Card>
 
             {/* Привязка Telegram */}
-            {!user.email.includes('@telegram') && !user.email.includes('telegram_') && !user.telegramId && (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-5 w-5 text-primary" />
-                      <div>
-                        <CardTitle>Привязать Telegram</CardTitle>
-                        <CardDescription>Добавьте Telegram для удобного входа</CardDescription>
-                      </div>
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-5 w-5 text-primary" />
+                    <div>
+                      <CardTitle>Привязать Telegram</CardTitle>
+                      <CardDescription>Добавьте Telegram для удобного входа</CardDescription>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Привяжите Telegram аккаунт к вашему email профилю. После этого вы сможете входить через Telegram Бот.
-                  </p>
-                  <Button
-                    onClick={handleAttachTelegram}
-                    disabled={isAttachingTelegram}
-                    data-testid="button-attach-telegram"
-                  >
-                    {isAttachingTelegram ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Mail className="h-4 w-4 mr-2" />
-                    )}
-                    Привязать Telegram
-                  </Button>
-                  <div id="attach-telegram-widget-container" className="flex justify-center my-2" />
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {user.telegramId ? (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Telegram уже привязан к вашему аккаунту.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Привяжите Telegram аккаунт к вашему email профилю. После этого вы сможете входить через Telegram Бот.
+                    </p>
+                    <Button
+                      onClick={handleAttachTelegram}
+                      disabled={isAttachingTelegram}
+                      data-testid="button-attach-telegram"
+                    >
+                      {isAttachingTelegram ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Mail className="h-4 w-4 mr-2" />
+                      )}
+                      Привязать Telegram
+                    </Button>
+                    <div id="attach-telegram-widget-container" className="flex justify-center my-2" />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Привязка Email */}
             <Card>
