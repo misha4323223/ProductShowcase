@@ -1,0 +1,9 @@
+{
+  "name": "telegram-login",
+  "version": "1.0.0",
+  "description": "Auto-login with Telegram ID or create account if new user",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.478.0",
+    "@aws-sdk/lib-dynamodb": "^3.478.0"
+  }
+}
