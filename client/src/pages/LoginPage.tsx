@@ -460,16 +460,38 @@ export default function LoginPage() {
             ref={telegramWidgetRef}
             className="w-full flex justify-center"
             data-testid="telegram-widget"
+            id="telegram-login-widget"
           >
-            <script 
-              async 
-              src="https://telegram.org/js/telegram-widget.js?22"
-              data-telegram-login="SweetWeb71"
-              data-size="large"
-              data-radius="8"
-              data-request-access="write"
-              data-onauth="onTelegramAuth"
-            ></script>
+            <script async src="https://telegram.org/js/telegram-widget.js?22"></script>
+            <script>
+              {`
+                if (typeof Telegram !== 'undefined' && Telegram.Login) {
+                  Telegram.Login.init({
+                    bot_id: 8527959863,
+                    request_access: 'write',
+                  }, (user) => {
+                    if (window.onTelegramAuth) {
+                      window.onTelegramAuth(user);
+                    }
+                  });
+                  Telegram.Login.render(document.getElementById('telegram-login-widget'));
+                } else {
+                  setTimeout(() => {
+                    if (typeof Telegram !== 'undefined' && Telegram.Login) {
+                      Telegram.Login.init({
+                        bot_id: 8527959863,
+                        request_access: 'write',
+                      }, (user) => {
+                        if (window.onTelegramAuth) {
+                          window.onTelegramAuth(user);
+                        }
+                      });
+                      Telegram.Login.render(document.getElementById('telegram-login-widget'));
+                    }
+                  }, 500);
+                }
+              `}
+            </script>
           </div>
 
           <Button 
