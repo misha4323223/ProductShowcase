@@ -122,21 +122,32 @@ function generateToken(userId, email, extraData = {}) {
 exports.handler = async (event) => {
   try {
     console.log('📥 attach-telegram handler called');
-    const { token, initData } = JSON.parse(event.body || '{}');
+    console.log('📋 event.body:', event.body ? event.body.substring(0, 100) : 'empty');
+    
+    const body = JSON.parse(event.body || '{}');
+    console.log('✅ Body parsed');
+    console.log('🔑 token:', body.token ? body.token.substring(0, 50) + '...' : 'missing');
+    console.log('📦 initData length:', body.initData ? body.initData.length : 'missing');
+    
+    const { token, initData } = body;
 
     if (!token) {
+      console.log('❌ No token provided');
       return createResponse(401, { error: 'No token provided' });
     }
 
     if (!initData) {
+      console.log('❌ No initData provided');
       return createResponse(400, { error: 'No initData provided' });
     }
 
     // Verify token
     const secret = process.env.JWT_SECRET || 'telegram-secret-key';
+    console.log('🔐 Verifying token with secret length:', secret.length);
     const tokenPayload = verifyToken(token, secret);
     
     if (!tokenPayload) {
+      console.log('❌ Token verification failed');
       return createResponse(401, { error: 'Invalid or expired token' });
     }
 

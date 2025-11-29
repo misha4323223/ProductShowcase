@@ -493,14 +493,15 @@ export default function AccountPage() {
     } else {
       // Если в браузере - показать Telegram Login Widget
       console.log('🌐 Браузер - загружаю Telegram Login Widget');
+      setIsAttachingTelegram(true);
       
-      // Создаем глобальный callback для widget
+      // ВАЖНО: Создаем глобальный callback ДО загрузки скрипта!
       (window as any).onTelegramAttachAuth = async (user: any) => {
         console.log('✅ Telegram user получен:', user);
-        setIsAttachingTelegram(true);
         try {
           // Преобразуем user data в initData формат
           const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
+          console.log('📦 initDataStr создана, отправляю attachTelegram()');
           
           await attachTelegram(initDataStr);
           toast({
@@ -521,21 +522,30 @@ export default function AccountPage() {
         }
       };
 
-      // Создаем скрипт Telegram widget (как на LoginPage)
-      const script = document.createElement('script');
-      script.src = 'https://telegram.org/js/telegram-widget.js?22';
-      script.async = true;
-      script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
-      script.setAttribute('data-size', 'large');
-      script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
-      script.setAttribute('data-request-access', 'write');
-      
-      // Добавляем скрипт в контейнер как на LoginPage
-      const container = document.getElementById('attach-telegram-widget-container');
-      if (container) {
-        container.innerHTML = '';
-        container.appendChild(script);
-      }
+      console.log('✅ onTelegramAttachAuth установлена на window');
+
+      // Даём гарантию что callback установлена, потом загружаем скрипт
+      setTimeout(() => {
+        console.log('⏳ Загружаю widget скрипт...');
+        
+        const script = document.createElement('script');
+        script.src = 'https://telegram.org/js/telegram-widget.js?22';
+        script.async = true;
+        script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
+        script.setAttribute('data-size', 'large');
+        script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
+        script.setAttribute('data-request-access', 'write');
+        
+        const container = document.getElementById('attach-telegram-widget-container');
+        if (container) {
+          console.log('✅ Контейнер найден, добавляю скрипт');
+          container.innerHTML = '';
+          container.appendChild(script);
+        } else {
+          console.error('❌ Контейнер attach-telegram-widget-container не найден!');
+          setIsAttachingTelegram(false);
+        }
+      }, 0);
     }
   };
 
