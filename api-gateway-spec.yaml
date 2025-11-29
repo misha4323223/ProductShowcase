@@ -2083,3 +2083,105 @@ paths:
       responses:
         '200':
           description: OK
+  /api/users/change-password:
+    post:
+      summary: Изменить пароль пользователя
+      description: Позволяет пользователю изменить свой пароль, если старый пароль верный
+      operationId: changePassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - oldPassword
+                - newPassword
+                - newPasswordConfirm
+              properties:
+                token:
+                  type: string
+                  description: JWT токен пользователя
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                oldPassword:
+                  type: string
+                  description: Текущий пароль пользователя
+                  example: "currentPassword123"
+                newPassword:
+                  type: string
+                  description: Новый пароль (минимум 6 символов)
+                  example: "newPassword123"
+                newPasswordConfirm:
+                  type: string
+                  description: Подтверждение нового пароля
+                  example: "newPassword123"
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e8l1sss626s16f7q4q
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Пароль успешно изменён
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                    description: Новый JWT токен с обновленными данными
+                  user:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                      email:
+                        type: string
+                      telegramId:
+                        type: string
+        '400':
+          description: Ошибка валидации (пароли не совпадают, слабый пароль и т.д.)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: Неверный старый пароль или истекший токен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
