@@ -878,7 +878,7 @@ export default function AccountPage() {
             </Card>
 
             {/* Привязка Telegram */}
-            {!user.email.includes('@telegram') && !user.email.includes('telegram_') && (
+            {!user.email.includes('@telegram') && !user.email.includes('telegram_') && !user.telegramId && (
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
