@@ -39,6 +39,7 @@ export default function LoginPage() {
 
   // Обработчик callback от Telegram Login Widget
   useEffect(() => {
+    // Callback для Telegram Login Widget
     window.onTelegramAuth = async (user: any) => {
       console.log('✅ Telegram widget auth successful:', user);
       try {
@@ -456,42 +457,18 @@ export default function LoginPage() {
           </Button>
 
           {/* Telegram Login Widget */}
-          <div 
-            ref={telegramWidgetRef}
-            className="w-full flex justify-center"
-            data-testid="telegram-widget"
-            id="telegram-login-widget"
-          >
-            <script async src="https://telegram.org/js/telegram-widget.js?22"></script>
-            <script>
-              {`
-                if (typeof Telegram !== 'undefined' && Telegram.Login) {
-                  Telegram.Login.init({
-                    bot_id: 8527959863,
-                    request_access: 'write',
-                  }, (user) => {
-                    if (window.onTelegramAuth) {
-                      window.onTelegramAuth(user);
-                    }
-                  });
-                  Telegram.Login.render(document.getElementById('telegram-login-widget'));
-                } else {
-                  setTimeout(() => {
-                    if (typeof Telegram !== 'undefined' && Telegram.Login) {
-                      Telegram.Login.init({
-                        bot_id: 8527959863,
-                        request_access: 'write',
-                      }, (user) => {
-                        if (window.onTelegramAuth) {
-                          window.onTelegramAuth(user);
-                        }
-                      });
-                      Telegram.Login.render(document.getElementById('telegram-login-widget'));
-                    }
-                  }, 500);
-                }
-              `}
-            </script>
+          <div className="w-full flex justify-center" data-testid="telegram-widget">
+            <a 
+              href="https://web.telegram.org/k/#@SweetWeb71_bot"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-0088cc text-white rounded-lg font-medium hover:bg-0077aa transition-colors"
+              data-testid="button-telegram-login"
+              style={{backgroundColor: '#0088cc'}}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.82-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295-.403 0-.335-.149-.472-.526l-1.04-3.402-.96-.3c-.42-.133-.429-.42.09-.623l11.856-4.576c.432-.176.810.104.676.782z"/>
+              </svg>
+              Войти через Telegram
+            </a>
           </div>
 
           <Button 
