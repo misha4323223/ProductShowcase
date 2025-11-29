@@ -26,6 +26,7 @@ import {
 
 import { createOrder } from "@/services/yandex-orders";
 import { validatePromoCode } from "@/services/yandex-promocodes";
+import { getProfile, isBirthdayToday } from "@/services/profile-api";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useWheel } from "@/contexts/WheelContext";
@@ -72,6 +73,7 @@ export default function CheckoutPage() {
   const [bonusDiscount, setBonusDiscount] = useState(0);
   const [bonusInput, setBonusInput] = useState("");
   const [isBonusApplied, setIsBonusApplied] = useState(false);
+  const [birthdayDiscount, setBirthdayDiscount] = useState(0);
   
   const [deliveryService, setDeliveryService] = useState<string | null>(null);
   const [deliveryType, setDeliveryType] = useState<string | null>(null);
@@ -89,6 +91,26 @@ export default function CheckoutPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      checkBirthdayDiscount();
+    }
+  }, [user]);
+
+  const checkBirthdayDiscount = async () => {
+    if (!user) return;
+    
+    try {
+      const profile = await getProfile(user.email);
+      if (isBirthdayToday(profile.birthDate)) {
+        const discount = Math.round(subtotal * 0.15);
+        setBirthdayDiscount(discount);
+      }
+    } catch (error) {
+      console.error('Ошибка проверки дня рождения:', error);
+    }
+  };
 
   // Guard: проверка старых pendingPaymentOrderId
   useEffect(() => {
@@ -161,7 +183,7 @@ export default function CheckoutPage() {
       ? POST_RUSSIA_PRICE 
       : 0;
   const subtotal = total + deliveryPrice;
-  const totalDiscount = promoDiscount + bonusDiscount;
+  const totalDiscount = promoDiscount + bonusDiscount + birthdayDiscount;
   const finalTotal = Math.max(0, subtotal - totalDiscount);
   
   const totalWeight = cartItems.reduce((sum, item) => sum + (item.quantity * 250), 0);

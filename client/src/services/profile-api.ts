@@ -9,6 +9,7 @@ export interface UserProfile {
   birthDate: string;
   phone: string;
   role: string;
+  [key: string]: any;
 }
 
 export interface UpdateProfileData {
@@ -18,6 +19,7 @@ export interface UpdateProfileData {
   patronymic?: string;
   birthDate?: string;
   phone?: string;
+  [key: string]: any;
 }
 
 export async function getProfile(email: string): Promise<UserProfile> {
@@ -50,4 +52,23 @@ export async function updateProfile(profileData: UpdateProfileData): Promise<Use
 
   const data = await response.json();
   return data.profile;
+}
+
+export function isBirthdayToday(birthDate: string): boolean {
+  if (!birthDate) return false;
+  try {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    return today.getDate() === birth.getDate() && today.getMonth() === birth.getMonth();
+  } catch {
+    return false;
+  }
+}
+
+export async function markBirthdayGiftSent(email: string): Promise<void> {
+  const year = new Date().getFullYear();
+  await updateProfile({
+    email,
+    [`birthdayGiftSent${year}`]: true,
+  });
 }

@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
-import { getProfile, updateProfile, type UserProfile } from "@/services/profile-api";
+import { getProfile, updateProfile, type UserProfile, isBirthdayToday, markBirthdayGiftSent } from "@/services/profile-api";
 import type { Order, WheelPrize } from "@/types/firebase-types";
 import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -242,6 +242,7 @@ export default function AccountPage() {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [savingProfile, setSavingProfile] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isBirthday, setIsBirthday] = useState(false);
   const [profileForm, setProfileForm] = useState({
     firstName: "",
     lastName: "",
@@ -281,6 +282,17 @@ export default function AccountPage() {
         birthDate: userProfile.birthDate || "",
         phone: userProfile.phone || "",
       });
+      
+      const isBday = isBirthdayToday(userProfile.birthDate);
+      setIsBirthday(isBday);
+      
+      if (isBday) {
+        try {
+          await markBirthdayGiftSent(user.email);
+        } catch (error) {
+          console.error('Ошибка отметки дня рождения:', error);
+        }
+      }
     } catch (error: any) {
       console.error('Ошибка загрузки профиля:', error);
     } finally {
@@ -546,6 +558,17 @@ export default function AccountPage() {
           <WheelTab />
 
           <TabsContent value="profile">
+            {isBirthday && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 border border-pink-300 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">🎂</div>
+                  <div className="flex-1">
+                    <p className="font-bold text-lg text-pink-900">С Днём Рождения! 🎉</p>
+                    <p className="text-sm text-pink-800">Поздравляем! Получите <span className="font-bold">15% скидку</span> на весь заказ в честь вашего дня рождения!</p>
+                  </div>
+                </div>
+              </div>
+            )}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between gap-2">
