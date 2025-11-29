@@ -177,12 +177,19 @@ async function handleMessage(chatId, text) {
  * Main handler
  */
 async function handler(event, context) {
-  console.log('📨 Received webhook:', JSON.stringify(event, null, 2));
+  console.log('📨 Received raw event:', JSON.stringify(event, null, 2));
 
   try {
+    // Парсим body если это строка
+    let webhookData = event;
+    if (typeof event.body === 'string') {
+      webhookData = JSON.parse(event.body);
+      console.log('✅ Parsed webhook from body:', JSON.stringify(webhookData, null, 2));
+    }
+
     // Обработка сообщения
-    if (event.message) {
-      const message = event.message;
+    if (webhookData.message) {
+      const message = webhookData.message;
       const chatId = message.chat.id;
       const text = message.text || '';
       const firstName = message.from.first_name;
@@ -192,23 +199,26 @@ async function handler(event, context) {
 
       // Обработка команд
       if (text === '/start') {
+        console.log('▶️ Handling /start command');
         await handleStartCommand(chatId, username, firstName);
       } else if (text === '/shop') {
+        console.log('▶️ Handling /shop command');
         await handleShopCommand(chatId);
       } else if (text === '/orders') {
+        console.log('▶️ Handling /orders command');
         await handleOrdersCommand(chatId);
       } else if (text.startsWith('/')) {
-        // Неизвестная команда
+        console.log('▶️ Handling unknown command');
         await handleMessage(chatId, text);
       } else if (text.length > 0) {
-        // Обычное сообщение
+        console.log('▶️ Handling regular message');
         await handleMessage(chatId, text);
       }
     }
 
     // Обработка callback queries
-    if (event.callback_query) {
-      const callbackQuery = event.callback_query;
+    if (webhookData.callback_query) {
+      const callbackQuery = webhookData.callback_query;
       const chatId = callbackQuery.from.id;
       const data = callbackQuery.data;
 
@@ -221,6 +231,7 @@ async function handler(event, context) {
       }
     }
 
+    console.log('✅ Webhook processed successfully');
     return {
       statusCode: 200,
       body: JSON.stringify({ ok: true }),
