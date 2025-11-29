@@ -497,71 +497,55 @@ export default function AccountPage() {
     } else {
       // Если в браузере - показать Telegram Login Widget
       console.log('🌐 Браузер - показываю Telegram Login Widget');
-      setIsAttachingTelegram(true);
       
-      // Создаем скрытый контейнер для widget если его нет
-      let widgetContainer = document.getElementById('attach-telegram-widget-container');
-      if (!widgetContainer) {
-        widgetContainer = document.createElement('div');
-        widgetContainer.id = 'attach-telegram-widget-container';
-        widgetContainer.style.display = 'none';
-        document.body.appendChild(widgetContainer);
-      }
+      // Создаем глобальный callback для widget
+      (window as any).onTelegramAttachAuth = async (user: any) => {
+        console.log('✅ Telegram user получен для привязки:', user);
+        setIsAttachingTelegram(true);
+        try {
+          // Преобразуем user data в initData формат для attach-telegram
+          const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
+          console.log('📦 initData создана:', initDataStr);
+          
+          await attachTelegram(initDataStr);
+          toast({
+            title: "Успешно!",
+            description: "Telegram успешно привязан к вашему аккаунту",
+          });
+          setTimeout(() => setLocation("/account"), 600);
+        } catch (error: any) {
+          console.error('❌ Ошибка привязки:', error);
+          toast({
+            title: "Ошибка привязки",
+            description: error.message || "Не удалось привязать Telegram",
+            variant: "destructive",
+          });
+        } finally {
+          setIsAttachingTelegram(false);
+          delete (window as any).onTelegramAttachAuth;
+        }
+      };
 
-      // Загружаем и инициализируем Telegram Login Widget
+      // Загружаем Telegram Widget скрипт
       const script = document.createElement('script');
       script.src = 'https://telegram.org/js/telegram-widget.js?22';
       script.async = true;
+      script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
+      script.setAttribute('data-size', 'large');
+      script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
+      script.setAttribute('data-request-access', 'write');
+      
       script.onload = () => {
         console.log('📱 Telegram Widget скрипт загружен');
-        // @ts-ignore
-        if (window.Telegram?.Login?.embedButton) {
-          const botUsername = 'SweetWeb71_bot'; // Используем реальное имя бота
-          
-          // @ts-ignore
-          window.Telegram.Login.embedButton('attach-telegram-widget-container', botUsername, {
-            size: 'large',
-            userpic: false,
-            radius: 6,
-            requestAccess: 'write',
-            onAuthCallback: async (user: any) => {
-              console.log('✅ Telegram user получен:', user);
-              try {
-                const response = await fetch(`${window.location.origin}/api/telegram/widget-callback`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(user),
-                });
-
-                const data = await response.json();
-                console.log('📊 Response:', data);
-                
-                if (response.ok) {
-                  // Теперь привязываем к текущему аккаунту
-                  const token = localStorage.getItem('authToken');
-                  if (token && data.initData) {
-                    await attachTelegram(data.initData);
-                    toast({
-                      title: "Успешно!",
-                      description: "Telegram успешно привязан к вашему аккаунту",
-                    });
-                    setTimeout(() => setLocation("/account"), 600);
-                  }
-                }
-              } catch (error: any) {
-                console.error('❌ Ошибка привязки:', error);
-                toast({
-                  title: "Ошибка",
-                  description: error.message || "Не удалось привязать Telegram",
-                  variant: "destructive",
-                });
-              } finally {
-                setIsAttachingTelegram(false);
-              }
-            }
-          });
+        const container = document.getElementById('attach-telegram-widget-container');
+        if (container) {
+          container.innerHTML = '';
+          container.appendChild(script.cloneNode(true));
+        } else {
+          document.head.appendChild(script);
         }
       };
+      
       script.onerror = () => {
         console.error('❌ Ошибка загрузки Telegram Widget');
         toast({
@@ -570,7 +554,9 @@ export default function AccountPage() {
           variant: "destructive",
         });
         setIsAttachingTelegram(false);
+        delete (window as any).onTelegramAttachAuth;
       };
+      
       document.head.appendChild(script);
     }
   };
