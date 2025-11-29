@@ -1,0 +1,32 @@
+✅ Корзина успешно сохранена в YDB
+AccountPage-Bg-618_v.js:22 Загруженные заказы: Array(20)
+AccountPage-Bg-618_v.js:22 🔗 handleAttachTelegram called
+AccountPage-Bg-618_v.js:22 🌐 Браузер - загружаю Telegram Login Widget
+AccountPage-Bg-618_v.js:22 ✅ onTelegramAttachAuth установлена на window
+AccountPage-Bg-618_v.js:22 ⏳ Загружаю widget скрипт...
+AccountPage-Bg-618_v.js:22 ✅ Контейнер найден, добавляю скрипт
+AccountPage-Bg-618_v.js:22 ✅ Telegram user получен: Objectauth_date: 1764459216first_name: "Misha"hash: "f7fcefd0a2e7fb3915f5730c8e5d559ca6ef27125a966714cdddf63add981451"id: 821150521photo_url: "https://t.me/i/userpic/320/oKH9Yvw17NodnFkwQkyyTju-S3zS3TooZmNkEN6yiCg.jpg"username: "BOOOMERANGSOPT"[[Prototype]]: Object
+AccountPage-Bg-618_v.js:22 📦 initDataStr создана, отправляю attachTelegram()
+index-CrbnNu0q.js:244 🔗 attachTelegram called
+index-CrbnNu0q.js:244 🌐 API_BASE_URL: https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net
+index-CrbnNu0q.js:244 🌐 ПОЛНЫЙ URL: https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net/api/users/attach-telegram
+index-CrbnNu0q.js:244 📡 Response status: 200
+index-CrbnNu0q.js:244 ✅ Telegram успешно привязан
+index-CrbnNu0q.js:244 🎰 Загрузка статуса рулетки для: pimashin2015@gmail.com userId: mi8xbi6wieiez6d8s9
+index-CrbnNu0q.js:244 Сохранение корзины в YDB: Array(0)
+d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net/wheel/history:1  Failed to load resource: the server responded with a status of 401 ()
+index-CrbnNu0q.js:244 Ошибка загрузки истории: Error: Failed to get wheel history: 401
+    at PC (index-CrbnNu0q.js:244:71625)
+    at async k (index-CrbnNu0q.js:244:73501)
+k @ index-CrbnNu0q.js:244
+index-CrbnNu0q.js:244 ✅ Корзина успешно сохранена в YDB
+AccountPage-Bg-618_v.js:22 Загруженные заказы: Array(20)
+account:1  Failed to load resource: the server responded with a status of 404 ()
+status:1  Failed to load resource: the server responded with a status of 401 ()
+index-CrbnNu0q.js:244 ❌ Ошибка загрузки статуса рулетки: Error: Failed to get wheel status: 401
+    at jC (index-CrbnNu0q.js:244:71043)
+    at async b (index-CrbnNu0q.js:244:73012)
+b @ index-CrbnNu0q.js:244
+index-CrbnNu0q.js:244 🎰 Получен статус рулетки: {spins: 6, totalSpinsEarned: 40, totalWheelSpins: 44, loyaltyPoints: 458, activePrizes: Array(3), …}
+index-CrbnNu0q.js:244 🎯 Доступные спины: 6
+index-CrbnNu0q.js:244 📊 Всего заработано: 40

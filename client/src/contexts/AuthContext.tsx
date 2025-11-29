@@ -6,6 +6,7 @@ interface User {
   userId: string;
   email: string;
   role: string;
+  telegramId?: string;
 }
 
 interface AuthContextType {
