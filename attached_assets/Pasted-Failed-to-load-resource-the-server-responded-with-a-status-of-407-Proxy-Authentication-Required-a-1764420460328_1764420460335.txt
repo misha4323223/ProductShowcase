@@ -1,0 +1,35 @@
+Failed to load resource: the server responded with a status of 407 (Proxy Authentication Required)
+a/favicon.ico:1  Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED
+main.f6557561a4ddcacd13a0.js:sourcemap:1 Object
+d @ main.f6557561a4ddcacd13a0.js:sourcemap:1
+main.f6557561a4ddcacd13a0.js:sourcemap:1 Object
+d @ main.f6557561a4ddcacd13a0.js:sourcemap:1
+main.f6557561a4ddcacd13a0.js:sourcemap:1 Object
+d @ main.f6557561a4ddcacd13a0.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.dd159faef581d85a6a51.js:sourcemap:1:265706
+connect @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 WebSocket error Event
+client.onerror @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 Socket zws2-1.web.telegram.org closed. Code: 1006, reason: , was clean: false
+client.onclose @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.dd159faef581d85a6a51.js:sourcemap:1:265706
+connect @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 WebSocket error Event
+client.onerror @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 Socket zws2.web.telegram.org closed. Code: 1006, reason: , was clean: false
+client.onclose @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 TimeoutError: signal timed out
+connect @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+webappinternal.telegram.org/botfather#tgWebAppData=user%3D%257B%2522id%2522%253A821150521%252C%2522first_name%2522%253A%2522Misha%2522%252C%2522last_name%2522%253A%2522%2522%252C%2522username%2522%253A%2522BOOOMERANGSOPT%2522%252C%2522language_code%2522%253A%2522ru%2522%252C%2522allows_write_to_pm%2522%253Atrue%252C%2522photo_url%2522%253A%2522https%253A%255C%252F%255C%252Ft.me%255C%252Fi%255C%252Fuserpic%255C%252F320%255C%252FoKH9Yvw17NodnFkwQkyyTju-S3zS3TooZmNkEN6yiCg.svg%2522%257D%26chat_instance%3D7194801416576843308%26chat_type%3Dsender%26auth_date%3D1764411922%26signature%3DraeveO2IbONehO9JSw9Pyfsyf8Vu5P2B4tPCIdLKhxPZddezKufaC0rpwGU-qW7VCV8pzstFDoz9T0PGqnSOBw%26hash%3D1118e3a247c12bb4a4299ec4c458d1cbe65bf97c1ed3256c31cd7007603cc8db&tgWebAppVersion=9.1&tgWebAppPlatform=weba&tgWebAppThemeParams=%7B%22bg_color%22%3A%22%23212121%22%2C%22text_color%22%3A%22%23ffffff%22%2C%22hint_color%22%3A%22%23aaaaaa%22%2C%22link_color%22%3A%22%238774e1%22%2C%22button_color%22%3A%22%238774e1%22%2C%22button_text_color%22%3A%22%23ffffff%22%2C%22secondary_bg_color%22%3A%22%230f0f0f%22%2C%22header_bg_color%22%3A%22%23212121%22%2C%22accent_text_color%22%3A%22%238774e1%22%2C%22section_bg_color%22%3A%22%23212121%22%2C%22section_header_text_color%22%3A%22%23aaaaaa%22%2C%22subtitle_text_color%22%3A%22%23aaaaaa%22%2C%22destructive_text_color%22%3A%22%23e53935%22%7D&tgWebAppDefaultColors=%7B%22bg_color%22%3A%22%231a2026%22%2C%22bg_dark_color%22%3A%22%231a2026%22%2C%22header_color%22%3A%22%23212a33%22%2C%22header_dark_color%22%3A%22%23212a33%22%7D:1  Failed to load resource: the server responded with a status of 400 ()
+2026.dd159faef581d85a6a51.js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.dd159faef581d85a6a51.js:sourcemap:1:265706
+connect @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 WebSocket error Event
+client.onerror @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+2026.dd159faef581d85a6a51.js:sourcemap:1 Socket zws2.web.telegram.org closed. Code: 1006, reason: , was clean: false
+client.onclose @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+22026.dd159faef581d85a6a51.js:sourcemap:1 TimeoutError: signal timed out
+connect @ 2026.dd159faef581d85a6a51.js:sourcemap:1
+sweetdelights.store/telegram#tgWebAppData=query_id%3DAAE5w_EwAAAAADnD8TAn2g_H%26user%3D%257B%2522id%2522%253A821150521%252C%2522first_name%2522%253A%2522Misha%2522%252C%2522last_name%2522%253A%2522%2522%252C%2522username%2522%253A%2522BOOOMERANGSOPT%2522%252C%2522language_code%2522%253A%2522ru%2522%252C%2522allows_write_to_pm%2522%253Atrue%252C%2522photo_url%2522%253A%2522https%253A%255C%252F%255C%252Ft.me%255C%252Fi%255C%252Fuserpic%255C%252F320%255C%252FoKH9Yvw17NodnFkwQkyyTju-S3zS3TooZmNkEN6yiCg.svg%2522%257D%26auth_date%3D1764420221%26signature%3DfrI1tFPycxcCE4wP6PTbhlxNpP3gcHITKniXZ0XJP44XVbQ8ywTpWe0ETz03uui9d_t13qMq_pYAT0zhNgy7Dg%26hash%3Dd747f03334bf3a64c8ffb933ac047ddf3721f5c398ae6e38836fd70f9eee6a3b&tgWebAppVersion=9.1&tgWebAppPlatform=weba&tgWebAppThemeParams=%7B%22bg_color%22%3A%22%23212121%22%2C%22text_color%22%3A%22%23ffffff%22%2C%22hint_color%22%3A%22%23aaaaaa%22%2C%22link_color%22%3A%22%238774e1%22%2C%22button_color%22%3A%22%238774e1%22%2C%22button_text_color%22%3A%22%23ffffff%22%2C%22secondary_bg_color%22%3A%22%230f0f0f%22%2C%22header_bg_color%22%3A%22%23212121%22%2C%22accent_text_color%22%3A%22%238774e1%22%2C%22section_bg_color%22%3A%22%23212121%22%2C%22section_header_text_color%22%3A%22%23aaaaaa%22%2C%22subtitle_text_color%22%3A%22%23aaaaaa%22%2C%22destructive_text_color%22%3A%22%23e53935%22%7D:1  Failed to load resource: the server responded with a status of 404 ()
