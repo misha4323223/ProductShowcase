@@ -223,7 +223,7 @@ function WheelTab() {
 }
 
 export default function AccountPage() {
-  const { user, signOut, loading, attachEmail, attachTelegram } = useAuth();
+  const { user, signOut, loading, attachEmail, attachTelegram, changePassword } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -260,6 +260,14 @@ export default function AccountPage() {
   });
 
   const [isAttachingTelegram, setIsAttachingTelegram] = useState(false);
+
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
+  const [changePasswordForm, setChangePasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    newPasswordConfirm: "",
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -450,6 +458,36 @@ export default function AccountPage() {
       });
     } finally {
       setIsAttachingEmail(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!changePasswordForm.oldPassword || !changePasswordForm.newPassword || !changePasswordForm.newPasswordConfirm) {
+      toast({
+        title: "Ошибка",
+        description: "Заполните все поля",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      await changePassword(changePasswordForm.oldPassword, changePasswordForm.newPassword, changePasswordForm.newPasswordConfirm);
+      toast({
+        title: "Успешно!",
+        description: "Пароль успешно изменён",
+      });
+      setShowChangePasswordForm(false);
+      setChangePasswordForm({ oldPassword: "", newPassword: "", newPasswordConfirm: "" });
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось изменить пароль",
+        variant: "destructive",
+      });
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -872,6 +910,98 @@ export default function AccountPage() {
                         {user.userId}
                       </p>
                     </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Изменить пароль */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-5 w-5 text-primary" />
+                    <div>
+                      <CardTitle>Безопасность</CardTitle>
+                      <CardDescription>Изменить пароль</CardDescription>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {showChangePasswordForm ? (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="old-password">Текущий пароль</Label>
+                      <Input
+                        id="old-password"
+                        type="password"
+                        placeholder="Введите текущий пароль"
+                        value={changePasswordForm.oldPassword}
+                        onChange={(e) => setChangePasswordForm({ ...changePasswordForm, oldPassword: e.target.value })}
+                        data-testid="input-old-password"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="new-password">Новый пароль</Label>
+                      <Input
+                        id="new-password"
+                        type="password"
+                        placeholder="Минимум 6 символов"
+                        value={changePasswordForm.newPassword}
+                        onChange={(e) => setChangePasswordForm({ ...changePasswordForm, newPassword: e.target.value })}
+                        data-testid="input-new-password"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="new-password-confirm">Подтвердите новый пароль</Label>
+                      <Input
+                        id="new-password-confirm"
+                        type="password"
+                        placeholder="Повторите новый пароль"
+                        value={changePasswordForm.newPasswordConfirm}
+                        onChange={(e) => setChangePasswordForm({ ...changePasswordForm, newPasswordConfirm: e.target.value })}
+                        data-testid="input-new-password-confirm"
+                      />
+                    </div>
+                    <Separator />
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowChangePasswordForm(false);
+                          setChangePasswordForm({ oldPassword: "", newPassword: "", newPasswordConfirm: "" });
+                        }}
+                        data-testid="button-cancel-change-password"
+                      >
+                        Отмена
+                      </Button>
+                      <Button
+                        onClick={handleChangePassword}
+                        disabled={isChangingPassword}
+                        data-testid="button-save-change-password"
+                      >
+                        {isChangingPassword ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Check className="h-4 w-4 mr-2" />
+                        )}
+                        Изменить пароль
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Измените ваш пароль для безопасности аккаунта.
+                    </p>
+                    <Button
+                      onClick={() => setShowChangePasswordForm(true)}
+                      data-testid="button-open-change-password-form"
+                    >
+                      <Mail className="h-4 w-4 mr-2" />
+                      Изменить пароль
+                    </Button>
                   </div>
                 )}
               </CardContent>

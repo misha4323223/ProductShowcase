@@ -21,6 +21,7 @@ interface AuthContextType {
   loginWithTelegram: (token: string) => Promise<void>;
   attachEmail: (email: string, password: string, passwordConfirm: string) => Promise<void>;
   attachTelegram: (initData: string) => Promise<void>;
+  changePassword: (oldPassword: string, newPassword: string, newPasswordConfirm: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -271,8 +272,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(data.user);
   };
 
+  const changePassword = async (oldPassword: string, newPassword: string, newPasswordConfirm: string) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Пожалуйста, авторизуйтесь');
+    }
+
+    if (!oldPassword || !newPassword || !newPasswordConfirm) {
+      throw new Error('Все поля обязательны');
+    }
+
+    if (newPassword !== newPasswordConfirm) {
+      throw new Error('Новые пароли не совпадают');
+    }
+
+    if (newPassword.length < 6) {
+      throw new Error('Пароль должен быть минимум 6 символов');
+    }
+
+    console.log('🔐 changePassword called');
+    const url = `${API_BASE_URL}/api/users/change-password`;
+    console.log('🌐 URL:', url);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        token,
+        oldPassword,
+        newPassword,
+        newPasswordConfirm
+      }),
+    });
+
+    console.log('📡 Response status:', response.status);
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Неизвестная ошибка' }));
+      console.error('❌ Error response:', error);
+      throw new Error(error.error || `Ошибка ${response.status}: Не удалось изменить пароль`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Пароль успешно изменён');
+    localStorage.setItem('authToken', data.token);
+    setUser(data.user);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram, attachEmail, attachTelegram }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram, attachEmail, attachTelegram, changePassword }}>
       {children}
     </AuthContext.Provider>
   );
