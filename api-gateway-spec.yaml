@@ -940,7 +940,7 @@ paths:
                   type: string
       x-yc-apigateway-integration:
         type: cloud_functions
-        function_id: REPLACE_WITH_WIDGET_CALLBACK_FUNCTION_ID
+        function_id: d4ea4vga6kcqndjl0mut
         service_account_id: aje47rf2630q59equess
       responses:
         '200':
