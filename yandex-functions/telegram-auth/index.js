@@ -36,18 +36,13 @@ function createResponse(statusCode, data) {
 
 function verifyTelegramSignature(initData, botToken) {
   const params = new URLSearchParams(initData);
-  const allParams = Object.fromEntries(params.entries());
   
-  console.log('📋 All params:', JSON.stringify(allParams, null, 2).substring(0, 500));
-  
-  let checkValue = params.get('hash') || params.get('signature');
+  // Priority: use 'signature' (base64, newer) over 'hash' (hex, older)
+  let checkValue = params.get('signature') || params.get('hash');
   
   if (!checkValue) {
-    console.log('❌ No hash or signature found');
     return false;
   }
-
-  console.log('🔐 Check value (first 40 chars):', checkValue.substring(0, 40));
 
   params.delete('hash');
   params.delete('signature');
@@ -57,8 +52,16 @@ function verifyTelegramSignature(initData, botToken) {
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
-  console.log('📝 Data check string (first 200):', dataCheckString.substring(0, 200));
-  console.log('🔑 Bot token (first 10):', botToken.substring(0, 10) + '...');
+  // If signature is base64, convert to hex for comparison
+  let expectedHex = checkValue;
+  if (checkValue.length > 40 && !checkValue.match(/^[0-9a-f]*$/i)) {
+    // Looks like base64, convert to hex
+    try {
+      expectedHex = Buffer.from(checkValue, 'base64').toString('hex');
+    } catch (e) {
+      expectedHex = checkValue;
+    }
+  }
 
   // Method 1: SHA256(token) as key
   const secret1 = crypto.createHash('sha256').update(botToken).digest();
@@ -66,10 +69,8 @@ function verifyTelegramSignature(initData, botToken) {
   hmac1.update(dataCheckString);
   const hash1 = hmac1.digest('hex');
 
-  console.log('Method 1 result:', hash1.substring(0, 40));
-
-  if (hash1 === checkValue) {
-    console.log('✅ PASSED Method 1');
+  if (hash1 === expectedHex) {
+    console.log('✅ Signature verification PASSED (Method 1)');
     return true;
   }
 
@@ -78,28 +79,12 @@ function verifyTelegramSignature(initData, botToken) {
   hmac2.update(dataCheckString);
   const hash2 = hmac2.digest('hex');
 
-  console.log('Method 2 result:', hash2.substring(0, 40));
-
-  if (hash2 === checkValue) {
-    console.log('✅ PASSED Method 2');
+  if (hash2 === expectedHex) {
+    console.log('✅ Signature verification PASSED (Method 2)');
     return true;
   }
 
-  // Method 3: Maybe it's base64?
-  try {
-    const hash1Base64 = Buffer.from(hash1, 'hex').toString('base64');
-    const hash2Base64 = Buffer.from(hash2, 'hex').toString('base64');
-    
-    console.log('Method 1 (base64):', hash1Base64.substring(0, 40));
-    console.log('Method 2 (base64):', hash2Base64.substring(0, 40));
-    
-    if (hash1Base64 === checkValue || hash2Base64 === checkValue) {
-      console.log('✅ PASSED Method 3 (base64)');
-      return true;
-    }
-  } catch(e) {}
-
-  console.log('❌ ALL METHODS FAILED');
+  console.log('❌ Signature verification FAILED');
   return false;
 }
 
@@ -128,8 +113,6 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
     const { initData, email } = body;
 
-    console.log('Request data:', { hasInitData: !!initData, email: email?.substring(0, 6) + '***' });
-
     if (!initData || !email) {
       return createResponse(400, { 
         error: "initData и email обязательны",
@@ -146,7 +129,6 @@ exports.handler = async (event) => {
     }
 
     if (!verifyTelegramSignature(initData, botToken)) {
-      console.log('Invalid Telegram signature');
       return createResponse(401, { 
         error: "Неверная подпись от Telegram",
         code: "INVALID_SIGNATURE"
@@ -209,7 +191,7 @@ exports.handler = async (event) => {
     const updateResult = await docClient.send(updateCommand);
     const updatedUser = updateResult.Attributes;
 
-    console.log(`✅ Telegram ID linked`);
+    console.log(`✅ Telegram ID linked successfully`);
 
     return createResponse(200, {
       success: true,
