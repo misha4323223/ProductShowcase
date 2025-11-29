@@ -1886,7 +1886,7 @@ paths:
       responses:
         '200':
           description: OK
-            # Привязка Email к Telegram аккаунту
+
   /api/users/attach-email:
     post:
       summary: Привязать Email и пароль к Telegram аккаунту
@@ -1976,7 +1976,19 @@ paths:
                 properties:
                   error:
                     type: string
-                    # Привязать Telegram к email аккаунту
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      responses:
+        '200':
+          description: OK
+
   /api/users/attach-telegram:
     post:
       summary: Привязать Telegram к email аккаунту
