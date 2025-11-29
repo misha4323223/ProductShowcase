@@ -30,11 +30,9 @@ export default function LoginPage() {
   const { toast } = useToast();
   const { isInMiniApp, telegramUser } = useTelegramApp();
 
-  // Обработчик callback от Telegram Login Widget
   useEffect(() => {
-    // Callback для Telegram Login Widget
     (window as any).onTelegramAuth = async (user: any) => {
-      console.log('✅ Telegram widget auth successful:', user);
+      console.log('✅ Telegram auth callback received:', user);
       try {
         const response = await fetch(`${API_BASE_URL}/api/telegram/widget-callback`, {
           method: 'POST',
@@ -44,26 +42,25 @@ export default function LoginPage() {
 
         const data = await response.json();
         if (data.success && data.token) {
-          console.log('✅ Got token from backend:', data.token);
+          console.log('✅ Token received, logging in...');
           await loginWithTelegram(data.token);
           toast({
             title: "Добро пожаловать!",
-            description: "Вы успешно вошли через Telegram",
+            description: "Успешный вход через Telegram",
           });
-          // Даём время на сохранение токена перед редиректом
-          setTimeout(() => setLocation("/"), 500);
+          setTimeout(() => setLocation("/"), 600);
         } else {
           toast({
-            title: "Ошибка",
-            description: data.error || "Не удалось войти через Telegram",
+            title: "Ошибка входа",
+            description: data.error || "Не удалось авторизоваться",
             variant: "destructive",
           });
         }
       } catch (error: any) {
-        console.error('❌ Telegram auth error:', error);
+        console.error('❌ Auth error:', error);
         toast({
           title: "Ошибка",
-          description: error.message || "Ошибка при входе",
+          description: "Ошибка при входе в систему",
           variant: "destructive",
         });
       }
@@ -454,29 +451,16 @@ export default function LoginPage() {
             {isLoading ? "..." : "Войти"}
           </Button>
 
-          {/* Telegram Login Button */}
-          <Button 
-            type="button"
-            onClick={() => {
-              const width = 500;
-              const height = 600;
-              const left = window.innerWidth / 2 - width / 2;
-              const top = window.innerHeight / 2 - height / 2;
-              
-              window.open(
-                `https://oauth.telegram.org/login?bot_id=8527959863&origin=${encodeURIComponent(window.location.origin)}&return_to=${encodeURIComponent(window.location.origin + '/login')}`,
-                'telegram_login',
-                `width=${width},height=${height},left=${left},top=${top}`
-              );
-            }}
-            className="w-full bg-[#0088cc] hover:bg-[#0077aa] text-white font-semibold h-9 text-sm transition-all flex items-center justify-center gap-2"
-            data-testid="button-telegram-login"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.82-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295-.403 0-.335-.149-.472-.526l-1.04-3.402-.96-.3c-.42-.133-.429-.42.09-.623l11.856-4.576c.432-.176.810.104.676.782z"/>
-            </svg>
-            Войти через Telegram
-          </Button>
+          {/* Telegram Login Widget */}
+          <script 
+            async 
+            src="https://telegram.org/js/telegram-widget.js?22" 
+            data-telegram-login="SweetWeb71" 
+            data-size="large" 
+            data-onauth="onTelegramAuth" 
+            data-request-access="write"
+          ></script>
+          <div id="telegram-login-button"></div>
 
           <Button 
             variant="ghost" 
