@@ -1,0 +1,281 @@
+  /api/telegram/auth:
+    post:
+      summary: Привязка Telegram ID к аккаунту пользователя
+      description: Проверяет подпись от Telegram Web App и привязывает Telegram ID к аккаунту пользователя
+      operationId: telegramAuth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - initData
+                - email
+              properties:
+                initData:
+                  type: string
+                  description: Данные от Telegram Web App (window.Telegram.WebApp.initData)
+                  example: "query_id=AAHdF6IQAAAAO0Xng..."
+                email:
+                  type: string
+                  format: email
+                  description: Email пользователя Sweet Delights
+                  example: "user@example.com"
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4em719picvakgi4ng2s
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Telegram ID успешно привязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Telegram ID успешно привязан"
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: "user@example.com"
+                      userId:
+                        type: string
+                        example: "user-123"
+                      telegramId:
+                        type: string
+                        example: "8527959863"
+                      telegramUsername:
+                        type: string
+                        example: "username"
+        '400':
+          description: Неверные параметры или отсутствуют обязательные поля
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+        '401':
+          description: Неверная подпись от Telegram
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '409':
+          description: К этому аккаунту уже привязан другой Telegram ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    options:
+      summary: CORS preflight
+      operationId: telegramAuthOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
+
+  /api/send-order-to-user-telegram:
+    post:
+      summary: Отправка уведомления о заказе в личный Telegram чат пользователя
+      description: Получает данные заказа и отправляет красивое форматированное уведомление пользователю в его личный Telegram чат
+      operationId: sendOrderToUserTelegram
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderData
+              properties:
+                orderData:
+                  type: object
+                  required:
+                    - id
+                    - customerName
+                    - customerEmail
+                    - items
+                    - total
+                  properties:
+                    id:
+                      type: string
+                      description: ID заказа
+                      example: "order-123abc"
+                    customerName:
+                      type: string
+                      description: ФИО получателя
+                      example: "Иван Петров"
+                    customerEmail:
+                      type: string
+                      format: email
+                      description: Email получателя
+                      example: "ivan@example.com"
+                    customerPhone:
+                      type: string
+                      description: Телефон получателя (опционально)
+                      example: "+79991234567"
+                    items:
+                      type: array
+                      description: Массив товаров в заказе
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: "Шоколад молочный"
+                          quantity:
+                            type: number
+                            example: 2
+                          price:
+                            type: number
+                            example: 150
+                    total:
+                      type: number
+                      description: Итоговая сумма заказа
+                      example: 5000
+                    subtotal:
+                      type: number
+                      description: Сумма без скидки (опционально)
+                      example: 5750
+                    discount:
+                      type: number
+                      description: Размер скидки (опционально)
+                      example: 750
+                    promoCode:
+                      type: string
+                      description: Промокод (опционально)
+                      example: "BIRTHDAY15"
+                    shippingAddress:
+                      type: string
+                      description: Адрес доставки
+                      example: "г. Москва, ул. Лени Голикова, д. 3"
+                    createdAt:
+                      type: string
+                      format: date-time
+                      description: Время создания заказа
+                      example: "2025-11-29T13:30:00Z"
+                    deliveryService:
+                      type: string
+                      enum: [CDEK, POST, OTHER]
+                      description: Служба доставки
+                      example: "CDEK"
+                    deliveryType:
+                      type: string
+                      enum: [PICKUP, DOOR]
+                      description: Тип доставки
+                      example: "PICKUP"
+                    cdekDeliveryCost:
+                      type: number
+                      description: Стоимость доставки СДЭК (опционально)
+                      example: 250
+                    deliveryCost:
+                      type: number
+                      description: Стоимость доставки (опционально)
+                      example: 200
+                    deliveryPointName:
+                      type: string
+                      description: Название пункта выдачи (опционально)
+                      example: "ПВЗ №1234 - Москва, Тверская"
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4epu4u7dq6u9ni5tfbo
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Уведомление успешно отправлено или пропущено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Order notification sent to user's Telegram"
+                  notificationSent:
+                    type: boolean
+                    description: true если уведомление отправлено, false если пользователь не имеет telegramId
+                    example: true
+                  telegramId:
+                    type: string
+                    description: Telegram ID пользователя (если отправлено)
+                    example: "8527959863"
+                  orderId:
+                    type: string
+                    description: ID заказа
+                    example: "order-123abc"
+        '400':
+          description: Отсутствует orderData или customerEmail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    options:
+      summary: CORS preflight
+      operationId: sendOrderToUserTelegramOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response

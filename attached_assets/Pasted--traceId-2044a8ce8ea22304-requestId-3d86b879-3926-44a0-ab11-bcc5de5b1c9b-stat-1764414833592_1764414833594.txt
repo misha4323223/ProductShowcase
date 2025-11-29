@@ -1,0 +1,24 @@
+{
+  "traceId": "2044a8ce8ea22304",
+  "requestId": "3d86b879-3926-44a0-ab11-bcc5de5b1c9b",
+  "status": 400,
+  "message": "Invalid openapi spec: while parsing a block mapping\n in 'reader', line 1, column 1:\n    openapi: 3.0.0\n    ^\nexpected <block end>, but found '<block mapping start>'\n in 'reader', line 1634, column 3:\n      /api/send-order-to-user-telegram:\n      ^\n\n at [Source: (StringReader); line: 1634, column: 3]",
+  "code": "GATEWAY_REQUEST_ERROR",
+  "title": "Ошибка",
+  "description": "Invalid openapi spec: while parsing a block mapping\n in 'reader', line 1, column 1:\n    openapi: 3.0.0\n    ^\nexpected <block end>, but found '<block mapping start>'\n in 'reader', line 1634, column 3:\n      /api/send-order-to-user-telegram:\n      ^\n\n at [Source: (StringReader); line: 1634, column: 3]",
+  "details": [
+    {
+      "locale": "ru",
+      "message": "Ошибки в openapi спецификации: while parsing a block mapping\n in 'reader', line 1, column 1:\n    openapi: 3.0.0\n    ^\nexpected <block end>, but found '<block mapping start>'\n in 'reader', line 1634, column 3:\n      /api/send-order-to-user-telegram:\n      ^\n\n at [Source: (StringReader); line: 1634, column: 3]",
+      "@type": "type.googleapis.com/google.rpc.LocalizedMessage"
+    },
+    {
+      "stackEntries": [
+        "yandex.cloud.serverless.apigw.exception.InvalidSpecException: Invalid openapi spec: while parsing a block mapping\n in 'reader', line 1, column 1:\n    openapi: 3.0.0\n    ^\nexpected <block end>, but found '<block mapping start>'\n in 'reader', line 1634, column 3:\n      /api/send-order-to-user-telegram:\n      ^\n\n at [Source: (StringReader); line: 1634, column: 3]",
+        "\tat yandex.cloud.serverless.apigw.openapi.SpecParser.checkMessages(SpecParser.java:535)"
+      ],
+      "detail": "Invalid openapi spec: while parsing a block mapping\n in 'reader', line 1, column 1:\n    openapi: 3.0.0\n    ^\nexpected <block end>, but found '<block mapping start>'\n in 'reader', line 1634, column 3:\n      /api/send-order-to-user-telegram:\n      ^\n\n at [Source: (StringReader); line: 1634, column: 3]",
+      "@type": "type.googleapis.com/google.rpc.DebugInfo"
+    }
+  ]
+}

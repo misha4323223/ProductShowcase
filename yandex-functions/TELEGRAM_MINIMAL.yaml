@@ -1,0 +1,63 @@
+  /api/telegram/auth:
+    post:
+      summary: Привязка Telegram ID
+      operationId: telegramAuth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - initData
+                - email
+              properties:
+                initData:
+                  type: string
+                email:
+                  type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4em719picvakgi4ng2s
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Error
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+      responses:
+        '200':
+          description: OK
+
+  /api/send-order-to-user-telegram:
+    post:
+      summary: Отправка уведомления заказа
+      operationId: sendOrderToUserTelegram
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderData
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4epu4u7dq6u9ni5tfbo
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Error
+    options:
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+      responses:
+        '200':
+          description: OK
