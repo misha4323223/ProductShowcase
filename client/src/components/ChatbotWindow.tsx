@@ -210,7 +210,7 @@ export default function ChatbotWindow() {
               data-testid={`message-${message.type}`}
             >
               <div
-                className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
+                className={`max-w-xs px-3 py-2 rounded-lg text-sm whitespace-pre-wrap break-words ${
                   message.type === 'user'
                     ? 'bg-primary text-white rounded-br-none'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none'
