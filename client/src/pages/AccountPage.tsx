@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,8 +23,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
+import { getProfile, updateProfile, type UserProfile } from "@/services/profile-api";
 import type { Order, WheelPrize } from "@/types/firebase-types";
-import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star } from "lucide-react";
+import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function WheelTab() {
@@ -235,6 +238,18 @@ export default function AccountPage() {
     return 'orders';
   });
 
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    firstName: "",
+    lastName: "",
+    patronymic: "",
+    birthDate: "",
+    phone: "",
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -248,8 +263,57 @@ export default function AccountPage() {
   useEffect(() => {
     if (user) {
       loadOrders();
+      loadProfile();
     }
   }, [user]);
+
+  const loadProfile = async () => {
+    if (!user) return;
+    
+    setLoadingProfile(true);
+    try {
+      const userProfile = await getProfile(user.email);
+      setProfile(userProfile);
+      setProfileForm({
+        firstName: userProfile.firstName || "",
+        lastName: userProfile.lastName || "",
+        patronymic: userProfile.patronymic || "",
+        birthDate: userProfile.birthDate || "",
+        phone: userProfile.phone || "",
+      });
+    } catch (error: any) {
+      console.error('Ошибка загрузки профиля:', error);
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    
+    setSavingProfile(true);
+    try {
+      const updatedProfile = await updateProfile({
+        email: user.email,
+        ...profileForm,
+      });
+      setProfile(updatedProfile);
+      setIsEditingProfile(false);
+      toast({
+        title: "Профиль обновлён",
+        description: "Ваши данные успешно сохранены",
+      });
+    } catch (error: any) {
+      console.error('Ошибка сохранения профиля:', error);
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось сохранить профиль",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingProfile(false);
+    }
+  };
 
   const loadOrders = async () => {
     if (!user) return;
@@ -484,20 +548,169 @@ export default function AccountPage() {
           <TabsContent value="profile">
             <Card>
               <CardHeader>
-                <CardTitle>Информация профиля</CardTitle>
-                <CardDescription>Ваши данные</CardDescription>
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <CardTitle>Информация профиля</CardTitle>
+                    <CardDescription>Ваши личные данные</CardDescription>
+                  </div>
+                  {!isEditingProfile && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setIsEditingProfile(true)}
+                      data-testid="button-edit-profile"
+                    >
+                      <Edit3 className="h-4 w-4 mr-2" />
+                      Редактировать
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Email</label>
-                  <p className="text-lg" data-testid="text-profile-email">{user.email}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">ID пользователя</label>
-                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded" data-testid="text-profile-uid">
-                    {user.userId}
-                  </p>
-                </div>
+                {loadingProfile ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                ) : isEditingProfile ? (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Фамилия</Label>
+                        <Input
+                          id="lastName"
+                          placeholder="Иванов"
+                          value={profileForm.lastName}
+                          onChange={(e) => setProfileForm({ ...profileForm, lastName: e.target.value })}
+                          data-testid="input-lastName"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">Имя</Label>
+                        <Input
+                          id="firstName"
+                          placeholder="Иван"
+                          value={profileForm.firstName}
+                          onChange={(e) => setProfileForm({ ...profileForm, firstName: e.target.value })}
+                          data-testid="input-firstName"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="patronymic">Отчество</Label>
+                        <Input
+                          id="patronymic"
+                          placeholder="Иванович"
+                          value={profileForm.patronymic}
+                          onChange={(e) => setProfileForm({ ...profileForm, patronymic: e.target.value })}
+                          data-testid="input-patronymic"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="birthDate">Дата рождения</Label>
+                        <Input
+                          id="birthDate"
+                          type="date"
+                          value={profileForm.birthDate}
+                          onChange={(e) => setProfileForm({ ...profileForm, birthDate: e.target.value })}
+                          data-testid="input-birthDate"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Телефон</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+7 (999) 123-45-67"
+                        value={profileForm.phone}
+                        onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                        data-testid="input-phone"
+                      />
+                    </div>
+                    <Separator />
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setIsEditingProfile(false);
+                          if (profile) {
+                            setProfileForm({
+                              firstName: profile.firstName || "",
+                              lastName: profile.lastName || "",
+                              patronymic: profile.patronymic || "",
+                              birthDate: profile.birthDate || "",
+                              phone: profile.phone || "",
+                            });
+                          }
+                        }}
+                        data-testid="button-cancel-edit"
+                      >
+                        Отмена
+                      </Button>
+                      <Button 
+                        onClick={handleSaveProfile}
+                        disabled={savingProfile}
+                        data-testid="button-save-profile"
+                      >
+                        {savingProfile ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Save className="h-4 w-4 mr-2" />
+                        )}
+                        Сохранить
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-muted-foreground">Фамилия</Label>
+                        <p className="text-lg" data-testid="text-profile-lastName">
+                          {profile?.lastName || <span className="text-muted-foreground italic">Не указано</span>}
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-muted-foreground">Имя</Label>
+                        <p className="text-lg" data-testid="text-profile-firstName">
+                          {profile?.firstName || <span className="text-muted-foreground italic">Не указано</span>}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-muted-foreground">Отчество</Label>
+                        <p className="text-lg" data-testid="text-profile-patronymic">
+                          {profile?.patronymic || <span className="text-muted-foreground italic">Не указано</span>}
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-muted-foreground">Дата рождения</Label>
+                        <p className="text-lg" data-testid="text-profile-birthDate">
+                          {profile?.birthDate ? new Date(profile.birthDate).toLocaleDateString('ru-RU') : <span className="text-muted-foreground italic">Не указано</span>}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">Телефон</Label>
+                      <p className="text-lg" data-testid="text-profile-phone">
+                        {profile?.phone || <span className="text-muted-foreground italic">Не указано</span>}
+                      </p>
+                    </div>
+                    <Separator />
+                    <div>
+                      <Label className="text-muted-foreground">Email</Label>
+                      <p className="text-lg" data-testid="text-profile-email">{user.email}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground">ID пользователя</Label>
+                      <p className="text-sm font-mono bg-muted px-2 py-1 rounded inline-block" data-testid="text-profile-uid">
+                        {user.userId}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
