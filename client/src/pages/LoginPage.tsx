@@ -353,17 +353,15 @@ export default function LoginPage() {
             {isLoading ? "..." : "Войти"}
           </Button>
 
-          {isInMiniApp && (
-            <Button 
-              type="button"
-              className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold h-8 text-sm transition-all"
-              onClick={handleTelegramAuth}
-              disabled={isTelegramAuthLoading}
-              data-testid="button-telegram-auth"
-            >
-              {isTelegramAuthLoading ? "Привязка..." : "📱 Привязать Telegram"}
-            </Button>
-          )}
+          <Button 
+            type="button"
+            className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold h-8 text-sm transition-all"
+            onClick={handleTelegramAuth}
+            disabled={isTelegramAuthLoading}
+            data-testid="button-telegram-auth"
+          >
+            {isTelegramAuthLoading ? "Привязка..." : "📱 Привязать Telegram"}
+          </Button>
 
           <Button 
             variant="ghost" 
