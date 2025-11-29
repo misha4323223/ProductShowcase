@@ -454,55 +454,124 @@ export default function AccountPage() {
   };
 
   const handleAttachTelegram = async () => {
-    setIsAttachingTelegram(true);
     console.log('🔗 handleAttachTelegram called');
-    console.log('🔍 window.Telegram:', (window as any).Telegram);
     console.log('🔍 window.Telegram?.WebApp:', (window as any).Telegram?.WebApp);
     
-    try {
-      if (!(window as any).Telegram?.WebApp) {
-        console.log('❌ Telegram WebApp не доступен');
+    // Если в Mini App - использовать initData
+    if ((window as any).Telegram?.WebApp) {
+      setIsAttachingTelegram(true);
+      try {
+        const initData = (window as any).Telegram.WebApp.initData;
+        console.log('📦 initData получена:', initData ? 'есть' : 'нет');
+        
+        if (!initData) {
+          console.log('❌ initData отсутствует');
+          toast({
+            title: "Ошибка",
+            description: "Не удалось получить данные от Telegram",
+            variant: "destructive",
+          });
+          setIsAttachingTelegram(false);
+          return;
+        }
+
+        console.log('✅ Отправляем initData на сервер...');
+        await attachTelegram(initData);
+        toast({
+          title: "Успешно!",
+          description: "Telegram успешно привязан к вашему аккаунту",
+        });
+        console.log('✅ Telegram успешно привязан');
+        
+        setTimeout(() => setLocation("/account"), 600);
+      } catch (error: any) {
+        console.error('❌ Ошибка привязки:', error);
+        toast({
+          title: "Ошибка привязки",
+          description: error.message || "Не удалось привязать Telegram",
+          variant: "destructive",
+        });
+      } finally {
+        setIsAttachingTelegram(false);
+      }
+    } else {
+      // Если в браузере - показать Telegram Login Widget
+      console.log('🌐 Браузер - показываю Telegram Login Widget');
+      setIsAttachingTelegram(true);
+      
+      // Создаем скрытый контейнер для widget если его нет
+      let widgetContainer = document.getElementById('attach-telegram-widget-container');
+      if (!widgetContainer) {
+        widgetContainer = document.createElement('div');
+        widgetContainer.id = 'attach-telegram-widget-container';
+        widgetContainer.style.display = 'none';
+        document.body.appendChild(widgetContainer);
+      }
+
+      // Загружаем и инициализируем Telegram Login Widget
+      const script = document.createElement('script');
+      script.src = 'https://telegram.org/js/telegram-widget.js?22';
+      script.async = true;
+      script.onload = () => {
+        console.log('📱 Telegram Widget скрипт загружен');
+        // @ts-ignore
+        if (window.Telegram?.Login?.embedButton) {
+          const botUsername = 'SweetWeb71_bot'; // Используем реальное имя бота
+          
+          // @ts-ignore
+          window.Telegram.Login.embedButton('attach-telegram-widget-container', botUsername, {
+            size: 'large',
+            userpic: false,
+            radius: 6,
+            requestAccess: 'write',
+            onAuthCallback: async (user: any) => {
+              console.log('✅ Telegram user получен:', user);
+              try {
+                const response = await fetch(`${window.location.origin}/api/telegram/widget-callback`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(user),
+                });
+
+                const data = await response.json();
+                console.log('📊 Response:', data);
+                
+                if (response.ok) {
+                  // Теперь привязываем к текущему аккаунту
+                  const token = localStorage.getItem('authToken');
+                  if (token && data.initData) {
+                    await attachTelegram(data.initData);
+                    toast({
+                      title: "Успешно!",
+                      description: "Telegram успешно привязан к вашему аккаунту",
+                    });
+                    setTimeout(() => setLocation("/account"), 600);
+                  }
+                }
+              } catch (error: any) {
+                console.error('❌ Ошибка привязки:', error);
+                toast({
+                  title: "Ошибка",
+                  description: error.message || "Не удалось привязать Telegram",
+                  variant: "destructive",
+                });
+              } finally {
+                setIsAttachingTelegram(false);
+              }
+            }
+          });
+        }
+      };
+      script.onerror = () => {
+        console.error('❌ Ошибка загрузки Telegram Widget');
         toast({
           title: "Ошибка",
-          description: "Telegram Web App не доступно. Откройте приложение через Telegram Bot.",
+          description: "Не удалось загрузить Telegram Widget",
           variant: "destructive",
         });
         setIsAttachingTelegram(false);
-        return;
-      }
-
-      const initData = (window as any).Telegram.WebApp.initData;
-      console.log('📦 initData получена:', initData ? 'есть' : 'нет');
-      
-      if (!initData) {
-        console.log('❌ initData отсутствует');
-        toast({
-          title: "Ошибка",
-          description: "Не удалось получить данные от Telegram",
-          variant: "destructive",
-        });
-        setIsAttachingTelegram(false);
-        return;
-      }
-
-      console.log('✅ Отправляем initData на сервер...');
-      await attachTelegram(initData);
-      toast({
-        title: "Успешно!",
-        description: "Telegram успешно привязан к вашему аккаунту",
-      });
-      console.log('✅ Telegram успешно привязан');
-      
-      setTimeout(() => setLocation("/account"), 600);
-    } catch (error: any) {
-      console.error('❌ Ошибка привязки:', error);
-      toast({
-        title: "Ошибка привязки",
-        description: error.message || "Не удалось привязать Telegram",
-        variant: "destructive",
-      });
-    } finally {
-      setIsAttachingTelegram(false);
+      };
+      document.head.appendChild(script);
     }
   };
 
