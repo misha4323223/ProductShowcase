@@ -908,6 +908,7 @@ paths:
         '200':
           description: OK
 
+  # ========== TELEGRAM WIDGET CALLBACK ==========
   /api/telegram/widget-callback:
     post:
       summary: Callback от Telegram Login Widget
