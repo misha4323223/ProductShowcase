@@ -87,7 +87,29 @@ export function getTelegramInitData(): string | null {
     return null;
   }
 
-  return window.Telegram!.WebApp.initData;
+  const initData = window.Telegram!.WebApp.initData;
+  if (initData) return initData;
+
+  // Fallback: use initDataUnsafe to construct initData string
+  const initDataUnsafe = window.Telegram!.WebApp.initDataUnsafe;
+  if (initDataUnsafe && initDataUnsafe.user) {
+    const params = new URLSearchParams();
+    if (initDataUnsafe.user) {
+      params.append('user', JSON.stringify(initDataUnsafe.user));
+    }
+    if (initDataUnsafe.auth_date) {
+      params.append('auth_date', String(initDataUnsafe.auth_date));
+    }
+    if (initDataUnsafe.hash) {
+      params.append('hash', initDataUnsafe.hash);
+    }
+    if (initDataUnsafe.query_id) {
+      params.append('query_id', initDataUnsafe.query_id);
+    }
+    return params.toString();
+  }
+
+  return null;
 }
 
 /**
