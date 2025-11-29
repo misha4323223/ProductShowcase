@@ -17,7 +17,16 @@ const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
-  const { signIn, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram } = useAuth();
+  
+  let auth: any = null;
+  try {
+    auth = useAuth();
+  } catch (e) {
+    console.error('AuthContext error:', e);
+    return <div className="flex items-center justify-center min-h-screen">Ошибка загрузки</div>;
+  }
+  
+  const { signIn, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram } = auth;
   const { toast } = useToast();
   const { isInMiniApp, telegramUser } = useTelegramApp();
   
