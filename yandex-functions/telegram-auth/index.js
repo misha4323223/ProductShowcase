@@ -1,3 +1,4 @@
+
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
@@ -34,82 +35,57 @@ function createResponse(statusCode, data) {
   };
 }
 
-function verifyTelegramSignature(rawInitData, botToken) {
-  const params = new URLSearchParams(rawInitData);
-  
-  const hash = params.get('hash');
-  const signature = params.get('signature');
-  
-  console.log('🔍 Checking for hash:', !!hash);
-  console.log('🔍 Checking for signature:', !!signature);
-
-  const checkValue = hash || signature;
-  if (!checkValue) {
-    console.log('❌ No hash or signature');
+function verifyTelegramSignature(initData, botToken) {
+  try {
+    console.log('🔐 Starting Telegram signature verification');
+    
+    const params = new URLSearchParams(initData);
+    const hash = params.get('hash');
+    
+    if (!hash) {
+      console.log('❌ No hash found in initData');
+      return false;
+    }
+    
+    console.log('✅ Hash found:', hash.substring(0, 20) + '...');
+    
+    // Remove hash from params
+    params.delete('hash');
+    
+    // Sort params alphabetically and build data check string with \n separator
+    const dataCheckArray = [];
+    for (const [key, value] of params.entries()) {
+      dataCheckArray.push(`${key}=${value}`);
+    }
+    dataCheckArray.sort();
+    const dataCheckString = dataCheckArray.join('\n');
+    
+    console.log('📝 Data check string (first 100 chars):', dataCheckString.substring(0, 100));
+    
+    // Create secret key: HMAC-SHA256 of "WebAppData" with bot token
+    const secretKey = crypto
+      .createHmac('sha256', 'WebAppData')
+      .update(botToken)
+      .digest();
+    
+    console.log('🔑 Secret key generated');
+    
+    // Calculate hash
+    const calculatedHash = crypto
+      .createHmac('sha256', secretKey)
+      .update(dataCheckString)
+      .digest('hex');
+    
+    console.log('💻 Calculated hash:', calculatedHash);
+    console.log('📱 Received hash:  ', hash);
+    console.log('✅ Match:', calculatedHash === hash);
+    
+    return calculatedHash === hash;
+    
+  } catch (error) {
+    console.error('❌ Verification error:', error.message);
     return false;
   }
-
-  // Remove them before building data string
-  params.delete('hash');
-  params.delete('signature');
-
-  // Convert signature from base64 to hex if needed
-  let expectedHex = checkValue;
-  if (checkValue.length > 40 && !checkValue.match(/^[0-9a-f]*$/i)) {
-    try {
-      expectedHex = Buffer.from(checkValue, 'base64').toString('hex');
-      console.log('Converted signature from base64 to hex');
-    } catch (e) {
-      expectedHex = checkValue;
-    }
-  }
-
-  console.log('Expected signature (hex):', expectedHex.substring(0, 40));
-
-  // Build sorted data string
-  const sortedParams = Array.from(params.entries())
-    .sort(([a], [b]) => a.localeCompare(b));
-
-  // Try both separators (\n and &)
-  const separators = ['\n', '&'];
-  const keys = [
-    { name: 'SHA256(WebAppData + token)', value: crypto.createHash('sha256').update('WebAppData' + botToken).digest() },
-    { name: 'SHA256(token)', value: crypto.createHash('sha256').update(botToken).digest() },
-    { name: 'Direct token', value: botToken },
-  ];
-
-  for (const separator of separators) {
-    const dataCheckString = sortedParams
-      .map(([key, value]) => `${key}=${value}`)
-      .join(separator);
-
-    console.log(`\n📝 Trying separator: ${separator === '\n' ? '\\n' : separator}`);
-    console.log('Data string (first 100):', dataCheckString.substring(0, 100));
-
-    for (const key of keys) {
-      const hmac = crypto.createHmac('sha256', key.value);
-      hmac.update(dataCheckString);
-      const computed = hmac.digest('hex');
-      
-      console.log(`  ${key.name}: ${computed.substring(0, 40)}`);
-      
-      if (computed === expectedHex) {
-        console.log(`✅ SIGNATURE VALID with ${key.name} and separator '${separator === '\n' ? '\\n' : separator}'`);
-        return true;
-      }
-    }
-  }
-
-  console.log('\n❌ ALL VERIFICATION METHODS FAILED');
-  console.log('Expected:', expectedHex.substring(0, 40));
-  
-  // TEMPORARY: Allow verification to pass for debugging
-  if (process.env.SKIP_TELEGRAM_VERIFICATION === 'true') {
-    console.log('⚠️ VERIFICATION SKIPPED - DEBUG MODE');
-    return true;
-  }
-  
-  return false;
 }
 
 function parseTelegramInitData(initData) {
@@ -117,9 +93,14 @@ function parseTelegramInitData(initData) {
     const params = new URLSearchParams(initData);
     const userStr = params.get('user');
     
-    if (!userStr) return null;
+    if (!userStr) {
+      console.log('❌ No user data in initData');
+      return null;
+    }
 
     const userData = JSON.parse(userStr);
+    console.log('✅ User parsed:', userData.id, userData.first_name);
+    
     return {
       id: userData.id,
       first_name: userData.first_name || '',
@@ -128,16 +109,23 @@ function parseTelegramInitData(initData) {
       language_code: userData.language_code || 'ru',
     };
   } catch (error) {
+    console.error('❌ Parse error:', error.message);
     return null;
   }
 }
 
 exports.handler = async (event) => {
+  console.log('🚀 telegram-auth function started');
+  
   try {
     const body = JSON.parse(event.body || '{}');
     const { initData, email } = body;
 
+    console.log('📧 Email:', email);
+    console.log('📱 InitData length:', initData?.length);
+
     if (!initData || !email) {
+      console.log('❌ Missing params');
       return createResponse(400, { 
         error: "initData и email обязательны",
         code: "MISSING_PARAMS"
@@ -146,21 +134,27 @@ exports.handler = async (event) => {
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     if (!botToken) {
+      console.log('❌ Bot token not configured');
       return createResponse(500, { 
         error: "Telegram bot token not configured",
         code: "CONFIG_ERROR"
       });
     }
 
+    console.log('🔍 Verifying signature...');
     if (!verifyTelegramSignature(initData, botToken)) {
+      console.log('❌ Signature verification failed');
       return createResponse(401, { 
         error: "Неверная подпись от Telegram",
         code: "INVALID_SIGNATURE"
       });
     }
 
+    console.log('✅ Signature verified!');
+
     const telegramUser = parseTelegramInitData(initData);
     if (!telegramUser) {
+      console.log('❌ Failed to parse user data');
       return createResponse(400, { 
         error: "Failed to parse Telegram user data",
         code: "INVALID_USER_DATA"
@@ -170,6 +164,8 @@ exports.handler = async (event) => {
     const trimmedEmail = email.trim().toLowerCase();
     const telegramId = String(telegramUser.id);
 
+    console.log('🔍 Looking up user:', trimmedEmail);
+
     const getCommand = new GetCommand({
       TableName: "users",
       Key: { email: trimmedEmail }
@@ -177,6 +173,7 @@ exports.handler = async (event) => {
 
     const result = await docClient.send(getCommand);
     if (!result.Item) {
+      console.log('❌ User not found');
       return createResponse(404, { 
         error: "Пользователь не найден",
         code: "USER_NOT_FOUND"
@@ -186,11 +183,14 @@ exports.handler = async (event) => {
     const user = result.Item;
 
     if (user.telegramId && user.telegramId !== telegramId) {
+      console.log('❌ Telegram ID conflict');
       return createResponse(409, { 
         error: "К этому аккаунту уже привязан другой Telegram ID",
         code: "TELEGRAM_ID_CONFLICT"
       });
     }
+
+    console.log('💾 Updating user with Telegram data...');
 
     const updateCommand = new UpdateCommand({
       TableName: "users",
@@ -215,7 +215,7 @@ exports.handler = async (event) => {
     const updateResult = await docClient.send(updateCommand);
     const updatedUser = updateResult.Attributes;
 
-    console.log(`✅ Telegram ID linked successfully`);
+    console.log('✅ Telegram ID linked successfully!');
 
     return createResponse(200, {
       success: true,
@@ -229,10 +229,12 @@ exports.handler = async (event) => {
     });
 
   } catch (error) {
-    console.error("Error:", error.message);
+    console.error('❌ Error:', error.message);
+    console.error('Stack:', error.stack);
     return createResponse(500, { 
       error: "Ошибка при привязке Telegram ID",
-      code: "INTERNAL_ERROR"
+      code: "INTERNAL_ERROR",
+      details: error.message
     });
   }
 };
