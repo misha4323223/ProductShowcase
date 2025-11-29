@@ -166,6 +166,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
+          <TelegramAutoLogin />
           <AdminAuthProvider>
             <CartProvider>
               <WishlistProvider>
