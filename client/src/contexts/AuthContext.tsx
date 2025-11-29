@@ -193,14 +193,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const attachEmail = async (email: string, password: string, passwordConfirm: string) => {
+    console.log('🔗 attachEmail called');
     const token = localStorage.getItem('authToken');
     if (!token) {
       throw new Error('Пожалуйста, авторизуйтесь');
     }
 
     const trimmedEmail = email.trim().toLowerCase();
+    console.log('📧 Email:', trimmedEmail);
+    console.log('🔑 Token:', token.substring(0, 20) + '...');
     
-    const response = await fetch(`${API_BASE_URL}/api/users/attach-email`, {
+    const url = `${API_BASE_URL}/api/users/attach-email`;
+    console.log('🌐 URL:', url);
+    
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
@@ -211,12 +217,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }),
     });
 
+    console.log('📡 Response status:', response.status);
+    
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Ошибка привязки email');
+      const error = await response.json().catch(() => ({ error: 'Неизвестная ошибка' }));
+      console.error('❌ Error response:', error);
+      throw new Error(error.error || `Ошибка ${response.status}: Ошибка привязки email`);
     }
 
     const data = await response.json();
+    console.log('✅ Email успешно привязан');
     localStorage.setItem('authToken', data.token);
     setUser(data.user);
   };
