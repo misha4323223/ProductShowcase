@@ -25,7 +25,7 @@ import {
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
 import { getProfile, updateProfile, type UserProfile, isBirthdayToday, markBirthdayGiftSent } from "@/services/profile-api";
 import type { Order, WheelPrize } from "@/types/firebase-types";
-import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3 } from "lucide-react";
+import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3, Cake } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function WheelTab() {
@@ -561,9 +561,9 @@ export default function AccountPage() {
             {isBirthday && (
               <div className="mb-6 p-4 bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 border border-pink-300 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="text-3xl">🎂</div>
+                  <Cake className="h-8 w-8 text-pink-600 flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="font-bold text-lg text-pink-900">С Днём Рождения! 🎉</p>
+                    <p className="font-bold text-lg text-pink-900">С Днём Рождения!</p>
                     <p className="text-sm text-pink-800">Поздравляем! Получите <span className="font-bold">15% скидку</span> на весь заказ в честь вашего дня рождения!</p>
                   </div>
                 </div>

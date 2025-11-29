@@ -98,6 +98,13 @@ export default function CheckoutPage() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (subtotal > 0 && birthdayDiscount > 0) {
+      const discount = Math.round(subtotal * 0.15);
+      setBirthdayDiscount(discount);
+    }
+  }, [subtotal]);
+
   const checkBirthdayDiscount = async () => {
     if (!user) return;
     
@@ -828,6 +835,12 @@ export default function CheckoutPage() {
                       <div className="flex justify-between text-sm text-green-600">
                         <span>Скидка баллами</span>
                         <span data-testid="text-bonus-discount">-{bonusDiscount}₽</span>
+                      </div>
+                    )}
+                    {birthdayDiscount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>Скидка на день рождения (15%)</span>
+                        <span data-testid="text-birthday-discount">-{birthdayDiscount}₽</span>
                       </div>
                     )}
                   </div>
