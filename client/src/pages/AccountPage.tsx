@@ -449,34 +449,47 @@ export default function AccountPage() {
 
   const handleAttachTelegram = async () => {
     setIsAttachingTelegram(true);
+    console.log('🔗 handleAttachTelegram called');
+    console.log('🔍 window.Telegram:', (window as any).Telegram);
+    console.log('🔍 window.Telegram?.WebApp:', (window as any).Telegram?.WebApp);
+    
     try {
       if (!(window as any).Telegram?.WebApp) {
+        console.log('❌ Telegram WebApp не доступен');
         toast({
           title: "Ошибка",
-          description: "Telegram Web App не доступно",
+          description: "Telegram Web App не доступно. Откройте приложение через Telegram Bot.",
           variant: "destructive",
         });
+        setIsAttachingTelegram(false);
         return;
       }
 
       const initData = (window as any).Telegram.WebApp.initData;
+      console.log('📦 initData получена:', initData ? 'есть' : 'нет');
+      
       if (!initData) {
+        console.log('❌ initData отсутствует');
         toast({
           title: "Ошибка",
           description: "Не удалось получить данные от Telegram",
           variant: "destructive",
         });
+        setIsAttachingTelegram(false);
         return;
       }
 
+      console.log('✅ Отправляем initData на сервер...');
       await attachTelegram(initData);
       toast({
         title: "Успешно!",
         description: "Telegram успешно привязан к вашему аккаунту",
       });
+      console.log('✅ Telegram успешно привязан');
       
       setTimeout(() => setLocation("/account"), 600);
     } catch (error: any) {
+      console.error('❌ Ошибка привязки:', error);
       toast({
         title: "Ошибка привязки",
         description: error.message || "Не удалось привязать Telegram",
