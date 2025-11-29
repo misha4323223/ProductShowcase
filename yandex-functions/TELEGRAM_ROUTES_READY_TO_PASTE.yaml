@@ -1,0 +1,196 @@
+  # ========================================
+  # TELEGRAM MINI APP МАРШРУТЫ
+  # ========================================
+  # Вставляй эти маршруты В КОНЕЦ раздела "paths:" твоего основного api-gateway-spec.yaml
+  # Замени <SERVICE_ACCOUNT_ID> если ещё не заполнено
+  #
+  
+  /api/telegram/auth:
+    post:
+      summary: Привязка Telegram ID к аккаунту пользователя
+      description: Проверяет подпись от Telegram Web App и привязывает Telegram ID к аккаунту пользователя
+      operationId: telegramAuth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - initData
+                - email
+              properties:
+                initData:
+                  type: string
+                  description: Данные от Telegram Web App (window.Telegram.WebApp.initData)
+                  example: "query_id=AAHdF6IQAAAAO0Xng..."
+                email:
+                  type: string
+                  format: email
+                  description: Email пользователя Sweet Delights
+                  example: "user@example.com"
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4em719picvakgi4ng2s
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Telegram ID успешно привязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      userId:
+                        type: string
+                      telegramId:
+                        type: string
+                      telegramUsername:
+                        type: string
+        '400':
+          description: Неверные параметры или отсутствуют обязательные поля
+        '401':
+          description: Неверная подпись от Telegram
+        '404':
+          description: Пользователь не найден
+        '409':
+          description: К этому аккаунту уже привязан другой Telegram ID
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: telegramAuthOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
+
+  /api/send-order-to-user-telegram:
+    post:
+      summary: Отправка уведомления о заказе в личный Telegram чат пользователя
+      description: Получает данные заказа и отправляет красивое форматированное уведомление пользователю в его личный Telegram чат
+      operationId: sendOrderToUserTelegram
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderData
+              properties:
+                orderData:
+                  type: object
+                  required:
+                    - id
+                    - customerName
+                    - customerEmail
+                    - items
+                    - total
+                  properties:
+                    id:
+                      type: string
+                      description: ID заказа
+                      example: "order-123abc"
+                    customerName:
+                      type: string
+                      description: ФИО получателя
+                      example: "Иван Петров"
+                    customerEmail:
+                      type: string
+                      format: email
+                      description: Email получателя
+                      example: "ivan@example.com"
+                    items:
+                      type: array
+                      description: Массив товаров в заказе
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          quantity:
+                            type: number
+                          price:
+                            type: number
+                    total:
+                      type: number
+                      description: Итоговая сумма заказа
+                      example: 5000
+                    subtotal:
+                      type: number
+                    discount:
+                      type: number
+                    promoCode:
+                      type: string
+                    shippingAddress:
+                      type: string
+                    createdAt:
+                      type: string
+                      format: date-time
+                    deliveryService:
+                      type: string
+                      enum: [CDEK, POST, OTHER]
+                    deliveryType:
+                      type: string
+                      enum: [PICKUP, DOOR]
+                    cdekDeliveryCost:
+                      type: number
+                    deliveryCost:
+                      type: number
+                    deliveryPointName:
+                      type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4epu4u7dq6u9ni5tfbo
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Уведомление успешно отправлено или пропущено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  notificationSent:
+                    type: boolean
+                  telegramId:
+                    type: string
+                  orderId:
+                    type: string
+        '400':
+          description: Отсутствует orderData или customerEmail
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: sendOrderToUserTelegramOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
