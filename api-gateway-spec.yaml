@@ -1886,8 +1886,8 @@ paths:
       responses:
         '200':
           description: OK
-      # Привязка Email к Telegram аккаунту
-    /api/users/attach-email:
+
+  /api/users/attach-email:
     post:
       summary: Привязать Email к аккаунту
       operationId: attachEmail
