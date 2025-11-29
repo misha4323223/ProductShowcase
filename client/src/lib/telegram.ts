@@ -88,10 +88,14 @@ export function getTelegramInitData(): string | null {
   }
 
   const initData = window.Telegram!.WebApp.initData;
+  console.log('📊 initData:', !!initData, 'length:', initData?.length || 0);
+  
   if (initData) return initData;
 
   // Fallback: use initDataUnsafe to construct initData string
   const initDataUnsafe = window.Telegram!.WebApp.initDataUnsafe;
+  console.log('🔍 initDataUnsafe:', JSON.stringify(initDataUnsafe).substring(0, 200));
+  
   if (initDataUnsafe && initDataUnsafe.user) {
     const params = new URLSearchParams();
     if (initDataUnsafe.user) {
@@ -106,9 +110,11 @@ export function getTelegramInitData(): string | null {
     if (initDataUnsafe.query_id) {
       params.append('query_id', initDataUnsafe.query_id);
     }
+    console.log('✅ Constructed initData from initDataUnsafe');
     return params.toString();
   }
 
+  console.log('⚠️ No initDataUnsafe.user found');
   return null;
 }
 
