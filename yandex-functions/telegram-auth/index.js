@@ -36,9 +36,6 @@ function createResponse(statusCode, data) {
 
 /**
  * Проверка подписи Telegram Web App
- * @param {object} initData - данные от Telegram Web App
- * @param {string} botToken - токен бота
- * @returns {boolean} - верна ли подпись
  */
 function verifyTelegramSignature(initData, botToken) {
   try {
@@ -46,33 +43,22 @@ function verifyTelegramSignature(initData, botToken) {
     const hash = params.get('hash');
     
     if (!hash) {
-      console.log('❌ No hash in initData');
       return false;
     }
 
-    console.log('📝 Received hash:', hash.substring(0, 20) + '...');
-    console.log('🔑 Bot token length:', botToken.length);
-
-    // Удаляем hash из параметров
     params.delete('hash');
 
-    // Сортируем параметры и создаём string
     const dataCheckString = Array.from(params.entries())
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([key, value]) => `${key}=${value}`)
       .join('\n');
 
-    console.log('📄 Data check string:', dataCheckString.substring(0, 100) + '...');
-
-    // Создаём SECRET из BOT_TOKEN (этот шаг был пропущен!)
+    // ВАЖНО: Сначала хешируем токен, потом используем как ключ
     const secret = crypto.createHash('sha256').update(botToken).digest();
-    
-    // Создаём подпись с правильным SECRET
     const hmac = crypto.createHmac('sha256', secret);
     hmac.update(dataCheckString);
     const calculatedHash = hmac.digest('hex');
 
-    console.log('🧮 Calculated hash:', calculatedHash.substring(0, 20) + '...');
     const isValid = calculatedHash === hash;
     console.log(`🔐 Signature verification: ${isValid ? '✅' : '❌'}`);
     return isValid;
@@ -91,7 +77,6 @@ function parseTelegramInitData(initData) {
     const userStr = params.get('user');
     
     if (!userStr) {
-      console.log('❌ No user data in initData');
       return null;
     }
 
@@ -111,7 +96,6 @@ function parseTelegramInitData(initData) {
 
 exports.handler = async (event) => {
   try {
-    // Получаем тело запроса
     const body = JSON.parse(event.body || '{}');
     const { initData, email } = body;
 
@@ -122,7 +106,6 @@ exports.handler = async (event) => {
       });
     }
 
-    // Проверяем подпись от Telegram
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     if (!botToken) {
       console.error('❌ TELEGRAM_BOT_TOKEN not configured');
@@ -132,7 +115,6 @@ exports.handler = async (event) => {
       });
     }
 
-    // Проверяем подпись
     if (!verifyTelegramSignature(initData, botToken)) {
       return createResponse(401, { 
         error: "Неверная подпись от Telegram",
@@ -140,7 +122,6 @@ exports.handler = async (event) => {
       });
     }
 
-    // Парсим данные юзера из Telegram
     const telegramUser = parseTelegramInitData(initData);
     if (!telegramUser) {
       return createResponse(400, { 
@@ -152,7 +133,6 @@ exports.handler = async (event) => {
     const trimmedEmail = email.trim().toLowerCase();
     const telegramId = String(telegramUser.id);
 
-    // Проверяем что пользователь существует
     const getCommand = new GetCommand({
       TableName: "users",
       Key: { email: trimmedEmail }
@@ -168,7 +148,6 @@ exports.handler = async (event) => {
 
     const user = result.Item;
 
-    // Если уже привязан другой Telegram ID, ошибка
     if (user.telegramId && user.telegramId !== telegramId) {
       return createResponse(409, { 
         error: "К этому аккаунту уже привязан другой Telegram ID",
@@ -176,7 +155,6 @@ exports.handler = async (event) => {
       });
     }
 
-    // Обновляем профиль пользователя с Telegram ID и данными
     const updateCommand = new UpdateCommand({
       TableName: "users",
       Key: { email: trimmedEmail },
