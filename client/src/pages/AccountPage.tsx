@@ -516,9 +516,7 @@ export default function AccountPage() {
             description: error.message || "Не удалось привязать Telegram",
             variant: "destructive",
           });
-        } finally {
           setIsAttachingTelegram(false);
-          delete (window as any).onTelegramAttachAuth;
         }
       };
 
