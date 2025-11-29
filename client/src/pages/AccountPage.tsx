@@ -493,11 +493,11 @@ export default function AccountPage() {
     } else {
       // Если в браузере - показать Telegram Login Widget
       console.log('🌐 Браузер - загружаю Telegram Login Widget');
-      setIsAttachingTelegram(true);
       
       // Создаем глобальный callback для widget
       (window as any).onTelegramAttachAuth = async (user: any) => {
         console.log('✅ Telegram user получен:', user);
+        setIsAttachingTelegram(true);
         try {
           // Преобразуем user data в initData формат
           const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
@@ -530,7 +530,12 @@ export default function AccountPage() {
       script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
       script.setAttribute('data-request-access', 'write');
       
-      document.body.appendChild(script);
+      // Добавляем скрипт в контейнер как на LoginPage
+      const container = document.getElementById('attach-telegram-widget-container');
+      if (container) {
+        container.innerHTML = '';
+        container.appendChild(script);
+      }
     }
   };
 
