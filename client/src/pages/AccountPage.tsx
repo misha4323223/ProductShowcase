@@ -418,7 +418,9 @@ export default function AccountPage() {
   };
 
   const handleAttachEmail = async () => {
+    console.log('🔗 handleAttachEmail called');
     if (!attachEmailForm.email || !attachEmailForm.password || !attachEmailForm.passwordConfirm) {
+      console.log('❌ Форма не заполнена:', attachEmailForm);
       toast({
         title: "Ошибка",
         description: "Заполните все поля",
@@ -428,8 +430,11 @@ export default function AccountPage() {
     }
 
     setIsAttachingEmail(true);
+    console.log('📧 Отправляю данные:', {email: attachEmailForm.email, password: '***'});
     try {
+      console.log('⏳ Вызываю attachEmail()...');
       await attachEmail(attachEmailForm.email, attachEmailForm.password, attachEmailForm.passwordConfirm);
+      console.log('✅ attachEmail() вернула результат');
       toast({
         title: "Успешно!",
         description: "Email успешно привязан к вашему аккаунту",
@@ -437,6 +442,7 @@ export default function AccountPage() {
       setShowAttachEmailForm(false);
       setAttachEmailForm({ email: "", password: "", passwordConfirm: "" });
     } catch (error: any) {
+      console.error('❌ Ошибка attachEmail:', error);
       toast({
         title: "Ошибка привязки",
         description: error.message || "Не удалось привязать email",

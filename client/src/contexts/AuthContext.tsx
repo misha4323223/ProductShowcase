@@ -202,9 +202,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const trimmedEmail = email.trim().toLowerCase();
     console.log('📧 Email:', trimmedEmail);
     console.log('🔑 Token:', token.substring(0, 20) + '...');
+    console.log('🌐 API_BASE_URL:', API_BASE_URL || '(пусто - используется локальный сервер)');
     
     const url = `${API_BASE_URL}/api/users/attach-email`;
-    console.log('🌐 URL:', url);
+    console.log('🌐 ПОЛНЫЙ URL:', url);
     
     const response = await fetch(url, {
       method: 'POST',
@@ -241,7 +242,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error('Telegram данные не получены');
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/users/attach-telegram`, {
+    console.log('🔗 attachTelegram called');
+    console.log('🌐 API_BASE_URL:', API_BASE_URL || '(пусто - используется локальный сервер)');
+    const url = `${API_BASE_URL}/api/users/attach-telegram`;
+    console.log('🌐 ПОЛНЫЙ URL:', url);
+
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
@@ -250,12 +256,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }),
     });
 
+    console.log('📡 Response status:', response.status);
+    
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Ошибка привязки Telegram');
+      const error = await response.json().catch(() => ({ error: 'Неизвестная ошибка' }));
+      console.error('❌ Error response:', error);
+      throw new Error(error.error || `Ошибка ${response.status}: Ошибка привязки Telegram`);
     }
 
     const data = await response.json();
+    console.log('✅ Telegram успешно привязан');
     localStorage.setItem('authToken', data.token);
     setUser(data.user);
   };
