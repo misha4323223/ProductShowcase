@@ -1,0 +1,178 @@
+# === Отправка уведомления заказа (send-order-to-user-telegram) ===
+  /api/send-order-to-user-telegram:
+    post:
+      summary: Отправка уведомления о заказе в личный Telegram чат пользователя
+      description: Получает данные заказа и отправляет красивое форматированное уведомление пользователю в его личный Telegram чат
+      operationId: sendOrderToUserTelegram
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderData
+              properties:
+                orderData:
+                  type: object
+                  required:
+                    - id
+                    - customerName
+                    - customerEmail
+                    - items
+                    - total
+                  properties:
+                    id:
+                      type: string
+                    customerName:
+                      type: string
+                    customerEmail:
+                      type: string
+                    customerPhone:
+                      type: string
+                    items:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          quantity:
+                            type: number
+                          price:
+                            type: number
+                    total:
+                      type: number
+                    subtotal:
+                      type: number
+                    discount:
+                      type: number
+                    promoCode:
+                      type: string
+                    shippingAddress:
+                      type: string
+                    createdAt:
+                      type: string
+                      format: date-time
+                    deliveryService:
+                      type: string
+                      enum: [CDEK, POST, OTHER]
+                    deliveryType:
+                      type: string
+                      enum: [PICKUP, DOOR]
+                    cdekDeliveryCost:
+                      type: number
+                    deliveryCost:
+                      type: number
+                    deliveryPointName:
+                      type: string
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4epu4u7dq6u9ni5tfbo
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Уведомление успешно отправлено или пропущено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  notificationSent:
+                    type: boolean
+                  telegramId:
+                    type: string
+                  orderId:
+                    type: string
+        '400':
+          description: Отсутствует orderData или customerEmail
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      operationId: sendOrderToUserTelegramOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+      # Вход через Telegram ID или создание аккаунта
+    /api/telegram/login:
+    post:
+      summary: Вход через Telegram ID
+      description: Автоматически логинит пользователя по Telegram ID или создаёт новый аккаунт если его нет
+      operationId: telegramLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - initData
+              properties:
+                initData:
+                  type: string
+                  description: Данные от Telegram Web App
+                  example: "query_id=AAHdF6IQAAAAO0Xng..."
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e7ub8vlum9sk3hcabd
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Успешный вход или создание аккаунта
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Неверные параметры
+        '401':
+          description: Неверная подпись от Telegram
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: telegramLoginOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
