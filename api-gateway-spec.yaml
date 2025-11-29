@@ -867,48 +867,6 @@ paths:
         '200':
           description: OK
 
-  /site-settings:
-    get:
-      summary: Получить настройки сайта
-      parameters:
-        - name: key
-          in: query
-          required: false
-          schema:
-            type: string
-            default: current_theme
-      x-yc-apigateway-integration:
-        type: cloud_functions
-        function_id: d4ev5s477n19t0c5f5ad
-        service_account_id: aje47rf2630q59equess
-      responses:
-        '200':
-          description: Настройка получена
-    post:
-      summary: Установить настройку сайта
-      x-yc-apigateway-integration:
-        type: cloud_functions
-        function_id: d4e9o7ktbi27mfuu01du
-        service_account_id: aje47rf2630q59equess
-      responses:
-        '200':
-          description: Настройка сохранена
-    options:
-      summary: CORS preflight
-      x-yc-apigateway-integration:
-        type: dummy
-        http_code: 200
-        http_headers:
-          'Access-Control-Allow-Origin': '*'
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-        content:
-          application/json: '{}'
-      responses:
-        '200':
-          description: OK
-
-  # ========== TELEGRAM WIDGET CALLBACK ==========
   /api/telegram/widget-callback:
     post:
       summary: Callback от Telegram Login Widget
@@ -961,3 +919,45 @@ paths:
       responses:
         '200':
           description: OK
+
+  /site-settings:
+    get:
+      summary: Получить настройки сайта
+      parameters:
+        - name: key
+          in: query
+          required: false
+          schema:
+            type: string
+            default: current_theme
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ev5s477n19t0c5f5ad
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Настройка получена
+    post:
+      summary: Установить настройку сайта
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e9o7ktbi27mfuu01du
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Настройка сохранена
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
