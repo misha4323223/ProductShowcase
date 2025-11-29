@@ -53,45 +53,57 @@ function verifyTelegramSignature(rawInitData, botToken) {
   params.delete('hash');
   params.delete('signature');
 
-  const dataCheckString = Array.from(params.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => `${key}=${value}`)
-    .join('\n');
-
   // Convert signature from base64 to hex if needed
   let expectedHex = checkValue;
   if (checkValue.length > 40 && !checkValue.match(/^[0-9a-f]*$/i)) {
     try {
       expectedHex = Buffer.from(checkValue, 'base64').toString('hex');
+      console.log('Converted signature from base64 to hex');
     } catch (e) {
       expectedHex = checkValue;
     }
   }
 
-  // Try all possible combinations
-  const methods = [
-    { name: 'SHA256 key + newlines', key: crypto.createHash('sha256').update(botToken).digest() },
-    { name: 'Direct token + newlines', key: botToken },
+  console.log('Expected signature (hex):', expectedHex.substring(0, 40));
+
+  // Build sorted data string
+  const sortedParams = Array.from(params.entries())
+    .sort(([a], [b]) => a.localeCompare(b));
+
+  // Try both separators (\n and &)
+  const separators = ['\n', '&'];
+  const keys = [
+    { name: 'SHA256(WebAppData + token)', value: crypto.createHash('sha256').update('WebAppData' + botToken).digest() },
+    { name: 'SHA256(token)', value: crypto.createHash('sha256').update(botToken).digest() },
+    { name: 'Direct token', value: botToken },
   ];
 
-  for (const method of methods) {
-    const hmac = crypto.createHmac('sha256', method.key);
-    hmac.update(dataCheckString);
-    const computed = hmac.digest('hex');
-    
-    console.log(`📊 ${method.name}: ${computed.substring(0, 40)}`);
-    
-    if (computed === expectedHex) {
-      console.log(`✅ PASSED with ${method.name}`);
-      return true;
+  for (const separator of separators) {
+    const dataCheckString = sortedParams
+      .map(([key, value]) => `${key}=${value}`)
+      .join(separator);
+
+    console.log(`\n📝 Trying separator: ${separator === '\n' ? '\\n' : separator}`);
+    console.log('Data string (first 100):', dataCheckString.substring(0, 100));
+
+    for (const key of keys) {
+      const hmac = crypto.createHmac('sha256', key.value);
+      hmac.update(dataCheckString);
+      const computed = hmac.digest('hex');
+      
+      console.log(`  ${key.name}: ${computed.substring(0, 40)}`);
+      
+      if (computed === expectedHex) {
+        console.log(`✅ SIGNATURE VALID with ${key.name} and separator '${separator === '\n' ? '\\n' : separator}'`);
+        return true;
+      }
     }
   }
 
-  console.log('❌ Signature verification failed');
-  console.log('Expected (hex):', expectedHex.substring(0, 40));
+  console.log('\n❌ ALL VERIFICATION METHODS FAILED');
+  console.log('Expected:', expectedHex.substring(0, 40));
   
   // TEMPORARY: Allow verification to pass for debugging
-  // This will be removed once signature verification works
   if (process.env.SKIP_TELEGRAM_VERIFICATION === 'true') {
     console.log('⚠️ VERIFICATION SKIPPED - DEBUG MODE');
     return true;
