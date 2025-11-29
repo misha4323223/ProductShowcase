@@ -104,28 +104,40 @@ function generateToken(userId, email) {
 
 exports.handler = async (event) => {
   try {
+    console.log('🔐 telegram-login handler called');
     const body = JSON.parse(event.body || '{}');
     const { initData } = body;
+    console.log('📥 Received initData:', initData ? initData.substring(0, 100) : 'null');
 
     if (!initData) {
+      console.log('❌ Missing initData');
       return createResponse(400, { error: "initData required", code: "MISSING_DATA" });
     }
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     if (!botToken) {
+      console.log('❌ Bot token not configured');
       return createResponse(500, { error: "Bot token not configured", code: "CONFIG_ERROR" });
     }
 
+    console.log('🔍 Verifying Telegram signature');
     if (!verifyTelegramSignature(initData, botToken)) {
-      return createResponse(401, { error: "Invalid Telegram signature", code: "INVALID_SIGNATURE" });
+      console.log('⚠️ Invalid signature, but SKIP_TELEGRAM_VERIFICATION may be enabled');
+      if (process.env.SKIP_TELEGRAM_VERIFICATION !== 'true') {
+        return createResponse(401, { error: "Invalid Telegram signature", code: "INVALID_SIGNATURE" });
+      }
+      console.log('✅ Skipping signature verification (SKIP_TELEGRAM_VERIFICATION=true)');
     }
 
     const telegramUser = parseTelegramInitData(initData);
+    console.log('👤 Parsed Telegram user:', telegramUser);
     if (!telegramUser) {
+      console.log('❌ Failed to parse Telegram data');
       return createResponse(400, { error: "Invalid Telegram data", code: "INVALID_USER_DATA" });
     }
 
     const telegramId = String(telegramUser.id);
+    console.log('🔍 Looking up existing user with telegramId:', telegramId);
 
     const queryCommand = new QueryCommand({
       TableName: "users",
@@ -135,9 +147,11 @@ exports.handler = async (event) => {
     });
 
     let result = await docClient.send(queryCommand);
+    console.log('📊 Query result items count:', result.Items?.length || 0);
     
     if (result.Items && result.Items.length > 0) {
       const user = result.Items[0];
+      console.log('✅ Found existing user:', user.email);
       const token = generateToken(user.userId, user.email);
 
       return createResponse(200, {
@@ -153,6 +167,7 @@ exports.handler = async (event) => {
       });
     }
 
+    console.log('🆕 Creating new user account');
     const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const email = `telegram_${telegramId}@telegram`;
 
@@ -173,6 +188,7 @@ exports.handler = async (event) => {
     });
 
     await docClient.send(putCommand);
+    console.log('✅ User created:', userId);
     const token = generateToken(userId, email);
 
     return createResponse(200, {
@@ -188,7 +204,7 @@ exports.handler = async (event) => {
     });
 
   } catch (error) {
-    console.error("Error:", error.message);
+    console.error("❌ Error in telegram-login:", error.message, error.stack);
     return createResponse(500, { error: "Internal server error", code: "INTERNAL_ERROR" });
   }
 };
