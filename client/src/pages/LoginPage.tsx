@@ -10,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Home } from "lucide-react";
 import { Link } from "wouter";
 import logoUrl from "@assets/logo.webp";
+import { useTelegramApp } from "@/hooks/useTelegramApp";
+import { authenticateWithTelegram } from "@/lib/telegram";
 
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
@@ -17,6 +19,7 @@ export default function LoginPage() {
   const [, setLocation] = useLocation();
   const { signIn, resetPassword, requestEmailVerification, verifyEmailCode } = useAuth();
   const { toast } = useToast();
+  const { isInMiniApp, telegramUser } = useTelegramApp();
   
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -38,6 +41,7 @@ export default function LoginPage() {
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showSignupConfirmPassword, setShowSignupConfirmPassword] = useState(false);
+  const [isTelegramAuthLoading, setIsTelegramAuthLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);

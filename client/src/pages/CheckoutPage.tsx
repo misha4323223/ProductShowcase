@@ -35,6 +35,7 @@ import { DeliverySelector } from "@/components/DeliverySelector";
 import { CdekPointSelector } from "@/components/CdekPointSelector";
 import { DeliveryCalculator } from "@/components/DeliveryCalculator";
 import { CitySearchSelector } from "@/components/CitySearchSelector";
+import { sendOrderNotificationToTelegram } from "@/lib/telegram";
 
 interface CartItem {
   id: string;
@@ -446,6 +447,37 @@ export default function CheckoutPage() {
       });
 
       const orderId = await createOrder(orderData);
+
+      // Send Telegram notification if user has Telegram linked
+      try {
+        const notificationResult = await sendOrderNotificationToTelegram({
+          id: orderId,
+          customerName: orderData.customerName,
+          customerEmail: orderData.customerEmail,
+          customerPhone: orderData.customerPhone,
+          items: orderData.items,
+          total: orderData.total,
+          subtotal: orderData.subtotal,
+          discount: orderData.discount,
+          promoCode: orderData.promoCode?.code,
+          shippingAddress: orderData.shippingAddress,
+          createdAt: new Date().toISOString(),
+          deliveryService: orderData.deliveryService,
+          deliveryType: orderData.deliveryType,
+          cdekDeliveryCost: orderData.cdekDeliveryCost,
+          deliveryCost: orderData.deliveryCost,
+          deliveryPointName: orderData.deliveryPointName,
+        });
+        
+        if (notificationResult.notificationSent) {
+          console.log('✅ Telegram notification sent for order', orderId);
+        } else {
+          console.log('ℹ️ User has no Telegram linked, skipping notification');
+        }
+      } catch (telegramError) {
+        console.warn('⚠️ Error sending Telegram notification:', telegramError);
+        // Don't interrupt checkout flow - notification is optional
+      }
 
       // ВАЖНО: Email-подтверждение отправляется ПОСЛЕ успешной оплаты
       // через robokassa-callback Cloud Function, а не здесь!

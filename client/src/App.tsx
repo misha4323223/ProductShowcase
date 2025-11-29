@@ -21,6 +21,7 @@ import { useScrollPause } from "@/hooks/use-scroll-pause";
 import { initAnalytics } from "@/lib/analytics";
 import AutumnRain from "@/components/AutumnRain";
 import SunflareParticles from "@/components/SunflareParticles";
+import { useTelegramApp } from "@/hooks/useTelegramApp";
 
 // Главная страница загружается сразу (критичная для первого отображения)
 import Home from "@/pages/Home";
@@ -100,9 +101,20 @@ function App() {
   // ОПТИМИЗАЦИЯ: Автоматическая пауза анимаций при скролле
   useScrollPause();
 
+  // Инициализация Telegram Mini App
+  useTelegramApp();
+
   // Инициализация аналитики при монтировании
   useEffect(() => {
     initAnalytics();
+    
+    // Load Telegram Web App SDK if not already loaded
+    if (!window.Telegram) {
+      const script = document.createElement('script');
+      script.src = 'https://telegram.org/js/telegram-web-app.js';
+      script.async = true;
+      document.head.appendChild(script);
+    }
   }, []);
 
 
