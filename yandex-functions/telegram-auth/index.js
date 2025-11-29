@@ -50,6 +50,9 @@ function verifyTelegramSignature(initData, botToken) {
       return false;
     }
 
+    console.log('📝 Received hash:', hash.substring(0, 20) + '...');
+    console.log('🔑 Bot token length:', botToken.length);
+
     // Удаляем hash из параметров
     params.delete('hash');
 
@@ -59,6 +62,8 @@ function verifyTelegramSignature(initData, botToken) {
       .map(([key, value]) => `${key}=${value}`)
       .join('\n');
 
+    console.log('📄 Data check string:', dataCheckString.substring(0, 100) + '...');
+
     // Создаём SECRET из BOT_TOKEN (этот шаг был пропущен!)
     const secret = crypto.createHash('sha256').update(botToken).digest();
     
@@ -67,6 +72,7 @@ function verifyTelegramSignature(initData, botToken) {
     hmac.update(dataCheckString);
     const calculatedHash = hmac.digest('hex');
 
+    console.log('🧮 Calculated hash:', calculatedHash.substring(0, 20) + '...');
     const isValid = calculatedHash === hash;
     console.log(`🔐 Signature verification: ${isValid ? '✅' : '❌'}`);
     return isValid;
