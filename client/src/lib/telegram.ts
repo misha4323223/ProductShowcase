@@ -199,6 +199,67 @@ export async function authenticateWithTelegram(email: string): Promise<{
 }
 
 /**
+ * Auto-login with Telegram (after linking Telegram ID)
+ * Uses Telegram initData to auto-authenticate
+ */
+export async function loginWithTelegramId(): Promise<{
+  success: boolean;
+  message: string;
+  token?: string;
+  user?: {
+    email: string;
+    userId: string;
+    telegramId: string;
+  };
+  error?: string;
+}> {
+  const initData = getTelegramInitData();
+  
+  if (!initData) {
+    return {
+      success: false,
+      message: 'Not in Telegram Mini App',
+      error: 'NOT_IN_TELEGRAM',
+    };
+  }
+
+  try {
+    const url = `${API_GATEWAY_URL}/api/telegram/login`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ initData }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        success: false,
+        message: 'Failed to login with Telegram',
+        error: errorData.error || `HTTP ${response.status}`,
+      };
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      message: data.message || 'Logged in successfully',
+      token: data.token,
+      user: data.user,
+    };
+  } catch (error: any) {
+    console.error('❌ Telegram login error:', error);
+    return {
+      success: false,
+      message: 'Error during Telegram login',
+      error: error.message,
+    };
+  }
+}
+
+/**
  * Send order notification to user's Telegram chat
  */
 export async function sendOrderNotificationToTelegram(orderData: {

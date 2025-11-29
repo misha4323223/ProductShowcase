@@ -11,7 +11,7 @@ import { Eye, EyeOff, Home } from "lucide-react";
 import { Link } from "wouter";
 import logoUrl from "@assets/logo.webp";
 import { useTelegramApp } from "@/hooks/useTelegramApp";
-import { authenticateWithTelegram } from "@/lib/telegram";
+import { authenticateWithTelegram, loginWithTelegramId } from "@/lib/telegram";
 
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
@@ -175,8 +175,28 @@ export default function LoginPage() {
           title: "Успех!",
           description: "Telegram ID успешно привязан к аккаунту",
         });
-        setLoginEmail("");
-        // Auto-login would happen here in future
+        
+        // Try to auto-login with Telegram ID
+        console.log('🚀 Attempting auto-login with Telegram ID');
+        setTimeout(async () => {
+          try {
+            const loginResult = await loginWithTelegramId();
+            if (loginResult.success && loginResult.token) {
+              console.log('✅ Auto-login successful, redirecting to home');
+              // Store token in session/context
+              setLoginEmail("");
+              setLocation("/");
+            } else {
+              console.log('ℹ️ Auto-login not available, stay on login page');
+              // User linked but no auto-login endpoint yet
+              // They can manually login with email/password
+              setTimeout(() => setLocation("/"), 2000);
+            }
+          } catch (error) {
+            console.log('ℹ️ Auto-login attempt finished, redirecting');
+            setLocation("/");
+          }
+        }, 500);
       } else {
         toast({
           title: "Ошибка привязки",
