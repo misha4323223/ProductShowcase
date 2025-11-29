@@ -36,46 +36,51 @@ function createResponse(statusCode, data) {
 
 function verifyTelegramSignature(initData, botToken) {
   const params = new URLSearchParams(initData);
-  const hash = params.get('hash');
   
-  if (!hash) return false;
+  // Telegram sends either 'hash' (Mini Apps) or 'signature' (Legacy)
+  let checkValue = params.get('hash') || params.get('signature');
+  
+  if (!checkValue) {
+    console.log('❌ No hash or signature found');
+    return false;
+  }
 
+  // Remove hash/signature from params
   params.delete('hash');
+  params.delete('signature');
 
   const dataCheckString = Array.from(params.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, value]) => `${key}=${value}`)
     .join('\n');
 
-  console.log('🔍 Verifying signature...');
-  console.log('🔑 Bot token length:', botToken.length);
-  console.log('📄 Data check string length:', dataCheckString.length);
-  console.log('📮 Hash:', hash.substring(0, 20) + '...');
+  console.log('🔍 Verifying signature with dataCheckString length:', dataCheckString.length);
 
-  // Method 1: Using SHA256 hash of token as key (correct for Telegram Mini Apps)
+  // Method 1: Using SHA256 hash of token as key (for Mini Apps)
   const secret = crypto.createHash('sha256').update(botToken).digest();
   const hmac = crypto.createHmac('sha256', secret);
   hmac.update(dataCheckString);
   const calculatedHash = hmac.digest('hex');
 
-  console.log('🧮 Calculated hash:', calculatedHash.substring(0, 20) + '...');
-  
-  if (calculatedHash === hash) {
-    console.log('✅ Signature verification: PASSED');
+  if (calculatedHash === checkValue) {
+    console.log('✅ Signature verification: PASSED (Method 1)');
     return true;
   }
 
-  // Method 2: Fallback - using token directly as key (some implementations use this)
+  // Method 2: Using token directly as key
   const hmac2 = crypto.createHmac('sha256', botToken);
   hmac2.update(dataCheckString);
   const calculatedHash2 = hmac2.digest('hex');
 
-  if (calculatedHash2 === hash) {
-    console.log('✅ Signature verification (method 2): PASSED');
+  if (calculatedHash2 === checkValue) {
+    console.log('✅ Signature verification: PASSED (Method 2)');
     return true;
   }
 
   console.log('❌ Signature verification: FAILED');
+  console.log('Expected:', checkValue?.substring(0, 20));
+  console.log('Got (m1):', calculatedHash?.substring(0, 20));
+  console.log('Got (m2):', calculatedHash2?.substring(0, 20));
   return false;
 }
 
