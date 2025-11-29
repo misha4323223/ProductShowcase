@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -13,10 +13,17 @@ import logoUrl from "@assets/logo.webp";
 import { useTelegramApp } from "@/hooks/useTelegramApp";
 import { authenticateWithTelegram, loginWithTelegramId } from "@/lib/telegram";
 
+declare global {
+  interface Window {
+    onTelegramAuth?: (user: any) => Promise<void>;
+  }
+}
+
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
+  const telegramWidgetRef = useRef<HTMLDivElement>(null);
   
   let auth: any = null;
   try {
@@ -29,6 +36,46 @@ export default function LoginPage() {
   const { signIn, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram } = auth;
   const { toast } = useToast();
   const { isInMiniApp, telegramUser } = useTelegramApp();
+
+  // Обработчик callback от Telegram Login Widget
+  useEffect(() => {
+    window.onTelegramAuth = async (user: any) => {
+      console.log('✅ Telegram widget auth successful:', user);
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/telegram/widget-callback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user),
+        });
+
+        const data = await response.json();
+        if (data.success && data.token) {
+          await loginWithTelegram(data.token);
+          toast({
+            title: "Добро пожаловать!",
+            description: "Вы вошли через Telegram",
+          });
+          setLocation("/");
+        } else {
+          toast({
+            title: "Ошибка",
+            description: data.error || "Не удалось войти через Telegram",
+            variant: "destructive",
+          });
+        }
+      } catch (error: any) {
+        toast({
+          title: "Ошибка",
+          description: error.message || "Ошибка при входе",
+          variant: "destructive",
+        });
+      }
+    };
+
+    return () => {
+      delete window.onTelegramAuth;
+    };
+  }, []);
   
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -408,27 +455,22 @@ export default function LoginPage() {
             {isLoading ? "..." : "Войти"}
           </Button>
 
-          {isInMiniApp && (
-            <Button 
-              type="button"
-              className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 text-white font-semibold h-8 text-sm transition-all"
-              onClick={handleTelegramLogin}
-              disabled={isLoginTelegramLoading}
-              data-testid="button-telegram-login"
-            >
-              {isLoginTelegramLoading ? "Загрузка..." : "🚀 Войти через Telegram"}
-            </Button>
-          )}
-
-          <Button 
-            type="button"
-            className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold h-8 text-sm transition-all"
-            onClick={handleTelegramAuth}
-            disabled={isTelegramAuthLoading}
-            data-testid="button-telegram-auth"
+          {/* Telegram Login Widget */}
+          <div 
+            ref={telegramWidgetRef}
+            className="w-full flex justify-center"
+            data-testid="telegram-widget"
           >
-            {isTelegramAuthLoading ? "Привязка..." : "📱 Привязать Telegram"}
-          </Button>
+            <script 
+              async 
+              src="https://telegram.org/js/telegram-widget.js?22"
+              data-telegram-login="SweetWeb71"
+              data-size="large"
+              data-radius="8"
+              data-request-access="write"
+              data-onauth="onTelegramAuth"
+            ></script>
+          </div>
 
           <Button 
             variant="ghost" 
