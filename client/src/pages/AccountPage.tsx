@@ -1176,36 +1176,34 @@ export default function AccountPage() {
                 <div className="flex justify-center py-6">
                   <div ref={telegramContainerRef} className="flex justify-center w-full" />
                 </div>
-                {user.telegramId && (
-                  <>
-                    <Separator />
-                    <div className="flex gap-2 justify-end">
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowTelegramAttachModal(false)}
-                        data-testid="button-cancel-telegram-modal"
-                      >
-                        Отмена
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        onClick={() => {
-                          setShowTelegramAttachModal(false);
-                          setDetachConfirmType('telegram');
-                        }}
-                        disabled={isDeletachingTelegram}
-                        data-testid="button-detach-from-modal"
-                      >
-                        {isDeletachingTelegram ? (
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <Trash2 className="h-4 w-4 mr-2" />
-                        )}
-                        Отвязать текущий
-                      </Button>
-                    </div>
-                  </>
-                )}
+                <Separator />
+                <div className="flex gap-2 justify-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowTelegramAttachModal(false)}
+                    data-testid="button-cancel-telegram-modal"
+                  >
+                    Отмена
+                  </Button>
+                  {user.telegramId && (
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        setShowTelegramAttachModal(false);
+                        setDetachConfirmType('telegram');
+                      }}
+                      disabled={isDeletachingTelegram}
+                      data-testid="button-detach-from-modal"
+                    >
+                      {isDeletachingTelegram ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4 mr-2" />
+                      )}
+                      Сменить аккаунт
+                    </Button>
+                  )}
+                </div>
               </DialogContent>
             </Dialog>
 
