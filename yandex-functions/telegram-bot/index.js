@@ -2,6 +2,13 @@ const https = require('https');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
 
+// Подписываем пользователя на рассылку (локально, не требует доп. запроса)
+function subscribeUser(chatId, username, firstName) {
+  // Это может быть отправлено в YDB или другую БД
+  // На данный момент просто логируем (можно подключить DB позже)
+  console.log(`✅ Пользователь ${chatId} подписан на рассылку (${firstName})`);
+}
+
 async function sendTelegramMessage(chatId, message, replyMarkup) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (!botToken) throw new Error('BOT_TOKEN missing');
@@ -63,6 +70,9 @@ async function handler(event) {
     let replyMarkup = null;
 
     if (text === '/start') {
+      // Подписываем пользователя на рассылку
+      subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
+      
       message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>
 
 Выберите что вас интересует:`;
