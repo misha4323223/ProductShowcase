@@ -59,22 +59,54 @@ async function handler(event) {
 
     console.log('Message:', text);
 
-    const replyMarkup = {
-      inline_keyboard: [[{
-        text: '🛍️ Открыть магазин',
-        web_app: { url: MINI_APP_URL }
-      }]]
-    };
-
     let message = '';
+    let replyMarkup = null;
+
     if (text === '/start') {
-      message = '🎉 Добро пожаловать в Sweet Delights!\n\nОткройте магазин:';
+      message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>
+
+Выберите что вас интересует:`;
+      
+      replyMarkup = {
+        inline_keyboard: [
+          [
+            { text: '🛍️ Магазин', web_app: { url: MINI_APP_URL } },
+            { text: '📦 Заказы', web_app: { url: `${MINI_APP_URL}/?tab=orders` } }
+          ],
+          [
+            { text: '❤️ Избранное', web_app: { url: `${MINI_APP_URL}/?tab=wishlist` } },
+            { text: '🎁 Промо', web_app: { url: `${MINI_APP_URL}/?tab=promos` } }
+          ],
+          [
+            { text: '⚙️ Профиль', web_app: { url: `${MINI_APP_URL}/?tab=account` } }
+          ]
+        ]
+      };
     } else if (text === '/shop') {
-      message = '🛍️ Открыть магазин:';
+      message = '🛍️ <b>Магазин</b>';
+      replyMarkup = {
+        inline_keyboard: [[
+          { text: '🛍️ Открыть', web_app: { url: MINI_APP_URL } }
+        ]]
+      };
     } else if (text === '/orders') {
-      message = '📦 Ваши заказы:';
+      message = '📦 <b>Мои заказы</b>';
+      replyMarkup = {
+        inline_keyboard: [[
+          { text: '📦 Посмотреть', web_app: { url: `${MINI_APP_URL}/?tab=orders` } }
+        ]]
+      };
+    } else if (text === '/help') {
+      message = `<b>📋 Доступные команды:</b>
+
+/start - Главное меню
+/shop - Открыть магазин
+/orders - Мои заказы
+/help - Справка`;
     } else {
-      message = 'Доступные команды: /start, /shop, /orders';
+      message = `❓ Команда не распознана.
+
+Используйте /help для списка команд или нажмите /start`;
     }
 
     await sendTelegramMessage(chatId, message, replyMarkup);
