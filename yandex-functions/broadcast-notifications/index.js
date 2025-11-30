@@ -49,70 +49,83 @@ async function handler(event) {
       data = JSON.parse(event.body);
     }
 
-    const action = data.action;
-    
+    const action = data.action || 'get_subscribers';
+
     if (action === 'subscribe') {
-      console.log(`📝 Добавляю подписчика ${data.chatId}`);
-      
-      subscribers.set(data.chatId, {
-        chatId: data.chatId,
-        username: data.username,
-        firstName: data.firstName,
+      // Добавить подписчика
+      const { chatId, username, firstName } = data;
+      if (!chatId) {
+        return { statusCode: 400, body: JSON.stringify({ error: 'chatId required' }) };
+      }
+
+      subscribers.set(chatId, {
+        chatId,
+        username: username || null,
+        firstName: firstName || null,
         subscribedAt: new Date().toISOString(),
         isActive: true
       });
-      
-      console.log(`✅ Подписчик добавлен. Всего: ${subscribers.size}`);
-      
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ ok: true, message: 'Subscribed' })
-      };
-    }
-    
-    if (action === 'get_subscribers') {
-      console.log(`📋 Получение списка подписчиков (${subscribers.size})`);
-      const subsList = Array.from(subscribers.values());
-      
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ ok: true, subscribers: subsList })
-      };
-    }
-    
-    if (action === 'send') {
-      const { title, message } = data;
-      console.log(`📤 Отправляю рассылку: "${title}" (${subscribers.size} подписчиков)`);
-      
-      let successCount = 0;
-      let errorCount = 0;
 
-      for (const [chatId, subscriber] of subscribers.entries()) {
-        try {
-          const fullMessage = `<b>${title}</b>\n\n${message}`;
-          await sendTelegramMessage(chatId, fullMessage);
-          successCount++;
-          console.log(`✅ Отправлено ${chatId}`);
-        } catch (error) {
-          console.error(`❌ Ошибка ${chatId}:`, error.message);
-          errorCount++;
-        }
-      }
+      console.log(`✅ Подписчик ${chatId} добавлен. Всего: ${subscribers.size}`);
 
-      console.log(`✅ Рассылка завершена: ${successCount} успешно, ${errorCount} ошибок`);
-      
       return {
         statusCode: 200,
         body: JSON.stringify({
           ok: true,
-          message: `Отправлено ${successCount} сообщений, ошибок: ${errorCount}`
+          message: `Subscriber ${chatId} added`,
+          total: subscribers.size
+        })
+      };
+    } else if (action === 'get_subscribers') {
+      // Получить список подписчиков
+      const subscribersList = Array.from(subscribers.values());
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          subscribers: subscribersList,
+          count: subscribersList.length
+        })
+      };
+    } else if (action === 'send') {
+      // Отправить рассылку
+      const { message, title } = data;
+      if (!message) {
+        return { statusCode: 400, body: JSON.stringify({ error: 'message required' }) };
+      }
+
+      const subscribersList = Array.from(subscribers.values());
+      let sent = 0;
+      let failed = 0;
+
+      const fullMessage = title ? `<b>${title}</b>\n\n${message}` : message;
+
+      for (const subscriber of subscribersList) {
+        try {
+          await sendTelegramMessage(subscriber.chatId, fullMessage);
+          sent++;
+          console.log(`✅ Сообщение отправлено ${subscriber.chatId}`);
+        } catch (error) {
+          failed++;
+          console.error(`❌ Ошибка отправки ${subscriber.chatId}:`, error.message);
+        }
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          message: `Broadcast sent to ${sent} subscribers, ${failed} failed`,
+          sent,
+          failed,
+          total: subscribersList.length
         })
       };
     }
 
-    return { statusCode: 400, body: JSON.stringify({ error: 'Unknown action' }) };
+    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid action' }) };
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('Error:', error.message);
     return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
   }
 }

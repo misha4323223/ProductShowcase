@@ -2,57 +2,6 @@ const https = require('https');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
 
-async function subscribeUser(chatId, username, firstName) {
-  try {
-    console.log(`💾 Отправляю подписку ${chatId} на API...`);
-    
-    const payload = {
-      action: 'subscribe',
-      chatId,
-      username: username || null,
-      firstName: firstName || null
-    };
-
-    return new Promise((resolve, reject) => {
-      const payloadStr = JSON.stringify(payload);
-      const options = {
-        hostname: 'd4efkrvud5o73t4cskgk.functions.yandexcloud.net',
-        path: '/api/broadcast-notifications',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(payloadStr)
-        }
-      };
-
-      const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => {
-          try {
-            const result = JSON.parse(data);
-            console.log(`✅ Подписка сохранена`);
-            resolve(result);
-          } catch (e) {
-            resolve({ ok: true });
-          }
-        });
-      });
-
-      req.on('error', (err) => {
-        console.error(`⚠️ Ошибка отправки:`, err.message);
-        resolve({ ok: true });
-      });
-      
-      req.write(payloadStr);
-      req.end();
-    });
-  } catch (error) {
-    console.error(`⚠️ Ошибка:`, error.message);
-    return { ok: true };
-  }
-}
-
 async function sendTelegramMessage(chatId, message, replyMarkup) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (!botToken) throw new Error('BOT_TOKEN missing');
@@ -111,10 +60,6 @@ async function handler(event) {
     const text = data.message.text || '';
 
     console.log(`✅ Сообщение: "${text}" от ${chatId}`);
-
-    if (text === '/start') {
-      await subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
-    }
 
     let message = '';
     let replyMarkup = null;
