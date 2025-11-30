@@ -97,6 +97,16 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       return;
     }
 
+    // Проверяем, есть ли товары в корзине
+    if (wishlistCount === 0) {
+      toast({
+        title: "Корзина пуста",
+        description: "Добавьте товар в корзину, чтобы крутить рулетку",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSpinning(true);
 
     try {
@@ -106,7 +116,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
       if (!prize) {
         toast({
           title: "Ошибка",
-          description: "Не удалось получить приз. Попробуйте еще раз.",
+          description: "Добавьте товар в корзину и попробуйте еще раз.",
           variant: "destructive",
         });
         return;
