@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWheel } from "@/contexts/WheelContext";
 import { useLocation } from "wouter";
@@ -262,6 +262,7 @@ export default function AccountPage() {
 
   const [isAttachingTelegram, setIsAttachingTelegram] = useState(false);
   const [showTelegramAttachModal, setShowTelegramAttachModal] = useState(false);
+  const telegramContainerRef = useRef<HTMLDivElement>(null);
 
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
@@ -545,7 +546,9 @@ export default function AccountPage() {
 
   // Загрузка Telegram Widget в модале
   useEffect(() => {
-    if (!showTelegramAttachModal) return;
+    if (!showTelegramAttachModal || !telegramContainerRef.current) return;
+
+    console.log('📱 showTelegramAttachModal=true, загружаю Telegram Widget');
 
     // Создаем глобальный callback ДО загрузки виджета
     (window as any).onTelegramAttachModal = async (user: any) => {
@@ -577,8 +580,13 @@ export default function AccountPage() {
     };
 
     console.log('✅ onTelegramAttachModal установлена');
+    console.log('✅ Контейнер через ref найден, загружаю Telegram Widget скрипт');
+    
+    // Удаляем старый скрипт если есть
+    const oldScript = document.querySelector('script[src*="telegram-widget"]');
+    if (oldScript) oldScript.remove();
 
-    // Загружаем Telegram Login Widget
+    // Создаем новый скрипт
     const script = document.createElement('script');
     script.src = `https://telegram.org/js/telegram-widget.js?${Date.now()}`;
     script.async = true;
@@ -587,13 +595,12 @@ export default function AccountPage() {
     script.setAttribute('data-onauth', 'onTelegramAttachModal(user)');
     script.setAttribute('data-request-access', 'write');
     
-    const container = document.getElementById('telegram-attach-modal-container');
-    if (container) {
-      console.log('✅ Контейнер модала найден, добавляю скрипт');
-      container.innerHTML = ''; // Очищаем контейнер
-      container.appendChild(script);
-    } else {
-      console.error('❌ Контейнер telegram-attach-modal-container не найден!');
+    script.onload = () => console.log('✅ Telegram Widget скрипт загружен и выполнен');
+    script.onerror = () => console.error('❌ Ошибка загрузки Telegram Widget скрипта');
+    
+    if (telegramContainerRef.current) {
+      telegramContainerRef.current.innerHTML = ''; // Очищаем контейнер
+      telegramContainerRef.current.appendChild(script);
     }
 
     return () => {
@@ -1145,7 +1152,7 @@ export default function AccountPage() {
                   <DialogDescription>Выберите Telegram аккаунт для привязки</DialogDescription>
                 </DialogHeader>
                 <div className="flex justify-center py-6">
-                  <div id="telegram-attach-modal-container" className="flex justify-center" />
+                  <div ref={telegramContainerRef} className="flex justify-center w-full" />
                 </div>
               </DialogContent>
             </Dialog>
