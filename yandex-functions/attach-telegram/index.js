@@ -29,60 +29,29 @@ function createResponse(statusCode, data) {
   };
 }
 
-// Normalize base64: URL-safe to standard + remove padding
-function normalizeBase64(b64) {
-  // Convert URL-safe to standard
-  let normalized = b64.replace(/-/g, '+').replace(/_/g, '/');
-  // Remove padding
-  normalized = normalized.replace(/=/g, '');
-  return normalized;
-}
-
-// ПРАВИЛЬНЫЙ алгоритм верификации токена
 function verifyToken(token, secret) {
   try {
-    console.log('🔍 verifyToken: START');
     const parts = token.split('.');
-    console.log('📊 Token has', parts.length, 'parts');
-    
-    if (parts.length !== 3) {
-      console.log('❌ Expected 3 parts');
-      return null;
-    }
+    if (parts.length !== 3) return null;
 
     const [headerB64, payloadB64, signatureB64] = parts;
-    console.log('🔐 Computing signature with HMAC-SHA256');
-    
-    const dataToSign = `${headerB64}.${payloadB64}`;
-    const signature = crypto.createHmac('sha256', secret).update(dataToSign).digest('base64');
+    const expectedSignature = crypto.createHmac('sha256', secret).update(`${headerB64}.${payloadB64}`).digest('base64url');
 
-    // Normalize both to standard base64 for comparison
-    const normalizedReceived = normalizeBase64(signatureB64);
-    const normalizedComputed = normalizeBase64(signature);
-
-    console.log('📊 Received sig norm (first 30):', normalizedReceived.substring(0, 30));
-    console.log('📊 Computed sig norm (first 30):', normalizedComputed.substring(0, 30));
-    console.log('📊 Full match:', normalizedComputed === normalizedReceived ? '✅ YES' : '❌ NO');
-    
-    if (normalizedComputed !== normalizedReceived) {
-      console.log('❌ MISMATCH!');
-      console.log('📝 Raw received:', signatureB64.substring(0, 50));
-      console.log('📝 Raw computed:', signature.substring(0, 50));
+    if (signatureB64 !== expectedSignature) {
+      console.error('🔴 Signature mismatch. Got:', signatureB64, 'Expected:', expectedSignature);
       return null;
     }
 
-    console.log('✅ Signature valid');
-    const payload = JSON.parse(Buffer.from(payloadB64, 'base64').toString());
-    
+    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString());
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
-      console.log('❌ Token expired');
+      console.error('🔴 Token expired at', new Date(payload.exp * 1000));
       return null;
     }
 
-    console.log('✅ Token valid, userId:', payload.userId);
+    console.log('✅ Token verified successfully for:', payload.email);
     return payload;
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('Token verification error:', error);
     return null;
   }
 }
@@ -151,9 +120,9 @@ function generateToken(userId, email, extraData = {}) {
   };
 
   const secret = process.env.JWT_SECRET || 'telegram-secret-key';
-  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64');
-  const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64');
-  const signature = crypto.createHmac('sha256', secret).update(`${header}.${payloadStr}`).digest('base64');
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto.createHmac('sha256', secret).update(`${header}.${payloadStr}`).digest('base64url');
   
   return `${header}.${payloadStr}.${signature}`;
 }
