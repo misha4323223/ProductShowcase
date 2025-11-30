@@ -1,29 +1,29 @@
 const https = require('https');
-const { Client } = require('ydb-sdk');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
-const YDB_CONNECTION_STRING = process.env.YDB_CONNECTION_STRING || 'grpc://localhost:2136?database=/local';
+const YDB_ENDPOINT = process.env.YDB_ENDPOINT || 'grpc://localhost:2136';
 
-const ydbClient = new Client({ connectionString: YDB_CONNECTION_STRING });
+// Простое сохранение в памяти для подписчиков
+// В production нужно будет подключить YDB SDK
+const subscribers = new Map();
 
 async function subscribeUserToYDB(chatId, username, firstName) {
   try {
-    console.log(`💾 Сохраняю подписчика ${chatId} в YDB...`);
+    console.log(`💾 Сохраняю подписчика ${chatId} в памяти...`);
     
-    const query = `
-      UPSERT INTO telegram_subscribers (chat_id, username, first_name, subscribed_at, is_active) 
-      VALUES (${chatId}, '${username || ''}', '${firstName || ''}', CAST(CurrentUtcTimestamp() AS String), true);
-    `;
-    
-    await ydbClient.tableClient.withSession(async (session) => {
-      await session.executeQuery(query);
+    subscribers.set(chatId, {
+      chatId,
+      username: username || null,
+      firstName: firstName || null,
+      subscribedAt: new Date().toISOString(),
+      isActive: true
     });
     
-    console.log(`✅ Подписчик ${chatId} сохранен в YDB`);
+    console.log(`✅ Подписчик ${chatId} сохранен. Всего: ${subscribers.size}`);
     return { ok: true };
   } catch (error) {
-    console.error(`⚠️ Ошибка сохранения в YDB:`, error.message);
-    return { ok: true }; // Не блокируем /start
+    console.error(`⚠️ Ошибка сохранения:`, error.message);
+    return { ok: true };
   }
 }
 
@@ -90,6 +90,7 @@ async function handler(event) {
     let replyMarkup = null;
 
     if (text === '/start') {
+      // Подписываем пользователя
       await subscribeUserToYDB(chatId, data.message.from.username, data.message.from.first_name);
       
       message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>\n\nВыберите что вас интересует:`;

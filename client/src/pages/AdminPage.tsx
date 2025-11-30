@@ -1687,7 +1687,7 @@ export default function AdminPage() {
                 <p className="text-muted-foreground">Пока нет подписчиков</p>
               ) : (
                 <div className="space-y-2">
-                  {telegramSubscribers.map((subscriber) => (
+                  {telegramSubscribers.map((subscriber: any) => (
                     <div
                       key={subscriber.chatId}
                       className="border rounded-lg p-3 flex items-start gap-4"

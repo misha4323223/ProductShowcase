@@ -1,36 +1,7 @@
 const https = require('https');
-const { Client } = require('ydb-sdk');
 
-const YDB_CONNECTION_STRING = process.env.YDB_CONNECTION_STRING || 'grpc://localhost:2136?database=/local';
-const ydbClient = new Client({ connectionString: YDB_CONNECTION_STRING });
-
-async function getSubscribers() {
-  try {
-    console.log('📖 Получаю подписчиков из YDB...');
-    
-    const query = `SELECT chat_id, username, first_name, subscribed_at, is_active FROM telegram_subscribers WHERE is_active = true;`;
-    
-    const subscribers = [];
-    await ydbClient.tableClient.withSession(async (session) => {
-      const result = await session.executeQuery(query);
-      for (const row of result.rows) {
-        subscribers.push({
-          chatId: row.get('chat_id'),
-          username: row.get('username'),
-          firstName: row.get('first_name'),
-          subscribedAt: row.get('subscribed_at'),
-          isActive: row.get('is_active')
-        });
-      }
-    });
-    
-    console.log(`✅ Найдено ${subscribers.length} подписчиков`);
-    return subscribers;
-  } catch (error) {
-    console.error(`❌ Ошибка получения подписчиков:`, error.message);
-    return [];
-  }
-}
+// Хранилище подписчиков в памяти
+const subscribers = new Map();
 
 async function sendTelegramMessage(chatId, message) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -82,15 +53,22 @@ async function handler(event) {
     
     if (action === 'subscribe') {
       console.log(`✅ Подписка: ${data.chat_id}`);
-      return { statusCode: 200, body: JSON.stringify({ ok: true, message: 'Subscribed' }) };
+      subscribers.set(data.chat_id, {
+        chatId: data.chat_id,
+        username: data.username,
+        firstName: data.first_name,
+        subscribedAt: new Date().toISOString(),
+        isActive: true
+      });
+      return { statusCode: 200, body: JSON.stringify({ ok: true }) };
     }
     
     if (action === 'get_subscribers') {
       console.log(`📋 Получение списка подписчиков`);
-      const subscribers = await getSubscribers();
+      const subs = Array.from(subscribers.values());
       return {
         statusCode: 200,
-        body: JSON.stringify({ ok: true, subscribers })
+        body: JSON.stringify({ ok: true, subscribers: subs })
       };
     }
     
@@ -98,11 +76,11 @@ async function handler(event) {
       const { title, message } = data;
       console.log(`📤 Отправляю рассылку: "${title}"`);
       
-      const subscribers = await getSubscribers();
+      const subs = Array.from(subscribers.values()).filter(s => s.isActive);
       let successCount = 0;
       let errorCount = 0;
 
-      for (const subscriber of subscribers) {
+      for (const subscriber of subs) {
         try {
           const fullMessage = `<b>${title}</b>\n\n${message}`;
           await sendTelegramMessage(subscriber.chatId, fullMessage);
