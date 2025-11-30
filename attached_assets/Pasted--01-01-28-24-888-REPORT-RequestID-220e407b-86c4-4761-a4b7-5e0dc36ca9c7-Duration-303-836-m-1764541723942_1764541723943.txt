@@ -1,0 +1,61 @@
+
+
+01 дек. 01:28:24.888
+REPORT RequestID: 220e407b-86c4-4761-a4b7-5e0dc36ca9c7 Duration: 303.836 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 51 MB Queuing Duration: 0.071 ms CPU Usage: 14.258 %
+
+01 дек. 01:28:24.888
+ERROR RequestID: 220e407b-86c4-4761-a4b7-5e0dc36ca9c7 Code: 502 Message: Error during function invocation
+
+01 дек. 01:28:24.888
+END RequestID: 220e407b-86c4-4761-a4b7-5e0dc36ca9c7
+
+01 дек. 01:28:24.887
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module 'ydb-sdk'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+01 дек. 01:28:24.879
+Unable to import index.handler module. Error: Cannot find module 'ydb-sdk' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 01:28:24.582
+START RequestID: 220e407b-86c4-4761-a4b7-5e0dc36ca9c7 Version: d4e8u4pfsanr8433gko6
+
+01 дек. 01:28:22.539
+REPORT RequestID: 9ae8c9c1-3412-44b0-9765-0c4857b04482 Duration: 293.127 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 52 MB Queuing Duration: 86.341 ms CPU Usage: 14.258 %
+
+01 дек. 01:28:22.539
+ERROR RequestID: 9ae8c9c1-3412-44b0-9765-0c4857b04482 Code: 502 Message: Error during function invocation
+
+01 дек. 01:28:22.539
+END RequestID: 9ae8c9c1-3412-44b0-9765-0c4857b04482
+
+01 дек. 01:28:22.538
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module 'ydb-sdk'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+01 дек. 01:28:22.529
+Unable to import index.handler module. Error: Cannot find module 'ydb-sdk' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 01:28:22.343
+Unable to import index.handler module. Error: Cannot find module 'ydb-sdk' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 01:28:22.275
+Unable to import index.handler module. Error: Cannot find module 'ydb-sdk' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 01:28:22.157
+START RequestID: 9ae8c9c1-3412-44b0-9765-0c4857b04482 Version: d4e8u4pfsanr8433gko6
+
+01 дек. 01:28:22.114
+REPORT RequestID: 131cc61c-3986-4188-aeba-dcf1916a3e9b Duration: 20.730 ms Billed Duration: 100 ms Memory Size: 128 MB Queuing Duration: 0.082 ms
+
+01 дек. 01:28:22.114
+ERROR RequestID: 131cc61c-3986-4188-aeba-dcf1916a3e9b Code: 502 Message: Error during function invocation
+
+01 дек. 01:28:22.114
+END RequestID: 131cc61c-3986-4188-aeba-dcf1916a3e9b
+
+01 дек. 01:28:22.113
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module 'ydb-sdk'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+01 дек. 01:28:22.112
+Unable to import index.handler module. Error: Cannot find module 'ydb-sdk' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 01:28:22.091
+START RequestID: 131cc61c-3986-4188-aeba-dcf1916a3e9b Version: d4e8u4pfsanr8433gko6
