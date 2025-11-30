@@ -72,16 +72,21 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 module.exports.handler = async (event) => {
   try {
+    console.log('=== LOGIN REQUEST ===');
     const body = JSON.parse(event.body || '{}');
     const { email, password } = body;
+    console.log('📧 Email:', email, '🔐 Password length:', password ? password.length : 0);
 
     if (!email || !password) {
+      console.error('❌ Email или пароль не указаны');
       return createResponse(400, { error: 'Email и пароль обязательны' });
     }
 
     const trimmedEmail = email.trim().toLowerCase();
+    console.log('✓ Trimmed email:', trimmedEmail);
 
     if (!validateEmail(trimmedEmail)) {
+      console.error('❌ Неверный формат email');
       return createResponse(400, { error: 'Неверный формат email' });
     }
 
@@ -91,23 +96,36 @@ module.exports.handler = async (event) => {
     });
 
     const result = await docClient.send(getCommand);
+    console.log('📊 User found:', !!result.Item);
 
     if (!result.Item) {
+      console.error('❌ Пользователь не найден');
       return createResponse(401, { error: 'Неверный email или пароль' });
     }
 
     const user = result.Item;
+    console.log('👤 User data:', {
+      email: user.email,
+      emailVerified: user.emailVerified,
+      passwordSalt: user.passwordSalt ? '✓' : '✗',
+      passwordHash: user.passwordHash ? '✓' : '✗',
+      userId: user.userId
+    });
 
     // Проверить, верифицирован ли email
     if (!user.emailVerified) {
+      console.error('❌ Email не верифицирован. emailVerified =', user.emailVerified);
       return createResponse(401, { error: 'Пожалуйста, подтвердите вашу почту перед входом' });
     }
 
     const isValidPassword = verifyPassword(password, user.passwordSalt, user.passwordHash);
+    console.log('🔑 Password valid:', isValidPassword);
     if (!isValidPassword) {
+      console.error('❌ Пароль неверный');
       return createResponse(401, { error: 'Неверный email или пароль' });
     }
 
+    console.log('✅ All checks passed, generating token');
     const token = generateJWT(user.userId, user.email, user.role || 'user', {
       telegramId: user.telegramId,
       telegramUsername: user.telegramUsername,
@@ -115,6 +133,7 @@ module.exports.handler = async (event) => {
       emailVerified: user.emailVerified,
     });
 
+    console.log('✅ Login successful');
     return createResponse(200, {
       success: true,
       token,
@@ -128,7 +147,7 @@ module.exports.handler = async (event) => {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('❌ Login error:', error);
     return createResponse(500, { error: 'Ошибка при входе' });
   }
 };
