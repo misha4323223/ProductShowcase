@@ -1,0 +1,49 @@
+===> executing build script
+npm WARN using --force Recommended protections disabled.
+===> package.json found in sources
+===> will start 'npm install' in /function/code
+npm info using npm@7.24.2
+npm info using node@v22.15.0
+npm timing npm:load:whichnode Completed in 0ms
+npm timing config:load:defaults Completed in 3ms
+npm timing config:load:file:/function/runtime/nodejs/lib/node_modules/npm/npmrc Completed in 12ms
+npm timing config:load:builtin Completed in 12ms
+npm timing config:load:cli Completed in 3ms
+npm timing config:load:env Completed in 0ms
+npm timing config:load:project Completed in 6ms
+npm timing config:load:file:/function/code/.npmrc Completed in 0ms
+npm timing config:load:user Completed in 0ms
+npm timing config:load:file:/function/runtime/nodejs/etc/npmrc Completed in 0ms
+npm timing config:load:global Completed in 0ms
+npm timing config:load:validate Completed in 0ms
+npm timing config:load:credentials Completed in 1ms
+npm timing config:load:setEnvs Completed in 1ms
+npm timing config:load Completed in 26ms
+npm timing npm:load:configload Completed in 26ms
+npm timing npm:load:setTitle Completed in 0ms
+npm timing npm:load:setupLog Completed in 0ms
+npm timing config:load:flatten Completed in 2ms
+npm timing npm:load:cleanupLog Completed in 2ms
+npm timing npm:load:configScope Completed in 0ms
+npm timing npm:load:projectScope Completed in 1ms
+npm timing npm:load Completed in 34ms
+npm timing arborist:ctor Completed in 1ms
+npm timing arborist:ctor Completed in 0ms
+npm timing idealTree:init Completed in 10ms
+npm timing idealTree:userRequests Completed in 0ms
+npm http fetch GET 200 https://registry.npmjs.org/ydb-sdk 114ms (cache miss)
+npm timing idealTree:#root Completed in 125ms
+npm timing idealTree:node_modules/ydb-sdk Completed in 0ms
+npm timing idealTree:buildDeps Completed in 127ms
+npm timing idealTree:fixDepFlags Completed in 0ms
+npm timing idealTree Completed in 141ms
+npm timing command:install Completed in 200ms
+npm ERR! code ETARGET
+npm ERR! notarget No matching version found for ydb-sdk@^3.16.0.
+npm ERR! notarget In most cases you or one of your dependencies are requesting
+npm ERR! notarget a package version that doesn't exist.
+npm timing npm Completed in 424ms
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /function/code/.npm/_logs/2025-11-30T22_36_29_449Z-debug.log
+===> execution failed: exit status 1

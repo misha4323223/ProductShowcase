@@ -39,15 +39,24 @@ async function getSubscribersFromYDB() {
       const query = `SELECT chat_id, username, first_name, subscribed_at, is_active FROM ${TABLE_NAME} WHERE is_active = true`;
       const result = await session.executeQuery(query);
       
+      console.log('YDB Result:', JSON.stringify(result, null, 2).substring(0, 500));
+      
       if (result.resultSets && result.resultSets[0] && result.resultSets[0].rows) {
         for (const row of result.resultSets[0].rows) {
-          subscribers.push({
-            chatId: row.items[0].int64Value,
-            username: row.items[1].stringValue || '',
-            firstName: row.items[2].stringValue || '',
-            subscribedAt: row.items[3].timestampValue,
-            isActive: row.items[4].boolValue
-          });
+          const chatId = row.items[0].int64Value || row.items[0].uint64Value;
+          const username = row.items[1].stringValue || row.items[1].utf8Value || '';
+          const firstName = row.items[2].stringValue || row.items[2].utf8Value || '';
+          const isActive = row.items[4].boolValue !== false;
+          
+          if (chatId) {
+            subscribers.push({
+              chatId,
+              username,
+              firstName,
+              subscribedAt: row.items[3].timestampValue,
+              isActive
+            });
+          }
         }
       }
     });
@@ -55,7 +64,7 @@ async function getSubscribersFromYDB() {
     console.log(`✅ Найдено ${subscribers.length} подписчиков в YDB`);
     return subscribers;
   } catch (error) {
-    console.error(`❌ Ошибка YDB:`, error.message);
+    console.error(`❌ Ошибка YDB getSubscribers:`, error.message, error.stack);
     return [];
   }
 }
@@ -67,11 +76,16 @@ async function addSubscriberToYDB(chatId, username, firstName) {
     const driver = await initYDB();
     const tableClient = driver.getTableClient();
     
+    const cleanUsername = (username || '').replace(/'/g, "''").substring(0, 255);
+    const cleanFirstName = (firstName || '').replace(/'/g, "''").substring(0, 255);
+    
     const query = `
       UPSERT INTO ${TABLE_NAME} 
       (chat_id, username, first_name, subscribed_at, is_active) 
-      VALUES (${chatId}, '${(username || '').replace(/'/g, "''")}', '${(firstName || '').replace(/'/g, "''")}', CurrentUtcTimestamp(), true)
+      VALUES (${chatId}, '${cleanUsername}', '${cleanFirstName}', CurrentUtcTimestamp(), true)
     `;
+    
+    console.log(`Query: ${query}`);
     
     await tableClient.withSession(async (session) => {
       await session.executeQuery(query);
@@ -80,7 +94,7 @@ async function addSubscriberToYDB(chatId, username, firstName) {
     console.log(`✅ Подписчик ${chatId} добавлен в YDB`);
     return { ok: true };
   } catch (error) {
-    console.error(`⚠️ Ошибка YDB:`, error.message);
+    console.error(`⚠️ Ошибка YDB addSubscriber:`, error.message, error.stack);
     return { ok: true };
   }
 }
