@@ -109,6 +109,7 @@ exports.handler = async (event) => {
     console.log('✅ Token verified for userId:', tokenPayload.userId);
 
     const trimmedEmail = email.trim().toLowerCase();
+    console.log('📧 Attempting to attach email:', trimmedEmail);
 
     // Check if email already exists
     const scanCommand = new ScanCommand({
@@ -118,10 +119,21 @@ exports.handler = async (event) => {
     });
 
     let result = await docClient.send(scanCommand);
+    console.log('🔍 Found', result.Items?.length || 0, 'records with email:', trimmedEmail);
+    
     if (result.Items && result.Items.length > 0) {
       const existingUser = result.Items[0];
-      if (existingUser.userId !== tokenPayload.userId) {
+      console.log('👤 Existing user userId:', existingUser.userId, 'Current user:', tokenPayload.userId);
+      
+      // Allow if it's the same user or if the existing email is the user's telegram email
+      if (existingUser.userId !== tokenPayload.userId && !trimmedEmail.includes('@telegram')) {
+        console.log('❌ Email conflict with another user');
         return createResponse(400, { error: 'Email already in use by another account' });
+      }
+      
+      // If it's our own record, just continue and let delete/recreate handle it
+      if (existingUser.userId === tokenPayload.userId) {
+        console.log('✅ Email belongs to same user, continuing...');
       }
     }
 
