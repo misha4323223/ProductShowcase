@@ -1,0 +1,10 @@
+{
+  "name": "detach-telegram",
+  "version": "1.0.0",
+  "description": "Yandex Cloud Function для отвязи Telegram от аккаунта",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.621.0",
+    "@aws-sdk/lib-dynamodb": "^3.621.0"
+  }
+}
