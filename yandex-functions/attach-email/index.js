@@ -73,7 +73,7 @@ function generateToken(userId, email, extraData = {}) {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
   const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const signature = crypto.createHmac('sha256', secret).update(`${header}.${payloadStr}`).digest('base64url');
-  
+
   return `${header}.${payloadStr}.${signature}`;
 }
 
@@ -101,7 +101,7 @@ exports.handler = async (event) => {
     // Verify token
     const secret = process.env.JWT_SECRET || 'telegram-secret-key';
     const tokenPayload = verifyToken(token, secret);
-    
+
     if (!tokenPayload) {
       return createResponse(401, { error: 'Invalid or expired token' });
     }
@@ -120,27 +120,19 @@ exports.handler = async (event) => {
 
     let result = await docClient.send(scanCommand);
     console.log('🔍 Found', result.Items?.length || 0, 'records with email:', trimmedEmail);
-    
+
     if (result.Items && result.Items.length > 0) {
       const existingUser = result.Items[0];
       console.log('👤 Existing user userId:', existingUser.userId, 'Current user:', tokenPayload.userId);
-      console.log('🔐 Existing user has password hash:', !!existingUser.passwordHash);
-      
-      if (existingUser.userId !== tokenPayload.userId) {
-        // If the other user doesn't have a password hash (Telegram-only account), remove their record
-        if (!existingUser.passwordHash) {
-          console.log('🗑️ Removing orphaned Telegram-only account');
-          await docClient.send(new DeleteCommand({
-            TableName: "users",
-            Key: { email: trimmedEmail },
-          }));
-        } else {
-          // Real account with password exists - this is a real conflict
-          console.log('❌ Email conflict with another user who has password');
-          return createResponse(400, { error: 'Email already in use by another account' });
-        }
-      } else {
-        // Same user - just continue and let delete/recreate handle it
+
+      // Allow if it's the same user or if the existing email is the user's telegram email
+      if (existingUser.userId !== tokenPayload.userId && !trimmedEmail.includes('@telegram')) {
+        console.log('❌ Email conflict with another user');
+        return createResponse(400, { error: 'Email already in use by another account' });
+      }
+
+      // If it's our own record, just continue and let delete/recreate handle it
+      if (existingUser.userId === tokenPayload.userId) {
         console.log('✅ Email belongs to same user, continuing...');
       }
     }
