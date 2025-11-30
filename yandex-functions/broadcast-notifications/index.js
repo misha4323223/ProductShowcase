@@ -1,7 +1,77 @@
 const https = require('https');
+const { Driver, metadataAuthService } = require('ydb-sdk');
 
-// Хранилище подписчиков в памяти (теряется при перезагрузке функции)
-const subscribers = new Map();
+const DB_PATH = '/local';
+const TABLE_NAME = 'telegram_subscribers';
+
+let driver;
+
+async function initYDB() {
+  if (!driver) {
+    const authService = metadataAuthService();
+    driver = new Driver({
+      endpoint: process.env.YDB_ENDPOINT || 'grpc://localhost:2136',
+      database: DB_PATH,
+      authService
+    });
+    await driver.ready(10000);
+  }
+  return driver;
+}
+
+async function getSubscribersFromYDB() {
+  try {
+    console.log(`📖 Получаю подписчиков из YDB...`);
+    
+    const driver = await initYDB();
+    const subscribers = [];
+    
+    await driver.tableClient.withSession(async (session) => {
+      const query = `SELECT chat_id, username, first_name, subscribed_at, is_active FROM \`${DB_PATH}/${TABLE_NAME}\` WHERE is_active = true`;
+      const result = await session.executeQuery(query);
+      
+      for (const row of result.resultSets[0].rows) {
+        subscribers.push({
+          chatId: row.items[0].int64Value,
+          username: row.items[1].stringValue || '',
+          firstName: row.items[2].stringValue || '',
+          subscribedAt: row.items[3].timestampValue,
+          isActive: row.items[4].boolValue
+        });
+      }
+    });
+    
+    console.log(`✅ Найдено ${subscribers.length} подписчиков в YDB`);
+    return subscribers;
+  } catch (error) {
+    console.error(`❌ Ошибка YDB:`, error.message);
+    return [];
+  }
+}
+
+async function addSubscriberToYDB(chatId, username, firstName) {
+  try {
+    console.log(`📝 Добавляю подписчика ${chatId} в YDB...`);
+    
+    const driver = await initYDB();
+    
+    const query = `
+      UPSERT INTO \`${DB_PATH}/${TABLE_NAME}\` 
+      (chat_id, username, first_name, subscribed_at, is_active) 
+      VALUES (${chatId}, '${(username || '').replace(/'/g, "''")}', '${(firstName || '').replace(/'/g, "''")}', CurrentUtcTimestamp(), true)
+    `;
+    
+    await driver.tableClient.withSession(async (session) => {
+      await session.executeQuery(query);
+    });
+    
+    console.log(`✅ Подписчик ${chatId} добавлен в YDB`);
+    return { ok: true };
+  } catch (error) {
+    console.error(`⚠️ Ошибка YDB:`, error.message);
+    return { ok: true };
+  }
+}
 
 async function sendTelegramMessage(chatId, message) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -52,18 +122,7 @@ async function handler(event) {
     const action = data.action;
     
     if (action === 'subscribe') {
-      console.log(`📝 Добавляю подписчика ${data.chatId}`);
-      
-      subscribers.set(data.chatId, {
-        chatId: data.chatId,
-        username: data.username,
-        firstName: data.firstName,
-        subscribedAt: new Date().toISOString(),
-        isActive: true
-      });
-      
-      console.log(`✅ Подписчик добавлен. Всего: ${subscribers.size}`);
-      
+      const result = await addSubscriberToYDB(data.chatId, data.username, data.firstName);
       return {
         statusCode: 200,
         body: JSON.stringify({ ok: true, message: 'Subscribed' })
@@ -71,30 +130,29 @@ async function handler(event) {
     }
     
     if (action === 'get_subscribers') {
-      console.log(`📋 Получение списка подписчиков (${subscribers.size})`);
-      const subsList = Array.from(subscribers.values());
-      
+      const subscribers = await getSubscribersFromYDB();
       return {
         statusCode: 200,
-        body: JSON.stringify({ ok: true, subscribers: subsList })
+        body: JSON.stringify({ ok: true, subscribers })
       };
     }
     
     if (action === 'send') {
       const { title, message } = data;
-      console.log(`📤 Отправляю рассылку: "${title}" (${subscribers.size} подписчиков)`);
+      const subscribers = await getSubscribersFromYDB();
+      console.log(`📤 Отправляю рассылку: "${title}" (${subscribers.length} подписчиков)`);
       
       let successCount = 0;
       let errorCount = 0;
 
-      for (const [chatId, subscriber] of subscribers.entries()) {
+      for (const subscriber of subscribers) {
         try {
           const fullMessage = `<b>${title}</b>\n\n${message}`;
-          await sendTelegramMessage(chatId, fullMessage);
+          await sendTelegramMessage(subscriber.chatId, fullMessage);
           successCount++;
-          console.log(`✅ Отправлено ${chatId}`);
+          console.log(`✅ Отправлено ${subscriber.chatId}`);
         } catch (error) {
-          console.error(`❌ Ошибка ${chatId}:`, error.message);
+          console.error(`❌ Ошибка ${subscriber.chatId}:`, error.message);
           errorCount++;
         }
       }

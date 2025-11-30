@@ -3,5 +3,7 @@
   "version": "1.0.0",
   "description": "Telegram Bot Webhook Handler for Sweet Delights Mini App",
   "main": "index.js",
-  "dependencies": {}
+  "dependencies": {
+    "ydb-sdk": "^3.16.0"
+  }
 }

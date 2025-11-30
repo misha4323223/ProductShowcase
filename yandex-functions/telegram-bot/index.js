@@ -1,55 +1,45 @@
 const https = require('https');
+const { Driver, metadataAuthService } = require('ydb-sdk');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
-const API_GATEWAY = 'https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net';
+const DB_PATH = '/local';
+const TABLE_NAME = 'telegram_subscribers';
 
-async function subscribeUser(chatId, username, firstName) {
-  try {
-    console.log(`💾 Отправляю подписку ${chatId} на API Gateway...`);
-    
-    const payload = {
-      action: 'subscribe',
-      chatId,
-      username: username || null,
-      firstName: firstName || null
-    };
+let driver;
 
-    return new Promise((resolve, reject) => {
-      const payloadStr = JSON.stringify(payload);
-      const options = {
-        hostname: 'd4efkrvud5o73t4cskgk.functions.yandexcloud.net',
-        path: '/broadcast-notifications',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(payloadStr)
-        }
-      };
-
-      const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => {
-          try {
-            const result = JSON.parse(data);
-            console.log(`✅ Подписка сохранена`);
-            resolve(result);
-          } catch (e) {
-            resolve({ ok: true });
-          }
-        });
-      });
-
-      req.on('error', (err) => {
-        console.error(`⚠️ Ошибка отправки:`, err.message);
-        resolve({ ok: true });
-      });
-      
-      req.write(payloadStr);
-      req.end();
+async function initYDB() {
+  if (!driver) {
+    const authService = metadataAuthService();
+    driver = new Driver({
+      endpoint: process.env.YDB_ENDPOINT || 'grpc://localhost:2136',
+      database: DB_PATH,
+      authService
     });
+    await driver.ready(10000);
+  }
+  return driver;
+}
+
+async function subscribeUserToYDB(chatId, username, firstName) {
+  try {
+    console.log(`💾 Сохраняю подписчика ${chatId} в YDB...`);
+    
+    const driver = await initYDB();
+    
+    const query = `
+      UPSERT INTO \`${DB_PATH}/${TABLE_NAME}\` 
+      (chat_id, username, first_name, subscribed_at, is_active) 
+      VALUES (${chatId}, '${(username || '').replace(/'/g, "''")}', '${(firstName || '').replace(/'/g, "''")}', CurrentUtcTimestamp(), true)
+    `;
+    
+    await driver.tableClient.withSession(async (session) => {
+      await session.executeQuery(query);
+    });
+    
+    console.log(`✅ Подписчик ${chatId} сохранен в YDB`);
+    return { ok: true };
   } catch (error) {
-    console.error(`⚠️ Ошибка:`, error.message);
+    console.error(`⚠️ Ошибка YDB:`, error.message);
     return { ok: true };
   }
 }
@@ -113,8 +103,10 @@ async function handler(event) {
 
     console.log(`✅ Сообщение: "${text}" от ${chatId}`);
 
-    // Сохраняем подписчика
-    await subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
+    // Сохраняем подписчика в YDB
+    if (text === '/start') {
+      await subscribeUserToYDB(chatId, data.message.from.username, data.message.from.first_name);
+    }
 
     let message = '';
     let replyMarkup = null;
