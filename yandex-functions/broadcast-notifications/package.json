@@ -3,7 +3,5 @@
   "version": "1.0.0",
   "description": "Unified broadcast notifications service (subscribe + send)",
   "main": "index.js",
-  "dependencies": {
-    "ydb-sdk": "^2.11.0"
-  }
+  "dependencies": {}
 }
