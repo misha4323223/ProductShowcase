@@ -579,76 +579,59 @@ export default function AccountPage() {
         setIsAttachingTelegram(false);
       }
     } else {
-      // Если в браузере - показать Telegram Login Widget
-      console.log('🌐 Браузер - загружаю Telegram Login Widget');
+      // НОВОЕ: Открываем Telegram Widget в POPUP окне с чистой сессией
+      console.log('🌐 Браузер - открываю Telegram Widget в POPUP с чистой сессией');
       setIsAttachingTelegram(true);
       
-      // ВАЖНО: Создаем глобальный callback ДО загрузки скрипта!
-      (window as any).onTelegramAttachAuth = async (user: any) => {
-        console.log('✅ Telegram user получен:', user);
-        try {
-          // Преобразуем user data в initData формат
-          const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
-          console.log('📦 initDataStr создана, отправляю attachTelegram()');
-          
-          await attachTelegram(initDataStr);
-          toast({
-            title: "Успешно!",
-            description: "Telegram успешно привязан к вашему аккаунту",
-          });
-          setTimeout(() => setLocation("/account"), 600);
-        } catch (error: any) {
-          console.error('❌ Ошибка привязки:', error);
-          toast({
-            title: "Ошибка привязки",
-            description: error.message || "Не удалось привязать Telegram",
-            variant: "destructive",
-          });
-          setIsAttachingTelegram(false);
-        }
-      };
-
-      console.log('✅ onTelegramAttachAuth установлена на window');
-
-      // Даём гарантию что callback установлена, потом загружаем скрипт
-      setTimeout(() => {
-        console.log('⏳ Удаляю старые Telegram скрипты...');
-        
-        // 🔥 ПОЛНОСТЬЮ УДАЛЯЕМ ВСЕ старые скрипты Telegram
-        const oldScripts = document.querySelectorAll('script[src*="telegram-widget"]');
-        oldScripts.forEach(script => {
-          console.log('🗑️ Удаляю старый скрипт:', script.src);
-          script.remove();
-        });
-        
-        // Очищаем контейнер полностью
-        const container = document.getElementById('attach-telegram-widget-container');
-        if (container) {
-          container.innerHTML = '';
-        }
-        
-        // Даём браузеру время на очистку
-        setTimeout(() => {
-          console.log('⏳ Загружаю новый widget скрипт с cache busting...');
-          
-          // Создаём НОВЫЙ скрипт с временной меткой для избежания кэша
-          const script = document.createElement('script');
-          script.src = `https://telegram.org/js/telegram-widget.js?${Date.now()}`;
-          script.async = true;
-          script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
-          script.setAttribute('data-size', 'large');
-          script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
-          script.setAttribute('data-request-access', 'write');
-          
-          if (container) {
-            console.log('✅ Контейнер найден, добавляю новый скрипт');
-            container.appendChild(script);
-          } else {
-            console.error('❌ Контейнер attach-telegram-widget-container не найден!');
+      // Слушаем сообщения от popup окна
+      const handlePopupMessage = async (event: MessageEvent) => {
+        if (event.data?.type === 'TELEGRAM_AUTH_SUCCESS') {
+          console.log('✅ Получены данные от popup:', event.data.data);
+          try {
+            const user = event.data.data;
+            // Преобразуем user data в initData формат
+            const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
+            console.log('📦 initDataStr создана, отправляю attachTelegram()');
+            
+            await attachTelegram(initDataStr);
+            toast({
+              title: "Успешно!",
+              description: "Telegram успешно привязан к вашему аккаунту",
+            });
+            
+            // Удаляем listener
+            window.removeEventListener('message', handlePopupMessage);
+            
+            setTimeout(() => window.location.href = "/account", 600);
+          } catch (error: any) {
+            console.error('❌ Ошибка привязки:', error);
+            toast({
+              title: "Ошибка привязки",
+              description: error.message || "Не удалось привязать Telegram",
+              variant: "destructive",
+            });
             setIsAttachingTelegram(false);
           }
-        }, 100);
-      }, 0);
+        }
+      };
+      
+      window.addEventListener('message', handlePopupMessage);
+      
+      // Открываем popup с чистой Telegram сессией
+      const popupWindow = window.open('/telegram-attach-popup', 'telegram-attach', 'width=600,height=700');
+      
+      if (!popupWindow) {
+        console.error('❌ Не удалось открыть popup окно');
+        toast({
+          title: "Ошибка",
+          description: "Не удалось открыть окно привязки. Проверьте блокировщик всплывающих окон.",
+          variant: "destructive",
+        });
+        setIsAttachingTelegram(false);
+        window.removeEventListener('message', handlePopupMessage);
+      } else {
+        console.log('✅ Popup окно открыто');
+      }
     }
   };
 
@@ -1130,14 +1113,7 @@ export default function AccountPage() {
                 
                 {/* Кнопка видна ВСЕГДА - и когда привязан и когда не привязан */}
                 <Button
-                  onClick={() => {
-                    // Очищаем кэш старого аккаунта перед загрузкой нового Widget
-                    if (typeof window !== 'undefined') {
-                      localStorage.removeItem('TelegramLoginWidget');
-                      sessionStorage.removeItem('TelegramLoginWidget');
-                    }
-                    handleAttachTelegram();
-                  }}
+                  onClick={handleAttachTelegram}
                   disabled={isAttachingTelegram}
                   data-testid={user.telegramId ? "button-change-telegram-account" : "button-attach-telegram"}
                 >
@@ -1148,8 +1124,6 @@ export default function AccountPage() {
                   )}
                   {user.telegramId ? "Использовать другой аккаунт" : "Привязать Telegram"}
                 </Button>
-                
-                <div id="attach-telegram-widget-container" className="flex justify-center my-2" />
               </CardContent>
             </Card>
 
