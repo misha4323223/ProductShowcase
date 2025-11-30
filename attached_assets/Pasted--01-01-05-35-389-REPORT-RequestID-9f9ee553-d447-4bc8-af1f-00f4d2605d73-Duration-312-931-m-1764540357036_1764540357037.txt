@@ -1,0 +1,25 @@
+
+
+01 дек. 01:05:35.389
+REPORT RequestID: 9f9ee553-d447-4bc8-af1f-00f4d2605d73 Duration: 312.931 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 98 MB Queuing Duration: 0.081 ms Function Init Duration: 22.479 ms CPU Usage: 11.914 %
+
+01 дек. 01:05:35.389
+END RequestID: 9f9ee553-d447-4bc8-af1f-00f4d2605d73
+
+01 дек. 01:05:35.145
+⚠️ Ошибка при подписке 821150521: getaddrinfo ENOTFOUND d4efkrvud5o73t4cskgk.functions.yandexcloud.net
+
+01 дек. 01:05:35.100
+🔄 Подписываю пользователя 821150521...
+
+01 дек. 01:05:35.100
+✅ Сообщение получено от 821150521: "/start"
+
+01 дек. 01:05:35.099
+📦 Распарсенные данные: {"update_id":87832882,"message":{"message_id":29,"from":{"id":821150521,"is_bot":false,"first_name":"Misha","username":"BOOOMERANGSOPT","language_code":"ru"},"chat":{"id":821150521,"first_name":"Misha","username":"BOOOMERANGSOPT","type":"private"},"date":1764540334,"text":"/start","entities":[{"offset":0,"length":6,"type":"bot_command"}]}}
+
+01 дек. 01:05:35.099
+📥 Получен запрос от Telegram: {"httpMethod":"POST","headers":{"Accept-Encoding":"gzip, deflate","Content-Length":"342","Content-Type":"application/json","Host":"functions.yandexcloud.net","Uber-Trace-Id":"f1cc9ac43ca21e95:cfc90b57dd35ec6f:f1cc9ac43ca21e95:1","X-Forwarded-For":"91.108.5.140","X-Real-Remote-Address":"[91.108.5.140]:58518","X-Request-Id":"9f9ee553-d447-4bc8-af1f-00f4d2605d73","X-Trace-Id":"3ce0cc0a-62ae-4384-978b-fc824d671c0a"},"url":"","params":{},"multiValueParams":{},"pathParams":{},"multiValueHeaders":{"Accept-Encoding":["gzip, deflate"],"Content-Length":["342"],"Content-Type":["application/json"],"Host":["functions.yandexcloud.net"],"Uber-Trace-Id":["f1cc9ac43ca21e95:cfc90b57dd35ec6f:f1cc9ac43ca21e95:1"],"X-Forwarded-For":["91.108.5.140"],"X-Real-Remote-Address":["[91.108.5.140]:58518"],"X-Request-Id":["9f9ee553-d447-4bc8-af1f-00f4d2605d73"],"X-Trace-Id":["3ce0cc0a-62ae-4384-978b-fc824d671c0a"]},"queryStringParameters":{},"multiValueQueryStringParameters":{},"requestContext":{"identity":{"sourceIp":"91.108.5.140","userAgent":""},"httpMethod":"POST","requestId":"9f9ee553-d447-4bc8-af1f-00f4d2605d73","requestTime":"30/Nov/2025:22:05:35 +0000","requestTimeEpoch":1764540335},"body":"{\"update_id\":87832882,\n\"message\":{\"message_id\":29,\"from\":{\"id\":821150521,\"is_bot\":false,\"first_name\":\"Misha\",\"username\":\"BOOOMERANGSOPT\",\"language_code\":\"ru\"},\"chat\":{\"id\":821150521,\"first_name\":\"Misha\",\"username\":\"BOOOMERANGSOPT\",\"type\":\"private\"},\"date\":1764540334,\"text\":\"/start\",\"entities\":[{\"offset\":0,\"length\":6,\"type\":\"bot_command\"}]}}","isBase64Encoded":false}
+
+01 дек. 01:05:35.073
+START RequestID: 9f9ee553-d447-4bc8-af1f-00f4d2605d73 Version: d4er9sa2u30g1323fe0s
