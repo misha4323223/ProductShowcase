@@ -1,0 +1,67 @@
+
+
+01 дек. 02:24:17.818
+REPORT RequestID: 8cbfcd4e-42f6-44fc-b34e-54468cff8138 Duration: 309.875 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 53 MB Queuing Duration: 0.031 ms CPU Usage: 13.477 %
+
+01 дек. 02:24:17.818
+ERROR RequestID: 8cbfcd4e-42f6-44fc-b34e-54468cff8138 Code: 502 Message: Error during function invocation
+
+01 дек. 02:24:17.818
+END RequestID: 8cbfcd4e-42f6-44fc-b34e-54468cff8138
+
+01 дек. 02:24:17.818
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+01 дек. 02:24:17.799
+Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 02:24:17.506
+START RequestID: 8cbfcd4e-42f6-44fc-b34e-54468cff8138 Version: d4efkaif1lqkmnt61qel
+
+01 дек. 02:24:15.416
+REPORT RequestID: bafa6c0a-c390-42cd-a138-304a91958943 Duration: 310.310 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 52 MB Queuing Duration: 189.802 ms CPU Usage: 12.793 %
+
+01 дек. 02:24:15.416
+ERROR RequestID: bafa6c0a-c390-42cd-a138-304a91958943 Code: 502 Message: Error during function invocation
+
+01 дек. 02:24:15.416
+END RequestID: bafa6c0a-c390-42cd-a138-304a91958943
+
+01 дек. 02:24:15.415
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+01 дек. 02:24:15.397
+Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 02:24:15.194
+Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 02:24:15.159
+Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 02:24:15.114
+Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 02:24:15.033
+Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 02:24:14.914
+START RequestID: bafa6c0a-c390-42cd-a138-304a91958943 Version: d4efkaif1lqkmnt61qel
+
+01 дек. 02:24:14.846
+REPORT RequestID: 551a54de-fb1b-4d66-a92f-7431c71f6423 Duration: 26.891 ms Billed Duration: 100 ms Memory Size: 128 MB Queuing Duration: 0.042 ms
+
+01 дек. 02:24:14.846
+ERROR RequestID: 551a54de-fb1b-4d66-a92f-7431c71f6423 Code: 502 Message: Error during function invocation
+
+01 дек. 02:24:14.846
+END RequestID: 551a54de-fb1b-4d66-a92f-7431c71f6423
+
+01 дек. 02:24:14.845
+{"errorMessage":"Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js'\nRequire stack:\n- /function/code/index.js","errorType":"Error","stackTrace":[{"line":"Require stack:"},{"line":"- /function/code/index.js"},{"function":"he.<anonymous>","file":"/function/runtime/bootstrap","line":178,"column":47},{"function":"Generator.throw","file":null,"line":null,"column":null},{"function":"a","file":"/function/runtime/bootstrap","line":158,"column":184}]}
+
+01 дек. 02:24:14.844
+Unable to import index.handler module. Error: Cannot find module '../lib/db-client.js' Require stack: - /function/code/index.js Stack: Require stack: - /function/code/index.js at he.<anonymous> (/function/runtime/bootstrap:178:47) at Generator.throw (<anonymous>) at a (/function/runtime/bootstrap:158:184)
+
+01 дек. 02:24:14.817
+START RequestID: 551a54de-fb1b-4d66-a92f-7431c71f6423 Version: d4efkaif1lqkmnt61qel
