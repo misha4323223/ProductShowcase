@@ -81,8 +81,8 @@ exports.handler = async (event) => {
       return createResponse(401, { error: 'No token provided' });
     }
 
-    if (!oldPassword || !newPassword || !newPasswordConfirm) {
-      return createResponse(400, { error: 'Old password, new password and confirmation required' });
+    if (!newPassword || !newPasswordConfirm) {
+      return createResponse(400, { error: 'New password and confirmation required' });
     }
 
     if (newPassword !== newPasswordConfirm) {
@@ -91,10 +91,6 @@ exports.handler = async (event) => {
 
     if (newPassword.length < 6) {
       return createResponse(400, { error: 'Password must be at least 6 characters' });
-    }
-
-    if (oldPassword === newPassword) {
-      return createResponse(400, { error: 'New password must be different from old password' });
     }
 
     // Verify token
@@ -120,14 +116,26 @@ exports.handler = async (event) => {
     }
 
     const userRecord = getUserResult.Items[0];
-    const oldPasswordHash = hashPassword(oldPassword);
+    const hasExistingPassword = !!userRecord.passwordHash;
 
-    // Verify old password
-    if (!userRecord.passwordHash || userRecord.passwordHash !== oldPasswordHash) {
-      return createResponse(401, { error: 'Old password is incorrect' });
+    // If user has existing password, verify old password
+    if (hasExistingPassword) {
+      if (!oldPassword) {
+        return createResponse(400, { error: 'Current password required' });
+      }
+
+      if (oldPassword === newPassword) {
+        return createResponse(400, { error: 'New password must be different from old password' });
+      }
+
+      const oldPasswordHash = hashPassword(oldPassword);
+      if (userRecord.passwordHash !== oldPasswordHash) {
+        return createResponse(401, { error: 'Current password is incorrect' });
+      }
+      console.log('✅ Current password verified');
+    } else {
+      console.log('✅ First password set (no existing password)');
     }
-
-    console.log('✅ Old password verified');
 
     // Update password
     const newPasswordHash = hashPassword(newPassword);
