@@ -3,9 +3,47 @@ const https = require('https');
 const MINI_APP_URL = 'https://sweetdelights.store';
 
 // Подписываем пользователя на рассылку через unified функцию
-function subscribeUser(chatId, username, firstName) {
-  console.log(`✅ Пользователь ${chatId} подписан на рассылку (${firstName})`);
-  // Можно подключить к broadcast-notifications API позже если нужно
+async function subscribeUser(chatId, username, firstName) {
+  try {
+    console.log(`🔄 Подписываю пользователя ${chatId}...`);
+    
+    const payload = JSON.stringify({
+      action: 'subscribe',
+      chat_id: chatId,
+      username: username || null,
+      first_name: firstName || null
+    });
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
+
+    return new Promise((resolve, reject) => {
+      const req = https.request('https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net', options, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          console.log(`✅ Пользователь ${chatId} подписан на рассылку`);
+          resolve(JSON.parse(data));
+        });
+      });
+
+      req.on('error', (err) => {
+        console.error(`⚠️ Ошибка при подписке ${chatId}:`, err.message);
+        resolve({ ok: true }); // Не блокируем /start если ошибка подписки
+      });
+
+      req.write(payload);
+      req.end();
+    });
+  } catch (error) {
+    console.error(`⚠️ Ошибка подписки:`, error.message);
+    return { ok: true };
+  }
 }
 
 async function sendTelegramMessage(chatId, message, replyMarkup) {
@@ -70,7 +108,7 @@ async function handler(event) {
 
     if (text === '/start') {
       // Подписываем пользователя на рассылку
-      subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
+      await subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
       
       message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>
 

@@ -1,0 +1,59 @@
+2026.b8fb401….js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.b8fb401b0f58b6a…:sourcemap:1:266987
+2026.b8fb401….js:sourcemap:1 WebSocket error 
+Event
+2026.b8fb401….js:sourcemap:1 Socket zws2.web.telegram.org closed. Code: 1006, reason: , was clean: false
+2026.b8fb401….js:sourcemap:1 TimeoutError: signal timed out
+1f604.png:1 
+ Failed to load resource: net::ERR_TIMED_OUT
+1f605.png:1 
+ Failed to load resource: net::ERR_TIMED_OUT
+1f606.png:1 
+ Failed to load resource: net::ERR_TIMED_OUT
+1f923.png:1 
+ Failed to load resource: net::ERR_TIMED_OUT
+1f642.png:1 
+ Failed to load resource: net::ERR_TIMED_OUT
+1f643.png:1 
+ Failed to load resource: net::ERR_TIMED_OUT
+2026.b8fb401….js:sourcemap:1 TypeError: Failed to fetch
+    at Tt.connect (2026.b8fb401b0f58b6a…:sourcemap:1:260981)
+    at Lt._connect (2026.b8fb401b0f58b6a…:sourcemap:1:270298)
+    at Lt.connect (2026.b8fb401b0f58b6a…:sourcemap:1:270428)
+    at gs._connect (2026.b8fb401b0f58b6a…:sourcemap:1:287432)
+    at gs.connect (2026.b8fb401b0f58b6a…:sourcemap:1:285218)
+    at async gs._reconnect (2026.b8fb401b0f58b6a…:sourcemap:1:302969)
+2026.b8fb401….js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.b8fb401b0f58b6a…:sourcemap:1:266987
+2026.b8fb401….js:sourcemap:1 WebSocket error 
+Event
+2026.b8fb401….js:sourcemap:1 Socket zws2.web.telegram.org closed. Code: 1006, reason: , was clean: false
+2
+2026.b8fb401….js:sourcemap:1 TimeoutError: signal timed out
+2026.b8fb401….js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.b8fb401b0f58b6a…:sourcemap:1:266987
+2026.b8fb401….js:sourcemap:1 WebSocket error 
+Event
+2026.b8fb401….js:sourcemap:1 Socket zws2-1.web.telegram.org closed. Code: 1006, reason: , was clean: false
+2026.b8fb401….js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.b8fb401b0f58b6a…:sourcemap:1:266987
+2026.b8fb401….js:sourcemap:1 WebSocket error 
+Event
+2026.b8fb401….js:sourcemap:1 Socket zws2.web.telegram.org closed. Code: 1006, reason: , was clean: false
+2026.b8fb401….js:sourcemap:1 WebSocket error 
+Event
+2026.b8fb401….js:sourcemap:1 Socket zws2.web.telegram.org closed. Code: 1006, reason: , was clean: false
+2026.b8fb401….js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.b8fb401b0f58b6a…:sourcemap:1:266987
+2026.b8fb401….js:sourcemap:1 WebSocket error 
+Event
+2026.b8fb401….js:sourcemap:1 Socket zws2.web.telegram.org closed. Code: 1006, reason: , was clean: false
+a/img-apple-64/1f4f1.png:1 
+ Failed to load resource: net::ERR_CONNECTION_RESET
+2026.b8fb401….js:sourcemap:1 Error: WebSocket connection timeout
+    at 2026.b8fb401b0f58b6a…:sourcemap:1:266987
+2026.b8fb401….js:sourcemap:1 WebSocket error 
+Event {isTrusted: true, type: 'error', target: WebSocket, currentTarget: WebSocket, eventPhase: 2, …}
+2026.b8fb401….js:sourcemap:1 Socket zws2-1.web.telegram.org closed. Code: 1006, reason: , was clean: false
+﻿
+
