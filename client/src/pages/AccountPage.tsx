@@ -610,25 +610,42 @@ export default function AccountPage() {
 
       // Даём гарантию что callback установлена, потом загружаем скрипт
       setTimeout(() => {
-        console.log('⏳ Загружаю widget скрипт...');
+        console.log('⏳ Удаляю старые Telegram скрипты...');
         
-        const script = document.createElement('script');
-        script.src = 'https://telegram.org/js/telegram-widget.js?22';
-        script.async = true;
-        script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
-        script.setAttribute('data-size', 'large');
-        script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
-        script.setAttribute('data-request-access', 'write');
+        // 🔥 ПОЛНОСТЬЮ УДАЛЯЕМ ВСЕ старые скрипты Telegram
+        const oldScripts = document.querySelectorAll('script[src*="telegram-widget"]');
+        oldScripts.forEach(script => {
+          console.log('🗑️ Удаляю старый скрипт:', script.src);
+          script.remove();
+        });
         
+        // Очищаем контейнер полностью
         const container = document.getElementById('attach-telegram-widget-container');
         if (container) {
-          console.log('✅ Контейнер найден, добавляю скрипт');
           container.innerHTML = '';
-          container.appendChild(script);
-        } else {
-          console.error('❌ Контейнер attach-telegram-widget-container не найден!');
-          setIsAttachingTelegram(false);
         }
+        
+        // Даём браузеру время на очистку
+        setTimeout(() => {
+          console.log('⏳ Загружаю новый widget скрипт с cache busting...');
+          
+          // Создаём НОВЫЙ скрипт с временной меткой для избежания кэша
+          const script = document.createElement('script');
+          script.src = `https://telegram.org/js/telegram-widget.js?${Date.now()}`;
+          script.async = true;
+          script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
+          script.setAttribute('data-size', 'large');
+          script.setAttribute('data-onauth', 'onTelegramAttachAuth(user)');
+          script.setAttribute('data-request-access', 'write');
+          
+          if (container) {
+            console.log('✅ Контейнер найден, добавляю новый скрипт');
+            container.appendChild(script);
+          } else {
+            console.error('❌ Контейнер attach-telegram-widget-container не найден!');
+            setIsAttachingTelegram(false);
+          }
+        }, 100);
       }, 0);
     }
   };
