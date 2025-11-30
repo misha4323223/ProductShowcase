@@ -16,3 +16,12 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+// Telegram subscribers хранятся в YDB на Yandex Cloud
+export type TelegramSubscriber = {
+  chatId: number;
+  username?: string | null;
+  firstName?: string | null;
+  subscribedAt: string;
+  isActive: boolean;
+};

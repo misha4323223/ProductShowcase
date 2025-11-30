@@ -142,6 +142,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/admin/telegram-subscribers", async (req, res) => {
+    try {
+      const functionUrl = "https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net";
+      const response = await fetch(functionUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get_subscribers" })
+      });
+      
+      const data = await response.json();
+      res.json(data.subscribers || []);
+    } catch (error: any) {
+      console.error("Error fetching telegram subscribers:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

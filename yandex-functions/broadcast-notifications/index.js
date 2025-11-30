@@ -1,19 +1,53 @@
 const https = require('https');
+const { Client } = require('ydb-sdk');
 
-async function sendTelegramMessage(chatId, message, botToken) {
+const YDB_CONNECTION_STRING = process.env.YDB_CONNECTION_STRING || 'grpc://localhost:2136?database=/local';
+const ydbClient = new Client({ connectionString: YDB_CONNECTION_STRING });
+
+async function getSubscribers() {
+  try {
+    console.log('📖 Получаю подписчиков из YDB...');
+    
+    const query = `SELECT chat_id, username, first_name FROM telegram_subscribers WHERE is_active = true;`;
+    
+    const subscribers = [];
+    await ydbClient.tableClient.withSession(async (session) => {
+      const result = await session.executeQuery(query);
+      for (const row of result.rows) {
+        subscribers.push({
+          chatId: row.get('chat_id'),
+          username: row.get('username'),
+          firstName: row.get('first_name')
+        });
+      }
+    });
+    
+    console.log(`✅ Найдено ${subscribers.length} подписчиков`);
+    return subscribers;
+  } catch (error) {
+    console.error(`❌ Ошибка получения подписчиков:`, error.message);
+    return [];
+  }
+}
+
+async function sendTelegramMessage(chatId, message) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  if (!botToken) throw new Error('BOT_TOKEN missing');
+
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-  const payload = JSON.stringify({
+  const payload = {
     chat_id: chatId,
     text: message,
     parse_mode: 'HTML'
-  });
+  };
 
   return new Promise((resolve, reject) => {
+    const payloadStr = JSON.stringify(payload);
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(payload)
+        'Content-Length': Buffer.byteLength(payloadStr)
       }
     };
 
@@ -22,7 +56,7 @@ async function sendTelegramMessage(chatId, message, botToken) {
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
         if (res.statusCode === 200) {
-          resolve(true);
+          resolve(JSON.parse(data));
         } else {
           reject(new Error(`Telegram error: ${res.statusCode}`));
         }
@@ -30,129 +64,62 @@ async function sendTelegramMessage(chatId, message, botToken) {
     });
 
     req.on('error', reject);
-    req.write(payload);
+    req.write(payloadStr);
     req.end();
   });
 }
 
-// Простое хранилище подписчиков в памяти (демо версия)
-const subscribers = new Map();
-
 async function handler(event) {
   try {
+    console.log('🔔 Начинаю обработку рассылки');
+    
     let data = event;
     if (typeof event.body === 'string') {
       data = JSON.parse(event.body);
     }
 
-    const { action, chat_id, username, first_name, message, broadcast_title } = data;
-
-    // ACTION 1: Подписать пользователя
+    const action = data.action;
+    
     if (action === 'subscribe') {
-      if (!chat_id) {
-        return { 
-          statusCode: 400, 
-          body: JSON.stringify({ error: 'chat_id required' }) 
-        };
-      }
-
-      subscribers.set(chat_id, { 
-        chat_id, 
-        username, 
-        first_name, 
-        subscribed_at: new Date() 
-      });
-
-      console.log(`✅ Подписчик ${chat_id} (${first_name || username}) добавлен`);
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ 
-          ok: true, 
-          message: 'Подписка активирована' 
-        })
-      };
+      console.log(`✅ Подписка: ${data.chat_id}`);
+      // Подписка обрабатывается в telegram-bot функции
+      return { statusCode: 200, body: JSON.stringify({ ok: true, message: 'Subscribed' }) };
     }
-
-    // ACTION 2: Отправить рассылку
+    
     if (action === 'send') {
-      if (!message) {
-        return { 
-          statusCode: 400, 
-          body: JSON.stringify({ error: 'message required' }) 
-        };
-      }
-
-      const botToken = process.env.TELEGRAM_BOT_TOKEN;
-      if (!botToken) {
-        console.error('❌ BOT_TOKEN not configured');
-        throw new Error('BOT_TOKEN missing');
-      }
-
-      // Получаем всех подписчиков
-      const subscriberList = Array.from(subscribers.values());
+      const { title, message } = data;
+      console.log(`📤 Отправляю рассылку: "${title}"`);
       
-      if (subscriberList.length === 0) {
-        console.log('⚠️ Нет подписчиков для рассылки');
-        return { 
-          statusCode: 200, 
-          body: JSON.stringify({ 
-            ok: true, 
-            sent: 0, 
-            failed: 0,
-            total: 0,
-            message: 'Нет подписчиков' 
-          }) 
-        };
-      }
+      const subscribers = await getSubscribers();
+      let successCount = 0;
+      let errorCount = 0;
 
-      const fullMessage = broadcast_title 
-        ? `<b>📰 ${broadcast_title}</b>\n\n${message}`
-        : message;
-
-      let sent = 0;
-      let failed = 0;
-
-      console.log(`📢 Начинаем рассылку ${subscriberList.length} подписчикам...`);
-
-      for (const subscriber of subscriberList) {
+      for (const subscriber of subscribers) {
         try {
-          await sendTelegramMessage(subscriber.chat_id, fullMessage, botToken);
-          sent++;
-          console.log(`✅ Сообщение отправлено ${subscriber.chat_id}`);
-          await new Promise(resolve => setTimeout(resolve, 50));
-        } catch (err) {
-          console.error(`❌ Ошибка отправки ${subscriber.chat_id}:`, err.message);
-          failed++;
+          const fullMessage = `<b>${title}</b>\n\n${message}`;
+          await sendTelegramMessage(subscriber.chatId, fullMessage);
+          successCount++;
+        } catch (error) {
+          console.error(`❌ Ошибка отправки ${subscriber.chatId}:`, error.message);
+          errorCount++;
         }
       }
 
-      console.log(`✅ Рассылка завершена: отправлено ${sent}/${subscriberList.length}, ошибок ${failed}`);
-
+      console.log(`✅ Рассылка завершена: ${successCount} успешно, ${errorCount} ошибок`);
+      
       return {
         statusCode: 200,
         body: JSON.stringify({
           ok: true,
-          message: '✅ Рассылка отправлена',
-          sent,
-          failed,
-          total: subscriberList.length
+          message: `Отправлено ${successCount} сообщений, ошибок: ${errorCount}`
         })
       };
     }
 
-    return { 
-      statusCode: 400, 
-      body: JSON.stringify({ 
-        error: 'action required: "subscribe" or "send"' 
-      }) 
-    };
+    return { statusCode: 400, body: JSON.stringify({ error: 'Unknown action' }) };
   } catch (error) {
     console.error('❌ Error:', error.message);
-    return { 
-      statusCode: 500, 
-      body: JSON.stringify({ error: error.message }) 
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
   }
 }
 

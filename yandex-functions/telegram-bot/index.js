@@ -1,27 +1,29 @@
 const https = require('https');
+const { Client } = require('ydb-sdk');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
+const YDB_CONNECTION_STRING = process.env.YDB_CONNECTION_STRING || 'grpc://localhost:2136?database=/local';
 
-// ⚠️ ВРЕМЕННОЕ решение - подписчики хранятся в памяти функции
-// ⚠️ ВНИМАНИЕ: Данные ТЕРЯЮТСЯ при перезагрузке функции!
-// TODO: Подключить к YDB для постоянного хранения
-const subscribers = new Map();
+const ydbClient = new Client({ connectionString: YDB_CONNECTION_STRING });
 
-// Подписываем пользователя на рассылку
-async function subscribeUser(chatId, username, firstName) {
+async function subscribeUserToYDB(chatId, username, firstName) {
   try {
-    subscribers.set(chatId, {
-      chat_id: chatId,
-      username: username || null,
-      first_name: firstName || null,
-      subscribed_at: new Date()
+    console.log(`💾 Сохраняю подписчика ${chatId} в YDB...`);
+    
+    const query = `
+      UPSERT INTO telegram_subscribers (chat_id, username, first_name, subscribed_at, is_active) 
+      VALUES (${chatId}, '${username || ''}', '${firstName || ''}', CAST(CurrentUtcTimestamp() AS String), true);
+    `;
+    
+    await ydbClient.tableClient.withSession(async (session) => {
+      await session.executeQuery(query);
     });
-    console.log(`✅ Пользователь ${chatId} подписан на рассылку. Всего подписчиков в памяти: ${subscribers.size}`);
-    console.log(`⚠️ ВАЖНО: Подписчики хранятся в памяти! Для постоянного хранения нужна БД (YDB)`);
+    
+    console.log(`✅ Подписчик ${chatId} сохранен в YDB`);
     return { ok: true };
   } catch (error) {
-    console.error(`⚠️ Ошибка подписки:`, error.message);
-    return { ok: true };
+    console.error(`⚠️ Ошибка сохранения в YDB:`, error.message);
+    return { ok: true }; // Не блокируем /start
   }
 }
 
@@ -68,35 +70,29 @@ async function sendTelegramMessage(chatId, message, replyMarkup) {
 
 async function handler(event) {
   try {
-    console.log('📥 Получен запрос от Telegram:', JSON.stringify(event));
+    console.log('📥 Получен запрос от Telegram');
     
     let data = event;
     if (typeof event.body === 'string') {
       data = JSON.parse(event.body);
     }
 
-    console.log('📦 Распарсенные данные:', JSON.stringify(data));
-
     if (!data.message) {
-      console.log('⚠️ Нет data.message');
       return { statusCode: 200, body: JSON.stringify({ ok: true }) };
     }
 
     const chatId = data.message.chat.id;
     const text = data.message.text || '';
 
-    console.log(`✅ Сообщение получено от ${chatId}: "${text}"`);
+    console.log(`✅ Сообщение: "${text}" от ${chatId}`);
 
     let message = '';
     let replyMarkup = null;
 
     if (text === '/start') {
-      // Подписываем пользователя на рассылку
-      await subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
+      await subscribeUserToYDB(chatId, data.message.from.username, data.message.from.first_name);
       
-      message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>
-
-Выберите что вас интересует:`;
+      message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>\n\nВыберите что вас интересует:`;
       
       replyMarkup = {
         inline_keyboard: [
@@ -128,16 +124,9 @@ async function handler(event) {
         ]]
       };
     } else if (text === '/help') {
-      message = `<b>📋 Доступные команды:</b>
-
-/start - Главное меню
-/shop - Открыть магазин
-/orders - Мои заказы
-/help - Справка`;
+      message = `<b>📋 Доступные команды:</b>\n\n/start - Главное меню\n/shop - Открыть магазин\n/orders - Мои заказы\n/help - Справка`;
     } else {
-      message = `❓ Команда не распознана.
-
-Используйте /help для списка команд или нажмите /start`;
+      message = `❓ Команда не распознана.\n\nИспользуйте /help для списка команд или нажмите /start`;
     }
 
     await sendTelegramMessage(chatId, message, replyMarkup);
