@@ -504,7 +504,8 @@ export default function AccountPage() {
         description: "Email успешно отвязан от вашего аккаунта",
       });
       setDetachConfirmType(null);
-      setTimeout(() => setLocation("/account"), 600);
+      // 🔄 ПОЛНАЯ ПЕРЕЗАГРУЗКА страницы чтобы user данные обновились в контексте
+      setTimeout(() => window.location.href = "/account", 600);
     } catch (error: any) {
       console.error('❌ Ошибка отвязи:', error);
       toast({
@@ -526,7 +527,8 @@ export default function AccountPage() {
         description: "Telegram успешно отвязан от вашего аккаунта",
       });
       setDetachConfirmType(null);
-      setTimeout(() => setLocation("/account"), 600);
+      // 🔄 ПОЛНАЯ ПЕРЕЗАГРУЗКА страницы чтобы user данные обновились в контексте
+      setTimeout(() => window.location.href = "/account", 600);
     } catch (error: any) {
       console.error('❌ Ошибка отвязи:', error);
       toast({
