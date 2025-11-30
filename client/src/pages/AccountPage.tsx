@@ -1185,24 +1185,20 @@ export default function AccountPage() {
                   >
                     Отмена
                   </Button>
-                  {user.telegramId && (
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        setShowTelegramAttachModal(false);
-                        setDetachConfirmType('telegram');
-                      }}
-                      disabled={isDeletachingTelegram}
-                      data-testid="button-detach-from-modal"
-                    >
-                      {isDeletachingTelegram ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4 mr-2" />
-                      )}
-                      Сменить аккаунт
-                    </Button>
-                  )}
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setShowTelegramAttachModal(false);
+                      setDetachConfirmType('telegram');
+                    }}
+                    disabled={isDeletachingTelegram}
+                    data-testid="button-switch-telegram-account"
+                  >
+                    {isDeletachingTelegram ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : null}
+                    Сменить аккаунт
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>
