@@ -19,6 +19,7 @@ import { sendStockNotifications, getAllNotifications, deleteNotification } from 
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
 import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, getBackgroundSettings, setBackgroundSettings, setPreferredTheme as savePreferredTheme, type HeroSlide, type BackgroundSettings, type BackgroundSetting } from "@/services/site-settings-client";
+import { getTelegramSubscribers, sendTelegramBroadcast, type TelegramSubscriber } from "@/services/telegram-subscribers";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
@@ -179,6 +180,11 @@ export default function AdminPage() {
   const { data: newsletterSubscriptions = [], isLoading: newsletterLoading} = useQuery<NewsletterSubscription[]>({
     queryKey: ["/api/admin/newsletter-subscriptions"],
     queryFn: getAllNewsletterSubscriptions,
+  });
+
+  const { data: telegramSubscribers = [], isLoading: telegramLoading } = useQuery<TelegramSubscriber[]>({
+    queryKey: ["/api/telegram/subscribers"],
+    queryFn: getTelegramSubscribers,
   });
 
   useEffect(() => {
@@ -1541,7 +1547,7 @@ export default function AdminPage() {
             <CardHeader>
               <CardTitle>Массовая рассылка по Telegram</CardTitle>
               <CardDescription>
-                Отправьте сообщение всем подписчикам Telegram бота
+                Отправьте сообщение всем подписчикам Telegram бота ({telegramSubscribers.length} чел.)
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1549,26 +1555,12 @@ export default function AdminPage() {
                 <form
                   onSubmit={telegramBroadcastForm.handleSubmit(async (data) => {
                     try {
-                      const response = await apiRequest('/api/broadcast-notifications', {
-                        method: 'POST',
-                        body: JSON.stringify({
-                          action: 'send',
-                          broadcast_title: data.broadcast_title,
-                          message: data.message,
-                        }),
+                      await sendTelegramBroadcast(data.broadcast_title, data.message);
+                      toast({
+                        title: "Рассылка отправлена!",
+                        description: `Успешно отправлено ${telegramSubscribers.length} подписчикам`,
                       });
-
-                      const result = await response.json();
-                      
-                      if (result.ok) {
-                        toast({
-                          title: "Рассылка отправлена!",
-                          description: `Успешно отправлено ${result.sent} подписчикам${result.failed > 0 ? `, ошибок: ${result.failed}` : ''}`,
-                        });
-                        telegramBroadcastForm.reset();
-                      } else {
-                        throw new Error(result.error || 'Ошибка отправки');
-                      }
+                      telegramBroadcastForm.reset();
                     } catch (error: any) {
                       toast({
                         title: "Ошибка отправки",
@@ -1616,7 +1608,7 @@ export default function AdminPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Подписчики на рассылку</CardTitle>
+              <CardTitle>Подписчики на Email рассылку</CardTitle>
               <CardDescription>
                 Список email адресов подписанных на новости
               </CardDescription>
@@ -1649,6 +1641,44 @@ export default function AdminPage() {
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Подписчики Telegram бота</CardTitle>
+              <CardDescription>
+                Список пользователей подписанных на Telegram рассылку
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {telegramLoading ? (
+                <p className="text-muted-foreground">Загрузка...</p>
+              ) : telegramSubscribers.length === 0 ? (
+                <p className="text-muted-foreground">Пока нет подписчиков</p>
+              ) : (
+                <div className="space-y-2">
+                  {telegramSubscribers.map((subscriber) => (
+                    <div
+                      key={subscriber.chatId}
+                      className="border rounded-lg p-3 flex items-start gap-4"
+                      data-testid={`telegram-subscriber-${subscriber.chatId}`}
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium">@{subscriber.username || subscriber.firstName || `ID: ${subscriber.chatId}`}</p>
+                        <p className="text-sm text-muted-foreground">Chat ID: {subscriber.chatId}</p>
+                        {subscriber.firstName && <p className="text-sm">{subscriber.firstName}</p>}
+                        <p className="text-xs text-muted-foreground">
+                          Подписан: {new Date(subscriber.subscribedAt).toLocaleDateString('ru-RU')}
+                        </p>
+                      </div>
+                      <Badge variant={subscriber.isActive ? "default" : "secondary"}>
+                        {subscriber.isActive ? "Активен" : "Неактивен"}
+                      </Badge>
                     </div>
                   ))}
                 </div>
