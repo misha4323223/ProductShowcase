@@ -112,9 +112,10 @@ module.exports.handler = async (event) => {
       userId: user.userId
     });
 
-    // Проверить, верифицирован ли email
-    if (!user.emailVerified) {
-      console.error('❌ Email не верифицирован. emailVerified =', user.emailVerified);
+    // Проверить, верифицирован ли email (поддержка обоих старого и нового полей)
+    const isEmailVerified = user.emailVerified || user.isVerified;
+    if (!isEmailVerified) {
+      console.error('❌ Email не верифицирован. emailVerified =', user.emailVerified, 'isVerified =', user.isVerified);
       return createResponse(401, { error: 'Пожалуйста, подтвердите вашу почту перед входом' });
     }
 
