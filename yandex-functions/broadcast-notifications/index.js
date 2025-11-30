@@ -1,11 +1,8 @@
 const https = require('https');
 
-// Хранилище подписчиков в памяти
 const subscribers = new Map();
 
-const MINI_APP_URL = 'https://sweetdelights.store';
-
-async function sendTelegramMessage(chatId, message, replyMarkup) {
+async function sendTelegramMessage(chatId, message) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (!botToken) throw new Error('BOT_TOKEN missing');
 
@@ -15,8 +12,6 @@ async function sendTelegramMessage(chatId, message, replyMarkup) {
     text: message,
     parse_mode: 'HTML'
   };
-
-  if (replyMarkup) payload.reply_markup = replyMarkup;
 
   return new Promise((resolve, reject) => {
     const payloadStr = JSON.stringify(payload);
@@ -46,71 +41,6 @@ async function sendTelegramMessage(chatId, message, replyMarkup) {
   });
 }
 
-// Обработка Telegram update (webhook)
-async function handleTelegramUpdate(update) {
-  if (!update.message) return;
-
-  const chatId = update.message.chat.id;
-  const text = update.message.text || '';
-  const username = update.message.from.username || null;
-  const firstName = update.message.from.first_name || null;
-
-  console.log(`📥 Telegram: "${text}" от ${chatId}`);
-
-  if (text === '/start') {
-    // Добавить в подписчики
-    subscribers.set(chatId, {
-      chatId,
-      username,
-      firstName,
-      subscribedAt: new Date().toISOString(),
-      isActive: true
-    });
-    console.log(`✅ Подписчик ${chatId} добавлен. Всего: ${subscribers.size}`);
-
-    // Отправить меню
-    const message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>\n\nВыберите что вас интересует:`;
-    const replyMarkup = {
-      inline_keyboard: [
-        [
-          { text: '🛍️ Магазин', web_app: { url: MINI_APP_URL } },
-          { text: '📦 Заказы', web_app: { url: `${MINI_APP_URL}/?tab=orders` } }
-        ],
-        [
-          { text: '❤️ Избранное', web_app: { url: `${MINI_APP_URL}/?tab=wishlist` } },
-          { text: '🎁 Промо', web_app: { url: `${MINI_APP_URL}/?tab=promos` } }
-        ],
-        [
-          { text: '⚙️ Профиль', web_app: { url: `${MINI_APP_URL}/?tab=account` } }
-        ]
-      ]
-    };
-    await sendTelegramMessage(chatId, message, replyMarkup);
-  } else if (text === '/shop') {
-    const message = '🛍️ <b>Магазин</b>';
-    const replyMarkup = {
-      inline_keyboard: [[
-        { text: '🛍️ Открыть', web_app: { url: MINI_APP_URL } }
-      ]]
-    };
-    await sendTelegramMessage(chatId, message, replyMarkup);
-  } else if (text === '/orders') {
-    const message = '📦 <b>Мои заказы</b>';
-    const replyMarkup = {
-      inline_keyboard: [[
-        { text: '📦 Посмотреть', web_app: { url: `${MINI_APP_URL}/?tab=orders` } }
-      ]]
-    };
-    await sendTelegramMessage(chatId, message, replyMarkup);
-  } else if (text === '/help') {
-    const message = `<b>📋 Доступные команды:</b>\n\n/start - Главное меню\n/shop - Открыть магазин\n/orders - Мои заказы\n/help - Справка`;
-    await sendTelegramMessage(chatId, message);
-  } else {
-    const message = `❓ Команда не распознана.\n\nИспользуйте /help для списка команд или нажмите /start`;
-    await sendTelegramMessage(chatId, message);
-  }
-}
-
 async function handler(event) {
   try {
     let data = event;
@@ -118,17 +48,33 @@ async function handler(event) {
       data = JSON.parse(event.body);
     }
 
-    // Если это Telegram update (webhook)
-    if (data.message) {
-      console.log('📥 Получен webhook от Telegram');
-      await handleTelegramUpdate(data);
-      return { statusCode: 200, body: JSON.stringify({ ok: true }) };
-    }
-
-    // Если это API запрос (action-based)
     const action = data.action || 'get_subscribers';
 
-    if (action === 'get_subscribers') {
+    if (action === 'subscribe') {
+      const { chatId, username, firstName } = data;
+      if (!chatId) {
+        return { statusCode: 400, body: JSON.stringify({ error: 'chatId required' }) };
+      }
+
+      subscribers.set(chatId, {
+        chatId,
+        username: username || null,
+        firstName: firstName || null,
+        subscribedAt: new Date().toISOString(),
+        isActive: true
+      });
+
+      console.log(`✅ Подписчик ${chatId} добавлен. Всего: ${subscribers.size}`);
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          ok: true,
+          message: `Subscriber ${chatId} added`,
+          total: subscribers.size
+        })
+      };
+    } else if (action === 'get_subscribers') {
       const subscribersList = Array.from(subscribers.values());
       return {
         statusCode: 200,
