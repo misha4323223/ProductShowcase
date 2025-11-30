@@ -1,0 +1,7 @@
+{
+  "name": "setup-bot-commands",
+  "version": "1.0.0",
+  "description": "Setup Telegram bot commands menu",
+  "main": "index.js",
+  "dependencies": {}
+}
