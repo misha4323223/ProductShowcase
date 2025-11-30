@@ -1,7 +1,57 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand, QueryCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
-const { verifyJWT } = require("../lib/auth-utils");
-const { successResponse, errorResponse } = require("../lib/response-helper");
+const crypto = require('crypto');
+
+// ========== ВСТРОЕННЫЕ УТИЛИТЫ ==========
+
+function verifyJWT(token) {
+  try {
+    const [header, payload, signature] = token.split('.');
+    
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.JWT_SECRET || 'default-secret-key')
+      .update(`${header}.${payload}`)
+      .digest('base64url');
+    
+    if (signature !== expectedSignature) {
+      return { valid: false, error: 'Invalid signature' };
+    }
+    
+    const decodedPayload = JSON.parse(Buffer.from(payload, 'base64url').toString());
+    
+    if (decodedPayload.exp < Math.floor(Date.now() / 1000)) {
+      return { valid: false, error: 'Token expired' };
+    }
+    
+    return { valid: true, payload: decodedPayload };
+  } catch (error) {
+    return { valid: false, error: 'Invalid token format' };
+  }
+}
+
+function successResponse(data) {
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+}
+
+function errorResponse(statusCode, message) {
+  return {
+    statusCode,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ error: message }),
+  };
+}
+
+// ========== DATABASE ==========
 
 const client = new DynamoDBClient({
   region: "ru-central1",
