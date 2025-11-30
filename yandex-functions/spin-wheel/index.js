@@ -1,15 +1,171 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
-const { verifyJWT } = require("../lib/auth-utils");
-const { successResponse, errorResponse } = require("../lib/response-helper");
-const {
-  generatePromoCode,
-  determinePrize,
-  calculateExpiryDate,
-  getSecureRandom,
-  generatePrizeId,
-  getPrizeDisplayName
-} = require("../lib/wheel-utils");
+const crypto = require('crypto');
+
+// ========== ВСТРОЕННЫЕ УТИЛИТЫ ==========
+
+function verifyJWT(token) {
+  try {
+    const [header, payload, signature] = token.split('.');
+    
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.JWT_SECRET || 'default-secret-key')
+      .update(`${header}.${payload}`)
+      .digest('base64url');
+    
+    if (signature !== expectedSignature) {
+      return { valid: false, error: 'Invalid signature' };
+    }
+    
+    const decodedPayload = JSON.parse(Buffer.from(payload, 'base64url').toString());
+    
+    if (decodedPayload.exp < Math.floor(Date.now() / 1000)) {
+      return { valid: false, error: 'Token expired' };
+    }
+    
+    return { valid: true, payload: decodedPayload };
+  } catch (error) {
+    return { valid: false, error: 'Invalid token format' };
+  }
+}
+
+function successResponse(data) {
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+}
+
+function errorResponse(statusCode, message) {
+  return {
+    statusCode,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ error: message }),
+  };
+}
+
+function generatePromoCode(prizeType) {
+  const prefix = {
+    'discount_10': 'WISH10',
+    'discount_20': 'RAND20',
+    'jackpot': 'JACKPOT40',
+    'free_item': 'FREE',
+    'delivery': 'SHIP',
+    'points': 'PTS'
+  }[prizeType] || 'PRIZE';
+  
+  const random = crypto.randomBytes(2).toString('hex').toUpperCase();
+  return `${prefix}-${random}`;
+}
+
+function getAvailablePrizes(currentSpins) {
+  if (!currentSpins || currentSpins < 1 || typeof currentSpins !== 'number') {
+    return ['discount_10'];
+  }
+  
+  const spins = Math.floor(Math.min(Math.max(currentSpins, 1), 9999));
+  
+  if (spins === 1) {
+    return ['discount_10'];
+  }
+  
+  if (spins === 2) {
+    return ['discount_10', 'discount_20'];
+  }
+  
+  if (spins === 3) {
+    return ['discount_10', 'discount_20', 'points'];
+  }
+  
+  if (spins === 4) {
+    return ['discount_10', 'discount_20', 'points', 'delivery'];
+  }
+  
+  if (spins === 5) {
+    return ['discount_10', 'discount_20', 'points', 'delivery', 'free_item'];
+  }
+  
+  return ['discount_10', 'discount_20', 'points', 'delivery', 'free_item', 'jackpot'];
+}
+
+function determinePrize(randomValue, currentSpins) {
+  const availablePrizes = getAvailablePrizes(currentSpins);
+  
+  const prizeWeights = {
+    'discount_10': 30,
+    'discount_20': 25,
+    'points': 20,
+    'delivery': 15,
+    'free_item': 8,
+    'jackpot': 2
+  };
+  
+  const availableWeights = {};
+  let totalWeight = 0;
+  
+  for (const prize of availablePrizes) {
+    availableWeights[prize] = prizeWeights[prize];
+    totalWeight += prizeWeights[prize];
+  }
+  
+  const normalizedRandom = (randomValue / 100) * totalWeight;
+  
+  let cumulative = 0;
+  for (const prize of availablePrizes) {
+    cumulative += availableWeights[prize];
+    if (normalizedRandom < cumulative) {
+      return prize;
+    }
+  }
+  
+  return availablePrizes[availablePrizes.length - 1];
+}
+
+function calculateExpiryDate(prizeType) {
+  const now = new Date();
+  const daysToAdd = {
+    'discount_10': 21,
+    'discount_20': 21,
+    'points': 182,
+    'delivery': 60,
+    'free_item': 10,
+    'jackpot': 2
+  }[prizeType] || 7;
+  
+  now.setDate(now.getDate() + daysToAdd);
+  return now.toISOString();
+}
+
+function getSecureRandom() {
+  const buffer = crypto.randomBytes(4);
+  const value = buffer.readUInt32BE(0);
+  return (value / 0xFFFFFFFF) * 100;
+}
+
+function generatePrizeId() {
+  return Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
+}
+
+function getPrizeDisplayName(prizeType) {
+  const names = {
+    'discount_10': 'Скидка 10% на весь заказ',
+    'discount_20': 'Скидка 20% на товар',
+    'points': '+200 баллов',
+    'delivery': 'Бесплатная доставка',
+    'free_item': 'Бесплатный товар',
+    'jackpot': 'ДЖЕКПОТ! -40% на весь заказ'
+  };
+  return names[prizeType] || prizeType;
+}
+
+// ========== DATABASE ==========
 
 const client = new DynamoDBClient({
   region: "ru-central1",
