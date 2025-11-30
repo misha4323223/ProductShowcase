@@ -1,5 +1,5 @@
 const https = require('https');
-const { Driver, metadataAuthService } = require('ydb-sdk');
+const ydb = require('ydb-sdk');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
 const DB_PATH = '/local';
@@ -9,13 +9,21 @@ let driver;
 
 async function initYDB() {
   if (!driver) {
-    const authService = metadataAuthService();
-    driver = new Driver({
-      endpoint: process.env.YDB_ENDPOINT || 'grpc://localhost:2136',
-      database: DB_PATH,
-      authService
-    });
-    await driver.ready(10000);
+    try {
+      driver = new ydb.Driver({
+        endpoint: process.env.YDB_ENDPOINT || 'grpc://localhost:2136',
+        database: DB_PATH,
+        authService: new ydb.MetadataAuthService()
+      });
+      await driver.ready(10000);
+    } catch (e) {
+      console.log('YDB init fallback:', e.message);
+      driver = new ydb.Driver({
+        endpoint: process.env.YDB_ENDPOINT || 'grpc://localhost:2136',
+        database: DB_PATH
+      });
+      await driver.ready(10000);
+    }
   }
   return driver;
 }
@@ -25,14 +33,15 @@ async function subscribeUserToYDB(chatId, username, firstName) {
     console.log(`💾 Сохраняю подписчика ${chatId} в YDB...`);
     
     const driver = await initYDB();
+    const tableClient = driver.getTableClient();
     
     const query = `
-      UPSERT INTO \`${DB_PATH}/${TABLE_NAME}\` 
+      UPSERT INTO ${TABLE_NAME} 
       (chat_id, username, first_name, subscribed_at, is_active) 
       VALUES (${chatId}, '${(username || '').replace(/'/g, "''")}', '${(firstName || '').replace(/'/g, "''")}', CurrentUtcTimestamp(), true)
     `;
     
-    await driver.tableClient.withSession(async (session) => {
+    await tableClient.withSession(async (session) => {
       await session.executeQuery(query);
     });
     
