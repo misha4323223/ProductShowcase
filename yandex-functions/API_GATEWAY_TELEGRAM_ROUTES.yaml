@@ -286,3 +286,273 @@ paths:
           description: Неверный или истекший токен
         '500':
           description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: attachTelegramOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
+
+  # Привязка Email к Telegram аккаунту
+  /api/users/attach-email:
+    post:
+      summary: Привязать Email к Telegram аккаунту
+      description: Позволяет пользователю, зарегистрированному через Telegram, добавить Email к своему аккаунту
+      operationId: attachEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - email
+                - password
+                - passwordConfirm
+              properties:
+                token:
+                  type: string
+                  description: JWT токен пользователя
+                email:
+                  type: string
+                  format: email
+                  description: Email для привязки
+                password:
+                  type: string
+                  description: Пароль (минимум 6 символов)
+                passwordConfirm:
+                  type: string
+                  description: Подтверждение пароля
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: ATTACH_EMAIL_FUNCTION_ID
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Email успешно привязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Ошибка валидации
+        '401':
+          description: Неверный или истекший токен
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: attachEmailOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
+
+  # Отвязка Email от аккаунта
+  /api/users/detach-email:
+    post:
+      summary: Отвязать Email от аккаунта
+      description: Позволяет пользователю отвязать Email от своего аккаунта, оставляя только Telegram привязку
+      operationId: detachEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                  description: JWT токен пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4em448d4dij6i8dvv23
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Email успешно отвязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Email не привязан к аккаунту
+        '401':
+          description: Неверный или истекший токен
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: detachEmailOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
+
+  # Отвязка Telegram от аккаунта
+  /api/users/detach-telegram:
+    post:
+      summary: Отвязать Telegram от аккаунта
+      description: Позволяет пользователю отвязать Telegram от своего аккаунта, оставляя только Email привязку
+      operationId: detachTelegram
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                  description: JWT токен пользователя
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4e09g29gals7tov7gje
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Telegram успешно отвязан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Telegram не привязан к аккаунту
+        '401':
+          description: Неверный или истекший токен
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: detachTelegramOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response
+
+  # Изменение пароля
+  /api/users/change-password:
+    post:
+      summary: Изменить пароль
+      description: Позволяет пользователю изменить пароль своего аккаунта
+      operationId: changePassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - oldPassword
+                - newPassword
+                - newPasswordConfirm
+              properties:
+                token:
+                  type: string
+                  description: JWT токен пользователя
+                oldPassword:
+                  type: string
+                  description: Текущий пароль
+                newPassword:
+                  type: string
+                  description: Новый пароль (минимум 6 символов)
+                newPasswordConfirm:
+                  type: string
+                  description: Подтверждение нового пароля
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: CHANGE_PASSWORD_FUNCTION_ID
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Пароль успешно изменён
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Ошибка валидации
+        '401':
+          description: Неверный пароль или истекший токен
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      operationId: changePasswordOptions
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          Access-Control-Allow-Origin: "'*'"
+          Access-Control-Allow-Methods: "'POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
+      responses:
+        '200':
+          description: CORS response

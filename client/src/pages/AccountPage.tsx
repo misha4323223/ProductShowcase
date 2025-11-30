@@ -223,7 +223,7 @@ function WheelTab() {
 }
 
 export default function AccountPage() {
-  const { user, signOut, loading, attachEmail, attachTelegram, changePassword } = useAuth();
+  const { user, signOut, loading, attachEmail, attachTelegram, detachEmail, detachTelegram, changePassword } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -268,6 +268,10 @@ export default function AccountPage() {
     newPassword: "",
     newPasswordConfirm: "",
   });
+
+  const [isDeletachingEmail, setIsDeletachingEmail] = useState(false);
+  const [isDeletachingTelegram, setIsDeletachingTelegram] = useState(false);
+  const [detachConfirmType, setDetachConfirmType] = useState<'email' | 'telegram' | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -488,6 +492,50 @@ export default function AccountPage() {
       });
     } finally {
       setIsChangingPassword(false);
+    }
+  };
+
+  const handleDetachEmail = async () => {
+    setIsDeletachingEmail(true);
+    try {
+      await detachEmail();
+      toast({
+        title: "Успешно!",
+        description: "Email успешно отвязан от вашего аккаунта",
+      });
+      setDetachConfirmType(null);
+      setTimeout(() => setLocation("/account"), 600);
+    } catch (error: any) {
+      console.error('❌ Ошибка отвязи:', error);
+      toast({
+        title: "Ошибка отвязи",
+        description: error.message || "Не удалось отвязать email",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeletachingEmail(false);
+    }
+  };
+
+  const handleDetachTelegram = async () => {
+    setIsDeletachingTelegram(true);
+    try {
+      await detachTelegram();
+      toast({
+        title: "Успешно!",
+        description: "Telegram успешно отвязан от вашего аккаунта",
+      });
+      setDetachConfirmType(null);
+      setTimeout(() => setLocation("/account"), 600);
+    } catch (error: any) {
+      console.error('❌ Ошибка отвязи:', error);
+      toast({
+        title: "Ошибка отвязи",
+        description: error.message || "Не удалось отвязать Telegram",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeletachingTelegram(false);
     }
   };
 
@@ -1023,18 +1071,35 @@ export default function AccountPage() {
                   <div className="flex items-center gap-2">
                     <Mail className="h-5 w-5 text-primary" />
                     <div>
-                      <CardTitle>Привязать Telegram</CardTitle>
-                      <CardDescription>Добавьте Telegram для удобного входа</CardDescription>
+                      <CardTitle>Telegram аккаунт</CardTitle>
+                      <CardDescription>Управление привязкой Telegram</CardDescription>
                     </div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 {user.telegramId ? (
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Telegram уже привязан к вашему аккаунту.
-                    </p>
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-muted-foreground">Telegram Username</Label>
+                      <p className="text-lg" data-testid="text-telegram-username">
+                        {user.telegramUsername ? `@${user.telegramUsername}` : `ID: ${user.telegramId}`}
+                      </p>
+                    </div>
+                    <Separator />
+                    <Button
+                      variant="destructive"
+                      onClick={() => setDetachConfirmType('telegram')}
+                      disabled={isDeletachingTelegram}
+                      data-testid="button-detach-telegram"
+                    >
+                      {isDeletachingTelegram ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4 mr-2" />
+                      )}
+                      Отвязать Telegram
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -1066,8 +1131,8 @@ export default function AccountPage() {
                   <div className="flex items-center gap-2">
                     <Mail className="h-5 w-5 text-primary" />
                     <div>
-                      <CardTitle>Привязать Email</CardTitle>
-                      <CardDescription>Добавьте email и пароль для входа</CardDescription>
+                      <CardTitle>Email аккаунт</CardTitle>
+                      <CardDescription>Управление привязкой email</CardDescription>
                     </div>
                   </div>
                   {user.email.includes('@telegram') && !showAttachEmailForm && (
@@ -1078,7 +1143,30 @@ export default function AccountPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {showAttachEmailForm ? (
+                {user.email && !user.email.includes('@telegram') ? (
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-muted-foreground">Email адрес</Label>
+                      <p className="text-lg" data-testid="text-account-email">
+                        {user.email}
+                      </p>
+                    </div>
+                    <Separator />
+                    <Button
+                      variant="destructive"
+                      onClick={() => setDetachConfirmType('email')}
+                      disabled={isDeletachingEmail}
+                      data-testid="button-detach-email"
+                    >
+                      {isDeletachingEmail ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4 mr-2" />
+                      )}
+                      Отвязать Email
+                    </Button>
+                  </div>
+                ) : showAttachEmailForm ? (
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="attach-email">Email адрес</Label>
@@ -1178,6 +1266,32 @@ export default function AccountPage() {
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleHideOrder} data-testid="button-confirm-hide">
               Скрыть
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!detachConfirmType} onOpenChange={(open) => !open && setDetachConfirmType(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {detachConfirmType === 'email' ? 'Отвязать Email?' : 'Отвязать Telegram?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {detachConfirmType === 'email'
+                ? 'После отвязки email вы сможете входить только через Telegram. Продолжить?'
+                : 'После отвязки Telegram вы сможете входить только через email. Продолжить?'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-detach">
+              Отмена
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={detachConfirmType === 'email' ? handleDetachEmail : handleDetachTelegram}
+              data-testid={`button-confirm-detach-${detachConfirmType}`}
+            >
+              Отвязать
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
