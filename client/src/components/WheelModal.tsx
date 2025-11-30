@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useWheel } from "@/contexts/WheelContext";
-import { useWishlist } from "@/contexts/WishlistContext";
+import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -69,7 +69,7 @@ const WHEEL_SECTORS = [
 export default function WheelModal({ open, onClose }: WheelModalProps) {
   const { user } = useAuth();
   const { spins, spin, isLoading } = useWheel();
-  const { wishlistItems, wishlistCount } = useWishlist();
+  const { cartItems, cartCount } = useCart();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
@@ -98,7 +98,7 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
     }
 
     // Проверяем, есть ли товары в корзине
-    if (wishlistCount === 0) {
+    if (cartCount === 0) {
       toast({
         title: "Корзина пуста",
         description: "Добавьте товар в корзину, чтобы крутить рулетку",
@@ -368,26 +368,31 @@ export default function WheelModal({ open, onClose }: WheelModalProps) {
               )}
             </div>
 
-            {/* Вишлист */}
-                {wishlistCount > 0 && (
+            {/* Корзина */}
+                {cartCount > 0 && (
                   <div className="pt-2 border-t">
                     <p className="text-[11px] text-muted-foreground text-center mb-1.5">
-                      Ваш вишлист ({wishlistCount} товаров):
+                      Ваша корзина ({cartCount} товаров):
                     </p>
                     <div className="flex gap-1.5 justify-center flex-wrap">
-                      {wishlistItems.slice(0, 6).map((item) => (
+                      {cartItems.slice(0, 6).map((item) => (
                         <div
-                          key={item.productId}
-                          className="w-8 h-8 rounded-md overflow-hidden border-2 border-muted"
+                          key={item.id}
+                          className="w-8 h-8 rounded-md overflow-hidden border-2 border-muted hover:border-primary transition-colors"
+                          title={item.name}
                         >
-                          <div className="w-full h-full bg-muted flex items-center justify-center text-xs">
-                            🍬
-                          </div>
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-muted flex items-center justify-center text-xs">
+                              🍬
+                            </div>
+                          )}
                         </div>
                       ))}
-                      {wishlistCount > 6 && (
+                      {cartCount > 6 && (
                         <div className="w-8 h-8 rounded-md border-2 border-muted flex items-center justify-center text-[10px] text-muted-foreground">
-                          +{wishlistCount - 6}
+                          +{cartCount - 6}
                         </div>
                       )}
                     </div>
