@@ -7,6 +7,7 @@ interface User {
   email: string;
   role: string;
   telegramId?: string;
+  telegramUsername?: string;
 }
 
 interface AuthContextType {
@@ -21,6 +22,8 @@ interface AuthContextType {
   loginWithTelegram: (token: string) => Promise<void>;
   attachEmail: (email: string, password: string, passwordConfirm: string) => Promise<void>;
   attachTelegram: (initData: string) => Promise<void>;
+  detachEmail: () => Promise<void>;
+  detachTelegram: () => Promise<void>;
   changePassword: (oldPassword: string, newPassword: string, newPasswordConfirm: string) => Promise<void>;
 }
 
@@ -272,6 +275,66 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(data.user);
   };
 
+  const detachEmail = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Пожалуйста, авторизуйтесь');
+    }
+
+    console.log('🔗 detachEmail called');
+    const url = `${API_BASE_URL}/api/users/detach-email`;
+    console.log('🌐 URL:', url);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+
+    console.log('📡 Response status:', response.status);
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Неизвестная ошибка' }));
+      console.error('❌ Error response:', error);
+      throw new Error(error.error || `Ошибка ${response.status}: Не удалось отвязать email`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Email успешно отвязан');
+    localStorage.setItem('authToken', data.token);
+    setUser(data.user);
+  };
+
+  const detachTelegram = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Пожалуйста, авторизуйтесь');
+    }
+
+    console.log('🔗 detachTelegram called');
+    const url = `${API_BASE_URL}/api/users/detach-telegram`;
+    console.log('🌐 URL:', url);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+
+    console.log('📡 Response status:', response.status);
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Неизвестная ошибка' }));
+      console.error('❌ Error response:', error);
+      throw new Error(error.error || `Ошибка ${response.status}: Не удалось отвязать Telegram`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Telegram успешно отвязан');
+    localStorage.setItem('authToken', data.token);
+    setUser(data.user);
+  };
+
   const changePassword = async (oldPassword: string, newPassword: string, newPasswordConfirm: string) => {
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -320,7 +383,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram, attachEmail, attachTelegram, changePassword }}>
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut, resetPassword, requestEmailVerification, verifyEmailCode, loginWithTelegram, attachEmail, attachTelegram, detachEmail, detachTelegram, changePassword }}>
       {children}
     </AuthContext.Provider>
   );
