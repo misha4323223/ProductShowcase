@@ -149,7 +149,7 @@ module.exports.handler = async (event) => {
 
     // Шаг 1: Отправить код верификации
     if (action === 'send_verification') {
-      if (existingUser.Item && existingUser.Item.isVerified) {
+      if (existingUser.Item && existingUser.Item.emailVerified) {
         return createResponse(400, { error: 'Пользователь с таким email уже существует' });
       }
 
@@ -176,7 +176,7 @@ module.exports.handler = async (event) => {
             verificationCode: newVerificationCode,
             verificationCodeExpires: expiresAt,
             tempPassword: password,
-            isVerified: false,
+            emailVerified: false,
             createdAt: new Date().toISOString(),
           }
         });
@@ -224,7 +224,7 @@ module.exports.handler = async (event) => {
       const updateCommand = new UpdateCommand({
         TableName: 'users',
         Key: { email: trimmedEmail },
-        UpdateExpression: 'SET userId = :userId, passwordSalt = :salt, passwordHash = :hash, isVerified = :verified, role = :role REMOVE verificationCode, verificationCodeExpires, tempPassword',
+        UpdateExpression: 'SET userId = :userId, passwordSalt = :salt, passwordHash = :hash, emailVerified = :verified, role = :role REMOVE verificationCode, verificationCodeExpires, tempPassword',
         ExpressionAttributeValues: {
           ':userId': userId,
           ':salt': salt,
@@ -265,7 +265,7 @@ module.exports.handler = async (event) => {
         passwordSalt: salt,
         passwordHash: hash,
         role: 'user',
-        isVerified: true,
+        emailVerified: true,
         createdAt: new Date().toISOString(),
       }
     });
