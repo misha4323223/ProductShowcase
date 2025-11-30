@@ -462,7 +462,7 @@ export default function AccountPage() {
   };
 
   const handleChangePassword = async () => {
-    if (!changePasswordForm.oldPassword || !changePasswordForm.newPassword || !changePasswordForm.newPasswordConfirm) {
+    if (!changePasswordForm.newPassword || !changePasswordForm.newPasswordConfirm) {
       toast({
         title: "Ошибка",
         description: "Заполните все поля",
@@ -931,17 +931,26 @@ export default function AccountPage() {
               <CardContent>
                 {showChangePasswordForm ? (
                   <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="old-password">Текущий пароль</Label>
-                      <Input
-                        id="old-password"
-                        type="password"
-                        placeholder="Введите текущий пароль"
-                        value={changePasswordForm.oldPassword}
-                        onChange={(e) => setChangePasswordForm({ ...changePasswordForm, oldPassword: e.target.value })}
-                        data-testid="input-old-password"
-                      />
-                    </div>
+                    {user.telegramId && !user.email && (
+                      <div className="p-3 rounded-md bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          Это установка первого пароля для вашего аккаунта
+                        </p>
+                      </div>
+                    )}
+                    {user.email && user.telegramId === undefined && (
+                      <div className="space-y-2">
+                        <Label htmlFor="old-password">Текущий пароль</Label>
+                        <Input
+                          id="old-password"
+                          type="password"
+                          placeholder="Введите текущий пароль"
+                          value={changePasswordForm.oldPassword}
+                          onChange={(e) => setChangePasswordForm({ ...changePasswordForm, oldPassword: e.target.value })}
+                          data-testid="input-old-password"
+                        />
+                      </div>
+                    )}
                     <div className="space-y-2">
                       <Label htmlFor="new-password">Новый пароль</Label>
                       <Input
