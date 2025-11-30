@@ -938,7 +938,7 @@ export default function AccountPage() {
                         </p>
                       </div>
                     )}
-                    {user.email && user.telegramId === undefined && (
+                    {user.email && (
                       <div className="space-y-2">
                         <Label htmlFor="old-password">Текущий пароль</Label>
                         <Input
