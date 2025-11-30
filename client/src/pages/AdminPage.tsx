@@ -185,7 +185,7 @@ export default function AdminPage() {
     queryKey: ["/api/telegram/subscribers"],
     queryFn: async () => {
       try {
-        const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net/broadcast-notifications", {
+        const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net/api/broadcast-notifications", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "get_subscribers" })
@@ -1567,7 +1567,7 @@ export default function AdminPage() {
                 <form
                   onSubmit={telegramBroadcastForm.handleSubmit(async (data) => {
                     try {
-                      const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net/broadcast-notifications", {
+                      const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net/api/broadcast-notifications", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({

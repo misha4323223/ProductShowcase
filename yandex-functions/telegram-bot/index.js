@@ -1,11 +1,10 @@
 const https = require('https');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
-const API_GATEWAY = 'https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net';
 
 async function subscribeUser(chatId, username, firstName) {
   try {
-    console.log(`💾 Отправляю подписку ${chatId} на broadcast-notifications...`);
+    console.log(`💾 Отправляю подписку ${chatId} на API...`);
     
     const payload = {
       action: 'subscribe',
@@ -18,7 +17,7 @@ async function subscribeUser(chatId, username, firstName) {
       const payloadStr = JSON.stringify(payload);
       const options = {
         hostname: 'd4efkrvud5o73t4cskgk.functions.yandexcloud.net',
-        path: '/broadcast-notifications',
+        path: '/api/broadcast-notifications',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +112,6 @@ async function handler(event) {
 
     console.log(`✅ Сообщение: "${text}" от ${chatId}`);
 
-    // Сохраняем подписчика на broadcast-notifications
     if (text === '/start') {
       await subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
     }
