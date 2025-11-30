@@ -144,8 +144,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/admin/telegram-subscribers", async (req, res) => {
     try {
-      const functionUrl = "https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net";
-      const response = await fetch(functionUrl, {
+      // Вызываем API Gateway на Yandex Cloud для получения подписчиков
+      const apiGatewayUrl = process.env.YANDEX_API_GATEWAY_URL || "https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net";
+      const response = await fetch(apiGatewayUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "get_subscribers" })

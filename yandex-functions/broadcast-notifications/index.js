@@ -8,7 +8,7 @@ async function getSubscribers() {
   try {
     console.log('📖 Получаю подписчиков из YDB...');
     
-    const query = `SELECT chat_id, username, first_name FROM telegram_subscribers WHERE is_active = true;`;
+    const query = `SELECT chat_id, username, first_name, subscribed_at, is_active FROM telegram_subscribers WHERE is_active = true;`;
     
     const subscribers = [];
     await ydbClient.tableClient.withSession(async (session) => {
@@ -17,7 +17,9 @@ async function getSubscribers() {
         subscribers.push({
           chatId: row.get('chat_id'),
           username: row.get('username'),
-          firstName: row.get('first_name')
+          firstName: row.get('first_name'),
+          subscribedAt: row.get('subscribed_at'),
+          isActive: row.get('is_active')
         });
       }
     });
@@ -71,8 +73,6 @@ async function sendTelegramMessage(chatId, message) {
 
 async function handler(event) {
   try {
-    console.log('🔔 Начинаю обработку рассылки');
-    
     let data = event;
     if (typeof event.body === 'string') {
       data = JSON.parse(event.body);
@@ -82,8 +82,16 @@ async function handler(event) {
     
     if (action === 'subscribe') {
       console.log(`✅ Подписка: ${data.chat_id}`);
-      // Подписка обрабатывается в telegram-bot функции
       return { statusCode: 200, body: JSON.stringify({ ok: true, message: 'Subscribed' }) };
+    }
+    
+    if (action === 'get_subscribers') {
+      console.log(`📋 Получение списка подписчиков`);
+      const subscribers = await getSubscribers();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ ok: true, subscribers })
+      };
     }
     
     if (action === 'send') {
