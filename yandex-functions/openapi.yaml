@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: Sweet Delights Bot API
+  version: 1.0.0
+  description: API Gateway for Telegram bot and broadcast notifications
+
+servers:
+  - url: https://api.sweetdelights.store
+    description: Production API
+
+paths:
+  /api/broadcast-notifications:
+    post:
+      summary: Broadcast notifications (subscribe or send)
+      operationId: broadcastNotifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: [subscribe, send]
+                  description: Action to perform
+                chat_id:
+                  type: number
+                  description: Telegram chat ID (required for subscribe)
+                username:
+                  type: string
+                  description: Telegram username (optional)
+                first_name:
+                  type: string
+                  description: User first name (optional)
+                message:
+                  type: string
+                  description: Message text (required for send)
+                broadcast_title:
+                  type: string
+                  description: Message title (optional)
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4efkrvud5o73t4cskgk
+        tag: $latest
+
+  /api/telegram-bot:
+    post:
+      summary: Telegram bot webhook
+      operationId: telegramBot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: telegram_bot_function_id
+        tag: $latest
