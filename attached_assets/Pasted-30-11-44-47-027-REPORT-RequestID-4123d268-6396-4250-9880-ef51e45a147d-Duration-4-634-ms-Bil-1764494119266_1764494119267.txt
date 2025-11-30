@@ -1,0 +1,296 @@
+30 нояб. 11:44:47.027
+REPORT RequestID: 4123d268-6396-4250-9880-ef51e45a147d Duration: 4.634 ms Billed Duration: 100 ms Memory Size: 256 MB Max Memory Used: 114 MB Queuing Duration: 0.065 ms CPU Usage: 0.977 %
+
+30 нояб. 11:44:47.026
+END RequestID: 4123d268-6396-4250-9880-ef51e45a147d
+
+30 нояб. 11:44:47.026
+}
+
+30 нояб. 11:44:47.026
+"X-Trace-Id": "d2bf4c7e-34ce-4142-a12e-983d15faf9ed"
+
+30 нояб. 11:44:47.026
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+30 нояб. 11:44:47.026
+"X-Serverless-Certificate-Ids": "{}",
+
+30 нояб. 11:44:47.026
+"X-Request-Id": "9451aaf9-9cec-49a6-8117-1226feba91df",
+
+30 нояб. 11:44:47.026
+"X-Real-Remote-Address": "95.211.185.11:48641",
+
+30 нояб. 11:44:47.026
+"X-Forwarded-Proto": "https",
+
+30 нояб. 11:44:47.026
+"X-Forwarded-For": "95.211.185.11",
+
+30 нояб. 11:44:47.026
+"X-Envoy-Original-Path": "/wheel/status",
+
+30 нояб. 11:44:47.026
+"X-Envoy-External-Address": "95.211.185.11",
+
+30 нояб. 11:44:47.026
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+30 нояб. 11:44:47.026
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0 (Edition std-2)",
+
+30 нояб. 11:44:47.025
+"Uber-Trace-Id": "24e7d6d842e4c7ab:526354d37dfec42f:c5bfb465bd96f4d2:1",
+
+30 нояб. 11:44:47.025
+"Sec-Fetch-Site": "cross-site",
+
+30 нояб. 11:44:47.025
+"Sec-Fetch-Mode": "cors",
+
+30 нояб. 11:44:47.025
+"Sec-Fetch-Dest": "empty",
+
+30 нояб. 11:44:47.025
+"Sec-Ch-Ua-Platform": "\"Windows\"",
+
+30 нояб. 11:44:47.025
+"Sec-Ch-Ua-Mobile": "?0",
+
+30 нояб. 11:44:47.025
+"Sec-Ch-Ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"",
+
+30 нояб. 11:44:47.025
+"Referer": "https://sweetdelights.store/",
+
+30 нояб. 11:44:47.025
+"Priority": "u=1, i",
+
+30 нояб. 11:44:47.025
+"Origin": "https://sweetdelights.store",
+
+30 нояб. 11:44:47.025
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+30 нояб. 11:44:47.025
+"Content-Type": "application/json",
+
+30 нояб. 11:44:47.025
+"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyXzE3NjQ0MzQ5NDM1NTJfcHJqc3g0NzRkIiwiZW1haWwiOiJwaW1hc2hpbjIwMTVAcmFtYmxlci5ydSIsInRlbGVncmFtSWQiOiI3MDMyNzQwMDgzIiwidGVsZWdyYW1Vc2VybmFtZSI6IiIsInRlbGVncmFtRmlyc3ROYW1lIjoiUG9zaXRpdmV+c3RvcmUiLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NjQ0NTkzMTUsImV4cCI6MTc2NzA1MTMxNX0=.7N1YkyoOAqNWztkNucExla4bxt93kyqiq6MBy1Rq9tA=",
+
+30 нояб. 11:44:47.025
+"Accept-Language": "ru,en-US;q=0.9,en;q=0.8,nl;q=0.7",
+
+30 нояб. 11:44:47.025
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+30 нояб. 11:44:47.025
+"Accept": "*/*",
+
+30 нояб. 11:44:47.025
+Headers: {
+
+30 нояб. 11:44:47.025
+=== GET WHEEL STATUS REQUEST ===
+
+30 нояб. 11:44:47.019
+START RequestID: 4123d268-6396-4250-9880-ef51e45a147d Version: d4equgvno8pa0mc29mkq
+
+30 нояб. 11:44:30.291
+REPORT RequestID: afb43be8-dfbb-48db-8c44-ef7ee40a8b5b Duration: 4.738 ms Billed Duration: 100 ms Memory Size: 256 MB Max Memory Used: 114 MB Queuing Duration: 0.076 ms
+
+30 нояб. 11:44:30.291
+END RequestID: afb43be8-dfbb-48db-8c44-ef7ee40a8b5b
+
+30 нояб. 11:44:30.290
+}
+
+30 нояб. 11:44:30.290
+"X-Trace-Id": "ac738ded-aaa1-43e2-95c1-0c803e0326d4"
+
+30 нояб. 11:44:30.290
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+30 нояб. 11:44:30.290
+"X-Serverless-Certificate-Ids": "{}",
+
+30 нояб. 11:44:30.290
+"X-Request-Id": "32cc88ce-5566-4eeb-8756-80eaf681210d",
+
+30 нояб. 11:44:30.290
+"X-Real-Remote-Address": "95.211.185.11:42365",
+
+30 нояб. 11:44:30.290
+"X-Forwarded-Proto": "https",
+
+30 нояб. 11:44:30.290
+"X-Forwarded-For": "95.211.185.11",
+
+30 нояб. 11:44:30.290
+"X-Envoy-Original-Path": "/wheel/status",
+
+30 нояб. 11:44:30.290
+"X-Envoy-External-Address": "95.211.185.11",
+
+30 нояб. 11:44:30.290
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+30 нояб. 11:44:30.290
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0 (Edition std-2)",
+
+30 нояб. 11:44:30.290
+"Uber-Trace-Id": "b51e6b983bf9b956:f1c343a2855bb257:91e4bfc90d1b9bfa:1",
+
+30 нояб. 11:44:30.290
+"Sec-Fetch-Site": "cross-site",
+
+30 нояб. 11:44:30.290
+"Sec-Fetch-Mode": "cors",
+
+30 нояб. 11:44:30.290
+"Sec-Fetch-Dest": "empty",
+
+30 нояб. 11:44:30.290
+"Sec-Ch-Ua-Platform": "\"Windows\"",
+
+30 нояб. 11:44:30.290
+"Sec-Ch-Ua-Mobile": "?0",
+
+30 нояб. 11:44:30.290
+"Sec-Ch-Ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"",
+
+30 нояб. 11:44:30.290
+"Referer": "https://sweetdelights.store/",
+
+30 нояб. 11:44:30.290
+"Priority": "u=1, i",
+
+30 нояб. 11:44:30.290
+"Origin": "https://sweetdelights.store",
+
+30 нояб. 11:44:30.290
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+30 нояб. 11:44:30.290
+"Content-Type": "application/json",
+
+30 нояб. 11:44:30.290
+"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyXzE3NjQ0MzQ5NDM1NTJfcHJqc3g0NzRkIiwiZW1haWwiOiJwaW1hc2hpbjIwMTVAcmFtYmxlci5ydSIsInRlbGVncmFtSWQiOiI3MDMyNzQwMDgzIiwidGVsZWdyYW1Vc2VybmFtZSI6IiIsInRlbGVncmFtRmlyc3ROYW1lIjoiUG9zaXRpdmV+c3RvcmUiLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NjQ0NTkzMTUsImV4cCI6MTc2NzA1MTMxNX0=.7N1YkyoOAqNWztkNucExla4bxt93kyqiq6MBy1Rq9tA=",
+
+30 нояб. 11:44:30.290
+"Accept-Language": "ru,en-US;q=0.9,en;q=0.8,nl;q=0.7",
+
+30 нояб. 11:44:30.290
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+30 нояб. 11:44:30.290
+"Accept": "*/*",
+
+30 нояб. 11:44:30.290
+Headers: {
+
+30 нояб. 11:44:30.290
+=== GET WHEEL STATUS REQUEST ===
+
+30 нояб. 11:44:30.282
+START RequestID: afb43be8-dfbb-48db-8c44-ef7ee40a8b5b Version: d4equgvno8pa0mc29mkq
+
+30 нояб. 11:44:22.288
+REPORT RequestID: 11b3d02d-9d84-4b45-90e7-ad8895557265 Duration: 195.510 ms Billed Duration: 200 ms Memory Size: 256 MB Max Memory Used: 107 MB Queuing Duration: 0.033 ms Function Init Duration: 191.035 ms CPU Usage: 17.676 %
+
+30 нояб. 11:44:22.288
+END RequestID: 11b3d02d-9d84-4b45-90e7-ad8895557265
+
+30 нояб. 11:44:22.286
+}
+
+30 нояб. 11:44:22.286
+"X-Trace-Id": "148b8208-b967-4d91-aa1b-8be0f3e81a19"
+
+30 нояб. 11:44:22.286
+"X-Serverless-Gateway-Id": "d5dimdj7itkijbl4s0g4",
+
+30 нояб. 11:44:22.286
+"X-Serverless-Certificate-Ids": "{}",
+
+30 нояб. 11:44:22.286
+"X-Request-Id": "7f3b0ab4-b7c4-4eed-b15b-056ba0aad34a",
+
+30 нояб. 11:44:22.286
+"X-Real-Remote-Address": "95.211.185.11:52665",
+
+30 нояб. 11:44:22.286
+"X-Forwarded-Proto": "https",
+
+30 нояб. 11:44:22.286
+"X-Forwarded-For": "95.211.185.11",
+
+30 нояб. 11:44:22.286
+"X-Envoy-Original-Path": "/wheel/status",
+
+30 нояб. 11:44:22.286
+"X-Envoy-External-Address": "95.211.185.11",
+
+30 нояб. 11:44:22.286
+"X-Api-Gateway-Function-Id": "d4eo70h7u5qevjl70hup",
+
+30 нояб. 11:44:22.286
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0 (Edition std-2)",
+
+30 нояб. 11:44:22.286
+"Uber-Trace-Id": "493a93406e0abf3d:81c9ed4492b89056:cf67477e165c49bd:1",
+
+30 нояб. 11:44:22.286
+"Sec-Fetch-Site": "cross-site",
+
+30 нояб. 11:44:22.286
+"Sec-Fetch-Mode": "cors",
+
+30 нояб. 11:44:22.286
+"Sec-Fetch-Dest": "empty",
+
+30 нояб. 11:44:22.286
+"Sec-Ch-Ua-Platform": "\"Windows\"",
+
+30 нояб. 11:44:22.286
+"Sec-Ch-Ua-Mobile": "?0",
+
+30 нояб. 11:44:22.285
+"Sec-Ch-Ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"",
+
+30 нояб. 11:44:22.285
+"Referer": "https://sweetdelights.store/",
+
+30 нояб. 11:44:22.285
+"Priority": "u=1, i",
+
+30 нояб. 11:44:22.285
+"Origin": "https://sweetdelights.store",
+
+30 нояб. 11:44:22.285
+"Host": "d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net",
+
+30 нояб. 11:44:22.285
+"Content-Type": "application/json",
+
+30 нояб. 11:44:22.285
+"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyXzE3NjQ0MzQ5NDM1NTJfcHJqc3g0NzRkIiwiZW1haWwiOiJwaW1hc2hpbjIwMTVAcmFtYmxlci5ydSIsInRlbGVncmFtSWQiOiI3MDMyNzQwMDgzIiwidGVsZWdyYW1Vc2VybmFtZSI6IiIsInRlbGVncmFtRmlyc3ROYW1lIjoiUG9zaXRpdmV+c3RvcmUiLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NjQ0NTkzMTUsImV4cCI6MTc2NzA1MTMxNX0=.7N1YkyoOAqNWztkNucExla4bxt93kyqiq6MBy1Rq9tA=",
+
+30 нояб. 11:44:22.285
+"Accept-Language": "ru,en-US;q=0.9,en;q=0.8,nl;q=0.7",
+
+30 нояб. 11:44:22.285
+"Accept-Encoding": "gzip, deflate, br, zstd",
+
+30 нояб. 11:44:22.285
+"Accept": "*/*",
+
+30 нояб. 11:44:22.285
+Headers: {
+
+30 нояб. 11:44:22.285
+=== GET WHEEL STATUS REQUEST ===
+
+30 нояб. 11:44:22.039
+START RequestID: 11b3d02d-9d84-4b45-90e7-ad8895557265 Version: d4equgvno8pa0mc29mkq
