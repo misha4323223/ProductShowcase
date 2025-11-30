@@ -1,6 +1,7 @@
 const https = require('https');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
+const API_GATEWAY = 'https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net';
 
 async function subscribeUser(chatId, username, firstName) {
   try {
@@ -112,7 +113,7 @@ async function handler(event) {
 
     console.log(`✅ Сообщение: "${text}" от ${chatId}`);
 
-    // Сохраняем подписчика
+    // Сохраняем подписчика на broadcast-notifications
     if (text === '/start') {
       await subscribeUser(chatId, data.message.from.username, data.message.from.first_name);
     }
