@@ -2,7 +2,9 @@ const https = require('https');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
 
-// Локальное хранилище подписчиков для рассылки
+// ⚠️ ВРЕМЕННОЕ решение - подписчики хранятся в памяти функции
+// ⚠️ ВНИМАНИЕ: Данные ТЕРЯЮТСЯ при перезагрузке функции!
+// TODO: Подключить к YDB для постоянного хранения
 const subscribers = new Map();
 
 // Подписываем пользователя на рассылку
@@ -14,7 +16,8 @@ async function subscribeUser(chatId, username, firstName) {
       first_name: firstName || null,
       subscribed_at: new Date()
     });
-    console.log(`✅ Пользователь ${chatId} подписан на рассылку. Всего подписчиков: ${subscribers.size}`);
+    console.log(`✅ Пользователь ${chatId} подписан на рассылку. Всего подписчиков в памяти: ${subscribers.size}`);
+    console.log(`⚠️ ВАЖНО: Подписчики хранятся в памяти! Для постоянного хранения нужна БД (YDB)`);
     return { ok: true };
   } catch (error) {
     console.error(`⚠️ Ошибка подписки:`, error.message);
