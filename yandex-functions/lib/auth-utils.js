@@ -11,7 +11,7 @@ function verifyPassword(password, salt, hash) {
   return hash === hashVerify;
 }
 
-function generateJWT(userId, email, role = 'user') {
+function generateJWT(userId, email, role = 'user', extraData = {}) {
   const header = {
     alg: 'HS256',
     typ: 'JWT'
@@ -21,6 +21,7 @@ function generateJWT(userId, email, role = 'user') {
     userId,
     email,
     role,
+    ...extraData,
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60)
   };

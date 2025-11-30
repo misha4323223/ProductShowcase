@@ -52,7 +52,12 @@ module.exports.handler = async (event) => {
       return createResponse(401, { error: 'Неверный email или пароль' });
     }
 
-    const token = generateJWT(user.userId, user.email, user.role || 'user');
+    const token = generateJWT(user.userId, user.email, user.role || 'user', {
+      telegramId: user.telegramId,
+      telegramUsername: user.telegramUsername,
+      telegramFirstName: user.telegramFirstName,
+      emailVerified: user.emailVerified,
+    });
 
     return createResponse(200, {
       success: true,
@@ -60,7 +65,9 @@ module.exports.handler = async (event) => {
       user: {
         userId: user.userId,
         email: user.email,
-        role: user.role || 'user'
+        role: user.role || 'user',
+        telegramId: user.telegramId,
+        telegramUsername: user.telegramUsername,
       }
     });
 
