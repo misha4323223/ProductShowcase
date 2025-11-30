@@ -22,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
 import { getProfile, updateProfile, type UserProfile, isBirthdayToday, markBirthdayGiftSent } from "@/services/profile-api";
 import type { Order, WheelPrize } from "@/types/firebase-types";
@@ -260,6 +261,7 @@ export default function AccountPage() {
   });
 
   const [isAttachingTelegram, setIsAttachingTelegram] = useState(false);
+  const [showTelegramAttachModal, setShowTelegramAttachModal] = useState(false);
 
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
@@ -541,6 +543,64 @@ export default function AccountPage() {
     }
   };
 
+  // Загрузка Telegram Widget в модале
+  useEffect(() => {
+    if (!showTelegramAttachModal) return;
+
+    // Создаем глобальный callback ДО загрузки виджета
+    (window as any).onTelegramAttachModal = async (user: any) => {
+      console.log('✅ Telegram user из модала получен:', user);
+      try {
+        // Преобразуем user data в initData формат
+        const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
+        console.log('📦 initDataStr создана, отправляю attachTelegram()');
+        
+        setIsAttachingTelegram(true);
+        await attachTelegram(initDataStr);
+        toast({
+          title: "Успешно!",
+          description: "Telegram успешно привязан к вашему аккаунту",
+        });
+        
+        // Закрываем модал и перезагружаем страницу
+        setShowTelegramAttachModal(false);
+        setTimeout(() => window.location.href = "/account", 600);
+      } catch (error: any) {
+        console.error('❌ Ошибка привязки:', error);
+        toast({
+          title: "Ошибка привязки",
+          description: error.message || "Не удалось привязать Telegram",
+          variant: "destructive",
+        });
+        setIsAttachingTelegram(false);
+      }
+    };
+
+    console.log('✅ onTelegramAttachModal установлена');
+
+    // Загружаем Telegram Login Widget
+    const script = document.createElement('script');
+    script.src = `https://telegram.org/js/telegram-widget.js?${Date.now()}`;
+    script.async = true;
+    script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
+    script.setAttribute('data-size', 'large');
+    script.setAttribute('data-onauth', 'onTelegramAttachModal(user)');
+    script.setAttribute('data-request-access', 'write');
+    
+    const container = document.getElementById('telegram-attach-modal-container');
+    if (container) {
+      console.log('✅ Контейнер модала найден, добавляю скрипт');
+      container.innerHTML = ''; // Очищаем контейнер
+      container.appendChild(script);
+    } else {
+      console.error('❌ Контейнер telegram-attach-modal-container не найден!');
+    }
+
+    return () => {
+      delete (window as any).onTelegramAttachModal;
+    };
+  }, [showTelegramAttachModal, attachTelegram, toast]);
+
   const handleAttachTelegram = async () => {
     console.log('🔗 handleAttachTelegram called');
     
@@ -579,59 +639,9 @@ export default function AccountPage() {
         setIsAttachingTelegram(false);
       }
     } else {
-      // НОВОЕ: Открываем Telegram Widget в POPUP окне с чистой сессией
-      console.log('🌐 Браузер - открываю Telegram Widget в POPUP с чистой сессией');
-      setIsAttachingTelegram(true);
-      
-      // Слушаем сообщения от popup окна
-      const handlePopupMessage = async (event: MessageEvent) => {
-        if (event.data?.type === 'TELEGRAM_AUTH_SUCCESS') {
-          console.log('✅ Получены данные от popup:', event.data.data);
-          try {
-            const user = event.data.data;
-            // Преобразуем user data в initData формат
-            const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
-            console.log('📦 initDataStr создана, отправляю attachTelegram()');
-            
-            await attachTelegram(initDataStr);
-            toast({
-              title: "Успешно!",
-              description: "Telegram успешно привязан к вашему аккаунту",
-            });
-            
-            // Удаляем listener
-            window.removeEventListener('message', handlePopupMessage);
-            
-            setTimeout(() => window.location.href = "/account", 600);
-          } catch (error: any) {
-            console.error('❌ Ошибка привязки:', error);
-            toast({
-              title: "Ошибка привязки",
-              description: error.message || "Не удалось привязать Telegram",
-              variant: "destructive",
-            });
-            setIsAttachingTelegram(false);
-          }
-        }
-      };
-      
-      window.addEventListener('message', handlePopupMessage);
-      
-      // Открываем popup с чистой Telegram сессией
-      const popupWindow = window.open('/telegram-attach-popup', 'telegram-attach', 'width=600,height=700');
-      
-      if (!popupWindow) {
-        console.error('❌ Не удалось открыть popup окно');
-        toast({
-          title: "Ошибка",
-          description: "Не удалось открыть окно привязки. Проверьте блокировщик всплывающих окон.",
-          variant: "destructive",
-        });
-        setIsAttachingTelegram(false);
-        window.removeEventListener('message', handlePopupMessage);
-      } else {
-        console.log('✅ Popup окно открыто');
-      }
+      // Открываем модал с Telegram Widget с чистой сессией
+      console.log('🌐 Браузер - открываю Telegram Widget в МОДАЛЕ');
+      setShowTelegramAttachModal(true);
     }
   };
 
@@ -1126,6 +1136,19 @@ export default function AccountPage() {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* МОДАЛ для привязки Telegram */}
+            <Dialog open={showTelegramAttachModal} onOpenChange={setShowTelegramAttachModal}>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Привязка Telegram аккаунта</DialogTitle>
+                  <DialogDescription>Выберите Telegram аккаунт для привязки</DialogDescription>
+                </DialogHeader>
+                <div className="flex justify-center py-6">
+                  <div id="telegram-attach-modal-container" className="flex justify-center" />
+                </div>
+              </DialogContent>
+            </Dialog>
 
             {/* Привязка Email */}
             <Card>
