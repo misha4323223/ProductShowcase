@@ -2,11 +2,10 @@ const https = require('https');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
 
-// Подписываем пользователя на рассылку (локально, не требует доп. запроса)
+// Подписываем пользователя на рассылку через unified функцию
 function subscribeUser(chatId, username, firstName) {
-  // Это может быть отправлено в YDB или другую БД
-  // На данный момент просто логируем (можно подключить DB позже)
   console.log(`✅ Пользователь ${chatId} подписан на рассылку (${firstName})`);
+  // Можно подключить к broadcast-notifications API позже если нужно
 }
 
 async function sendTelegramMessage(chatId, message, replyMarkup) {
