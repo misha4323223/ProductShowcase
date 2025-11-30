@@ -1087,19 +1087,33 @@ export default function AccountPage() {
                       </p>
                     </div>
                     <Separator />
-                    <Button
-                      variant="destructive"
-                      onClick={() => setDetachConfirmType('telegram')}
-                      disabled={isDeletachingTelegram}
-                      data-testid="button-detach-telegram"
-                    >
-                      {isDeletachingTelegram ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4 mr-2" />
-                      )}
-                      Отвязать Telegram
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={handleAttachTelegram}
+                        disabled={isAttachingTelegram}
+                        data-testid="button-change-telegram-account"
+                      >
+                        {isAttachingTelegram ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Mail className="h-4 w-4 mr-2" />
+                        )}
+                        Использовать другой аккаунт
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => setDetachConfirmType('telegram')}
+                        disabled={isDeletachingTelegram}
+                        data-testid="button-detach-telegram"
+                      >
+                        {isDeletachingTelegram ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4 mr-2" />
+                        )}
+                        Отвязать Telegram
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-4">
