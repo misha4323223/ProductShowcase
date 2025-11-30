@@ -176,10 +176,11 @@ module.exports.handler = async (event) => {
       const updateCommand = new UpdateCommand({
         TableName: 'users',
         Key: { email: trimmedEmail },
-        UpdateExpression: 'SET passwordSalt = :salt, passwordHash = :hash REMOVE resetCode, resetCodeExpires',
+        UpdateExpression: 'SET passwordSalt = :salt, passwordHash = :hash, emailVerified = :verified REMOVE resetCode, resetCodeExpires',
         ExpressionAttributeValues: {
           ':salt': salt,
-          ':hash': hash
+          ':hash': hash,
+          ':verified': true
         }
       });
 
