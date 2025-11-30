@@ -89,19 +89,24 @@ async function sendTelegramMessage(chatId, message, replyMarkup) {
 
 async function handler(event) {
   try {
+    console.log('📥 Получен запрос от Telegram:', JSON.stringify(event));
+    
     let data = event;
     if (typeof event.body === 'string') {
       data = JSON.parse(event.body);
     }
 
+    console.log('📦 Распарсенные данные:', JSON.stringify(data));
+
     if (!data.message) {
+      console.log('⚠️ Нет data.message');
       return { statusCode: 200, body: JSON.stringify({ ok: true }) };
     }
 
     const chatId = data.message.chat.id;
     const text = data.message.text || '';
 
-    console.log('Message:', text);
+    console.log(`✅ Сообщение получено от ${chatId}: "${text}"`);
 
     let message = '';
     let replyMarkup = null;
