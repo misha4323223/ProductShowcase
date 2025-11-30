@@ -35,15 +35,20 @@ function verifyToken(token, secret) {
     if (parts.length !== 3) return null;
 
     const [headerB64, payloadB64, signatureB64] = parts;
-    const signature = crypto.createHmac('sha256', secret).update(`${headerB64}.${payloadB64}`).digest('base64');
+    const expectedSignature = crypto.createHmac('sha256', secret).update(`${headerB64}.${payloadB64}`).digest('base64url');
 
-    if (signature !== signatureB64) return null;
-
-    const payload = JSON.parse(Buffer.from(payloadB64, 'base64').toString());
-    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+    if (signatureB64 !== expectedSignature) {
+      console.error('🔴 Signature mismatch. Got:', signatureB64, 'Expected:', expectedSignature);
       return null;
     }
 
+    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString());
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      console.error('🔴 Token expired at', new Date(payload.exp * 1000));
+      return null;
+    }
+
+    console.log('✅ Token verified successfully for:', payload.email);
     return payload;
   } catch (error) {
     console.error('Ошибка верификации токена:', error);
@@ -61,9 +66,9 @@ function generateToken(userId, email, extraData = {}) {
   };
 
   const secret = process.env.JWT_SECRET || 'telegram-secret-key';
-  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64');
-  const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64');
-  const signature = crypto.createHmac('sha256', secret).update(`${header}.${payloadStr}`).digest('base64');
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto.createHmac('sha256', secret).update(`${header}.${payloadStr}`).digest('base64url');
   
   return `${header}.${payloadStr}.${signature}`;
 }
