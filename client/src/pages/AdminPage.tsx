@@ -82,6 +82,11 @@ const newsletterSchema = z.object({
   message: z.string().trim().min(1, "Сообщение обязательно"),
 });
 
+const telegramBroadcastSchema = z.object({
+  broadcast_title: z.string().trim().min(1, "Заголовок обязателен"),
+  message: z.string().trim().min(1, "Сообщение обязательно"),
+});
+
 const heroSlideSchema = z.object({
   id: z.number(),
   title: z.string().trim().min(1, "Заголовок обязателен"),
@@ -92,6 +97,7 @@ const heroSlideSchema = z.object({
 
 type NewsletterForm = z.infer<typeof newsletterSchema>;
 type HeroSlideForm = z.infer<typeof heroSlideSchema>;
+type TelegramBroadcastForm = z.infer<typeof telegramBroadcastSchema>;
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -369,6 +375,11 @@ export default function AdminPage() {
       endDate: "",
       active: true,
     },
+  });
+
+  const telegramBroadcastForm = useForm<TelegramBroadcastForm>({
+    resolver: zodResolver(telegramBroadcastSchema),
+    defaultValues: { broadcast_title: "", message: "" },
   });
 
   const newsletterForm = useForm<NewsletterForm>({
@@ -1520,6 +1531,83 @@ export default function AdminPage() {
                   <Button type="submit" className="w-full" data-testid="button-send-newsletter">
                     <Send className="w-4 h-4 mr-2" />
                     Отправить рассылку всем подписчикам
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Массовая рассылка по Telegram</CardTitle>
+              <CardDescription>
+                Отправьте сообщение всем подписчикам Telegram бота
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...telegramBroadcastForm}>
+                <form
+                  onSubmit={telegramBroadcastForm.handleSubmit(async (data) => {
+                    try {
+                      const response = await apiRequest('/api/broadcast-notifications', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                          action: 'send',
+                          broadcast_title: data.broadcast_title,
+                          message: data.message,
+                        }),
+                      });
+
+                      const result = await response.json();
+                      
+                      if (result.ok) {
+                        toast({
+                          title: "Рассылка отправлена!",
+                          description: `Успешно отправлено ${result.sent} подписчикам${result.failed > 0 ? `, ошибок: ${result.failed}` : ''}`,
+                        });
+                        telegramBroadcastForm.reset();
+                      } else {
+                        throw new Error(result.error || 'Ошибка отправки');
+                      }
+                    } catch (error: any) {
+                      toast({
+                        title: "Ошибка отправки",
+                        description: error.message,
+                        variant: "destructive",
+                      });
+                    }
+                  })}
+                  className="space-y-4"
+                >
+                  <FormField
+                    control={telegramBroadcastForm.control}
+                    name="broadcast_title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Заголовок рассылки</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="🎁 Новые товары" data-testid="input-telegram-title" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={telegramBroadcastForm.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Текст сообщения</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} placeholder="Добавили новую коллекцию конфет!" rows={6} data-testid="input-telegram-message" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="w-full" data-testid="button-send-telegram">
+                    <Send className="w-4 h-4 mr-2" />
+                    Отправить в Telegram
                   </Button>
                 </form>
               </Form>
