@@ -19,7 +19,6 @@ import { sendStockNotifications, getAllNotifications, deleteNotification } from 
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
 import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, getBackgroundSettings, setBackgroundSettings, setPreferredTheme as savePreferredTheme, type HeroSlide, type BackgroundSettings, type BackgroundSetting } from "@/services/site-settings-client";
-import { getTelegramSubscribers, sendTelegramBroadcast, type TelegramSubscriber } from "@/services/telegram-subscribers";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
@@ -182,9 +181,22 @@ export default function AdminPage() {
     queryFn: getAllNewsletterSubscriptions,
   });
 
-  const { data: telegramSubscribers = [], isLoading: telegramLoading } = useQuery<TelegramSubscriber[]>({
+  const { data: telegramSubscribers = [], isLoading: telegramLoading } = useQuery({
     queryKey: ["/api/telegram/subscribers"],
-    queryFn: getTelegramSubscribers,
+    queryFn: async () => {
+      try {
+        const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "get_subscribers" })
+        });
+        const data = await response.json();
+        return data.subscribers || [];
+      } catch (error) {
+        console.error("Error fetching telegram subscribers:", error);
+        return [];
+      }
+    },
   });
 
   useEffect(() => {
@@ -1555,12 +1567,25 @@ export default function AdminPage() {
                 <form
                   onSubmit={telegramBroadcastForm.handleSubmit(async (data) => {
                     try {
-                      await sendTelegramBroadcast(data.broadcast_title, data.message);
-                      toast({
-                        title: "Рассылка отправлена!",
-                        description: `Успешно отправлено ${telegramSubscribers.length} подписчикам`,
+                      const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          action: "send",
+                          title: data.broadcast_title,
+                          message: data.message
+                        })
                       });
-                      telegramBroadcastForm.reset();
+                      const result = await response.json();
+                      if (result.ok) {
+                        toast({
+                          title: "Рассылка отправлена!",
+                          description: `Успешно отправлено ${telegramSubscribers.length} подписчикам`,
+                        });
+                        telegramBroadcastForm.reset();
+                      } else {
+                        throw new Error(result.error || 'Ошибка отправки');
+                      }
                     } catch (error: any) {
                       toast({
                         title: "Ошибка отправки",
