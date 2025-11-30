@@ -123,7 +123,9 @@ export async function getHeroSlides(theme?: string): Promise<HeroSlide[]> {
     const data: SiteSetting = await response.json();
     if (!data.settingValue) return [];
     
-    return JSON.parse(data.settingValue) as HeroSlide[];
+    // Handle both stringified JSON and already parsed objects
+    const value = typeof data.settingValue === 'string' ? JSON.parse(data.settingValue) : data.settingValue;
+    return Array.isArray(value) ? value : [];
   } catch (error) {
     console.error('Error fetching hero slides:', error);
     return [];
@@ -195,9 +197,10 @@ export async function getBackgroundSettings(): Promise<BackgroundSettings> {
       return {} as BackgroundSettings;
     }
     
-    const parsed = JSON.parse(data.settingValue) as BackgroundSettings;
+    // Handle both stringified JSON and already parsed objects
+    const parsed = typeof data.settingValue === 'string' ? JSON.parse(data.settingValue) : data.settingValue;
     console.log('Parsed background settings:', parsed);
-    return parsed;
+    return parsed as BackgroundSettings;
   } catch (error) {
     console.error('Error fetching background settings:', error);
     return {} as BackgroundSettings;
