@@ -544,11 +544,38 @@ export default function AccountPage() {
     }
   };
 
-  // Загрузка Telegram Widget в модале через IFRAME для новой сессии
+  // Загрузка Telegram Widget в модале
   useEffect(() => {
     if (!showTelegramAttachModal) return;
 
-    console.log('📱 showTelegramAttachModal=true, загружаю Telegram Widget в IFRAME');
+    console.log('📱 showTelegramAttachModal=true, загружаю Telegram Widget');
+
+    // Создаем глобальный callback ДО загрузки виджета
+    (window as any).onTelegramAttachModal = async (user: any) => {
+      console.log('✅ Telegram user из модала получен:', user);
+      try {
+        const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
+        console.log('📦 initDataStr создана, отправляю attachTelegram()');
+        
+        setIsAttachingTelegram(true);
+        await attachTelegram(initDataStr);
+        toast({
+          title: "Успешно!",
+          description: "Telegram успешно привязан к вашему аккаунту",
+        });
+        
+        setShowTelegramAttachModal(false);
+        setTimeout(() => window.location.href = "/account", 600);
+      } catch (error: any) {
+        console.error('❌ Ошибка привязки:', error);
+        toast({
+          title: "Ошибка привязки",
+          description: error.message || "Не удалось привязать Telegram",
+          variant: "destructive",
+        });
+        setIsAttachingTelegram(false);
+      }
+    };
 
     // Функция загрузки Widget с retry логикой
     let attempts = 0;
@@ -567,104 +594,35 @@ export default function AccountPage() {
         return;
       }
 
-      console.log(`✅ На попытке ${attempts}: контейнер найден, создаю IFRAME с Telegram Widget`);
+      console.log(`✅ На попытке ${attempts}: контейнер найден, загружаю Widget скрипт`);
       
-      // Очищаем контейнер
+      // Очищаем контейнер от старых скриптов
       telegramContainerRef.current.innerHTML = '';
       
-      // Создаем HTML контент для iframe
-      const iframeHTML = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <style>
-            body {
-              margin: 0;
-              padding: 10px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              min-height: 100vh;
-              background: transparent;
-            }
-          </style>
-        </head>
-        <body>
-          <script async src="https://telegram.org/js/telegram-widget.js?${Date.now()}"></script>
-          <script>
-            window.onTelegramAuth = function(user) {
-              console.log('✅ Telegram auth в iframe:', user);
-              window.parent.postMessage({
-                type: 'TELEGRAM_AUTH_SUCCESS',
-                data: user
-              }, '*');
-            };
-          </script>
-          <telegram-login 
-            data-telegram-login="SweetWeb71_bot" 
-            data-size="large" 
-            data-onauth="onTelegramAuth" 
-            data-request-access="write">
-          </telegram-login>
-        </body>
-        </html>
-      `;
+      // Удаляем старый глобальный скрипт если есть
+      const oldScript = document.querySelector('script[src*="telegram-widget"]');
+      if (oldScript) oldScript.remove();
 
-      // Создаем iframe
-      const iframe = document.createElement('iframe');
-      iframe.style.border = 'none';
-      iframe.style.width = '100%';
-      iframe.style.height = '200px';
-      iframe.sandbox.add('allow-same-origin');
-      iframe.sandbox.add('allow-scripts');
-      iframe.sandbox.add('allow-popups');
+      // Создаем новый скрипт
+      const script = document.createElement('script');
+      script.src = `https://telegram.org/js/telegram-widget.js?${Date.now()}`;
+      script.async = true;
+      script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
+      script.setAttribute('data-size', 'large');
+      script.setAttribute('data-onauth', 'onTelegramAttachModal(user)');
+      script.setAttribute('data-request-access', 'write');
       
-      // Слушаем сообщения от iframe
-      const handleIframeMessage = async (event: MessageEvent) => {
-        if (event.data?.type === 'TELEGRAM_AUTH_SUCCESS') {
-          console.log('✅ Получены данные от iframe:', event.data.data);
-          window.removeEventListener('message', handleIframeMessage);
-          
-          try {
-            const user = event.data.data;
-            const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
-            console.log('📦 initDataStr создана, отправляю attachTelegram()');
-            
-            setIsAttachingTelegram(true);
-            await attachTelegram(initDataStr);
-            toast({
-              title: "Успешно!",
-              description: "Telegram успешно привязан к вашему аккаунту",
-            });
-            
-            setShowTelegramAttachModal(false);
-            setTimeout(() => window.location.href = "/account", 600);
-          } catch (error: any) {
-            console.error('❌ Ошибка привязки:', error);
-            toast({
-              title: "Ошибка привязки",
-              description: error.message || "Не удалось привязать Telegram",
-              variant: "destructive",
-            });
-            setIsAttachingTelegram(false);
-          }
-        }
-      };
-
-      window.addEventListener('message', handleIframeMessage);
+      script.onload = () => console.log('✅ Telegram Widget скрипт загружен');
+      script.onerror = () => console.error('❌ Ошибка загрузки скрипта');
       
-      // Загружаем контент в iframe
-      telegramContainerRef.current.appendChild(iframe);
-      iframe.contentDocument?.write(iframeHTML);
-      iframe.contentDocument?.close();
+      telegramContainerRef.current.appendChild(script);
     };
 
     // Запускаем загрузку с retry
     loadWidget();
 
     return () => {
-      // Cleanup
+      delete (window as any).onTelegramAttachModal;
     };
   }, [showTelegramAttachModal, attachTelegram, toast]);
 
