@@ -546,7 +546,7 @@ export default function AccountPage() {
 
   // Загрузка Telegram Widget в модале
   useEffect(() => {
-    if (!showTelegramAttachModal || !telegramContainerRef.current) return;
+    if (!showTelegramAttachModal) return;
 
     console.log('📱 showTelegramAttachModal=true, загружаю Telegram Widget');
 
@@ -580,28 +580,48 @@ export default function AccountPage() {
     };
 
     console.log('✅ onTelegramAttachModal установлена');
-    console.log('✅ Контейнер через ref найден, загружаю Telegram Widget скрипт');
-    
-    // Удаляем старый скрипт если есть
-    const oldScript = document.querySelector('script[src*="telegram-widget"]');
-    if (oldScript) oldScript.remove();
 
-    // Создаем новый скрипт
-    const script = document.createElement('script');
-    script.src = `https://telegram.org/js/telegram-widget.js?${Date.now()}`;
-    script.async = true;
-    script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-onauth', 'onTelegramAttachModal(user)');
-    script.setAttribute('data-request-access', 'write');
+    // Функция загрузки Widget с retry логикой
+    let attempts = 0;
+    const maxAttempts = 50; // 50 * 50ms = 2.5 seconds max wait
     
-    script.onload = () => console.log('✅ Telegram Widget скрипт загружен и выполнен');
-    script.onerror = () => console.error('❌ Ошибка загрузки Telegram Widget скрипта');
-    
-    if (telegramContainerRef.current) {
+    const loadWidget = () => {
+      attempts++;
+      
+      if (!telegramContainerRef.current) {
+        if (attempts < maxAttempts) {
+          console.log(`⏳ Попытка ${attempts}/${maxAttempts}: контейнер еще не в DOM...`);
+          setTimeout(loadWidget, 50);
+        } else {
+          console.error('❌ Контейнер так и не появился после 2.5 сек ожидания');
+        }
+        return;
+      }
+
+      console.log(`✅ На попытке ${attempts}: контейнер через ref найден, загружаю Telegram Widget скрипт`);
+      
+      // Удаляем старый скрипт если есть
+      const oldScript = document.querySelector('script[src*="telegram-widget"]');
+      if (oldScript) oldScript.remove();
+
+      // Создаем новый скрипт
+      const script = document.createElement('script');
+      script.src = `https://telegram.org/js/telegram-widget.js?${Date.now()}`;
+      script.async = true;
+      script.setAttribute('data-telegram-login', 'SweetWeb71_bot');
+      script.setAttribute('data-size', 'large');
+      script.setAttribute('data-onauth', 'onTelegramAttachModal(user)');
+      script.setAttribute('data-request-access', 'write');
+      
+      script.onload = () => console.log('✅ Telegram Widget скрипт загружен и выполнен');
+      script.onerror = () => console.error('❌ Ошибка загрузки Telegram Widget скрипта');
+      
       telegramContainerRef.current.innerHTML = ''; // Очищаем контейнер
       telegramContainerRef.current.appendChild(script);
-    }
+    };
+
+    // Запускаем загрузку с retry
+    loadWidget();
 
     return () => {
       delete (window as any).onTelegramAttachModal;
