@@ -1094,7 +1094,7 @@ export default function AccountPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 {user.telegramId ? (
                   <div className="space-y-4">
                     <div>
@@ -1104,68 +1104,50 @@ export default function AccountPage() {
                       </p>
                     </div>
                     <Separator />
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => {
-                          // Очищаем кэш старого аккаунта перед загрузкой нового Widget
-                          if (typeof window !== 'undefined') {
-                            localStorage.removeItem('TelegramLoginWidget');
-                            sessionStorage.removeItem('TelegramLoginWidget');
-                          }
-                          handleAttachTelegram();
-                        }}
-                        disabled={isAttachingTelegram}
-                        data-testid="button-change-telegram-account"
-                      >
-                        {isAttachingTelegram ? (
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <Mail className="h-4 w-4 mr-2" />
-                        )}
-                        Использовать другой аккаунт
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        onClick={() => setDetachConfirmType('telegram')}
-                        disabled={isDeletachingTelegram}
-                        data-testid="button-detach-telegram"
-                      >
-                        {isDeletachingTelegram ? (
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <Trash2 className="h-4 w-4 mr-2" />
-                        )}
-                        Отвязать Telegram
-                      </Button>
-                    </div>
+                    <Button
+                      variant="destructive"
+                      onClick={() => setDetachConfirmType('telegram')}
+                      disabled={isDeletachingTelegram}
+                      data-testid="button-detach-telegram"
+                    >
+                      {isDeletachingTelegram ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4 mr-2" />
+                      )}
+                      Отвязать Telegram
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">
                       Привяжите Telegram аккаунт к вашему email профилю. После этого вы сможете входить через Telegram Бот.
                     </p>
-                    <Button
-                      onClick={() => {
-                        // Очищаем кэш старого аккаунта перед загрузкой нового Widget
-                        if (typeof window !== 'undefined') {
-                          localStorage.removeItem('TelegramLoginWidget');
-                          sessionStorage.removeItem('TelegramLoginWidget');
-                        }
-                        handleAttachTelegram();
-                      }}
-                      disabled={isAttachingTelegram}
-                      data-testid="button-attach-telegram"
-                    >
-                      {isAttachingTelegram ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <Mail className="h-4 w-4 mr-2" />
-                      )}
-                      Привязать Telegram
-                    </Button>
-                    <div id="attach-telegram-widget-container" className="flex justify-center my-2" />
                   </div>
                 )}
+                
+                {/* Кнопка видна ВСЕГДА - и когда привязан и когда не привязан */}
+                <Button
+                  onClick={() => {
+                    // Очищаем кэш старого аккаунта перед загрузкой нового Widget
+                    if (typeof window !== 'undefined') {
+                      localStorage.removeItem('TelegramLoginWidget');
+                      sessionStorage.removeItem('TelegramLoginWidget');
+                    }
+                    handleAttachTelegram();
+                  }}
+                  disabled={isAttachingTelegram}
+                  data-testid={user.telegramId ? "button-change-telegram-account" : "button-attach-telegram"}
+                >
+                  {isAttachingTelegram ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Mail className="h-4 w-4 mr-2" />
+                  )}
+                  {user.telegramId ? "Использовать другой аккаунт" : "Привязать Telegram"}
+                </Button>
+                
+                <div id="attach-telegram-widget-container" className="flex justify-center my-2" />
               </CardContent>
             </Card>
 
