@@ -1166,12 +1166,46 @@ export default function AccountPage() {
             <Dialog open={showTelegramAttachModal} onOpenChange={setShowTelegramAttachModal}>
               <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>Привязка Telegram аккаунта</DialogTitle>
-                  <DialogDescription>Выберите Telegram аккаунт для привязки</DialogDescription>
+                  <DialogTitle>{user.telegramId ? "Использовать другой аккаунт" : "Привязка Telegram аккаунта"}</DialogTitle>
+                  <DialogDescription>
+                    {user.telegramId 
+                      ? "Выберите новый Telegram аккаунт для замены текущего" 
+                      : "Выберите Telegram аккаунт для привязки"}
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="flex justify-center py-6">
                   <div ref={telegramContainerRef} className="flex justify-center w-full" />
                 </div>
+                {user.telegramId && (
+                  <>
+                    <Separator />
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowTelegramAttachModal(false)}
+                        data-testid="button-cancel-telegram-modal"
+                      >
+                        Отмена
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          setShowTelegramAttachModal(false);
+                          setDetachConfirmType('telegram');
+                        }}
+                        disabled={isDeletachingTelegram}
+                        data-testid="button-detach-from-modal"
+                      >
+                        {isDeletachingTelegram ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4 mr-2" />
+                        )}
+                        Отвязать текущий
+                      </Button>
+                    </div>
+                  </>
+                )}
               </DialogContent>
             </Dialog>
 
