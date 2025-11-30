@@ -106,9 +106,14 @@ exports.handler = async (event) => {
 
     const userRecord = getUserResult.Items[0];
 
-    // Проверяем, есть ли привязанный email
+    // Проверяем, есть ли привязанный Email (должен быть пароль)
     if (!userRecord.passwordHash || userRecord.email.includes('@telegram')) {
-      return createResponse(400, { error: 'Email не привязан к аккаунту' });
+      return createResponse(400, { error: 'Email не привязан к аккаунту - невозможно отвязать только Telegram' });
+    }
+
+    // Проверяем, есть ли привязанный Telegram
+    if (!userRecord.telegramId) {
+      return createResponse(400, { error: 'Telegram не привязан к аккаунту' });
     }
 
     // Удаляем старую запись
@@ -119,14 +124,17 @@ exports.handler = async (event) => {
 
     console.log('🗑️ Старая запись удалена');
 
-    // Создаём новую запись с Telegram email
-    const telegramEmail = `${userRecord.telegramId}@telegram`;
+    // Создаём новую запись БЕЗ Telegram (оставляем Email)
     const updatedUser = {
       ...userRecord,
-      email: telegramEmail,
-      passwordHash: undefined,
-      emailVerified: false,
-      emailAttachedAt: undefined,
+      // email остается прежним (не меняем на @telegram)
+      // Удаляем только данные Telegram
+      telegramId: undefined,
+      telegramUsername: undefined,
+      telegramFirstName: undefined,
+      telegramLastName: undefined,
+      telegramPhotoUrl: undefined,
+      telegramLanguageCode: undefined,
     };
 
     await docClient.send(new PutCommand({
@@ -134,24 +142,21 @@ exports.handler = async (event) => {
       Item: updatedUser,
     }));
 
-    console.log('✅ Новая запись создана с Telegram email');
+    console.log('✅ Telegram успешно отвязан - Email остается активным');
 
-    // Генерируем новый токен
+    // Генерируем новый токен БЕЗ Telegram данных
     const newToken = generateToken(updatedUser.userId, updatedUser.email, {
-      telegramId: updatedUser.telegramId,
-      telegramUsername: updatedUser.telegramUsername,
-      emailVerified: false,
+      emailVerified: true,
     });
 
     return createResponse(200, {
       success: true,
-      message: 'Telegram успешно отвязан от аккаунта',
+      message: 'Telegram успешно отвязан от аккаунта. Email остается активным способом входа.',
       token: newToken,
       user: {
         userId: updatedUser.userId,
         email: updatedUser.email,
-        telegramId: updatedUser.telegramId,
-        telegramUsername: updatedUser.telegramUsername,
+        // telegramId больше не включаем - он удален
       },
     });
 
