@@ -1,7 +1,6 @@
 const https = require('https');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
-const API_GATEWAY = 'https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net';
 
 async function subscribeUser(chatId, username, firstName) {
   try {
