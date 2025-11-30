@@ -124,15 +124,23 @@ exports.handler = async (event) => {
     if (result.Items && result.Items.length > 0) {
       const existingUser = result.Items[0];
       console.log('👤 Existing user userId:', existingUser.userId, 'Current user:', tokenPayload.userId);
+      console.log('🔐 Existing user has password hash:', !!existingUser.passwordHash);
       
-      // Allow if it's the same user or if the existing email is the user's telegram email
-      if (existingUser.userId !== tokenPayload.userId && !trimmedEmail.includes('@telegram')) {
-        console.log('❌ Email conflict with another user');
-        return createResponse(400, { error: 'Email already in use by another account' });
-      }
-      
-      // If it's our own record, just continue and let delete/recreate handle it
-      if (existingUser.userId === tokenPayload.userId) {
+      if (existingUser.userId !== tokenPayload.userId) {
+        // If the other user doesn't have a password hash (Telegram-only account), remove their record
+        if (!existingUser.passwordHash) {
+          console.log('🗑️ Removing orphaned Telegram-only account');
+          await docClient.send(new DeleteCommand({
+            TableName: "users",
+            Key: { email: trimmedEmail },
+          }));
+        } else {
+          // Real account with password exists - this is a real conflict
+          console.log('❌ Email conflict with another user who has password');
+          return createResponse(400, { error: 'Email already in use by another account' });
+        }
+      } else {
+        // Same user - just continue and let delete/recreate handle it
         console.log('✅ Email belongs to same user, continuing...');
       }
     }
