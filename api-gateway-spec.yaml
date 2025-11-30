@@ -2346,3 +2346,85 @@ paths:
       responses:
         '200':
           description: OK
+
+  # ========== BROADCAST NOTIFICATIONS ==========
+  /api/broadcast-notifications:
+    post:
+      summary: Telegram рассылка - подписка или отправка сообщений
+      description: Unified функция для управления подписками и отправки broadcast рассылок
+      operationId: broadcastNotifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - action
+              properties:
+                action:
+                  type: string
+                  enum: [subscribe, send]
+                  description: 'subscribe - добавить подписчика, send - отправить рассылку'
+                  example: "send"
+                chat_id:
+                  type: number
+                  description: Telegram chat ID (обязателен для action=subscribe)
+                  example: 123456789
+                username:
+                  type: string
+                  description: Telegram username (опционально)
+                first_name:
+                  type: string
+                  description: Имя пользователя (опционально)
+                message:
+                  type: string
+                  description: Текст сообщения (обязателен для action=send)
+                  example: "Добавили новые товары!"
+                broadcast_title:
+                  type: string
+                  description: Заголовок рассылки (опционально)
+                  example: "🎁 Новинка"
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4efkrvud5o73t4cskgk
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  message:
+                    type: string
+                  sent:
+                    type: number
+                    description: Кол-во отправленных сообщений (для action=send)
+                  failed:
+                    type: number
+                    description: Кол-во ошибок (для action=send)
+                  total:
+                    type: number
+                    description: Всего подписчиков (для action=send)
+        '400':
+          description: Ошибка валидации
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
