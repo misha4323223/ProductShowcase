@@ -1,11 +1,7 @@
 const https = require('https');
+const { YandexCloudDatabase } = require('../lib/db-client.js');
 
-const subscribers = new Map();
-
-async function sendTelegramMessage(chatId, message, replyMarkup) {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  if (!botToken) throw new Error('BOT_TOKEN missing');
-
+async function sendTelegramMessage(chatId, message, replyMarkup, botToken) {
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   const payload = {
     chat_id: chatId,
@@ -52,6 +48,11 @@ async function handler(event) {
 
     console.log('📥 Запрос получен');
 
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    if (!botToken) throw new Error('BOT_TOKEN missing');
+
+    const db = new YandexCloudDatabase();
+
     // WEBHOOK от Telegram (есть message поле)
     if (data.message) {
       console.log('🤖 Webhook от Telegram');
@@ -62,16 +63,15 @@ async function handler(event) {
 
       console.log(`✅ Сообщение: "${text}" от ${chatId}`);
 
-      // Сохранить подписчика
+      // Сохранить подписчика в БД
       if (text === '/start') {
-        subscribers.set(chatId, {
-          chatId,
-          username,
-          firstName,
-          subscribedAt: new Date().toISOString(),
-          isActive: true
-        });
-        console.log(`💾 Подписчик ${chatId} добавлен. Всего: ${subscribers.size}`);
+        await db.executeQuery(`
+          INSERT INTO telegram_subscribers (chat_id, username, first_name, subscribed_at, is_active)
+          VALUES ($1, $2, $3, NOW(), true)
+          ON CONFLICT (chat_id) 
+          DO UPDATE SET is_active = true, updated_at = NOW()
+        `, [chatId, username, firstName]);
+        console.log(`💾 Подписчик ${chatId} добавлен в БД`);
       }
 
       let message = '';
@@ -115,7 +115,7 @@ async function handler(event) {
         message = `❓ Команда не распознана.\n\nИспользуйте /help для списка команд или нажмите /start`;
       }
 
-      await sendTelegramMessage(chatId, message, replyMarkup);
+      await sendTelegramMessage(chatId, message, replyMarkup, botToken);
 
       return { statusCode: 200, body: JSON.stringify({ ok: true }) };
     }
@@ -129,32 +129,36 @@ async function handler(event) {
         return { statusCode: 400, body: JSON.stringify({ error: 'chatId required' }) };
       }
 
-      subscribers.set(chatId, {
-        chatId,
-        username: username || null,
-        firstName: firstName || null,
-        subscribedAt: new Date().toISOString(),
-        isActive: true
-      });
+      await db.executeQuery(`
+        INSERT INTO telegram_subscribers (chat_id, username, first_name, subscribed_at, is_active)
+        VALUES ($1, $2, $3, NOW(), true)
+        ON CONFLICT (chat_id) 
+        DO UPDATE SET is_active = true, updated_at = NOW()
+      `, [chatId, username, firstName]);
 
-      console.log(`✅ Подписчик ${chatId} добавлен. Всего: ${subscribers.size}`);
+      console.log(`✅ Подписчик ${chatId} добавлен`);
 
       return {
         statusCode: 200,
         body: JSON.stringify({
           ok: true,
-          message: `Subscriber ${chatId} added`,
-          total: subscribers.size
+          message: `Subscriber ${chatId} added`
         })
       };
     } else if (action === 'get_subscribers') {
-      const subscribersList = Array.from(subscribers.values());
+      const subscribers = await db.executeQuery(`
+        SELECT chat_id, username, first_name, subscribed_at, is_active
+        FROM telegram_subscribers 
+        WHERE is_active = true
+        ORDER BY subscribed_at DESC
+      `);
+
       return {
         statusCode: 200,
         body: JSON.stringify({
           ok: true,
-          subscribers: subscribersList,
-          count: subscribersList.length
+          subscribers: subscribers || [],
+          count: (subscribers || []).length
         })
       };
     } else if (action === 'send') {
@@ -163,20 +167,33 @@ async function handler(event) {
         return { statusCode: 400, body: JSON.stringify({ error: 'message required' }) };
       }
 
-      const subscribersList = Array.from(subscribers.values());
-      let sent = 0;
-      let failed = 0;
+      const subscribers = await db.executeQuery(`
+        SELECT chat_id FROM telegram_subscribers 
+        WHERE is_active = true
+        ORDER BY subscribed_at DESC
+      `);
+
+      if (!subscribers || subscribers.length === 0) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ ok: true, sent: 0, failed: 0, total: 0, message: 'No subscribers' })
+        };
+      }
 
       const fullMessage = title ? `<b>${title}</b>\n\n${message}` : message;
 
-      for (const subscriber of subscribersList) {
+      let sent = 0;
+      let failed = 0;
+
+      for (const subscriber of subscribers) {
         try {
-          await sendTelegramMessage(subscriber.chatId, fullMessage);
+          await sendTelegramMessage(subscriber.chat_id, fullMessage, null, botToken);
           sent++;
-          console.log(`✅ Рассылка отправлена ${subscriber.chatId}`);
+          console.log(`✅ Рассылка отправлена ${subscriber.chat_id}`);
+          await new Promise(resolve => setTimeout(resolve, 50));
         } catch (error) {
           failed++;
-          console.error(`❌ Ошибка рассылки ${subscriber.chatId}:`, error.message);
+          console.error(`❌ Ошибка рассылки ${subscriber.chat_id}:`, error.message);
         }
       }
 
@@ -187,7 +204,7 @@ async function handler(event) {
           message: `Broadcast sent to ${sent} subscribers, ${failed} failed`,
           sent,
           failed,
-          total: subscribersList.length
+          total: subscribers.length
         })
       };
     }
