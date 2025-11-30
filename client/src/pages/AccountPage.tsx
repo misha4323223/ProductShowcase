@@ -1176,6 +1176,13 @@ export default function AccountPage() {
                 <div className="flex justify-center py-6">
                   <div ref={telegramContainerRef} className="flex justify-center w-full" />
                 </div>
+                
+                <div className="p-3 rounded-md bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
+                  <p className="text-xs text-blue-800 dark:text-blue-200">
+                    <span className="font-semibold">💡 Совет:</span> Если видите старый аккаунт, удалите cookies браузера для <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">oauth.telegram.org</code> (F12 → Application → Cookies) или используйте Инкогнито режим.
+                  </p>
+                </div>
+                
                 <Separator />
                 <div className="flex gap-2 justify-center">
                   <Button
