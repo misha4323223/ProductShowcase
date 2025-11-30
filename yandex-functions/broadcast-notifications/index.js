@@ -2,7 +2,7 @@ const https = require('https');
 
 const subscribers = new Map();
 
-async function sendTelegramMessage(chatId, message) {
+async function sendTelegramMessage(chatId, message, replyMarkup) {
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (!botToken) throw new Error('BOT_TOKEN missing');
 
@@ -12,6 +12,8 @@ async function sendTelegramMessage(chatId, message) {
     text: message,
     parse_mode: 'HTML'
   };
+
+  if (replyMarkup) payload.reply_markup = replyMarkup;
 
   return new Promise((resolve, reject) => {
     const payloadStr = JSON.stringify(payload);
@@ -48,6 +50,77 @@ async function handler(event) {
       data = JSON.parse(event.body);
     }
 
+    console.log('📥 Запрос получен');
+
+    // WEBHOOK от Telegram (есть message поле)
+    if (data.message) {
+      console.log('🤖 Webhook от Telegram');
+      const chatId = data.message.chat.id;
+      const text = data.message.text || '';
+      const username = data.message.from.username || null;
+      const firstName = data.message.from.first_name || null;
+
+      console.log(`✅ Сообщение: "${text}" от ${chatId}`);
+
+      // Сохранить подписчика
+      if (text === '/start') {
+        subscribers.set(chatId, {
+          chatId,
+          username,
+          firstName,
+          subscribedAt: new Date().toISOString(),
+          isActive: true
+        });
+        console.log(`💾 Подписчик ${chatId} добавлен. Всего: ${subscribers.size}`);
+      }
+
+      let message = '';
+      let replyMarkup = null;
+
+      if (text === '/start') {
+        message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>\n\nВыберите что вас интересует:`;
+        
+        replyMarkup = {
+          inline_keyboard: [
+            [
+              { text: '🛍️ Магазин', web_app: { url: 'https://sweetdelights.store' } },
+              { text: '📦 Заказы', web_app: { url: 'https://sweetdelights.store/?tab=orders' } }
+            ],
+            [
+              { text: '❤️ Избранное', web_app: { url: 'https://sweetdelights.store/?tab=wishlist' } },
+              { text: '🎁 Промо', web_app: { url: 'https://sweetdelights.store/?tab=promos' } }
+            ],
+            [
+              { text: '⚙️ Профиль', web_app: { url: 'https://sweetdelights.store/?tab=account' } }
+            ]
+          ]
+        };
+      } else if (text === '/shop') {
+        message = '🛍️ <b>Магазин</b>';
+        replyMarkup = {
+          inline_keyboard: [[
+            { text: '🛍️ Открыть', web_app: { url: 'https://sweetdelights.store' } }
+          ]]
+        };
+      } else if (text === '/orders') {
+        message = '📦 <b>Мои заказы</b>';
+        replyMarkup = {
+          inline_keyboard: [[
+            { text: '📦 Посмотреть', web_app: { url: 'https://sweetdelights.store/?tab=orders' } }
+          ]]
+        };
+      } else if (text === '/help') {
+        message = `<b>📋 Доступные команды:</b>\n\n/start - Главное меню\n/shop - Открыть магазин\n/orders - Мои заказы\n/help - Справка`;
+      } else {
+        message = `❓ Команда не распознана.\n\nИспользуйте /help для списка команд или нажмите /start`;
+      }
+
+      await sendTelegramMessage(chatId, message, replyMarkup);
+
+      return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+    }
+
+    // API запросы (есть action поле)
     const action = data.action || 'get_subscribers';
 
     if (action === 'subscribe') {
@@ -119,7 +192,7 @@ async function handler(event) {
       };
     }
 
-    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid action' }) };
+    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request' }) };
   } catch (error) {
     console.error('Error:', error.message);
     return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
