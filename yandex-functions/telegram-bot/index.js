@@ -1,28 +1,41 @@
 const https = require('https');
+const { Client } = require('ydb-sdk');
 
 const MINI_APP_URL = 'https://sweetdelights.store';
 const YDB_ENDPOINT = process.env.YDB_ENDPOINT || 'grpc://localhost:2136';
 
-// Простое сохранение в памяти для подписчиков
-// В production нужно будет подключить YDB SDK
-const subscribers = new Map();
+let ydbClient;
+
+async function initYDB() {
+  if (!ydbClient) {
+    ydbClient = new Client({
+      endpoint: YDB_ENDPOINT,
+      database: '/local',
+      authService: undefined
+    });
+    await ydbClient.ready();
+  }
+  return ydbClient;
+}
 
 async function subscribeUserToYDB(chatId, username, firstName) {
   try {
-    console.log(`💾 Сохраняю подписчика ${chatId} в памяти...`);
+    console.log(`💾 Сохраняю подписчика ${chatId} в YDB...`);
     
-    subscribers.set(chatId, {
-      chatId,
-      username: username || null,
-      firstName: firstName || null,
-      subscribedAt: new Date().toISOString(),
-      isActive: true
-    });
+    const client = await initYDB();
+    const session = await client.getSession();
     
-    console.log(`✅ Подписчик ${chatId} сохранен. Всего: ${subscribers.size}`);
+    const query = `
+      UPSERT INTO telegram_subscribers (chat_id, username, first_name, subscribed_at, is_active) 
+      VALUES (${chatId}, '${(username || '').replace(/'/g, "''")}', '${(firstName || '').replace(/'/g, "''")}', CurrentUtcTimestamp(), true)
+    `;
+    
+    await session.executeQuery(query);
+    console.log(`✅ Подписчик ${chatId} сохранен в YDB`);
     return { ok: true };
   } catch (error) {
-    console.error(`⚠️ Ошибка сохранения:`, error.message);
+    console.error(`⚠️ Ошибка YDB:`, error.message);
+    // Не блокируем /start если ошибка БД
     return { ok: true };
   }
 }
@@ -90,7 +103,6 @@ async function handler(event) {
     let replyMarkup = null;
 
     if (text === '/start') {
-      // Подписываем пользователя
       await subscribeUserToYDB(chatId, data.message.from.username, data.message.from.first_name);
       
       message = `🍭 <b>Добро пожаловать в Sweet Delights!</b>\n\nВыберите что вас интересует:`;
