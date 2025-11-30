@@ -1089,7 +1089,14 @@ export default function AccountPage() {
                     <Separator />
                     <div className="flex gap-2">
                       <Button
-                        onClick={handleAttachTelegram}
+                        onClick={() => {
+                          // Очищаем кэш старого аккаунта перед загрузкой нового Widget
+                          if (typeof window !== 'undefined') {
+                            localStorage.removeItem('TelegramLoginWidget');
+                            sessionStorage.removeItem('TelegramLoginWidget');
+                          }
+                          handleAttachTelegram();
+                        }}
                         disabled={isAttachingTelegram}
                         data-testid="button-change-telegram-account"
                       >
@@ -1121,7 +1128,14 @@ export default function AccountPage() {
                       Привяжите Telegram аккаунт к вашему email профилю. После этого вы сможете входить через Telegram Бот.
                     </p>
                     <Button
-                      onClick={handleAttachTelegram}
+                      onClick={() => {
+                        // Очищаем кэш старого аккаунта перед загрузкой нового Widget
+                        if (typeof window !== 'undefined') {
+                          localStorage.removeItem('TelegramLoginWidget');
+                          sessionStorage.removeItem('TelegramLoginWidget');
+                        }
+                        handleAttachTelegram();
+                      }}
                       disabled={isAttachingTelegram}
                       data-testid="button-attach-telegram"
                     >
