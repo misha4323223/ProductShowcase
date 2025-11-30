@@ -2432,21 +2432,21 @@ html.autumn body {
      Адаптация для iPhone и других мобильных устройств
      ======================================== */
   .hero-mobile-fix {
-    /* Убеждаемся, что на мобильных фон не приближен */
-    min-height: 65vh;
+    /* Фиксированная высота в px для корректного масштабирования при зуме браузера */
+    height: 500px;
+  }
+
+  @media (min-width: 768px) {
+    .hero-mobile-fix {
+      /* На десктопе большая высота */
+      height: 900px;
+    }
   }
 
   @media (max-width: 640px) {
     .hero-mobile-fix {
       /* Для очень узких экранов (iPhone SE, старые модели) */
-      min-height: 60vh;
-    }
-  }
-
-  @supports (height: 100dvh) {
-    .hero-mobile-fix {
-      /* Используем dynamic viewport height для iPhone с safe area */
-      min-height: 65dvh;
+      height: 450px;
     }
   }
 
