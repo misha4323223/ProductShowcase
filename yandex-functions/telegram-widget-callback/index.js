@@ -75,9 +75,17 @@ function generateToken(userId, email, extraData = {}) {
   };
 
   const secret = process.env.JWT_SECRET || 'telegram-secret-key';
-  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64');
-  const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64');
-  const signature = crypto.createHmac('sha256', secret).update(`${header}.${payloadStr}`).digest('base64');
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
+    .toString('base64')
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  const payloadStr = Buffer.from(JSON.stringify(payload))
+    .toString('base64')
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  const signature = crypto
+    .createHmac('sha256', secret)
+    .update(`${header}.${payloadStr}`)
+    .digest('base64')
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   
   return `${header}.${payloadStr}.${signature}`;
 }
