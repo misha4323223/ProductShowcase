@@ -139,51 +139,73 @@ export default function Footer() {
             <p className={`text-sm ${mutedClass} mb-3`}>
               Узнайте первыми об открытии магазина и получайте эксклюзивные предложения
             </p>
-            <form onSubmit={handleNewsletterSubscribe} className="space-y-3">
-              <div className="flex gap-2">
-                <Input 
-                  type="email" 
-                  placeholder="Ваш email" 
-                  className="flex-1"
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  disabled={isSubscribing}
-                  data-testid="input-newsletter-email"
-                />
-                <Button 
-                  type="submit" 
-                  disabled={isSubscribing}
-                  data-testid="button-subscribe"
-                >
-                  {isSubscribing ? "..." : "Подписаться"}
-                </Button>
-              </div>
-              <div className="flex items-start space-x-2">
-                <Checkbox
-                  id="newsletter-consent"
-                  checked={newsletterConsent}
-                  onCheckedChange={(checked) => setNewsletterConsent(checked as boolean)}
-                  disabled={isSubscribing}
-                  data-testid="checkbox-newsletter-consent"
-                  className={theme === 'new-year' ? 'border-yellow-300 data-[state=checked]:bg-yellow-300' : ''}
-                />
-                <Label 
-                  htmlFor="newsletter-consent" 
-                  className={`text-xs ${mutedClass} leading-tight cursor-pointer`}
-                >
-                  Я согласен с{" "}
-                  <button
-                    type="button"
-                    onClick={() => setPrivacyOpen(true)}
-                    className={theme === 'new-year' ? 'text-yellow-300 hover:text-yellow-200 hover:underline font-medium' : 'text-primary hover:underline font-medium'}
-                    data-testid="link-newsletter-privacy"
+            <div className="space-y-4">
+              <form onSubmit={handleNewsletterSubscribe} className="space-y-3">
+                <div className="flex gap-2">
+                  <Input 
+                    type="email" 
+                    placeholder="Ваш email" 
+                    className="flex-1"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    disabled={isSubscribing}
+                    data-testid="input-newsletter-email"
+                  />
+                  <Button 
+                    type="submit" 
+                    disabled={isSubscribing}
+                    data-testid="button-subscribe"
                   >
-                    политикой конфиденциальности
-                  </button>
-                  {" "}и на получение рассылки
-                </Label>
+                    {isSubscribing ? "..." : "Подписаться"}
+                  </Button>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <Checkbox
+                    id="newsletter-consent"
+                    checked={newsletterConsent}
+                    onCheckedChange={(checked) => setNewsletterConsent(checked as boolean)}
+                    disabled={isSubscribing}
+                    data-testid="checkbox-newsletter-consent"
+                    className={theme === 'new-year' ? 'border-yellow-300 data-[state=checked]:bg-yellow-300' : ''}
+                  />
+                  <Label 
+                    htmlFor="newsletter-consent" 
+                    className={`text-xs ${mutedClass} leading-tight cursor-pointer`}
+                  >
+                    Я согласен с{" "}
+                    <button
+                      type="button"
+                      onClick={() => setPrivacyOpen(true)}
+                      className={theme === 'new-year' ? 'text-yellow-300 hover:text-yellow-200 hover:underline font-medium' : 'text-primary hover:underline font-medium'}
+                      data-testid="link-newsletter-privacy"
+                    >
+                      политикой конфиденциальности
+                    </button>
+                    {" "}и на получение рассылки
+                  </Label>
+                </div>
+              </form>
+
+              <div>
+                <p className={`text-sm ${mutedClass} mb-2`}>
+                  Или подпишитесь в Telegram:
+                </p>
+                <a
+                  href="https://t.me/SweetWeb71_bot?start"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="button-telegram-subscribe"
+                >
+                  <Button 
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <SiTelegram className="h-4 w-4 mr-2" />
+                    Подписаться на Telegram
+                  </Button>
+                </a>
               </div>
-            </form>
+            </div>
           </div>
         </div>
 
