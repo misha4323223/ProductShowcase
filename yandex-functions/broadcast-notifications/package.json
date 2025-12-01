@@ -1,7 +1,10 @@
 {
   "name": "broadcast-notifications",
-  "version": "1.0.0",
-  "description": "Unified broadcast notifications service (subscribe + send)",
+  "version": "2.0.0",
+  "description": "Unified broadcast notifications service with YDB persistence",
   "main": "index.js",
-  "dependencies": {}
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.478.0",
+    "@aws-sdk/lib-dynamodb": "^3.478.0"
+  }
 }
