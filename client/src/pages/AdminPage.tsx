@@ -1036,7 +1036,7 @@ export default function AdminPage() {
                 <div className="space-y-4">
                   {filteredOrders.map((order) => (
                     <div key={order.id} className="border rounded-lg p-4 space-y-3" data-testid={`order-${order.id}`}>
-                      <div className="flex items-start justify-between">
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
                             <p className="font-semibold">Заказ #{order.id.slice(0, 8)}</p>
@@ -1153,7 +1153,7 @@ export default function AdminPage() {
                     const product = products.find(p => p.id === review.productId);
                     return (
                       <div key={review.id} className="border rounded-lg p-4 space-y-3" data-testid={`review-${review.id}`}>
-                        <div className="flex items-start justify-between">
+                        <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4">
                           <div className="space-y-1 flex-1">
                             <div className="flex items-center gap-2">
                               <p className="font-semibold">{review.userName}</p>
@@ -1211,7 +1211,7 @@ export default function AdminPage() {
             <CardContent>
               <Form {...promoCodeForm}>
                 <form onSubmit={promoCodeForm.handleSubmit((data) => addPromoCodeMutation.mutate(data))} className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                     <FormField
                       control={promoCodeForm.control}
                       name="code"
@@ -1249,7 +1249,7 @@ export default function AdminPage() {
                     />
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                     <FormField
                       control={promoCodeForm.control}
                       name="discountValue"
@@ -1292,7 +1292,7 @@ export default function AdminPage() {
                     />
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                     <FormField
                       control={promoCodeForm.control}
                       name="maxUses"
@@ -1334,7 +1334,7 @@ export default function AdminPage() {
                     />
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                     <FormField
                       control={promoCodeForm.control}
                       name="startDate"
@@ -1399,7 +1399,7 @@ export default function AdminPage() {
                       className="border rounded-lg p-4 space-y-3" 
                       data-testid={`promo-${promo.id}`}
                     >
-                      <div className="flex items-start justify-between">
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <code className="bg-primary/10 px-3 py-1 rounded font-mono text-lg font-bold">
@@ -1425,7 +1425,7 @@ export default function AdminPage() {
                         </Button>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-4 text-sm">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-sm">
                         <div>
                           <p className="text-muted-foreground">Использований:</p>
                           <p className="font-medium">
@@ -2535,7 +2535,7 @@ export default function AdminPage() {
                                 }}
                                 data-testid={`button-edit-slide-${slide.id}`}
                               >
-                                <div className="flex items-start justify-between">
+                                <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4">
                                   <div className="flex-1 min-w-0">
                                     <div className="font-semibold text-sm">
                                       {index + 1}. {slide.title}
