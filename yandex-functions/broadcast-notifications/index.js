@@ -132,32 +132,33 @@ async function unsubscribe(docClient, chatId) {
 async function handler(event) {
   try {
     let data = event;
-    if (typeof event.body === 'string') {
-      data = JSON.parse(event.body);
+    
+    // Если event.body есть и это строка - парсим
+    if (event.body && typeof event.body === 'string') {
+      try {
+        data = JSON.parse(event.body);
+      } catch (e) {
+        console.error('Ошибка парсинга event.body:', e.message);
+        data = event;
+      }
     }
 
-    console.log('Запрос получен');
+    console.log('Сырой event:', JSON.stringify(event).substring(0, 200));
+    console.log('Структура data:', JSON.stringify(data).substring(0, 200));
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     if (!botToken) throw new Error('TELEGRAM_BOT_TOKEN не настроен');
 
     const docClient = createDbClient();
 
-    if (data.message) {
-      console.log('Webhook от Telegram');
-      console.log('Структура data.message:', JSON.stringify(data.message));
-      
-      if (!data.message.chat || !data.message.chat.id) {
-        console.error('Ошибка: отсутствует chat.id в webhook');
-        return createResponse(400, { error: 'Неверная структура webhook' });
-      }
-      
+    // Проверяем что это webhook от Telegram (объект с message)
+    if (data.message && typeof data.message === 'object' && data.message.chat && data.message.chat.id) {
       const chatId = data.message.chat.id;
       const text = data.message.text || '';
       const username = data.message.from?.username || null;
       const firstName = data.message.from?.first_name || null;
 
-      console.log(`Сообщение: "${text}" от ${chatId}`);
+      console.log(`Webhook от Telegram. Сообщение: "${text}" от ${chatId}`);
 
       let message = '';
       let replyMarkup = null;
