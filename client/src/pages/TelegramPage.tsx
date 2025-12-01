@@ -1,24 +1,17 @@
 import { useEffect } from 'react';
-import { useLocation } from 'wouter';
-import Home from './Home';
-import CategoryPage from './CategoryPage';
-import AccountPage from './AccountPage';
-import WishlistPage from './WishlistPage';
 
 export default function TelegramPage() {
-  const [location, navigate] = useLocation();
-
   useEffect(() => {
     // Парсим параметр tab из URL
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab');
 
     if (!tab || tab === 'shop') {
-      // Магазин - главная страница (остаемся на месте)
+      // Магазин - остаемся на главной странице
       return;
     }
 
-    // Навигируемся на нужную страницу
+    // Редирект на нужную страницу в зависимости от tab
     const routes: { [key: string]: string } = {
       'orders': '/account?tab=orders',
       'wishlist': '/wishlist',
@@ -27,25 +20,19 @@ export default function TelegramPage() {
     };
 
     const targetRoute = routes[tab];
-    if (targetRoute && location !== targetRoute) {
-      navigate(targetRoute);
+    if (targetRoute) {
+      // Используем window.location для полного редиректа
+      window.location.href = targetRoute;
     }
-  }, [navigate, location]);
+  }, []);
 
-  // Получаем текущий tab из URL
-  const params = new URLSearchParams(window.location.search);
-  const tab = params.get('tab') || 'shop';
-
-  // Показываем правильный компонент в зависимости от tab
-  switch (tab) {
-    case 'orders':
-    case 'promos':
-      return <AccountPage />;
-    case 'wishlist':
-      return <WishlistPage />;
-    case 'account':
-      return <AccountPage />;
-    default:
-      return <Home />;
-  }
+  // Показываем загрузку пока идет редирект
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm text-muted-foreground">Загрузка...</p>
+      </div>
+    </div>
+  );
 }
