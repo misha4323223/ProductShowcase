@@ -181,16 +181,19 @@ export default function AdminPage() {
     queryFn: getAllNewsletterSubscriptions,
   });
 
+  const API_GATEWAY_URL = import.meta.env.VITE_API_GATEWAY_URL || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
+  
   const { data: telegramSubscribers = [], isLoading: telegramLoading } = useQuery({
     queryKey: ["/api/telegram/subscribers"],
     queryFn: async () => {
       try {
-        const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net/api/broadcast-notifications", {
+        const response = await fetch(`${API_GATEWAY_URL}/api/broadcast-notifications`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "get_subscribers" })
         });
         const data = await response.json();
+        console.log("Telegram subscribers response:", data);
         return data.subscribers || [];
       } catch (error) {
         console.error("Error fetching telegram subscribers:", error);
@@ -1567,7 +1570,8 @@ export default function AdminPage() {
                 <form
                   onSubmit={telegramBroadcastForm.handleSubmit(async (data) => {
                     try {
-                      const response = await fetch("https://d4efkrvud5o73t4cskgk.functions.yandexcloud.net/api/broadcast-notifications", {
+                      const apiUrl = import.meta.env.VITE_API_GATEWAY_URL || 'https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net';
+                      const response = await fetch(`${apiUrl}/api/broadcast-notifications`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({

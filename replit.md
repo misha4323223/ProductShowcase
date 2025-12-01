@@ -6,7 +6,32 @@ Sweet Delights is an e-commerce platform specializing in sweets (chocolates, can
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
-## Latest Updates (November 29, 2025)
+## Latest Updates (December 01, 2025)
+
+✅ **Telegram Broadcast Notifications - Dec 01, 2025 (COMPLETED)**:
+- **Функция broadcast-notifications обновлена**:
+  - Подписчики теперь сохраняются в YDB (таблица `telegram_subscribers`)
+  - При `/start` в боте — автоматическая подписка на рассылку
+  - При `/unsubscribe` — отписка от рассылки
+  - Автоотписка заблокировавших бота
+  - Интеграция с админкой через API Gateway
+
+- **YDB Table**: `telegram_subscribers`
+  - Primary Key: `chat_id` (String)
+  - Поля: username, first_name, subscribed_at, is_active
+
+- **API Gateway Route**: POST /api/broadcast-notifications
+  - action: "get_subscribers" — список подписчиков
+  - action: "send" — массовая рассылка
+  - action: "subscribe" — ручная подписка
+
+- **AdminPage.tsx**: Исправлены URL на API Gateway
+  - Загрузка подписчиков работает
+  - Отправка рассылки работает
+
+---
+
+## Previous Updates (November 29, 2025)
 
 ✅ **ЭТАП 3: Frontend Telegram Mini App Integration - Nov 29, 2025 (COMPLETED)**:
 - **Core Libraries**:
