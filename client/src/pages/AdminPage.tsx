@@ -950,8 +950,8 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <div className="mb-6 flex items-start justify-between gap-4">
+    <div className="container mx-auto p-3 sm:p-4 md:p-6 max-w-6xl">
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2">Админ-панель</h1>
           <p className="text-muted-foreground">Управление категориями и товарами</p>
@@ -967,7 +967,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-8 mb-6">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 mb-4 sm:mb-6 gap-1">
           <TabsTrigger value="orders" data-testid="tab-orders">
             <ShoppingBag className="w-4 h-4 mr-2" />
             Заказы ({allOrders.length})
