@@ -89,7 +89,7 @@ async function saveSubscriber(docClient, chatId, username, firstName) {
   });
 
   await docClient.send(command);
-  console.log(`YDB: Subscriber ${chatId} saved to database`);
+  console.log(`YDB: Подписчик ${chatId} сохранён в базу`);
 }
 
 async function getSubscriber(docClient, chatId) {
@@ -126,7 +126,7 @@ async function unsubscribe(docClient, chatId) {
   });
 
   await docClient.send(command);
-  console.log(`YDB: Subscriber ${chatId} unsubscribed`);
+  console.log(`YDB: Подписчик ${chatId} отписан`);
 }
 
 async function handler(event) {
@@ -136,21 +136,21 @@ async function handler(event) {
       data = JSON.parse(event.body);
     }
 
-    console.log('Received request');
+    console.log('Запрос получен');
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
-    if (!botToken) throw new Error('TELEGRAM_BOT_TOKEN missing');
+    if (!botToken) throw new Error('TELEGRAM_BOT_TOKEN не настроен');
 
     const docClient = createDbClient();
 
     if (data.message) {
-      console.log('Telegram webhook received');
+      console.log('Webhook от Telegram');
       const chatId = data.message.chat.id;
       const text = data.message.text || '';
       const username = data.message.from.username || null;
       const firstName = data.message.from.first_name || null;
 
-      console.log(`Message: "${text}" from ${chatId}`);
+      console.log(`Сообщение: "${text}" от ${chatId}`);
 
       let message = '';
       let replyMarkup = null;
@@ -158,54 +158,54 @@ async function handler(event) {
       if (text === '/start') {
         try {
           await saveSubscriber(docClient, chatId, username, firstName);
-          console.log(`Subscriber ${chatId} saved to YDB`);
+          console.log(`Подписчик ${chatId} сохранён в YDB`);
         } catch (dbError) {
-          console.error(`YDB save error: ${dbError.message}`);
+          console.error(`Ошибка сохранения в YDB: ${dbError.message}`);
         }
 
-        message = `<b>Welcome to Sweet Delights!</b>\n\nChoose what interests you:`;
+        message = `<b>Добро пожаловать в Sweet Delights!</b>\n\nВыберите что вас интересует:`;
         
         replyMarkup = {
           inline_keyboard: [
             [
-              { text: 'Shop', web_app: { url: 'https://sweetdelights.store' } },
-              { text: 'Orders', web_app: { url: 'https://sweetdelights.store/?tab=orders' } }
+              { text: 'Магазин', web_app: { url: 'https://sweetdelights.store' } },
+              { text: 'Заказы', web_app: { url: 'https://sweetdelights.store/?tab=orders' } }
             ],
             [
-              { text: 'Wishlist', web_app: { url: 'https://sweetdelights.store/?tab=wishlist' } },
-              { text: 'Promos', web_app: { url: 'https://sweetdelights.store/?tab=promos' } }
+              { text: 'Избранное', web_app: { url: 'https://sweetdelights.store/?tab=wishlist' } },
+              { text: 'Промо', web_app: { url: 'https://sweetdelights.store/?tab=promos' } }
             ],
             [
-              { text: 'Profile', web_app: { url: 'https://sweetdelights.store/?tab=account' } }
+              { text: 'Профиль', web_app: { url: 'https://sweetdelights.store/?tab=account' } }
             ]
           ]
         };
       } else if (text === '/shop') {
-        message = '<b>Shop</b>';
+        message = '<b>Магазин</b>';
         replyMarkup = {
           inline_keyboard: [[
-            { text: 'Open', web_app: { url: 'https://sweetdelights.store' } }
+            { text: 'Открыть', web_app: { url: 'https://sweetdelights.store' } }
           ]]
         };
       } else if (text === '/orders') {
-        message = '<b>My Orders</b>';
+        message = '<b>Мои заказы</b>';
         replyMarkup = {
           inline_keyboard: [[
-            { text: 'View', web_app: { url: 'https://sweetdelights.store/?tab=orders' } }
+            { text: 'Посмотреть', web_app: { url: 'https://sweetdelights.store/?tab=orders' } }
           ]]
         };
       } else if (text === '/unsubscribe') {
         try {
           await unsubscribe(docClient, chatId);
-          message = 'You have been unsubscribed from notifications.';
+          message = 'Вы отписались от уведомлений.';
         } catch (dbError) {
-          console.error(`YDB unsubscribe error: ${dbError.message}`);
-          message = 'Error unsubscribing. Please try again.';
+          console.error(`Ошибка отписки в YDB: ${dbError.message}`);
+          message = 'Ошибка отписки. Попробуйте ещё раз.';
         }
       } else if (text === '/help') {
-        message = `<b>Available commands:</b>\n\n/start - Main menu\n/shop - Open shop\n/orders - My orders\n/unsubscribe - Unsubscribe from notifications\n/help - Help`;
+        message = `<b>Доступные команды:</b>\n\n/start - Главное меню\n/shop - Открыть магазин\n/orders - Мои заказы\n/unsubscribe - Отписаться от рассылки\n/help - Справка`;
       } else {
-        message = `Command not recognized.\n\nUse /help for command list or press /start`;
+        message = `Команда не распознана.\n\nИспользуйте /help для списка команд или нажмите /start`;
       }
 
       await sendTelegramMessage(chatId, message, replyMarkup, botToken);
@@ -225,7 +225,7 @@ async function handler(event) {
 
       return createResponse(200, {
         ok: true,
-        message: `Subscriber ${chatId} added to database`
+        message: `Подписчик ${chatId} добавлен в базу`
       });
 
     } else if (action === 'get_subscribers') {
@@ -251,7 +251,7 @@ async function handler(event) {
           sent: 0,
           failed: 0,
           total: 0,
-          message: 'No subscribers in database'
+          message: 'Нет подписчиков в базе'
         });
       }
 
@@ -264,18 +264,18 @@ async function handler(event) {
         try {
           await sendTelegramMessage(subscriber.chat_id, fullMessage, null, botToken);
           sent++;
-          console.log(`Broadcast sent to ${subscriber.chat_id}`);
+          console.log(`Рассылка отправлена: ${subscriber.chat_id}`);
           await new Promise(resolve => setTimeout(resolve, 50));
         } catch (error) {
           failed++;
-          console.error(`Broadcast error for ${subscriber.chat_id}: ${error.message}`);
+          console.error(`Ошибка рассылки для ${subscriber.chat_id}: ${error.message}`);
           
           if (error.message.includes('403') || error.message.includes('blocked')) {
             try {
               await unsubscribe(docClient, subscriber.chat_id);
-              console.log(`Auto-unsubscribed blocked user: ${subscriber.chat_id}`);
+              console.log(`Автоотписка заблокировавшего: ${subscriber.chat_id}`);
             } catch (e) {
-              console.error(`Failed to auto-unsubscribe: ${e.message}`);
+              console.error(`Ошибка автоотписки: ${e.message}`);
             }
           }
         }
@@ -283,7 +283,7 @@ async function handler(event) {
 
       return createResponse(200, {
         ok: true,
-        message: `Broadcast sent to ${sent} subscribers, ${failed} failed`,
+        message: `Рассылка отправлена ${sent} подписчикам, ${failed} ошибок`,
         sent,
         failed,
         total: subscribers.length
@@ -299,14 +299,14 @@ async function handler(event) {
 
       return createResponse(200, {
         ok: true,
-        message: `Subscriber ${chatId} unsubscribed`
+        message: `Подписчик ${chatId} отписан`
       });
     }
 
-    return createResponse(400, { error: 'Invalid action' });
+    return createResponse(400, { error: 'Неверное действие' });
 
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Ошибка:', error.message);
     return createResponse(500, { error: error.message });
   }
 }
