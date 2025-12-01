@@ -231,10 +231,19 @@ async function handler(event) {
     } else if (action === 'get_subscribers') {
       const subscribers = await getAllSubscribers(docClient);
       
+      // Преобразуем snake_case в camelCase для фронтенда
+      const formattedSubscribers = subscribers.map(sub => ({
+        chatId: sub.chat_id,
+        username: sub.username,
+        firstName: sub.first_name,
+        subscribedAt: sub.subscribed_at,
+        isActive: sub.is_active
+      }));
+      
       return createResponse(200, {
         ok: true,
-        subscribers: subscribers,
-        count: subscribers.length
+        subscribers: formattedSubscribers,
+        count: formattedSubscribers.length
       });
 
     } else if (action === 'send') {
