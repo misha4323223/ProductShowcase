@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Mail, Copy, Check } from "lucide-react";
+import { SiTelegram } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -208,45 +209,73 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
-            <form onSubmit={handleSubscribe} className="space-y-4">
-              <Input
-                type="email"
-                placeholder="Ваш email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isSubscribing}
-                data-testid="input-subscribe-email"
-              />
-              
-              <div className="flex items-start gap-2">
-                <Checkbox
-                  id="terms"
-                  checked={agreedToTerms}
-                  onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
+            <div>
+              <p className="text-sm font-medium mb-3">Подпишитесь на email:</p>
+              <form onSubmit={handleSubscribe} className="space-y-3">
+                <Input
+                  type="email"
+                  placeholder="Ваш email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={isSubscribing}
-                  data-testid="checkbox-terms"
+                  data-testid="input-subscribe-email"
                 />
-                <label
-                  htmlFor="terms"
-                  className="text-sm text-muted-foreground leading-tight cursor-pointer"
-                >
-                  Я согласен с{" "}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowPrivacyDialog(true);
-                    }}
-                    className="text-primary hover:underline font-medium"
-                    data-testid="button-privacy-policy"
+                
+                <div className="flex items-start gap-2">
+                  <Checkbox
+                    id="terms"
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                    disabled={isSubscribing}
+                    data-testid="checkbox-terms"
+                  />
+                  <label
+                    htmlFor="terms"
+                    className="text-sm text-muted-foreground leading-tight cursor-pointer"
                   >
-                    политикой конфиденциальности
-                  </button>
-                  {" "}и на получение рассылки
-                </label>
-              </div>
-            </form>
+                    Я согласен с{" "}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowPrivacyDialog(true);
+                      }}
+                      className="text-primary hover:underline font-medium"
+                      data-testid="button-privacy-policy"
+                    >
+                      политикой конфиденциальности
+                    </button>
+                    {" "}и на получение рассылки
+                  </label>
+                </div>
+              </form>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-sm text-muted-foreground">или</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            <div>
+              <p className="text-sm font-medium mb-3">Подпишитесь в Telegram:</p>
+              <a
+                href="https://t.me/SweetWeb71_bot?start"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full"
+                data-testid="button-telegram-subscribe-dialog"
+              >
+                <Button 
+                  variant="outline"
+                  className="w-full"
+                >
+                  <SiTelegram className="h-4 w-4 mr-2" />
+                  Открыть Telegram бот
+                </Button>
+              </a>
+            </div>
           </div>
 
           <div className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t flex gap-2">
@@ -264,7 +293,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               disabled={isSubscribing || !agreedToTerms}
               data-testid="button-submit-subscribe"
             >
-              {isSubscribing ? "Подписываемся..." : "Подписаться"}
+              {isSubscribing ? "Подписываемся..." : "Подписаться по email"}
             </Button>
           </div>
         </DialogContent>
