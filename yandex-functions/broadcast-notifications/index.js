@@ -145,10 +145,17 @@ async function handler(event) {
 
     if (data.message) {
       console.log('Webhook от Telegram');
+      console.log('Структура data.message:', JSON.stringify(data.message));
+      
+      if (!data.message.chat || !data.message.chat.id) {
+        console.error('Ошибка: отсутствует chat.id в webhook');
+        return createResponse(400, { error: 'Неверная структура webhook' });
+      }
+      
       const chatId = data.message.chat.id;
       const text = data.message.text || '';
-      const username = data.message.from.username || null;
-      const firstName = data.message.from.first_name || null;
+      const username = data.message.from?.username || null;
+      const firstName = data.message.from?.first_name || null;
 
       console.log(`Сообщение: "${text}" от ${chatId}`);
 
@@ -210,6 +217,16 @@ async function handler(event) {
 
       await sendTelegramMessage(chatId, message, replyMarkup, botToken);
 
+      return createResponse(200, { ok: true });
+    }
+
+    // Обработка callback queries от кнопок
+    if (data.callback_query) {
+      console.log('Callback query получен');
+      const chatId = data.callback_query.from?.id;
+      if (chatId) {
+        console.log(`Callback от ${chatId}`);
+      }
       return createResponse(200, { ok: true });
     }
 
