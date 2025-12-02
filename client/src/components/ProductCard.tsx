@@ -377,12 +377,7 @@ export default function ProductCard({
               )}
             </div>
             {description && (
-              <div className="text-sm text-muted-foreground">
-                <p>{description}</p>
-              </div>
-            )}
-            {description && (
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground mb-4">
                 <p>{description}</p>
               </div>
             )}
