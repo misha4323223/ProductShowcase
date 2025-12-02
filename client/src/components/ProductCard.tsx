@@ -31,6 +31,7 @@ export default function ProductCard({
   salePrice,
   image,
   stock,
+  description,
   onAddToCart,
   onClick
 }: ProductCardProps) {
