@@ -380,6 +380,11 @@ export default function ProductCard({
                 <p>{description}</p>
               </div>
             )}
+            {description && (
+              <div className="text-sm text-muted-foreground">
+                <p>{description}</p>
+              </div>
+            )}
             <div className="flex gap-2 mt-auto">
               {isOutOfStock ? (
                 <Button
