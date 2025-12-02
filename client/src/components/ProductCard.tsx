@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShoppingCart, Sparkles, Heart, Bell } from "lucide-react";
+import { ShoppingCart, Sparkles, Heart, Bell, Eye } from "lucide-react";
 import { useState, useRef, useMemo } from "react";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,6 +19,7 @@ interface ProductCardProps {
   salePrice?: number;
   image: string;
   stock?: number;
+  description?: string;
   onAddToCart: (id: string) => void;
   onClick: (id: string) => void;
 }
@@ -36,6 +37,7 @@ export default function ProductCard({
   const PRODUCT_CARD_TOAST_DURATION = 1500;
   const [isAdding, setIsAdding] = useState(false);
   const [showNotifyDialog, setShowNotifyDialog] = useState(false);
+  const [showQuickView, setShowQuickView] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState("");
   const [isSubscribing, setIsSubscribing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -120,6 +122,11 @@ export default function ProductCard({
     setShowNotifyDialog(true);
   };
 
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowQuickView(true);
+  };
+
   const handleSubscribe = async () => {
     if (!notifyEmail || !notifyEmail.includes('@')) {
       toast({
@@ -197,6 +204,15 @@ export default function ProductCard({
             <Sparkles className="h-12 w-12 text-white animate-sparkle drop-shadow-2xl" />
           </div>
         )}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute bottom-2 right-2 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          onClick={handleQuickView}
+          data-testid={`button-quick-view-${id}`}
+        >
+          <Eye className="h-4 w-4 text-gray-700" />
+        </Button>
       </div>
       <div className={`p-4 flex flex-col ${isNewYear ? 'bg-gradient-to-b from-red-50/50 via-white to-orange-50/50 dark:from-red-950/50 dark:via-slate-900 dark:to-orange-950/50' : 'bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'} relative ${!isNewYear && 'caramel-drip'}`}>
         <h3 className={`font-medium text-sm line-clamp-2 min-h-[2.5rem] ${isNewYear ? 'text-red-900 dark:text-red-100' : 'text-gray-900 dark:text-white'}`} data-testid={`text-product-name-${id}`}>
@@ -303,6 +319,105 @@ export default function ProductCard({
             {isSubscribing ? "Подписка..." : "Подписаться"}
           </Button>
         </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    <Dialog open={showQuickView} onOpenChange={setShowQuickView}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" data-testid={`dialog-quick-view-${id}`}>
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">{name}</DialogTitle>
+        </DialogHeader>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="relative aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+            {image ? (
+              <img
+                src={image}
+                alt={name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                <ShoppingCart className="h-24 w-24" />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-4">
+            <div>
+              <div className="flex items-baseline gap-3 mb-4">
+                {hasDiscount ? (
+                  <>
+                    <span className="text-3xl font-bold text-primary">
+                      {salePrice}₽
+                    </span>
+                    <span className="text-lg text-muted-foreground line-through">
+                      {price}₽
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-3xl font-bold text-primary">
+                    {price}₽
+                  </span>
+                )}
+              </div>
+              {(isOutOfStock || isLowStock || !hasUnlimitedStock) && (
+                <div className="mb-4">
+                  {isOutOfStock ? (
+                    <Badge variant="destructive">Нет в наличии</Badge>
+                  ) : isLowStock ? (
+                    <Badge variant="outline" className="border-yellow-500 text-yellow-700">
+                      Осталось мало
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="border-green-500 text-green-700">
+                      {stock} шт в наличии
+                    </Badge>
+                  )}
+                </div>
+              )}
+            </div>
+            {description && (
+              <div className="text-sm text-muted-foreground">
+                <p>{description}</p>
+              </div>
+            )}
+            <div className="flex gap-2 mt-auto">
+              {isOutOfStock ? (
+                <Button
+                  className="flex-1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowQuickView(false);
+                    setShowNotifyDialog(true);
+                  }}
+                >
+                  <Bell className="h-4 w-4 mr-2" />
+                  Уведомить меня
+                </Button>
+              ) : (
+                <Button
+                  className="flex-1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(e);
+                    setShowQuickView(false);
+                  }}
+                >
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  В корзину
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowQuickView(false);
+                  onClick(id);
+                }}
+              >
+                Подробнее
+              </Button>
+            </div>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
     </>

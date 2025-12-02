@@ -252,6 +252,7 @@ export default function CategoryPage() {
                         salePrice={product.salePrice}
                         image={product.image}
                         stock={product.stock}
+                        description={product.description}
                         onAddToCart={handleAddToCart}
                         onClick={(id) => setLocation(`/product/${id}`)}
                       />
