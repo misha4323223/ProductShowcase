@@ -22,6 +22,7 @@ import { initAnalytics } from "@/lib/analytics";
 import AutumnRain from "@/components/AutumnRain";
 import SunflareParticles from "@/components/SunflareParticles";
 import { useTelegramApp } from "@/hooks/useTelegramApp";
+import { useLocation } from "wouter";
 
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 
@@ -143,6 +144,19 @@ function TelegramAutoLogin() {
   return null;
 }
 
+function ChatbotContainer() {
+  const [location] = useLocation();
+  
+  // Не показывать чат-бот на странице входа и в админке
+  const hideChatbot = location === '/login' || location === '/admin';
+  
+  if (hideChatbot) {
+    return null;
+  }
+  
+  return <ChatbotWidget />;
+}
+
 function App() {
   // ОПТИМИЗАЦИЯ: Автоматическая пауза анимаций при скролле
   useScrollPause();
@@ -182,7 +196,7 @@ function App() {
                         <CookieBanner />
                         <Router />
                         <LegalDialogContainer />
-                        <ChatbotWidget />
+                        <ChatbotContainer />
                       </TooltipProvider>
                     </ChatbotProvider>
                   </LegalDialogProvider>

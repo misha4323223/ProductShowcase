@@ -13,6 +13,8 @@ import logoUrl from "@assets/logo.webp";
 import { useTelegramApp } from "@/hooks/useTelegramApp";
 import { authenticateWithTelegram, loginWithTelegramId } from "@/lib/telegram";
 
+// Чат-бот отключен на странице входа
+
 declare global {
   interface Window {
     onTelegramAuth?: (user: any) => Promise<void>;
