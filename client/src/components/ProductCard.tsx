@@ -208,11 +208,15 @@ export default function ProductCard({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute bottom-2 right-2 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
+          className={`absolute bottom-2 right-2 backdrop-blur-sm rounded-full shadow-lg transition-opacity duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100 ${
+            isNewYear 
+              ? 'bg-blue-500/90 hover:bg-blue-600/90 border-2 border-blue-300' 
+              : 'bg-white/90 hover:bg-white border-2 border-pink-200'
+          }`}
           onClick={handleQuickView}
           data-testid={`button-quick-view-${id}`}
         >
-          <Eye className="h-4 w-4 text-gray-700" />
+          <Eye className={`h-4 w-4 ${isNewYear ? 'text-white' : 'text-gray-700'}`} />
         </Button>
       </div>
       <div className={`p-4 flex flex-col ${isNewYear ? 'bg-gradient-to-b from-red-50/50 via-white to-orange-50/50 dark:from-red-950/50 dark:via-slate-900 dark:to-orange-950/50' : 'bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-gray-800 dark:via-gray-900 dark:to-gray-800'} relative ${!isNewYear && 'caramel-drip'}`}>
