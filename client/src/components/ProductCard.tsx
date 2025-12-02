@@ -208,7 +208,7 @@ export default function ProductCard({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute bottom-2 right-2 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute bottom-2 right-2 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
           onClick={handleQuickView}
           data-testid={`button-quick-view-${id}`}
         >
