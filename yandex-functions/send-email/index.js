@@ -100,6 +100,10 @@ exports.handler = async (event) => {
         emailParams = buildEmailVerificationEmail(to, data);
         break;
       
+      case 'gift_certificate':
+        emailParams = buildGiftCertificateEmail(to, data);
+        break;
+      
       default:
         return {
           statusCode: 400,
@@ -468,6 +472,75 @@ ${verificationCode}
     to,
     from: process.env.SUPPORT_EMAIL || process.env.FROM_EMAIL,
     subject: 'Подтверждение адреса электронной почты - Sweet Delights',
+    htmlBody,
+    textBody,
+  };
+}
+
+function buildGiftCertificateEmail(to, data) {
+  const { senderName, recipientName, amount, code, message, expiresAt, designTemplate } = data;
+  
+  const expiresDate = new Date(expiresAt).toLocaleDateString('ru-RU');
+  const greeting = recipientName ? `Здравствуйте, ${recipientName}!` : 'Здравствуйте!';
+  const fromText = senderName ? `<p style="font-size: 16px; color: #666;">От: <strong>${senderName}</strong></p>` : '';
+  const personalMessage = message ? `
+    <div style="background: #fff3e0; padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #EC4899;">
+      <p style="font-size: 16px; font-style: italic; color: #333; margin: 0;">"${message}"</p>
+    </div>
+  ` : '';
+
+  const htmlBody = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
+      <h2 style="color: #EC4899; text-align: center;">Вам подарили сертификат!</h2>
+      <p style="font-size: 16px; line-height: 1.6;">${greeting}</p>
+      ${fromText}
+      ${personalMessage}
+      <div style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%); padding: 30px; border-radius: 12px; text-align: center; margin: 20px 0; color: white;">
+        <p style="font-size: 14px; margin: 0 0 10px 0; opacity: 0.9;">Номинал сертификата</p>
+        <p style="font-size: 36px; font-weight: bold; margin: 0 0 20px 0;">${amount}₽</p>
+        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+          <p style="font-size: 12px; margin: 0 0 5px 0; opacity: 0.9;">Код сертификата</p>
+          <p style="font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 0;">${code}</p>
+        </div>
+      </div>
+      <p style="font-size: 14px; color: #666; text-align: center;">
+        Действителен до: <strong>${expiresDate}</strong>
+      </p>
+      <p style="font-size: 16px; line-height: 1.6; text-align: center;">
+        Используйте код при оформлении заказа в Sweet Delights!
+      </p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+      <p style="font-size: 14px; color: #666;">
+        С наилучшими пожеланиями,<br/>
+        Команда Sweet Delights
+      </p>
+    </div>
+  `;
+
+  const fromTextPlain = senderName ? `От: ${senderName}\n` : '';
+  const personalMessagePlain = message ? `\n"${message}"\n` : '';
+
+  const textBody = `
+Вам подарили сертификат!
+
+${greeting}
+${fromTextPlain}${personalMessagePlain}
+Номинал сертификата: ${amount}₽
+Код сертификата: ${code}
+
+Действителен до: ${expiresDate}
+
+Используйте код при оформлении заказа в Sweet Delights!
+
+С наилучшими пожеланиями,
+Команда Sweet Delights
+  `;
+
+  return {
+    to,
+    from: process.env.GIFTS_EMAIL || process.env.FROM_EMAIL,
+    subject: 'Вам подарили сертификат Sweet Delights!',
     htmlBody,
     textBody,
   };

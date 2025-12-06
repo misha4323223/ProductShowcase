@@ -1,0 +1,9 @@
+{
+  "name": "gift-certificates",
+  "version": "1.0.0",
+  "description": "Gift certificates management for Sweet Delights",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.478.0",
+    "@aws-sdk/lib-dynamodb": "^3.478.0"
+  }
+}

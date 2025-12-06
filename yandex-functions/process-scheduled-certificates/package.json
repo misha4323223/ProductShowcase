@@ -1,0 +1,9 @@
+{
+  "name": "process-scheduled-certificates",
+  "version": "1.0.0",
+  "description": "Cron function to send scheduled gift certificates",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.478.0",
+    "@aws-sdk/lib-dynamodb": "^3.478.0"
+  }
+}
