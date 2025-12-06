@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart, Sparkles } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -240,6 +240,19 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
               </button>
             )}
             
+            <Link href="/certificates">
+              <button
+                className="w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble"
+                style={{
+                  boxShadow: '0 4px 0 rgba(244, 63, 94, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                }}
+                data-testid="button-certificates"
+                title="Подарочные сертификаты"
+              >
+                <Gift className="h-4 w-4 text-white drop-shadow-lg" />
+              </button>
+            </Link>
+            
             {user ? (
               <Link href="/account">
                 <button
@@ -364,6 +377,20 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                           {wishlistCount}
                         </span>
                       )}
+                    </button>
+                  </Link>
+                  
+                  <Link href="/certificates" onClick={() => setMobileMenuOpen(false)}>
+                    <button 
+                      className="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 active:scale-95 transition-all shadow-lg jelly-wobble text-left flex items-center gap-2"
+                      style={{
+                        textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                        boxShadow: '0 4px 0 rgba(244, 63, 94, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                      }}
+                      data-testid="link-mobile-certificates"
+                    >
+                      <Gift className="h-4 w-4" />
+                      Сертификаты
                     </button>
                   </Link>
                   
