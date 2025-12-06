@@ -88,11 +88,8 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
   const updateBranding = async (settings: Partial<BrandingSettings>) => {
     try {
       await setBrandingSettings(settings);
-      const newBranding = { ...branding, ...settings };
-      setBranding(newBranding);
-      if (settings.accentColor) {
-        applyAccentColor(settings.accentColor);
-      }
+      // Перезагружаем данные с сервера для синхронизации
+      await loadBranding();
     } catch (error) {
       console.error('Error updating branding:', error);
       throw error;
