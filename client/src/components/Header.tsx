@@ -308,7 +308,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                       </span>
                     </div>
                   </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
+                  <DropdownMenuSubContent side="right" sideOffset={8}>
                     {/* Показываем только текущую сезонную тему */}
                     <DropdownMenuItem 
                       onClick={() => setTheme(preferredTheme)}
