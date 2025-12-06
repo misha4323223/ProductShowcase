@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart, Sparkles, Gift, MoreVertical } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles, Gift, MoreVertical, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -7,13 +7,17 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
-import ThemeToggle from "@/components/ThemeToggle";
+import { useTheme } from "@/contexts/ThemeContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 
 // Кастомная иконка рулетки
@@ -107,6 +111,17 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
   const prevWheelSpins = useRef(wheelSpins);
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+  const { theme, setTheme, preferredTheme } = useTheme();
+
+  const themeNames: Record<string, string> = {
+    'sakura': '🌸 Сакура',
+    'new-year': '🎄 Новый год',
+    'spring': '🌼 Весна',
+    'autumn': '🍂 Осень',
+    'dark': '🌙 Тёмная'
+  };
+
+  const isDarkMode = theme === 'dark';
 
   // Загрузка категорий из API
   const { data: categories = [] } = useQuery<Category[]>({
@@ -225,8 +240,6 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
               </button>
             )}
             
-            <ThemeToggle />
-            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -244,6 +257,8 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Функции</DropdownMenuLabel>
+                
                 {user && onWheelClick && (
                   <DropdownMenuItem onClick={onWheelClick} className="cursor-pointer" data-testid="menu-item-wheel">
                     <div className="flex items-center gap-2 w-full">
@@ -267,8 +282,6 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                   </Link>
                 </DropdownMenuItem>
                 
-                <DropdownMenuSeparator />
-                
                 <DropdownMenuItem asChild>
                   <Link href="/wishlist" className="cursor-pointer" data-testid="menu-item-wishlist">
                     <div className="flex items-center gap-2 w-full">
@@ -282,6 +295,76 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                     </div>
                   </Link>
                 </DropdownMenuItem>
+                
+                <DropdownMenuSeparator />
+                
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <div className="flex items-center gap-2 w-full">
+                      <Moon className="h-4 w-4 text-purple-500" />
+                      <span>Тема</span>
+                      <span className="ml-auto text-xs text-muted-foreground">
+                        {themeNames[isDarkMode ? 'dark' : preferredTheme]?.split(' ')[0]}
+                      </span>
+                    </div>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem 
+                      onClick={() => setTheme('sakura')}
+                      className="cursor-pointer"
+                      data-testid="theme-sakura"
+                    >
+                      <span className={theme === 'sakura' && !isDarkMode ? 'font-bold' : ''}>
+                        {themeNames['sakura']}
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setTheme('new-year')}
+                      className="cursor-pointer"
+                      data-testid="theme-new-year"
+                    >
+                      <span className={theme === 'new-year' && !isDarkMode ? 'font-bold' : ''}>
+                        {themeNames['new-year']}
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setTheme('spring')}
+                      className="cursor-pointer"
+                      data-testid="theme-spring"
+                    >
+                      <span className={theme === 'spring' && !isDarkMode ? 'font-bold' : ''}>
+                        {themeNames['spring']}
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => setTheme('autumn')}
+                      className="cursor-pointer"
+                      data-testid="theme-autumn"
+                    >
+                      <span className={theme === 'autumn' && !isDarkMode ? 'font-bold' : ''}>
+                        {themeNames['autumn']}
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={() => {
+                        if (isDarkMode) {
+                          setTheme(preferredTheme);
+                        } else {
+                          setTheme('dark');
+                        }
+                      }}
+                      className="cursor-pointer"
+                      data-testid="theme-dark"
+                    >
+                      <span className={isDarkMode ? 'font-bold' : ''}>
+                        {themeNames['dark']}
+                      </span>
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                
+                <DropdownMenuSeparator />
                 
                 {user ? (
                   <DropdownMenuItem asChild>
