@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Shield, FileText } from "lucide-react";
 import { Link } from "wouter";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 interface LegalDialogProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface LegalDialogProps {
 }
 
 export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps) {
+  const { siteName } = useSiteSettings();
   const isPrivacy = type === "privacy";
 
   return (
@@ -30,8 +32,8 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
           </div>
           <DialogDescription className="sr-only">
             {isPrivacy 
-              ? "Краткая версия политики конфиденциальности Sweet Delights" 
-              : "Краткая версия договора публичной оферты Sweet Delights"}
+              ? `Краткая версия политики конфиденциальности ${siteName}` 
+              : `Краткая версия договора публичной оферты ${siteName}`}
           </DialogDescription>
         </DialogHeader>
 
@@ -43,7 +45,7 @@ export default function LegalDialog({ isOpen, onClose, type }: LegalDialogProps)
                   <h3 className="text-xs sm:text-sm md:text-lg font-semibold text-primary">1. Общие положения</h3>
                   <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                     Настоящая Политика конфиденциальности действует в отношении всей информации, 
-                    которую интернет-магазин Sweet Delights может получить о Пользователе во время использования сайта.
+                    которую интернет-магазин {siteName} может получить о Пользователе во время использования сайта.
                   </p>
                 </section>
 

@@ -10,9 +10,11 @@ import { subscribeToNewsletter } from "@/services/yandex-newsletter";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useLegalDialog } from "@/contexts/LegalDialogContext";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 export default function Footer() {
   const { setPrivacyOpen, setTermsOpen } = useLegalDialog();
+  const { siteName } = useSiteSettings();
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -82,7 +84,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <h3 className="font-serif text-xl font-bold text-primary mb-4">
-              Sweet Delights
+              {siteName}
             </h3>
             <p className={`text-sm ${mutedClass} mb-4`}>
               Лучшие сладости с доставкой по всей России.

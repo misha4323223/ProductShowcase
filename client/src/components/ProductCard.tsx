@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/contexts/ThemeContext";
 import { subscribeToStockNotification } from "@/services/yandex-stock-notifications";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 interface ProductCardProps {
   id: string;
@@ -36,6 +37,7 @@ export default function ProductCard({
   onClick
 }: ProductCardProps) {
   const PRODUCT_CARD_TOAST_DURATION = 1500;
+  const { siteName } = useSiteSettings();
   const [isAdding, setIsAdding] = useState(false);
   const [showNotifyDialog, setShowNotifyDialog] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
@@ -177,7 +179,7 @@ export default function ProductCard({
         {image ? (
           <img
             src={image}
-            alt={`Купить ${name} - цена ${salePrice || price}₽ | Sweet Delights магазин сладостей`}
+            alt={`Купить ${name} - цена ${salePrice || price}₽ | ${siteName} магазин сладостей`}
             loading="lazy"
             decoding="async"
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"

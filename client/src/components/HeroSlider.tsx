@@ -10,6 +10,7 @@ import { subscribeToNewsletter } from "@/services/yandex-newsletter";
 import OptimizedImage from "@/components/OptimizedImage";
 import LegalDialog from "@/components/LegalDialog";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 interface Slide {
   id: number;
@@ -33,6 +34,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
   const { toast } = useToast();
   const { theme: currentTheme } = useTheme();
+  const { siteName } = useSiteSettings();
 
   useEffect(() => {
     // ОПТИМИЗАЦИЯ: Увеличен интервал с 5 до 10 секунд для снижения нагрузки
@@ -122,7 +124,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             <OptimizedImage
               src={slide.image}
               webpSrc={slide.webpImage}
-              alt={`${slide.title} - Sweet Delights интернет-магазин сладостей и подарков с доставкой по России`}
+              alt={`${slide.title} - ${siteName} интернет-магазин сладостей и подарков с доставкой по России`}
               loading={index === 0 ? "eager" : "lazy"}
               decoding="async"
               fetchPriority={index === 0 ? "high" : "low"}

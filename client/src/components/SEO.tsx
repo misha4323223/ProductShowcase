@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { trackPageView } from '@/lib/analytics';
+import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 
 interface SEOProps {
   title?: string;
@@ -30,6 +31,7 @@ export default function SEO({
   structuredData,
 }: SEOProps) {
   const [location] = useLocation();
+  const { siteName } = useSiteSettings();
   const siteUrl = 'https://sweetdelights.store';
   const fullUrl = canonical || `${siteUrl}${location}`;
   const fullImageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
@@ -99,7 +101,7 @@ export default function SEO({
     setMetaTag('og:image', fullImageUrl, true);
     setMetaTag('og:url', fullUrl, true);
     setMetaTag('og:type', type, true);
-    setMetaTag('og:site_name', 'Sweet Delights', true);
+    setMetaTag('og:site_name', siteName, true);
     setMetaTag('og:locale', 'ru_RU', true);
 
     // Twitter Card теги
@@ -129,7 +131,7 @@ export default function SEO({
       script.text = JSON.stringify(structuredData);
       document.head.appendChild(script);
     }
-  }, [description, keywords, image, type, price, currency, availability, fullUrl, fullImageUrl, noindex, JSON.stringify(structuredData)]);
+  }, [description, keywords, image, type, price, currency, availability, fullUrl, fullImageUrl, noindex, siteName, JSON.stringify(structuredData)]);
 
   return null;
 }

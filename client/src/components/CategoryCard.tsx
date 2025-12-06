@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useMemo, memo } from "react";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 interface CategoryCardProps {
   name: string;
@@ -13,6 +14,7 @@ interface CategoryCardProps {
 }
 
 function CategoryCardComponent({ name, image, webpImage, onClick, theme, isDarkMode = false }: CategoryCardProps) {
+  const { siteName } = useSiteSettings();
   const isNewYear = useMemo(() => theme === 'new-year', [theme]);
   const showNewYearStyle = isNewYear && !isDarkMode;
   
@@ -27,7 +29,7 @@ function CategoryCardComponent({ name, image, webpImage, onClick, theme, isDarkM
           <OptimizedImage
             src={image}
             webpSrc={webpImage}
-            alt={`Купить ${name} в интернет-магазине Sweet Delights - каталог сладостей с доставкой по России`}
+            alt={`Купить ${name} в интернет-магазине ${siteName} - каталог сладостей с доставкой по России`}
             loading="lazy"
             decoding="async"
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
