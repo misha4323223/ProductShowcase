@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart, Sparkles, Gift, MoreVertical, Moon } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles, Gift, MoreHorizontal, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -250,7 +250,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                   data-testid="button-more-menu"
                   title="Дополнительные функции"
                 >
-                  <MoreVertical className="h-4 w-4 text-white drop-shadow-lg" />
+                  <MoreHorizontal className="h-4 w-4 text-white drop-shadow-lg" />
                   {user && wheelSpins > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-gradient-to-r from-red-500 to-orange-500 border border-white z-20" />
                   )}
