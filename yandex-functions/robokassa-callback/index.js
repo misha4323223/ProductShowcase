@@ -423,6 +423,55 @@ exports.handler = async (event) => {
       // Получаем данные заказа для уведомлений
       const order = orderResult.Item;
 
+      // Если это заказ сертификата, активируем сертификат
+      if (order.type === 'certificate' && order.certificateId) {
+        try {
+          console.log(`🎁 Activating gift certificate ${order.certificateId}...`);
+          
+          const giftCertificatesUrl = process.env.GIFT_CERTIFICATES_FUNCTION_URL;
+          if (giftCertificatesUrl) {
+            const activatePayload = JSON.stringify({
+              action: 'activate',
+              id: order.certificateId
+            });
+            
+            await new Promise((resolve) => {
+              const url = new URL(giftCertificatesUrl);
+              const req = https.request({
+                hostname: url.hostname,
+                path: url.pathname + url.search,
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Content-Length': Buffer.byteLength(activatePayload),
+                },
+              }, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                  if (res.statusCode === 200) {
+                    console.log(`✅ Certificate ${order.certificateId} activated successfully`);
+                  } else {
+                    console.warn(`⚠️ Certificate activation returned ${res.statusCode}: ${data}`);
+                  }
+                  resolve();
+                });
+              });
+              req.on('error', (error) => {
+                console.error('❌ Error activating certificate:', error);
+                resolve();
+              });
+              req.write(activatePayload);
+              req.end();
+            });
+          } else {
+            console.warn('⚠️ GIFT_CERTIFICATES_FUNCTION_URL not configured');
+          }
+        } catch (certError) {
+          console.error('❌ Error activating certificate:', certError);
+        }
+      }
+
       // Отправляем email-подтверждение после успешной оплаты
       try {
         

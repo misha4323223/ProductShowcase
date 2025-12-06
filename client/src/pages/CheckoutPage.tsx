@@ -76,6 +76,12 @@ export default function CheckoutPage() {
   const [isBonusApplied, setIsBonusApplied] = useState(false);
   const [birthdayDiscount, setBirthdayDiscount] = useState(0);
   
+  const [certificateCode, setCertificateCode] = useState("");
+  const [certificateCodeInput, setCertificateCodeInput] = useState("");
+  const [isCheckingCertificate, setIsCheckingCertificate] = useState(false);
+  const [certificateDiscount, setCertificateDiscount] = useState(0);
+  const [validatedCertificate, setValidatedCertificate] = useState<{ id: string; code: string; balance: number } | null>(null);
+  
   const [deliveryService, setDeliveryService] = useState<string | null>(null);
   const [deliveryType, setDeliveryType] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<{ code: number; name: string } | null>(null);
@@ -165,7 +171,7 @@ export default function CheckoutPage() {
       : 0;
   const subtotal = total + deliveryPrice;
   const birthdayDiscountAmount = birthdayDiscount === -1 ? Math.round(subtotal * 0.15) : 0;
-  const totalDiscount = promoDiscount + bonusDiscount + birthdayDiscountAmount;
+  const totalDiscount = promoDiscount + bonusDiscount + birthdayDiscountAmount + certificateDiscount;
   const finalTotal = Math.max(0, subtotal - totalDiscount);
 
   // Проверка дня рождения
@@ -299,6 +305,71 @@ export default function CheckoutPage() {
     });
   };
 
+  const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
+
+  const handleApplyCertificate = async () => {
+    if (!certificateCodeInput.trim()) {
+      toast({
+        title: "Введите код сертификата",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCheckingCertificate(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/certificates`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'validate',
+          code: certificateCodeInput.trim().toUpperCase(),
+          orderTotal: subtotal - promoDiscount - bonusDiscount - birthdayDiscountAmount,
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.valid && result.certificate) {
+        setCertificateCode(result.certificate.code);
+        setCertificateDiscount(result.discountAmount);
+        setValidatedCertificate({
+          id: result.certificate.id,
+          code: result.certificate.code,
+          balance: result.certificate.balance,
+        });
+        toast({
+          title: "Сертификат применён!",
+          description: `Скидка: ${result.discountAmount}₽`,
+        });
+      } else {
+        toast({
+          title: "Сертификат недействителен",
+          description: result.message || "Проверьте правильность кода",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось проверить сертификат",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCheckingCertificate(false);
+    }
+  };
+
+  const handleRemoveCertificate = () => {
+    setCertificateCode("");
+    setCertificateCodeInput("");
+    setCertificateDiscount(0);
+    setValidatedCertificate(null);
+    toast({
+      title: "Сертификат удалён",
+    });
+  };
+
   const onSubmit = async (data: CheckoutFormData) => {
     if (!deliveryService) {
       toast({
@@ -402,6 +473,12 @@ export default function CheckoutPage() {
 
       if (bonusDiscount > 0) {
         orderData.bonusPointsUsed = bonusDiscount;
+      }
+
+      if (certificateDiscount > 0 && validatedCertificate) {
+        orderData.certificateCode = validatedCertificate.code;
+        orderData.certificateId = validatedCertificate.id;
+        orderData.certificateDiscount = certificateDiscount;
       }
 
       if (deliveryService === 'CDEK') {
@@ -869,6 +946,12 @@ export default function CheckoutPage() {
                         <span data-testid="text-birthday-discount">-{birthdayDiscountAmount}₽</span>
                       </div>
                     )}
+                    {certificateDiscount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>Скидка по сертификату</span>
+                        <span data-testid="text-certificate-discount">-{certificateDiscount}₽</span>
+                      </div>
+                    )}
                   </div>
 
                   <Separator />
@@ -958,6 +1041,45 @@ export default function CheckoutPage() {
                             size="sm"
                             onClick={handleRemoveBonus}
                             data-testid="button-remove-bonus"
+                          >
+                            Удалить
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Подарочный сертификат</Label>
+                      {!certificateCode ? (
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="GC-XXXX-XXXX"
+                            value={certificateCodeInput}
+                            onChange={(e) => setCertificateCodeInput(e.target.value.toUpperCase())}
+                            data-testid="input-certificate-code"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleApplyCertificate}
+                            disabled={isCheckingCertificate}
+                            data-testid="button-apply-certificate"
+                          >
+                            {isCheckingCertificate ? "..." : "Применить"}
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-800">
+                          <div className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-purple-600" />
+                            <span className="text-sm font-medium text-purple-600">{certificateCode}</span>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleRemoveCertificate}
+                            data-testid="button-remove-certificate"
                           >
                             Удалить
                           </Button>

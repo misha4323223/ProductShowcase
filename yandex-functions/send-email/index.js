@@ -104,6 +104,14 @@ exports.handler = async (event) => {
         emailParams = buildGiftCertificateEmail(to, data);
         break;
       
+      case 'certificate_purchase_confirmation':
+        emailParams = buildCertificatePurchaseConfirmationEmail(to, data);
+        break;
+      
+      case 'certificate_expiry_reminder':
+        emailParams = buildCertificateExpiryReminderEmail(to, data);
+        break;
+      
       default:
         return {
           statusCode: 400,
@@ -541,6 +549,156 @@ ${fromTextPlain}${personalMessagePlain}
     to,
     from: process.env.GIFTS_EMAIL || process.env.FROM_EMAIL,
     subject: 'Вам подарили сертификат Sweet Delights!',
+    htmlBody,
+    textBody,
+  };
+}
+
+function buildCertificatePurchaseConfirmationEmail(to, data) {
+  const { purchaserName, amount, code, expiresAt, isGift, recipientName, recipientEmail } = data;
+  
+  const expiresDate = new Date(expiresAt).toLocaleDateString('ru-RU');
+  const greeting = purchaserName ? `Здравствуйте, ${purchaserName}!` : 'Здравствуйте!';
+  
+  const giftInfo = isGift ? `
+    <div style="background: #e8f5e9; padding: 16px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4caf50;">
+      <p style="font-size: 14px; color: #333; margin: 0;">
+        Сертификат будет отправлен получателю${recipientName ? ` (${recipientName})` : ''}${recipientEmail ? ` на ${recipientEmail}` : ''}.
+      </p>
+    </div>
+  ` : '';
+
+  const htmlBody = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
+      <h2 style="color: #EC4899; text-align: center;">Сертификат успешно приобретён!</h2>
+      <p style="font-size: 16px; line-height: 1.6;">${greeting}</p>
+      <p style="font-size: 16px; line-height: 1.6;">
+        Спасибо за покупку подарочного сертификата Sweet Delights!
+      </p>
+      ${giftInfo}
+      <div style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%); padding: 30px; border-radius: 12px; text-align: center; margin: 20px 0; color: white;">
+        <p style="font-size: 14px; margin: 0 0 10px 0; opacity: 0.9;">Номинал сертификата</p>
+        <p style="font-size: 36px; font-weight: bold; margin: 0 0 20px 0;">${amount}₽</p>
+        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+          <p style="font-size: 12px; margin: 0 0 5px 0; opacity: 0.9;">Код сертификата</p>
+          <p style="font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 0;">${code}</p>
+        </div>
+      </div>
+      <p style="font-size: 14px; color: #666; text-align: center;">
+        Действителен до: <strong>${expiresDate}</strong>
+      </p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+      <p style="font-size: 14px; color: #666;">
+        С наилучшими пожеланиями,<br/>
+        Команда Sweet Delights
+      </p>
+    </div>
+  `;
+
+  const giftInfoPlain = isGift 
+    ? `\nСертификат будет отправлен получателю${recipientName ? ` (${recipientName})` : ''}${recipientEmail ? ` на ${recipientEmail}` : ''}.\n` 
+    : '';
+
+  const textBody = `
+Сертификат успешно приобретён!
+
+${greeting}
+
+Спасибо за покупку подарочного сертификата Sweet Delights!
+${giftInfoPlain}
+Номинал сертификата: ${amount}₽
+Код сертификата: ${code}
+
+Действителен до: ${expiresDate}
+
+С наилучшими пожеланиями,
+Команда Sweet Delights
+  `;
+
+  return {
+    to,
+    from: process.env.GIFTS_EMAIL || process.env.FROM_EMAIL,
+    subject: 'Подарочный сертификат Sweet Delights - подтверждение покупки',
+    htmlBody,
+    textBody,
+  };
+}
+
+function buildCertificateExpiryReminderEmail(to, data) {
+  const { recipientName, amount, code, expiresAt, balance, daysUntilExpiry } = data;
+  
+  const expiresDate = new Date(expiresAt).toLocaleDateString('ru-RU');
+  const greeting = recipientName ? `Здравствуйте, ${recipientName}!` : 'Здравствуйте!';
+  const remainingBalance = balance || amount;
+  
+  const urgencyText = daysUntilExpiry <= 7 
+    ? `<p style="font-size: 16px; line-height: 1.6; color: #d32f2f; font-weight: bold;">
+        Осталось всего ${daysUntilExpiry} ${daysUntilExpiry === 1 ? 'день' : daysUntilExpiry < 5 ? 'дня' : 'дней'}!
+      </p>`
+    : `<p style="font-size: 16px; line-height: 1.6;">
+        До окончания срока действия осталось ${daysUntilExpiry} дней.
+      </p>`;
+
+  const htmlBody = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      ${getLogoHtml()}
+      <h2 style="color: #EC4899; text-align: center;">Не забудьте использовать сертификат!</h2>
+      <p style="font-size: 16px; line-height: 1.6;">${greeting}</p>
+      <p style="font-size: 16px; line-height: 1.6;">
+        Напоминаем, что срок действия вашего подарочного сертификата Sweet Delights скоро истекает.
+      </p>
+      ${urgencyText}
+      <div style="background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%); padding: 30px; border-radius: 12px; text-align: center; margin: 20px 0; color: white;">
+        <p style="font-size: 14px; margin: 0 0 10px 0; opacity: 0.9;">Остаток на сертификате</p>
+        <p style="font-size: 36px; font-weight: bold; margin: 0 0 20px 0;">${remainingBalance}₽</p>
+        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+          <p style="font-size: 12px; margin: 0 0 5px 0; opacity: 0.9;">Код сертификата</p>
+          <p style="font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 0;">${code}</p>
+        </div>
+      </div>
+      <p style="font-size: 14px; color: #d32f2f; text-align: center; font-weight: bold;">
+        Срок действия: до ${expiresDate}
+      </p>
+      <p style="font-size: 16px; line-height: 1.6; text-align: center;">
+        Успейте использовать сертификат при оформлении заказа!
+      </p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
+      <p style="font-size: 14px; color: #666;">
+        С наилучшими пожеланиями,<br/>
+        Команда Sweet Delights
+      </p>
+    </div>
+  `;
+
+  const urgencyTextPlain = daysUntilExpiry <= 7 
+    ? `Осталось всего ${daysUntilExpiry} ${daysUntilExpiry === 1 ? 'день' : daysUntilExpiry < 5 ? 'дня' : 'дней'}!`
+    : `До окончания срока действия осталось ${daysUntilExpiry} дней.`;
+
+  const textBody = `
+Не забудьте использовать сертификат!
+
+${greeting}
+
+Напоминаем, что срок действия вашего подарочного сертификата Sweet Delights скоро истекает.
+
+${urgencyTextPlain}
+
+Остаток на сертификате: ${remainingBalance}₽
+Код сертификата: ${code}
+
+Срок действия: до ${expiresDate}
+
+Успейте использовать сертификат при оформлении заказа!
+
+С наилучшими пожеланиями,
+Команда Sweet Delights
+  `;
+
+  return {
+    to,
+    from: process.env.GIFTS_EMAIL || process.env.FROM_EMAIL,
+    subject: 'Срок действия вашего сертификата Sweet Delights истекает!',
     htmlBody,
     textBody,
   };

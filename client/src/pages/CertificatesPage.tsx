@@ -109,8 +109,28 @@ export default function CertificatesPage() {
 
       toast({
         title: "Сертификат создан",
-        description: `Код: ${data.certificate.code}. Переход к оплате...`,
+        description: `Переход к оплате...`,
       });
+
+      const paymentPayload = {
+        action: "initPayment",
+        certificateId: data.certificate.id,
+        email: user.email,
+      };
+
+      const paymentResponse = await fetch(`${API_BASE_URL}/certificates`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentPayload),
+      });
+
+      const paymentData = await paymentResponse.json();
+
+      if (!paymentResponse.ok || !paymentData.success || !paymentData.paymentUrl) {
+        throw new Error(paymentData.error || 'Ошибка инициализации оплаты');
+      }
+
+      window.location.href = paymentData.paymentUrl;
 
     } catch (error) {
       console.error("Certificate creation error:", error);

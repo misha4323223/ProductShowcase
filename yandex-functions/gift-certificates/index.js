@@ -525,6 +525,111 @@ async function handleSend(body) {
   return createResponse(200, { success: true, message: "Certificate sent to recipient" });
 }
 
+async function handleInitPayment(body) {
+  const { certificateId, email } = body;
+
+  if (!certificateId) {
+    return createResponse(400, { error: "certificateId is required" });
+  }
+
+  const certResult = await docClient.send(new GetCommand({
+    TableName: "giftCertificates",
+    Key: { id: certificateId }
+  }));
+
+  const cert = certResult.Item;
+  if (!cert) {
+    return createResponse(404, { error: "Certificate not found" });
+  }
+
+  if (cert.status !== 'pending') {
+    return createResponse(400, { error: `Certificate already has status: ${cert.status}` });
+  }
+
+  const orderId = `cert-${certificateId}`;
+  const now = new Date().toISOString();
+
+  await docClient.send(new PutCommand({
+    TableName: "orders",
+    Item: {
+      id: orderId,
+      type: 'certificate',
+      certificateId: certificateId,
+      total: cert.amount,
+      status: 'pending',
+      paymentStatus: 'pending',
+      customerEmail: email || cert.purchaserEmail,
+      customerName: cert.purchaserName || 'Покупатель',
+      createdAt: now,
+      items: [{
+        name: `Подарочный сертификат ${cert.amount}₽`,
+        price: cert.amount,
+        quantity: 1,
+      }],
+    }
+  }));
+
+  console.log(`✅ Certificate order created: ${orderId} for certificate ${certificateId}`);
+
+  const initPaymentUrl = process.env.INIT_PAYMENT_ROBOKASSA_URL;
+  if (!initPaymentUrl) {
+    return createResponse(500, { error: "Payment service not configured" });
+  }
+
+  const paymentPayload = JSON.stringify({
+    orderId,
+    amount: cert.amount,
+    email: email || cert.purchaserEmail,
+    description: `Подарочный сертификат ${cert.amount}₽`,
+    paymentMethod: 'card'
+  });
+
+  return new Promise((resolve) => {
+    const url = new URL(initPaymentUrl);
+    const req = https.request({
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(paymentPayload),
+      },
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const result = JSON.parse(data);
+          if (res.statusCode === 200 && result.success && result.paymentUrl) {
+            resolve(createResponse(200, {
+              success: true,
+              paymentUrl: result.paymentUrl,
+              orderId,
+              certificateId,
+              amount: cert.amount
+            }));
+          } else {
+            console.error('Payment init failed:', result);
+            resolve(createResponse(500, { 
+              error: result.error || "Failed to initialize payment",
+              details: result
+            }));
+          }
+        } catch (e) {
+          console.error('Error parsing payment response:', e);
+          resolve(createResponse(500, { error: "Failed to parse payment response" }));
+        }
+      });
+    });
+    req.on('error', (error) => {
+      console.error('Payment request error:', error);
+      resolve(createResponse(500, { error: "Payment service unavailable" }));
+    });
+    req.write(paymentPayload);
+    req.end();
+  });
+}
+
 exports.handler = async (event) => {
   try {
     console.log('Gift certificates request:', event);
@@ -553,6 +658,8 @@ exports.handler = async (event) => {
           return await handleActivate(body);
         case 'send':
           return await handleSend(body);
+        case 'initPayment':
+          return await handleInitPayment(body);
         default:
           if (!action && body.amount) {
             return await handleCreate(body);
