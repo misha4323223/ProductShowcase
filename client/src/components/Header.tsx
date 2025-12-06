@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart, Sparkles, Gift } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles, Gift, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -8,6 +8,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
 import ThemeToggle from "@/components/ThemeToggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Кастомная иконка рулетки
 const WheelIcon = ({ className }: { className?: string }) => (
@@ -220,91 +227,83 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
             
             <ThemeToggle />
             
-            {user && onWheelClick && (
-              <button
-                onClick={onWheelClick}
-                className="relative w-9 h-9 rounded-full hover:scale-110 transition-all jelly-wobble cursor-pointer bg-gradient-to-br from-yellow-400 via-amber-500 to-yellow-600 shadow-lg flex items-center justify-center"
-                style={{
-                  boxShadow: '0 4px 0 rgba(234, 179, 8, 0.4), 0 6px 12px rgba(245, 158, 11, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)',
-                  animation: wheelSpins > 0 ? 'pulse-soft 2s infinite' : 'none'
-                }}
-                data-testid="button-wheel"
-                title="Рулетка Желаний"
-              >
-                <WheelIcon className={`h-8.5 w-8.5 z-10 drop-shadow-lg ${wheelBounce ? 'heart-melt-animation' : ''}`} />
-                {wheelSpins > 0 && (
-                  <span className={`absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${wheelBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-wheel-spins">
-                    {wheelSpins}
-                  </span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="relative w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-400 via-violet-500 to-purple-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble"
+                  style={{
+                    boxShadow: '0 4px 0 rgba(147, 51, 234, 0.4), 0 6px 12px rgba(139, 92, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                  }}
+                  data-testid="button-more-menu"
+                  title="Дополнительные функции"
+                >
+                  <MoreVertical className="h-4 w-4 text-white drop-shadow-lg" />
+                  {user && wheelSpins > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-gradient-to-r from-red-500 to-orange-500 border border-white z-20" />
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                {user && onWheelClick && (
+                  <DropdownMenuItem onClick={onWheelClick} className="cursor-pointer" data-testid="menu-item-wheel">
+                    <div className="flex items-center gap-2 w-full">
+                      <Sparkles className="h-4 w-4 text-amber-500" />
+                      <span>Рулетка Желаний</span>
+                      {wheelSpins > 0 && (
+                        <span className="ml-auto bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                          {wheelSpins}
+                        </span>
+                      )}
+                    </div>
+                  </DropdownMenuItem>
                 )}
-              </button>
-            )}
-            
-            <Link href="/certificates">
-              <button
-                className="w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble"
-                style={{
-                  boxShadow: '0 4px 0 rgba(244, 63, 94, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                }}
-                data-testid="button-certificates"
-                title="Подарочные сертификаты"
-              >
-                <Gift className="h-4 w-4 text-white drop-shadow-lg" />
-              </button>
-            </Link>
-            
-            {user ? (
-              <Link href="/account">
-                <button
-                  className="w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-400 via-violet-500 to-indigo-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble"
-                  style={{
-                    boxShadow: '0 4px 0 rgba(99, 102, 241, 0.4), 0 6px 12px rgba(139, 92, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                  }}
-                  data-testid="button-account"
-                >
-                  <User className="h-4 w-4 text-white drop-shadow-lg" />
-                </button>
-              </Link>
-            ) : (
-              <Link href="/login">
-                <button
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-br from-indigo-400 via-violet-500 to-indigo-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble hidden md:flex items-center gap-1.5"
-                  style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                    boxShadow: '0 4px 0 rgba(99, 102, 241, 0.4), 0 6px 12px rgba(139, 92, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                  }}
-                  data-testid="button-login"
-                >
-                  Войти
-                </button>
-                <button
-                  className="w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-400 via-violet-500 to-indigo-600 hover:scale-110 transition-all shadow-lg hover:shadow-xl jelly-wobble md:hidden"
-                  style={{
-                    boxShadow: '0 4px 0 rgba(99, 102, 241, 0.4), 0 6px 12px rgba(139, 92, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                  }}
-                  data-testid="button-login-mobile"
-                >
-                  <User className="h-4 w-4 text-white drop-shadow-lg" />
-                </button>
-              </Link>
-            )}
-            
-            <Link href="/wishlist">
-              <button
-                className="relative w-9 h-9 rounded-full hover:scale-110 transition-all jelly-wobble cursor-pointer bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600 shadow-lg flex items-center justify-center"
-                style={{
-                  boxShadow: '0 4px 0 rgba(219, 39, 119, 0.4), 0 6px 12px rgba(236, 72, 153, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
-                }}
-                data-testid="button-wishlist"
-              >
-                <Heart className={`h-4 w-4 text-white z-10 drop-shadow-lg transition-all ${wishlistCount > 0 ? 'fill-white' : ''} ${wishlistBounce ? 'heart-melt-animation' : ''}`} />
-                {wishlistCount > 0 && (
-                  <span className={`absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold flex items-center justify-center shadow-xl border-2 border-white z-20 ${wishlistBounce ? 'cart-badge-bounce' : ''}`} data-testid="text-wishlist-count">
-                    {wishlistCount}
-                  </span>
+                
+                <DropdownMenuItem asChild>
+                  <Link href="/certificates" className="cursor-pointer" data-testid="menu-item-certificates">
+                    <div className="flex items-center gap-2 w-full">
+                      <Gift className="h-4 w-4 text-pink-500" />
+                      <span>Сертификаты</span>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                
+                <DropdownMenuSeparator />
+                
+                <DropdownMenuItem asChild>
+                  <Link href="/wishlist" className="cursor-pointer" data-testid="menu-item-wishlist">
+                    <div className="flex items-center gap-2 w-full">
+                      <Heart className="h-4 w-4 text-pink-500" />
+                      <span>Избранное</span>
+                      {wishlistCount > 0 && (
+                        <span className="ml-auto bg-pink-100 text-pink-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                          {wishlistCount}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                
+                {user ? (
+                  <DropdownMenuItem asChild>
+                    <Link href="/account" className="cursor-pointer" data-testid="menu-item-account">
+                      <div className="flex items-center gap-2 w-full">
+                        <User className="h-4 w-4 text-indigo-500" />
+                        <span>Личный кабинет</span>
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem asChild>
+                    <Link href="/login" className="cursor-pointer" data-testid="menu-item-login">
+                      <div className="flex items-center gap-2 w-full">
+                        <User className="h-4 w-4 text-indigo-500" />
+                        <span>Войти</span>
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
                 )}
-              </button>
-            </Link>
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             <button
               className="relative w-10 h-10 rounded-full hover:scale-110 transition-all jelly-wobble cursor-pointer bg-gradient-to-br from-orange-400 via-amber-500 to-orange-600 shadow-lg flex items-center justify-center"
