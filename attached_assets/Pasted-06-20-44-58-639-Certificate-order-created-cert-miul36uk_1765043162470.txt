@@ -1,0 +1,548 @@
+06 дек. 20:44:58.639
+✅ Certificate order created: cert-miul36ukry9cxnusg8m for certificate miul36ukry9cxnusg8m
+
+06 дек. 20:44:58.500
+}
+
+06 дек. 20:44:58.500
+path: '/certificates'
+
+06 дек. 20:44:58.500
+isBase64Encoded: false,
+
+06 дек. 20:44:58.500
+body: '{"action":"initPayment","certificateId":"miul36ukry9cxnusg8m","email":"pimashin2015@gmail.com"}',
+
+06 дек. 20:44:58.500
+},
+
+06 дек. 20:44:58.500
+requestTimeEpoch: 1765043098
+
+06 дек. 20:44:58.500
+requestTime: '6/Dec/2025:17:44:58 +0000',
+
+06 дек. 20:44:58.500
+requestId: '823d913e-4446-4072-b80b-ff439e65c87a',
+
+06 дек. 20:44:58.500
+httpMethod: 'POST',
+
+06 дек. 20:44:58.500
+},
+
+06 дек. 20:44:58.500
+userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+06 дек. 20:44:58.500
+sourceIp: '62.141.68.106',
+
+06 дек. 20:44:58.500
+identity: {
+
+06 дек. 20:44:58.500
+requestContext: {
+
+06 дек. 20:44:58.500
+multiValueQueryStringParameters: {},
+
+06 дек. 20:44:58.500
+queryStringParameters: {},
+
+06 дек. 20:44:58.500
+},
+
+06 дек. 20:44:58.500
+'X-Trace-Id': [ '88e311fa-8faf-437e-be59-431b9491c198' ]
+
+06 дек. 20:44:58.500
+'X-Serverless-Gateway-Id': [ 'd5dimdj7itkijbl4s0g4' ],
+
+06 дек. 20:44:58.500
+'X-Serverless-Certificate-Ids': [ '{}' ],
+
+06 дек. 20:44:58.500
+'X-Request-Id': [ '823d913e-4446-4072-b80b-ff439e65c87a' ],
+
+06 дек. 20:44:58.500
+'X-Real-Remote-Address': [ '62.141.68.106:63941' ],
+
+06 дек. 20:44:58.500
+'X-Forwarded-Proto': [ 'https' ],
+
+06 дек. 20:44:58.500
+'X-Forwarded-For': [ '62.141.68.106' ],
+
+06 дек. 20:44:58.500
+'X-Envoy-Original-Path': [ '/certificates' ],
+
+06 дек. 20:44:58.500
+'X-Envoy-External-Address': [ '62.141.68.106' ],
+
+06 дек. 20:44:58.500
+'X-Api-Gateway-Function-Id': [ 'd4eo70h7u5qevjl70hup' ],
+
+06 дек. 20:44:58.500
+],
+
+06 дек. 20:44:58.500
+'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+06 дек. 20:44:58.500
+'User-Agent': [
+
+06 дек. 20:44:58.500
+'Uber-Trace-Id': [ '96ab22da0ca8d229:2936a86e8dfd1f1e:9d0db5072fa341bd:1' ],
+
+06 дек. 20:44:58.500
+Tracestate: [ '' ],
+
+06 дек. 20:44:58.500
+Traceparent: [ '00-000000000000000096ab22da0ca8d229-f150e0585b47f531-01' ],
+
+06 дек. 20:44:58.500
+'Sec-Fetch-Site': [ 'cross-site' ],
+
+06 дек. 20:44:58.500
+'Sec-Fetch-Mode': [ 'cors' ],
+
+06 дек. 20:44:58.500
+'Sec-Fetch-Dest': [ 'empty' ],
+
+06 дек. 20:44:58.500
+'Sec-Ch-Ua-Platform': [ '"Windows"' ],
+
+06 дек. 20:44:58.500
+'Sec-Ch-Ua-Mobile': [ '?0' ],
+
+06 дек. 20:44:58.500
+],
+
+06 дек. 20:44:58.500
+'"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"'
+
+06 дек. 20:44:58.500
+'Sec-Ch-Ua': [
+
+06 дек. 20:44:58.500
+Referer: [ 'https://sweetdelights.store/' ],
+
+06 дек. 20:44:58.500
+Priority: [ 'u=1, i' ],
+
+06 дек. 20:44:58.500
+Origin: [ 'https://sweetdelights.store' ],
+
+06 дек. 20:44:58.500
+Host: [ 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net' ],
+
+06 дек. 20:44:58.500
+'Content-Type': [ 'application/json' ],
+
+06 дек. 20:44:58.500
+'Content-Length': [ '95' ],
+
+06 дек. 20:44:58.500
+'Accept-Language': [ 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7' ],
+
+06 дек. 20:44:58.500
+'Accept-Encoding': [ 'gzip, deflate, br, zstd' ],
+
+06 дек. 20:44:58.500
+Accept: [ '*/*' ],
+
+06 дек. 20:44:58.500
+multiValueHeaders: {
+
+06 дек. 20:44:58.499
+pathParams: {},
+
+06 дек. 20:44:58.499
+multiValueParams: {},
+
+06 дек. 20:44:58.499
+params: {},
+
+06 дек. 20:44:58.499
+url: '/certificates?',
+
+06 дек. 20:44:58.499
+},
+
+06 дек. 20:44:58.499
+'X-Trace-Id': '88e311fa-8faf-437e-be59-431b9491c198'
+
+06 дек. 20:44:58.499
+'X-Serverless-Gateway-Id': 'd5dimdj7itkijbl4s0g4',
+
+06 дек. 20:44:58.499
+'X-Serverless-Certificate-Ids': '{}',
+
+06 дек. 20:44:58.499
+'X-Request-Id': '823d913e-4446-4072-b80b-ff439e65c87a',
+
+06 дек. 20:44:58.499
+'X-Real-Remote-Address': '62.141.68.106:63941',
+
+06 дек. 20:44:58.499
+'X-Forwarded-Proto': 'https',
+
+06 дек. 20:44:58.499
+'X-Forwarded-For': '62.141.68.106',
+
+06 дек. 20:44:58.499
+'X-Envoy-Original-Path': '/certificates',
+
+06 дек. 20:44:58.499
+'X-Envoy-External-Address': '62.141.68.106',
+
+06 дек. 20:44:58.499
+'X-Api-Gateway-Function-Id': 'd4eo70h7u5qevjl70hup',
+
+06 дек. 20:44:58.499
+'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+
+06 дек. 20:44:58.499
+'Uber-Trace-Id': '96ab22da0ca8d229:2936a86e8dfd1f1e:9d0db5072fa341bd:1',
+
+06 дек. 20:44:58.499
+Tracestate: '',
+
+06 дек. 20:44:58.499
+Traceparent: '00-000000000000000096ab22da0ca8d229-f150e0585b47f531-01',
+
+06 дек. 20:44:58.499
+'Sec-Fetch-Site': 'cross-site',
+
+06 дек. 20:44:58.499
+'Sec-Fetch-Mode': 'cors',
+
+06 дек. 20:44:58.499
+'Sec-Fetch-Dest': 'empty',
+
+06 дек. 20:44:58.499
+'Sec-Ch-Ua-Platform': '"Windows"',
+
+06 дек. 20:44:58.499
+'Sec-Ch-Ua-Mobile': '?0',
+
+06 дек. 20:44:58.499
+'Sec-Ch-Ua': '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+
+06 дек. 20:44:58.499
+Referer: 'https://sweetdelights.store/',
+
+06 дек. 20:44:58.499
+Priority: 'u=1, i',
+
+06 дек. 20:44:58.499
+Origin: 'https://sweetdelights.store',
+
+06 дек. 20:44:58.499
+Host: 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net',
+
+06 дек. 20:44:58.499
+'Content-Type': 'application/json',
+
+06 дек. 20:44:58.499
+'Content-Length': '95',
+
+06 дек. 20:44:58.499
+'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+
+06 дек. 20:44:58.499
+'Accept-Encoding': 'gzip, deflate, br, zstd',
+
+06 дек. 20:44:58.499
+Accept: '*/*',
+
+06 дек. 20:44:58.499
+headers: {
+
+06 дек. 20:44:58.499
+httpMethod: 'POST',
+
+06 дек. 20:44:58.499
+Gift certificates request: {
+
+06 дек. 20:44:58.422
+✅ Gift certificate created: miul36ukry9cxnusg8m, code: GC-HT9T-UYFQ, amount: 1000₽
+
+06 дек. 20:44:58.222
+}
+
+06 дек. 20:44:58.222
+path: '/certificates'
+
+06 дек. 20:44:58.222
+isBase64Encoded: false,
+
+06 дек. 20:44:58.222
+body: '{"action":"create","amount":1000,"purchaserEmail":"pimashin2015@gmail.com","purchaserName":"pimashin2015","isGift":false,"designTemplate":"default"}',
+
+06 дек. 20:44:58.222
+},
+
+06 дек. 20:44:58.222
+requestTimeEpoch: 1765043098
+
+06 дек. 20:44:58.222
+requestTime: '6/Dec/2025:17:44:58 +0000',
+
+06 дек. 20:44:58.222
+requestId: '743d7473-af17-405f-8053-29a7490f65a8',
+
+06 дек. 20:44:58.221
+httpMethod: 'POST',
+
+06 дек. 20:44:58.221
+},
+
+06 дек. 20:44:58.221
+userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+06 дек. 20:44:58.221
+sourceIp: '62.141.68.106',
+
+06 дек. 20:44:58.221
+identity: {
+
+06 дек. 20:44:58.221
+requestContext: {
+
+06 дек. 20:44:58.221
+multiValueQueryStringParameters: {},
+
+06 дек. 20:44:58.221
+queryStringParameters: {},
+
+06 дек. 20:44:58.221
+},
+
+06 дек. 20:44:58.221
+'X-Trace-Id': [ '9eff4484-294e-47a3-a1b2-15d5a4a0259a' ]
+
+06 дек. 20:44:58.221
+'X-Serverless-Gateway-Id': [ 'd5dimdj7itkijbl4s0g4' ],
+
+06 дек. 20:44:58.221
+'X-Serverless-Certificate-Ids': [ '{}' ],
+
+06 дек. 20:44:58.221
+'X-Request-Id': [ '743d7473-af17-405f-8053-29a7490f65a8' ],
+
+06 дек. 20:44:58.221
+'X-Real-Remote-Address': [ '62.141.68.106:63941' ],
+
+06 дек. 20:44:58.221
+'X-Forwarded-Proto': [ 'https' ],
+
+06 дек. 20:44:58.221
+'X-Forwarded-For': [ '62.141.68.106' ],
+
+06 дек. 20:44:58.221
+'X-Envoy-Original-Path': [ '/certificates' ],
+
+06 дек. 20:44:58.221
+'X-Envoy-External-Address': [ '62.141.68.106' ],
+
+06 дек. 20:44:58.221
+'X-Api-Gateway-Function-Id': [ 'd4eo70h7u5qevjl70hup' ],
+
+06 дек. 20:44:58.221
+],
+
+06 дек. 20:44:58.221
+'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+06 дек. 20:44:58.221
+'User-Agent': [
+
+06 дек. 20:44:58.221
+'Uber-Trace-Id': [ 'b5a143aea567050c:a2dc9835feb8099a:6c1799f837f74071:1' ],
+
+06 дек. 20:44:58.221
+Tracestate: [ '' ],
+
+06 дек. 20:44:58.221
+Traceparent: [ '00-0000000000000000b5a143aea567050c-c5e1a8cad2488f12-01' ],
+
+06 дек. 20:44:58.221
+'Sec-Fetch-Site': [ 'cross-site' ],
+
+06 дек. 20:44:58.221
+'Sec-Fetch-Mode': [ 'cors' ],
+
+06 дек. 20:44:58.221
+'Sec-Fetch-Dest': [ 'empty' ],
+
+06 дек. 20:44:58.221
+'Sec-Ch-Ua-Platform': [ '"Windows"' ],
+
+06 дек. 20:44:58.221
+'Sec-Ch-Ua-Mobile': [ '?0' ],
+
+06 дек. 20:44:58.221
+],
+
+06 дек. 20:44:58.221
+'"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"'
+
+06 дек. 20:44:58.221
+'Sec-Ch-Ua': [
+
+06 дек. 20:44:58.221
+Referer: [ 'https://sweetdelights.store/' ],
+
+06 дек. 20:44:58.221
+Priority: [ 'u=1, i' ],
+
+06 дек. 20:44:58.221
+Origin: [ 'https://sweetdelights.store' ],
+
+06 дек. 20:44:58.221
+Host: [ 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net' ],
+
+06 дек. 20:44:58.221
+'Content-Type': [ 'application/json' ],
+
+06 дек. 20:44:58.221
+'Content-Length': [ '148' ],
+
+06 дек. 20:44:58.221
+'Accept-Language': [ 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7' ],
+
+06 дек. 20:44:58.221
+'Accept-Encoding': [ 'gzip, deflate, br, zstd' ],
+
+06 дек. 20:44:58.221
+Accept: [ '*/*' ],
+
+06 дек. 20:44:58.221
+multiValueHeaders: {
+
+06 дек. 20:44:58.221
+pathParams: {},
+
+06 дек. 20:44:58.221
+multiValueParams: {},
+
+06 дек. 20:44:58.221
+params: {},
+
+06 дек. 20:44:58.221
+url: '/certificates?',
+
+06 дек. 20:44:58.221
+},
+
+06 дек. 20:44:58.221
+'X-Trace-Id': '9eff4484-294e-47a3-a1b2-15d5a4a0259a'
+
+06 дек. 20:44:58.221
+'X-Serverless-Gateway-Id': 'd5dimdj7itkijbl4s0g4',
+
+06 дек. 20:44:58.221
+'X-Serverless-Certificate-Ids': '{}',
+
+06 дек. 20:44:58.221
+'X-Request-Id': '743d7473-af17-405f-8053-29a7490f65a8',
+
+06 дек. 20:44:58.221
+'X-Real-Remote-Address': '62.141.68.106:63941',
+
+06 дек. 20:44:58.221
+'X-Forwarded-Proto': 'https',
+
+06 дек. 20:44:58.221
+'X-Forwarded-For': '62.141.68.106',
+
+06 дек. 20:44:58.221
+'X-Envoy-Original-Path': '/certificates',
+
+06 дек. 20:44:58.221
+'X-Envoy-External-Address': '62.141.68.106',
+
+06 дек. 20:44:58.221
+'X-Api-Gateway-Function-Id': 'd4eo70h7u5qevjl70hup',
+
+06 дек. 20:44:58.221
+'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+
+06 дек. 20:44:58.221
+'Uber-Trace-Id': 'b5a143aea567050c:a2dc9835feb8099a:6c1799f837f74071:1',
+
+06 дек. 20:44:58.221
+Tracestate: '',
+
+06 дек. 20:44:58.221
+Traceparent: '00-0000000000000000b5a143aea567050c-c5e1a8cad2488f12-01',
+
+06 дек. 20:44:58.221
+'Sec-Fetch-Site': 'cross-site',
+
+06 дек. 20:44:58.221
+'Sec-Fetch-Mode': 'cors',
+
+06 дек. 20:44:58.221
+'Sec-Fetch-Dest': 'empty',
+
+06 дек. 20:44:58.221
+'Sec-Ch-Ua-Platform': '"Windows"',
+
+06 дек. 20:44:58.221
+'Sec-Ch-Ua-Mobile': '?0',
+
+06 дек. 20:44:58.221
+'Sec-Ch-Ua': '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+
+06 дек. 20:44:58.221
+Referer: 'https://sweetdelights.store/',
+
+06 дек. 20:44:58.221
+Priority: 'u=1, i',
+
+06 дек. 20:44:58.221
+Origin: 'https://sweetdelights.store',
+
+06 дек. 20:44:58.221
+Host: 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net',
+
+06 дек. 20:44:58.221
+'Content-Type': 'application/json',
+
+06 дек. 20:44:58.221
+'Content-Length': '148',
+
+06 дек. 20:44:58.221
+'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+
+06 дек. 20:44:58.220
+'Accept-Encoding': 'gzip, deflate, br, zstd',
+
+06 дек. 20:44:58.220
+Accept: '*/*',
+
+06 дек. 20:44:58.220
+headers: {
+
+06 дек. 20:44:58.220
+httpMethod: 'POST',
+
+06 дек. 20:44:58.220
+Gift certificates request: {
+
+06 дек. 20:44:58.213
+START RequestID: 5c09d94f-242b-471b-b662-a5cd47bb967a Version: d4e4tqr3am5spv3hsoa0
+
+06 дек. 20:44:40.231
+REPORT RequestID: 748231c7-450a-45ea-a24b-cfd7ed66a611 Duration: 197.005 ms Billed Duration: 200 ms Memory Size: 128 MB Max Memory Used: 104 MB Queuing Duration: 0.050 ms Function Init Duration: 193.968 ms CPU Usage: 17.676 %
+
+06 дек. 20:44:40.231
+END RequestID: 748231c7-450a-45ea-a24b-cfd7ed66a611
+
+06 дек. 20:44:40.229
+Gift certificates request: { payload: '' }
+
+06 дек. 20:44:39.966
+START RequestID: 748231c7-450a-45ea-a24b-cfd7ed66a611 Version: d4e4tqr3am5spv3hsoa0
