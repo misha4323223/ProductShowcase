@@ -1,0 +1,343 @@
+
+
+06 дек. 20:02:32.731
+REPORT RequestID: 340d2012-2458-46f8-afac-c052cf3eab81 Duration: 366.601 ms Billed Duration: 400 ms Memory Size: 128 MB Max Memory Used: 104 MB Queuing Duration: 0.034 ms Function Init Duration: 205.563 ms CPU Usage: 17.285 %
+
+06 дек. 20:02:32.731
+END RequestID: 340d2012-2458-46f8-afac-c052cf3eab81
+
+06 дек. 20:02:32.729
+}
+
+06 дек. 20:02:32.729
+__type: 'ru.yandex.docapi.v20120810#ValidationException'
+
+06 дек. 20:02:32.729
+},
+
+06 дек. 20:02:32.729
+totalRetryDelay: 0
+
+06 дек. 20:02:32.729
+attempts: 1,
+
+06 дек. 20:02:32.729
+cfId: undefined,
+
+06 дек. 20:02:32.729
+extendedRequestId: undefined,
+
+06 дек. 20:02:32.729
+requestId: 'e6e9a016-40b8-4546-a3b6-a1a9d49dc9af',
+
+06 дек. 20:02:32.729
+httpStatusCode: 400,
+
+06 дек. 20:02:32.729
+'$metadata': {
+
+06 дек. 20:02:32.729
+'$retryable': undefined,
+
+06 дек. 20:02:32.729
+'$fault': 'client',
+
+06 дек. 20:02:32.729
+at async handleGet (/function/code/index.js:280:18) {
+
+06 дек. 20:02:32.729
+at async /function/code/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js:5:26
+
+06 дек. 20:02:32.729
+at async /function/code/node_modules/@smithy/middleware-retry/dist-cjs/index.js:254:46
+
+06 дек. 20:02:32.729
+at async /function/code/node_modules/@smithy/core/dist-cjs/index.js:121:20
+
+06 дек. 20:02:32.729
+at async /function/code/node_modules/@aws-sdk/lib-dynamodb/dist-cjs/index.js:107:34
+
+06 дек. 20:02:32.729
+at async /function/code/node_modules/@smithy/core/dist-cjs/submodules/schema/index.js:26:24
+
+06 дек. 20:02:32.729
+at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+06 дек. 20:02:32.729
+at AwsJson1_0Protocol.deserializeResponse (/function/code/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:473:24)
+
+06 дек. 20:02:32.728
+at AwsJson1_0Protocol.handleError (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:733:65)
+
+06 дек. 20:02:32.728
+at ProtocolLib.getErrorSchemaOrThrowBaseException (/function/code/node_modules/@aws-sdk/core/dist-cjs/submodules/protocols/index.js:69:67)
+
+06 дек. 20:02:32.728
+Error in gift-certificates: ValidationException: Unsupported API version "" for table "/ru-central1/b1gnp4ml7k5j7cquabad/etngc3d5gjae4oef9v48/giftCertificates"
+
+06 дек. 20:02:32.574
+}
+
+06 дек. 20:02:32.574
+path: '/certificates'
+
+06 дек. 20:02:32.574
+isBase64Encoded: true,
+
+06 дек. 20:02:32.574
+body: '',
+
+06 дек. 20:02:32.574
+},
+
+06 дек. 20:02:32.574
+requestTimeEpoch: 1765040552
+
+06 дек. 20:02:32.574
+requestTime: '6/Dec/2025:17:02:32 +0000',
+
+06 дек. 20:02:32.574
+requestId: '241cf828-76e0-4f8a-b864-db8218a08a53',
+
+06 дек. 20:02:32.574
+httpMethod: 'GET',
+
+06 дек. 20:02:32.574
+},
+
+06 дек. 20:02:32.574
+userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+06 дек. 20:02:32.574
+sourceIp: '62.141.68.106',
+
+06 дек. 20:02:32.574
+identity: {
+
+06 дек. 20:02:32.574
+requestContext: {
+
+06 дек. 20:02:32.574
+multiValueQueryStringParameters: {},
+
+06 дек. 20:02:32.574
+queryStringParameters: {},
+
+06 дек. 20:02:32.574
+},
+
+06 дек. 20:02:32.574
+'X-Trace-Id': [ 'd6cf1f03-f780-49ca-aed4-36dc2b2a74b0' ]
+
+06 дек. 20:02:32.574
+'X-Serverless-Gateway-Id': [ 'd5dimdj7itkijbl4s0g4' ],
+
+06 дек. 20:02:32.574
+'X-Serverless-Certificate-Ids': [ '{}' ],
+
+06 дек. 20:02:32.574
+'X-Request-Id': [ '241cf828-76e0-4f8a-b864-db8218a08a53' ],
+
+06 дек. 20:02:32.574
+'X-Real-Remote-Address': [ '62.141.68.106:60328' ],
+
+06 дек. 20:02:32.574
+'X-Forwarded-Proto': [ 'https' ],
+
+06 дек. 20:02:32.574
+'X-Forwarded-For': [ '62.141.68.106' ],
+
+06 дек. 20:02:32.574
+'X-Envoy-Original-Path': [ '/certificates' ],
+
+06 дек. 20:02:32.574
+'X-Envoy-External-Address': [ '62.141.68.106' ],
+
+06 дек. 20:02:32.574
+'X-Api-Gateway-Function-Id': [ 'd4eo70h7u5qevjl70hup' ],
+
+06 дек. 20:02:32.574
+],
+
+06 дек. 20:02:32.574
+'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+
+06 дек. 20:02:32.574
+'User-Agent': [
+
+06 дек. 20:02:32.574
+'Uber-Trace-Id': [ 'aaf77777d534d268:c9e13cd32f181342:906d5e7a6a0e87c6:1' ],
+
+06 дек. 20:02:32.574
+Tracestate: [ '' ],
+
+06 дек. 20:02:32.574
+Traceparent: [ '00-0000000000000000aaf77777d534d268-5ab1fac87654056b-01' ],
+
+06 дек. 20:02:32.574
+'Sec-Fetch-Site': [ 'cross-site' ],
+
+06 дек. 20:02:32.574
+'Sec-Fetch-Mode': [ 'cors' ],
+
+06 дек. 20:02:32.574
+'Sec-Fetch-Dest': [ 'empty' ],
+
+06 дек. 20:02:32.574
+'Sec-Ch-Ua-Platform': [ '"Windows"' ],
+
+06 дек. 20:02:32.574
+'Sec-Ch-Ua-Mobile': [ '?0' ],
+
+06 дек. 20:02:32.574
+],
+
+06 дек. 20:02:32.573
+'"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"'
+
+06 дек. 20:02:32.573
+'Sec-Ch-Ua': [
+
+06 дек. 20:02:32.573
+],
+
+06 дек. 20:02:32.573
+'https://fa43439a-cfc5-4dc7-b27a-eef37335932c-00-y2qjrxkl2l3b.sisko.replit.dev/'
+
+06 дек. 20:02:32.573
+Referer: [
+
+06 дек. 20:02:32.573
+Priority: [ 'u=1, i' ],
+
+06 дек. 20:02:32.573
+],
+
+06 дек. 20:02:32.573
+'https://fa43439a-cfc5-4dc7-b27a-eef37335932c-00-y2qjrxkl2l3b.sisko.replit.dev'
+
+06 дек. 20:02:32.573
+Origin: [
+
+06 дек. 20:02:32.573
+Host: [ 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net' ],
+
+06 дек. 20:02:32.573
+'Accept-Language': [ 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7' ],
+
+06 дек. 20:02:32.573
+'Accept-Encoding': [ 'gzip, deflate, br, zstd' ],
+
+06 дек. 20:02:32.573
+Accept: [ '*/*' ],
+
+06 дек. 20:02:32.573
+multiValueHeaders: {
+
+06 дек. 20:02:32.573
+pathParams: {},
+
+06 дек. 20:02:32.573
+multiValueParams: {},
+
+06 дек. 20:02:32.573
+params: {},
+
+06 дек. 20:02:32.573
+url: '/certificates?',
+
+06 дек. 20:02:32.573
+},
+
+06 дек. 20:02:32.573
+'X-Trace-Id': 'd6cf1f03-f780-49ca-aed4-36dc2b2a74b0'
+
+06 дек. 20:02:32.573
+'X-Serverless-Gateway-Id': 'd5dimdj7itkijbl4s0g4',
+
+06 дек. 20:02:32.573
+'X-Serverless-Certificate-Ids': '{}',
+
+06 дек. 20:02:32.573
+'X-Request-Id': '241cf828-76e0-4f8a-b864-db8218a08a53',
+
+06 дек. 20:02:32.573
+'X-Real-Remote-Address': '62.141.68.106:60328',
+
+06 дек. 20:02:32.573
+'X-Forwarded-Proto': 'https',
+
+06 дек. 20:02:32.573
+'X-Forwarded-For': '62.141.68.106',
+
+06 дек. 20:02:32.573
+'X-Envoy-Original-Path': '/certificates',
+
+06 дек. 20:02:32.573
+'X-Envoy-External-Address': '62.141.68.106',
+
+06 дек. 20:02:32.573
+'X-Api-Gateway-Function-Id': 'd4eo70h7u5qevjl70hup',
+
+06 дек. 20:02:32.573
+'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+
+06 дек. 20:02:32.573
+'Uber-Trace-Id': 'aaf77777d534d268:c9e13cd32f181342:906d5e7a6a0e87c6:1',
+
+06 дек. 20:02:32.573
+Tracestate: '',
+
+06 дек. 20:02:32.573
+Traceparent: '00-0000000000000000aaf77777d534d268-5ab1fac87654056b-01',
+
+06 дек. 20:02:32.573
+'Sec-Fetch-Site': 'cross-site',
+
+06 дек. 20:02:32.573
+'Sec-Fetch-Mode': 'cors',
+
+06 дек. 20:02:32.573
+'Sec-Fetch-Dest': 'empty',
+
+06 дек. 20:02:32.573
+'Sec-Ch-Ua-Platform': '"Windows"',
+
+06 дек. 20:02:32.573
+'Sec-Ch-Ua-Mobile': '?0',
+
+06 дек. 20:02:32.573
+'Sec-Ch-Ua': '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+
+06 дек. 20:02:32.573
+Referer: 'https://fa43439a-cfc5-4dc7-b27a-eef37335932c-00-y2qjrxkl2l3b.sisko.replit.dev/',
+
+06 дек. 20:02:32.573
+Priority: 'u=1, i',
+
+06 дек. 20:02:32.573
+Origin: 'https://fa43439a-cfc5-4dc7-b27a-eef37335932c-00-y2qjrxkl2l3b.sisko.replit.dev',
+
+06 дек. 20:02:32.573
+Host: 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net',
+
+06 дек. 20:02:32.573
+'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+
+06 дек. 20:02:32.573
+'Accept-Encoding': 'gzip, deflate, br, zstd',
+
+06 дек. 20:02:32.573
+Accept: '*/*',
+
+06 дек. 20:02:32.573
+headers: {
+
+06 дек. 20:02:32.573
+httpMethod: 'GET',
+
+06 дек. 20:02:32.573
+Gift certificates request: {
+
+06 дек. 20:02:32.254
+START RequestID: 340d2012-2458-46f8-afac-c052cf3eab81 Version: d4e0sp5gvpfv7eodqvdi
