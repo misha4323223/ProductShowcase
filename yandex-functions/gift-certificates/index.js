@@ -276,7 +276,15 @@ async function handleGet(params) {
     return createResponse(200, { success: true, certificate: result.Item });
   }
 
-  return createResponse(400, { error: "code, id, or userId parameter required" });
+  // Admin: get all certificates (no filters)
+  const result = await docClient.send(new ScanCommand({
+    TableName: "giftCertificates",
+  }));
+
+  return createResponse(200, {
+    success: true,
+    certificates: result.Items || []
+  });
 }
 
 async function handleValidate(body) {

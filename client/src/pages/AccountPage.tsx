@@ -26,7 +26,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
 import { getProfile, updateProfile, type UserProfile, isBirthdayToday, markBirthdayGiftSent } from "@/services/profile-api";
 import type { Order, WheelPrize } from "@/types/firebase-types";
-import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3, Cake, Mail, Check } from "lucide-react";
+import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3, Cake, Mail, Check, Copy, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function WheelTab() {
@@ -213,6 +213,236 @@ function WheelTab() {
                       Экономия: {item.prizeDetails.savedAmount}₽
                     </Badge>
                   )}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </TabsContent>
+  );
+}
+
+interface GiftCertificate {
+  id: string;
+  code: string;
+  amount: number;
+  balance: number;
+  status: 'pending' | 'active' | 'used' | 'expired';
+  purchaserEmail: string;
+  recipientEmail: string | null;
+  recipientName: string | null;
+  senderName: string | null;
+  message: string | null;
+  isGift: boolean;
+  createdAt: string;
+  paidAt: string | null;
+  expiresAt: string;
+}
+
+function CertificatesTab({ userEmail }: { userEmail: string }) {
+  const [certificates, setCertificates] = useState<GiftCertificate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+
+  const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
+
+  useEffect(() => {
+    async function loadCertificates() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/certificates?userId=${encodeURIComponent(userEmail)}`);
+        const data = await response.json();
+        if (data.success && data.certificates) {
+          setCertificates(data.certificates);
+        }
+      } catch (error) {
+        console.error('Error loading certificates:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadCertificates();
+  }, [userEmail]);
+
+  const copyCode = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      toast({
+        title: "Скопировано!",
+        description: `Код ${code} скопирован в буфер обмена`,
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось скопировать код",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getStatusBadge = (cert: GiftCertificate) => {
+    const now = new Date();
+    const expiresAt = new Date(cert.expiresAt);
+    
+    if (cert.status === 'pending') {
+      return <Badge variant="secondary">Ожидает оплаты</Badge>;
+    }
+    if (cert.status === 'used' || cert.balance <= 0) {
+      return <Badge variant="outline">Использован</Badge>;
+    }
+    if (expiresAt < now) {
+      return <Badge variant="destructive">Истёк</Badge>;
+    }
+    return <Badge variant="default">Активен</Badge>;
+  };
+
+  const purchasedCerts = certificates.filter(c => c.purchaserEmail.toLowerCase() === userEmail.toLowerCase());
+  const receivedCerts = certificates.filter(c => c.recipientEmail?.toLowerCase() === userEmail.toLowerCase() && c.purchaserEmail.toLowerCase() !== userEmail.toLowerCase());
+
+  if (isLoading) {
+    return (
+      <TabsContent value="certificates">
+        <div className="text-center py-12">
+          <Loader2 className="h-12 w-12 mx-auto mb-4 text-primary animate-spin" />
+          <p className="text-muted-foreground">Загрузка сертификатов...</p>
+        </div>
+      </TabsContent>
+    );
+  }
+
+  return (
+    <TabsContent value="certificates" className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="h-5 w-5" />
+            Мои покупки
+          </CardTitle>
+          <CardDescription>Сертификаты, которые вы приобрели</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {purchasedCerts.length === 0 ? (
+            <div className="text-center py-8">
+              <Gift className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+              <p className="text-muted-foreground" data-testid="text-no-purchased-certs">
+                Вы ещё не приобретали сертификаты
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Подарочные сертификаты — отличный подарок для близких!
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {purchasedCerts.map((cert) => (
+                <div 
+                  key={cert.id} 
+                  className="flex items-center justify-between p-4 border rounded-lg hover-elevate"
+                  data-testid={`cert-purchased-${cert.id}`}
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <Gift className="h-8 w-8 text-pink-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-bold text-lg">{cert.amount}₽</p>
+                        {getStatusBadge(cert)}
+                        {cert.isGift && cert.recipientName && (
+                          <Badge variant="secondary">Подарок для {cert.recipientName}</Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <code className="text-sm font-mono bg-muted px-2 py-0.5 rounded">{cert.code}</code>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6"
+                          onClick={() => copyCode(cert.code)}
+                          data-testid={`button-copy-${cert.id}`}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
+                        {cert.status === 'active' && cert.balance < cert.amount && (
+                          <span className="text-primary font-medium">Остаток: {cert.balance}₽</span>
+                        )}
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          до {new Date(cert.expiresAt).toLocaleDateString('ru-RU')}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {new Date(cert.createdAt).toLocaleDateString('ru-RU')}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Gift className="h-5 w-5" />
+            Полученные в подарок
+          </CardTitle>
+          <CardDescription>Сертификаты, которые вам подарили</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {receivedCerts.length === 0 ? (
+            <div className="text-center py-8">
+              <Gift className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+              <p className="text-muted-foreground" data-testid="text-no-received-certs">
+                Вам ещё не дарили сертификаты
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {receivedCerts.map((cert) => (
+                <div 
+                  key={cert.id} 
+                  className="flex items-center justify-between p-4 border rounded-lg hover-elevate"
+                  data-testid={`cert-received-${cert.id}`}
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <Gift className="h-8 w-8 text-green-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-bold text-lg">{cert.amount}₽</p>
+                        {getStatusBadge(cert)}
+                        {cert.senderName && (
+                          <Badge variant="secondary">От {cert.senderName}</Badge>
+                        )}
+                      </div>
+                      {cert.message && (
+                        <p className="text-sm text-muted-foreground mt-1 italic">"{cert.message}"</p>
+                      )}
+                      <div className="flex items-center gap-2 mt-1">
+                        <code className="text-sm font-mono bg-muted px-2 py-0.5 rounded">{cert.code}</code>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6"
+                          onClick={() => copyCode(cert.code)}
+                          data-testid={`button-copy-received-${cert.id}`}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
+                        {cert.status === 'active' && cert.balance < cert.amount && (
+                          <span className="text-primary font-medium">Остаток: {cert.balance}₽</span>
+                        )}
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          до {new Date(cert.expiresAt).toLocaleDateString('ru-RU')}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -723,6 +953,10 @@ export default function AccountPage() {
               <Sparkles className="h-4 w-4 mr-2" />
               Рулетка
             </TabsTrigger>
+            <TabsTrigger value="certificates" data-testid="tab-certificates">
+              <Gift className="h-4 w-4 mr-2" />
+              Сертификаты
+            </TabsTrigger>
             <TabsTrigger value="profile" data-testid="tab-profile">
               <User className="h-4 w-4 mr-2" />
               Профиль
@@ -819,6 +1053,8 @@ export default function AccountPage() {
           </TabsContent>
 
           <WheelTab />
+
+          <CertificatesTab userEmail={user.email} />
 
           <TabsContent value="profile">
             {isBirthday && (

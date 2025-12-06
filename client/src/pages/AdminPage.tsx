@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send, Edit, Palette, Check } from "lucide-react";
+import { Trash2, Plus, Package, FolderOpen, ShoppingBag, MessageSquare, Star, Ticket, Bell, Upload, X, LogOut, Mail, Send, Edit, Palette, Check, Gift, Copy, Calendar, Loader2 } from "lucide-react";
 import { getUserOrders, updateOrderStatus, getAllOrders, deleteOrder } from "@/services/yandex-orders";
 import { getAllReviews, deleteReview } from "@/services/yandex-reviews";
 import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, getPromoCodeUsageCount } from "@/services/yandex-promocodes";
@@ -99,6 +99,246 @@ const heroSlideSchema = z.object({
 type NewsletterForm = z.infer<typeof newsletterSchema>;
 type HeroSlideForm = z.infer<typeof heroSlideSchema>;
 type TelegramBroadcastForm = z.infer<typeof telegramBroadcastSchema>;
+
+interface GiftCertificate {
+  id: string;
+  code: string;
+  amount: number;
+  balance: number;
+  status: 'pending' | 'active' | 'used' | 'expired';
+  purchaserEmail: string;
+  purchaserName: string | null;
+  recipientEmail: string | null;
+  recipientName: string | null;
+  senderName: string | null;
+  message: string | null;
+  isGift: boolean;
+  deliveryDate: string | null;
+  deliveryStatus: string | null;
+  createdAt: string;
+  paidAt: string | null;
+  expiresAt: string;
+}
+
+function CertificatesAdminTab() {
+  const [certificates, setCertificates] = useState<GiftCertificate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [activatingId, setActivatingId] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
+
+  const loadCertificates = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/certificates`);
+      const data = await response.json();
+      if (data.success && data.certificates) {
+        setCertificates(data.certificates.sort((a: GiftCertificate, b: GiftCertificate) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ));
+      }
+    } catch (error) {
+      console.error('Error loading certificates:', error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить сертификаты",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadCertificates();
+  }, []);
+
+  const handleActivate = async (certId: string) => {
+    setActivatingId(certId);
+    try {
+      const response = await fetch(`${API_BASE_URL}/certificates`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'activate', id: certId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        toast({
+          title: "Успешно!",
+          description: "Сертификат активирован",
+        });
+        loadCertificates();
+      } else {
+        throw new Error(data.error || 'Ошибка активации');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setActivatingId(null);
+    }
+  };
+
+  const copyCode = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      toast({ title: "Скопировано!", description: `Код ${code} скопирован` });
+    } catch (error) {
+      toast({ title: "Ошибка", description: "Не удалось скопировать", variant: "destructive" });
+    }
+  };
+
+  const getStatusBadge = (cert: GiftCertificate) => {
+    const now = new Date();
+    const expiresAt = new Date(cert.expiresAt);
+    
+    if (cert.status === 'pending') {
+      return <Badge variant="secondary">Ожидает оплаты</Badge>;
+    }
+    if (cert.status === 'used' || cert.balance <= 0) {
+      return <Badge variant="outline">Использован</Badge>;
+    }
+    if (expiresAt < now) {
+      return <Badge variant="destructive">Истёк</Badge>;
+    }
+    return <Badge variant="default">Активен</Badge>;
+  };
+
+  const filteredCertificates = statusFilter === "all" 
+    ? certificates 
+    : certificates.filter(c => {
+        if (statusFilter === 'expired') {
+          return new Date(c.expiresAt) < new Date() && c.status !== 'used';
+        }
+        return c.status === statusFilter;
+      });
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="py-12 text-center">
+          <Loader2 className="h-12 w-12 mx-auto mb-4 text-primary animate-spin" />
+          <p className="text-muted-foreground">Загрузка сертификатов...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Gift className="h-5 w-5" />
+              Управление сертификатами
+            </CardTitle>
+            <CardDescription>Всего сертификатов: {certificates.length}</CardDescription>
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[180px]" data-testid="select-cert-status-filter">
+              <SelectValue placeholder="Все статусы" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Все ({certificates.length})</SelectItem>
+              <SelectItem value="pending">Ожидают оплаты ({certificates.filter(c => c.status === 'pending').length})</SelectItem>
+              <SelectItem value="active">Активные ({certificates.filter(c => c.status === 'active').length})</SelectItem>
+              <SelectItem value="used">Использованные ({certificates.filter(c => c.status === 'used').length})</SelectItem>
+              <SelectItem value="expired">Истёкшие</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {filteredCertificates.length === 0 ? (
+          <div className="text-center py-8">
+            <Gift className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+            <p className="text-muted-foreground">Нет сертификатов с выбранным статусом</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredCertificates.map((cert) => (
+              <div 
+                key={cert.id} 
+                className="border rounded-lg p-4 space-y-3"
+                data-testid={`admin-cert-${cert.id}`}
+              >
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div className="space-y-1 flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-bold text-lg">{cert.amount}₽</span>
+                      {getStatusBadge(cert)}
+                      {cert.isGift && <Badge variant="secondary">Подарок</Badge>}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <code className="text-sm font-mono bg-muted px-2 py-0.5 rounded">{cert.code}</code>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6"
+                        onClick={() => copyCode(cert.code)}
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground mt-2">
+                      <div>
+                        <span className="font-medium">Покупатель:</span> {cert.purchaserEmail}
+                      </div>
+                      {cert.recipientEmail && (
+                        <div>
+                          <span className="font-medium">Получатель:</span> {cert.recipientEmail}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>Создан: {new Date(cert.createdAt).toLocaleDateString('ru-RU')}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>Истекает: {new Date(cert.expiresAt).toLocaleDateString('ru-RU')}</span>
+                      </div>
+                      {cert.balance !== cert.amount && cert.status === 'active' && (
+                        <div className="text-primary font-medium">
+                          Остаток: {cert.balance}₽ из {cert.amount}₽
+                        </div>
+                      )}
+                    </div>
+                    {cert.message && (
+                      <p className="text-sm text-muted-foreground italic mt-2">"{cert.message}"</p>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    {cert.status === 'pending' && (
+                      <Button
+                        size="sm"
+                        onClick={() => handleActivate(cert.id)}
+                        disabled={activatingId === cert.id}
+                        data-testid={`button-activate-${cert.id}`}
+                      >
+                        {activatingId === cert.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                          <Check className="h-4 w-4 mr-2" />
+                        )}
+                        Активировать
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -984,7 +1224,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 mb-4 sm:mb-6 gap-1">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 mb-4 sm:mb-6 gap-1">
           <TabsTrigger value="orders" data-testid="tab-orders">
             <ShoppingBag className="w-4 h-4 mr-2" />
             Заказы ({allOrders.length})
@@ -996,6 +1236,10 @@ export default function AdminPage() {
           <TabsTrigger value="promocodes" data-testid="tab-promocodes">
             <Ticket className="w-4 h-4 mr-2" />
             Промокоды
+          </TabsTrigger>
+          <TabsTrigger value="certificates" data-testid="tab-certificates">
+            <Gift className="w-4 h-4 mr-2" />
+            Сертификаты
           </TabsTrigger>
           <TabsTrigger value="newsletter" data-testid="tab-newsletter">
             <Mail className="w-4 h-4 mr-2" />
@@ -1478,6 +1722,10 @@ export default function AdminPage() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="certificates" className="space-y-6">
+          <CertificatesAdminTab />
         </TabsContent>
 
         <TabsContent value="newsletter" className="space-y-6">
