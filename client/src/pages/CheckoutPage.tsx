@@ -318,7 +318,7 @@ export default function CheckoutPage() {
 
     setIsCheckingCertificate(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/certificates`, {
+      const response = await fetch(`${API_BASE_URL}/api/certificates`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
