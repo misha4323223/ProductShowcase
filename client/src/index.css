@@ -2388,6 +2388,37 @@ html.autumn body {
   }
 
   /* ========================================
+     DROPDOWN MENU SUBMENU FIX - Принудительное позиционирование
+     ======================================== */
+  
+  /* Фикс для подменю темы - позиционируем справа от родителя */
+  [role="menu"][data-radix-popper-content-wrapper] {
+    position: fixed !important;
+  }
+  
+  /* На мобильных устройствах подменю открывается внутри viewport */
+  @media (max-width: 640px) {
+    [data-radix-dropdown-menu-content] [data-radix-dropdown-menu-sub-content] {
+      position: fixed !important;
+      left: auto !important;
+      right: 1rem !important;
+      top: auto !important;
+      max-width: calc(100vw - 2rem) !important;
+    }
+    
+    /* Специфичный фикс для подменю темы */
+    .theme-submenu {
+      position: fixed !important;
+      left: auto !important;
+      right: 1rem !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      max-width: calc(100vw - 2rem) !important;
+      z-index: 9999 !important;
+    }
+  }
+
+  /* ========================================
      DIALOG OVERLAY - АДАПТИВНЫЙ К ТЕМАМ
      ======================================== */
   
