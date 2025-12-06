@@ -1,0 +1,102 @@
+# ========== GIFT CERTIFICATES ==========
+  /certificates:
+    get:
+      summary: Получить сертификаты пользователя
+      parameters:
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Код сертификата
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: ID сертификата
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Email пользователя для получения его сертификатов
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eir457javr65abar8e
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Сертификат(ы)
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      summary: Операции с сертификатами
+      description: |
+        Поддерживаемые actions:
+        - create: создать сертификат
+        - validate: проверить валидность
+        - apply: применить к заказу
+        - activate: активировать после оплаты
+        - send: отправить получателю
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eke3lrn4gchvvuhgdh
+        service_account_id: aje47rf2630q59equess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: [create, validate, apply, activate, send]
+                amount:
+                  type: integer
+                  description: Номинал (для create)
+                purchaserEmail:
+                  type: string
+                  description: Email покупателя
+                isGift:
+                  type: boolean
+                  description: Подарок или для себя
+                recipientEmail:
+                  type: string
+                  description: Email получателя
+                recipientTelegramId:
+                  type: string
+                  description: Telegram ID получателя
+                code:
+                  type: string
+                  description: Код сертификата (для validate/apply)
+                orderId:
+                  type: string
+                  description: ID заказа (для apply)
+                amountToUse:
+                  type: integer
+                  description: Сумма к списанию (для apply)
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
