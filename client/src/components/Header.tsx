@@ -309,43 +309,18 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                     </div>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
+                    {/* Показываем только текущую сезонную тему */}
                     <DropdownMenuItem 
-                      onClick={() => setTheme('sakura')}
+                      onClick={() => setTheme(preferredTheme)}
                       className="cursor-pointer"
-                      data-testid="theme-sakura"
+                      data-testid={`theme-${preferredTheme}`}
                     >
-                      <span className={theme === 'sakura' && !isDarkMode ? 'font-bold' : ''}>
-                        {themeNames['sakura']}
-                      </span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => setTheme('new-year')}
-                      className="cursor-pointer"
-                      data-testid="theme-new-year"
-                    >
-                      <span className={theme === 'new-year' && !isDarkMode ? 'font-bold' : ''}>
-                        {themeNames['new-year']}
-                      </span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => setTheme('spring')}
-                      className="cursor-pointer"
-                      data-testid="theme-spring"
-                    >
-                      <span className={theme === 'spring' && !isDarkMode ? 'font-bold' : ''}>
-                        {themeNames['spring']}
-                      </span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => setTheme('autumn')}
-                      className="cursor-pointer"
-                      data-testid="theme-autumn"
-                    >
-                      <span className={theme === 'autumn' && !isDarkMode ? 'font-bold' : ''}>
-                        {themeNames['autumn']}
+                      <span className={!isDarkMode ? 'font-bold' : ''}>
+                        {themeNames[preferredTheme]}
                       </span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
+                    {/* Показываем тёмную тему */}
                     <DropdownMenuItem 
                       onClick={() => {
                         if (isDarkMode) {
