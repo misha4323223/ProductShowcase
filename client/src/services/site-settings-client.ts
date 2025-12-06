@@ -278,3 +278,69 @@ export async function setPreferredTheme(theme: string): Promise<void> {
     throw error;
   }
 }
+
+// Branding settings
+export interface BrandingSettings {
+  siteName: string;
+  logoUrl: string;
+  accentColor: string;
+}
+
+const DEFAULT_BRANDING: BrandingSettings = {
+  siteName: 'Sweet Delights',
+  logoUrl: '',
+  accentColor: '#f472b6', // pink-400 default
+};
+
+export async function getBrandingSettings(): Promise<BrandingSettings> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/site-settings?key=branding_settings`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch branding settings from server');
+      return DEFAULT_BRANDING;
+    }
+
+    const data: SiteSetting = await response.json();
+    if (!data.settingValue) return DEFAULT_BRANDING;
+    
+    const parsed = typeof data.settingValue === 'string' ? JSON.parse(data.settingValue) : data.settingValue;
+    return { ...DEFAULT_BRANDING, ...parsed };
+  } catch (error) {
+    console.error('Error fetching branding settings:', error);
+    return DEFAULT_BRANDING;
+  }
+}
+
+export async function setBrandingSettings(settings: Partial<BrandingSettings>): Promise<void> {
+  try {
+    const current = await getBrandingSettings();
+    const updated = { ...current, ...settings };
+    
+    const response = await fetch(`${API_BASE_URL}/site-settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        settingKey: 'branding_settings',
+        settingValue: JSON.stringify(updated)
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to save branding settings');
+    }
+
+    console.log('Branding settings saved to server:', updated);
+  } catch (error: any) {
+    console.error('Error setting branding settings:', error);
+    throw error;
+  }
+}

@@ -10,6 +10,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { WheelProvider } from "@/contexts/WheelContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { SiteSettingsProvider } from "@/contexts/SiteSettingsContext";
 import { LegalDialogProvider } from "@/contexts/LegalDialogContext";
 import { ChatbotProvider } from "@/contexts/ChatbotContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
@@ -181,30 +182,32 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <TelegramAutoLogin />
-          <AdminAuthProvider>
-            <CartProvider>
-              <WishlistProvider>
-                <WheelProvider>
-                  <LegalDialogProvider>
-                    <ChatbotProvider>
-                      <TooltipProvider>
-                        <AutumnRain />
-                        <SunflareParticles />
-                        <Toaster />
-                        <CookieBanner />
-                        <Router />
-                        <LegalDialogContainer />
-                        <ChatbotContainer />
-                      </TooltipProvider>
-                    </ChatbotProvider>
-                  </LegalDialogProvider>
-                </WheelProvider>
-              </WishlistProvider>
-            </CartProvider>
-          </AdminAuthProvider>
-        </AuthProvider>
+        <SiteSettingsProvider>
+          <AuthProvider>
+            <TelegramAutoLogin />
+            <AdminAuthProvider>
+              <CartProvider>
+                <WishlistProvider>
+                  <WheelProvider>
+                    <LegalDialogProvider>
+                      <ChatbotProvider>
+                        <TooltipProvider>
+                          <AutumnRain />
+                          <SunflareParticles />
+                          <Toaster />
+                          <CookieBanner />
+                          <Router />
+                          <LegalDialogContainer />
+                          <ChatbotContainer />
+                        </TooltipProvider>
+                      </ChatbotProvider>
+                    </LegalDialogProvider>
+                  </WheelProvider>
+                </WishlistProvider>
+              </CartProvider>
+            </AdminAuthProvider>
+          </AuthProvider>
+        </SiteSettingsProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

@@ -18,7 +18,8 @@ import { getAllPromoCodes, createPromoCode, updatePromoCode, deletePromoCode, ge
 import { sendStockNotifications, getAllNotifications, deleteNotification } from "@/services/yandex-stock-notifications";
 import { getAllNewsletterSubscriptions, getActiveNewsletterEmails, unsubscribeFromNewsletter, type NewsletterSubscription } from "@/services/yandex-newsletter";
 import { sendNewsletter } from "@/services/postbox-client";
-import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, getBackgroundSettings, setBackgroundSettings, setPreferredTheme as savePreferredTheme, type HeroSlide, type BackgroundSettings, type BackgroundSetting } from "@/services/site-settings-client";
+import { setCurrentTheme as saveThemeToServer, getHeroSlides, setHeroSlides, getBackgroundSettings, setBackgroundSettings, setPreferredTheme as savePreferredTheme, getBrandingSettings, setBrandingSettings, type HeroSlide, type BackgroundSettings, type BackgroundSetting, type BrandingSettings } from "@/services/site-settings-client";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { Order, Review, PromoCode } from "@/types/firebase-types";
 import { useForm } from "react-hook-form";
@@ -141,6 +142,15 @@ export default function AdminPage() {
   const [mobileBackgroundImageFile, setMobileBackgroundImageFile] = useState<File | null>(null);
   const [mobileBackgroundImagePreview, setMobileBackgroundImagePreview] = useState<string>("");
   const [isSavingBackground, setIsSavingBackground] = useState(false);
+
+  const { siteName, logoUrl, accentColor, refreshBranding } = useSiteSettings();
+  const [editingSiteName, setEditingSiteName] = useState<string>("");
+  const [editingLogoUrl, setEditingLogoUrl] = useState<string>("");
+  const [editingAccentColor, setEditingAccentColor] = useState<string>("");
+  const [logoImageFile, setLogoImageFile] = useState<File | null>(null);
+  const [logoImagePreview, setLogoImagePreview] = useState<string>("");
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [isSavingBranding, setIsSavingBranding] = useState(false);
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
@@ -343,6 +353,13 @@ export default function AdminPage() {
     }
     loadBackgrounds();
   }, []);
+
+  useEffect(() => {
+    setEditingSiteName(siteName);
+    setEditingLogoUrl(logoUrl);
+    setEditingAccentColor(accentColor);
+    setLogoImagePreview(logoUrl);
+  }, [siteName, logoUrl, accentColor]);
 
   useEffect(() => {
     async function loadPromoUsageCounts() {
@@ -2398,6 +2415,205 @@ export default function AdminPage() {
               <CardDescription>Настройка внешнего вида и темы</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div className="space-y-4 border-b pb-6">
+                <h3 className="text-base font-semibold">Брендинг магазина</h3>
+                
+                <div className="grid gap-4">
+                  <div>
+                    <Label htmlFor="site-name" className="text-sm font-medium mb-2 block">
+                      Название магазина
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="site-name"
+                        type="text"
+                        value={editingSiteName}
+                        onChange={(e) => setEditingSiteName(e.target.value)}
+                        placeholder="Sweet Delights"
+                        data-testid="input-site-name"
+                      />
+                      <Button
+                        onClick={async () => {
+                          if (!editingSiteName.trim()) {
+                            toast({ title: "Ошибка", description: "Название не может быть пустым", variant: "destructive" });
+                            return;
+                          }
+                          setIsSavingBranding(true);
+                          try {
+                            await setBrandingSettings({ siteName: editingSiteName.trim() });
+                            await refreshBranding();
+                            toast({ title: "Сохранено!", description: "Название магазина обновлено" });
+                          } catch (error: any) {
+                            toast({ title: "Ошибка", description: error.message, variant: "destructive" });
+                          } finally {
+                            setIsSavingBranding(false);
+                          }
+                        }}
+                        disabled={isSavingBranding || editingSiteName === siteName}
+                        data-testid="button-save-site-name"
+                      >
+                        <Check className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Отображается в заголовке сайта, SEO и письмах
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">
+                      Логотип магазина
+                    </Label>
+                    <div className="flex gap-3 items-start">
+                      {logoImagePreview ? (
+                        <div className="relative">
+                          <img
+                            src={logoImagePreview}
+                            alt="Логотип"
+                            className="w-20 h-20 object-contain rounded border bg-white"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                            onClick={() => {
+                              setLogoImageFile(null);
+                              setLogoImagePreview("");
+                              setEditingLogoUrl("");
+                            }}
+                            data-testid="button-remove-logo"
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="w-20 h-20 border-2 border-dashed rounded flex items-center justify-center text-muted-foreground text-xs">
+                          Нет лого
+                        </div>
+                      )}
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const error = validateImageFile(file);
+                              if (error) {
+                                toast({ title: "Ошибка", description: error, variant: "destructive" });
+                                return;
+                              }
+                              setLogoImageFile(file);
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setLogoImagePreview(reader.result as string);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          data-testid="input-logo-file"
+                        />
+                        <Button
+                          onClick={async () => {
+                            if (!logoImageFile && !editingLogoUrl) {
+                              toast({ title: "Ошибка", description: "Выберите файл логотипа", variant: "destructive" });
+                              return;
+                            }
+                            setIsUploadingLogo(true);
+                            try {
+                              let newLogoUrl = editingLogoUrl;
+                              if (logoImageFile) {
+                                newLogoUrl = await uploadImageToYandexStorage(logoImageFile, 'branding');
+                              }
+                              await setBrandingSettings({ logoUrl: newLogoUrl });
+                              await refreshBranding();
+                              setLogoImageFile(null);
+                              toast({ title: "Сохранено!", description: "Логотип обновлён" });
+                            } catch (error: any) {
+                              toast({ title: "Ошибка", description: error.message, variant: "destructive" });
+                            } finally {
+                              setIsUploadingLogo(false);
+                            }
+                          }}
+                          disabled={isUploadingLogo || (!logoImageFile && editingLogoUrl === logoUrl)}
+                          className="w-full"
+                          data-testid="button-save-logo"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          {isUploadingLogo ? "Загрузка..." : "Сохранить логотип"}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="accent-color" className="text-sm font-medium mb-2 block">
+                      Акцентный цвет
+                    </Label>
+                    <div className="flex gap-2 items-center">
+                      <div 
+                        className="w-10 h-10 rounded border cursor-pointer"
+                        style={{ backgroundColor: editingAccentColor }}
+                        onClick={() => document.getElementById('color-picker')?.click()}
+                      />
+                      <input
+                        id="color-picker"
+                        type="color"
+                        value={editingAccentColor}
+                        onChange={(e) => setEditingAccentColor(e.target.value)}
+                        className="sr-only"
+                        data-testid="input-accent-color"
+                      />
+                      <Input
+                        type="text"
+                        value={editingAccentColor}
+                        onChange={(e) => setEditingAccentColor(e.target.value)}
+                        placeholder="#f472b6"
+                        className="flex-1"
+                        data-testid="input-accent-color-text"
+                      />
+                      <Button
+                        onClick={async () => {
+                          if (!editingAccentColor || !/^#[0-9A-Fa-f]{6}$/.test(editingAccentColor)) {
+                            toast({ title: "Ошибка", description: "Укажите цвет в формате #RRGGBB", variant: "destructive" });
+                            return;
+                          }
+                          setIsSavingBranding(true);
+                          try {
+                            await setBrandingSettings({ accentColor: editingAccentColor });
+                            await refreshBranding();
+                            toast({ title: "Сохранено!", description: "Акцентный цвет обновлён" });
+                          } catch (error: any) {
+                            toast({ title: "Ошибка", description: error.message, variant: "destructive" });
+                          } finally {
+                            setIsSavingBranding(false);
+                          }
+                        }}
+                        disabled={isSavingBranding || editingAccentColor === accentColor}
+                        data-testid="button-save-accent-color"
+                      >
+                        <Check className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Цвет кнопок, ссылок и акцентных элементов
+                    </p>
+                    <div className="flex gap-2 mt-2 flex-wrap">
+                      {['#f472b6', '#ec4899', '#8b5cf6', '#6366f1', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'].map((color) => (
+                        <button
+                          key={color}
+                          className="w-8 h-8 rounded-full border-2 border-transparent hover:border-foreground/50 transition-all"
+                          style={{ backgroundColor: color }}
+                          onClick={() => setEditingAccentColor(color)}
+                          data-testid={`button-preset-color-${color.slice(1)}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="theme-select" className="text-base font-semibold mb-3 block">
