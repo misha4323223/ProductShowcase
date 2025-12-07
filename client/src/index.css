@@ -87,9 +87,9 @@ html.sakura header.header-themed {
   background: linear-gradient(135deg, rgba(244, 114, 182, 0.95), rgba(236, 72, 153, 0.95));
 }
 
-/* New Year theme - Red header with blur */
+/* New Year theme - Transparent header with blur */
 html.new-year header.header-themed {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.7), rgba(185, 28, 28, 0.7));
+  background: transparent;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
