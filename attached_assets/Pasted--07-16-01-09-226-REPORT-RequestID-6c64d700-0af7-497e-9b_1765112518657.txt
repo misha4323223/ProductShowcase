@@ -1,0 +1,157 @@
+
+
+07 дек. 16:01:09.226
+REPORT RequestID: 6c64d700-0af7-497e-9b89-b0ed838ead3f Duration: 204.478 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 104 MB Queuing Duration: 0.037 ms Function Init Duration: 193.619 ms CPU Usage: 12.207 %
+
+07 дек. 16:01:09.226
+END RequestID: 6c64d700-0af7-497e-9b89-b0ed838ead3f
+
+07 дек. 16:01:09.224
+at /function/runtime/bootstrap:159:108
+
+07 дек. 16:01:09.224
+at Generator.next (<anonymous>)
+
+07 дек. 16:01:09.224
+at ve.<anonymous> (/function/runtime/bootstrap:212:136)
+
+07 дек. 16:01:09.224
+at ve.handler (/function/runtime/bootstrap:194:106)
+
+07 дек. 16:01:09.224
+at ie (/function/runtime/bootstrap:158:76)
+
+07 дек. 16:01:09.224
+at new Promise (<anonymous>)
+
+07 дек. 16:01:09.224
+at /function/runtime/bootstrap:159:108
+
+07 дек. 16:01:09.224
+at Generator.next (<anonymous>)
+
+07 дек. 16:01:09.224
+at ve.<anonymous> (/function/runtime/bootstrap:196:14)
+
+07 дек. 16:01:09.224
+at exports.handler [as handlerFn] (/function/code/index.js:106:23)
+
+07 дек. 16:01:09.224
+Error in init-payment-robokassa: TypeError: RobokassaClient is not a constructor
+
+07 дек. 16:01:09.223
+}
+
+07 дек. 16:01:09.223
+isBase64Encoded: false
+
+07 дек. 16:01:09.223
+body: '{"orderId":"cert-mivqe1ben4gufil31wh","amount":500,"email":"pimashin2016@gmail.com","description":"Подарочный сертификат 500₽","paymentMethod":"card"}',
+
+07 дек. 16:01:09.223
+},
+
+07 дек. 16:01:09.223
+requestTimeEpoch: 1765112469
+
+07 дек. 16:01:09.223
+requestTime: '7/Dec/2025:13:01:09 +0000',
+
+07 дек. 16:01:09.223
+requestId: '6c64d700-0af7-497e-9b89-b0ed838ead3f',
+
+07 дек. 16:01:09.223
+httpMethod: 'POST',
+
+07 дек. 16:01:09.223
+identity: { sourceIp: '178.154.236.16', userAgent: '' },
+
+07 дек. 16:01:09.223
+requestContext: {
+
+07 дек. 16:01:09.223
+multiValueQueryStringParameters: {},
+
+07 дек. 16:01:09.223
+queryStringParameters: {},
+
+07 дек. 16:01:09.223
+},
+
+07 дек. 16:01:09.223
+'X-Trace-Id': [ '574c1bea-ac2e-4abb-b595-a315b93225e2' ]
+
+07 дек. 16:01:09.223
+'X-Request-Id': [ '6c64d700-0af7-497e-9b89-b0ed838ead3f' ],
+
+07 дек. 16:01:09.223
+'X-Real-Remote-Address': [ '[178.154.236.16]:52480' ],
+
+07 дек. 16:01:09.223
+'X-Forwarded-For': [ '178.154.236.16' ],
+
+07 дек. 16:01:09.223
+'Uber-Trace-Id': [ '37d45a4b3112f6e7:39835000534bc54d:37d45a4b3112f6e7:1' ],
+
+07 дек. 16:01:09.223
+Host: [ 'functions.yandexcloud.net' ],
+
+07 дек. 16:01:09.223
+'Content-Type': [ 'application/json' ],
+
+07 дек. 16:01:09.223
+'Content-Length': [ '172' ],
+
+07 дек. 16:01:09.223
+multiValueHeaders: {
+
+07 дек. 16:01:09.223
+pathParams: {},
+
+07 дек. 16:01:09.223
+multiValueParams: {},
+
+07 дек. 16:01:09.223
+params: {},
+
+07 дек. 16:01:09.223
+url: '',
+
+07 дек. 16:01:09.223
+},
+
+07 дек. 16:01:09.223
+'X-Trace-Id': '574c1bea-ac2e-4abb-b595-a315b93225e2'
+
+07 дек. 16:01:09.223
+'X-Request-Id': '6c64d700-0af7-497e-9b89-b0ed838ead3f',
+
+07 дек. 16:01:09.223
+'X-Real-Remote-Address': '[178.154.236.16]:52480',
+
+07 дек. 16:01:09.223
+'X-Forwarded-For': '178.154.236.16',
+
+07 дек. 16:01:09.223
+'Uber-Trace-Id': '37d45a4b3112f6e7:39835000534bc54d:37d45a4b3112f6e7:1',
+
+07 дек. 16:01:09.223
+Host: 'functions.yandexcloud.net',
+
+07 дек. 16:01:09.223
+'Content-Type': 'application/json',
+
+07 дек. 16:01:09.223
+'Content-Length': '172',
+
+07 дек. 16:01:09.223
+headers: {
+
+07 дек. 16:01:09.223
+httpMethod: 'POST',
+
+07 дек. 16:01:09.223
+Init payment request: {
+
+07 дек. 16:01:09.018
+START RequestID: 6c64d700-0af7-497e-9b89-b0ed838ead3f Version: d4e1letrb3f5kldj49ah
