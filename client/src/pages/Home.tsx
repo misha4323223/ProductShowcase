@@ -289,36 +289,39 @@ export default function Home() {
 
         {/* Coming Soon Banner - скрыт в новогодней теме */}
         {theme !== 'new-year' && (
-          <div className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 py-2 sm:py-3 md:py-4 animate-gradient backdrop-blur-sm">
+          <div 
+            className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 animate-gradient backdrop-blur-sm flex items-center justify-center"
+            style={{ height: 'clamp(3rem, 8vw, 10rem)', paddingBottom: 'clamp(0.5rem, 1.5vw, 1.5rem)' }}
+          >
             <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/40 via-purple-200/35 to-yellow-100/40"></div>
             <div className="absolute inset-0 opacity-30">
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNCIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')] animate-pulse-slow"></div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-              {/* Main heading */}
-              <div className="space-y-2 sm:space-y-3">
-                <h1 className="font-serif text-2xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white drop-shadow-2xl animate-bounce-soft leading-tight">
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0s' }}>С</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.1s' }}>К</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.2s' }}>О</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.3s' }}>Р</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.4s' }}>О</span>
-                  <span className="inline-block mx-1.5 sm:mx-2 md:mx-3">✨</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.5s' }}>О</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.6s' }}>Т</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.7s' }}>К</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.8s' }}>Р</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '0.9s' }}>Ы</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '1s' }}>Т</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '1.1s' }}>И</span>
-                  <span className="inline-block animate-wiggle" style={{ animationDelay: '1.2s' }}>Е</span>
-                </h1>
-              </div>
+            <div className="text-center relative z-10" style={{ padding: '0 1vw' }}>
+              <h1 
+                className="font-serif font-bold text-white drop-shadow-2xl animate-bounce-soft leading-tight whitespace-nowrap"
+                style={{ fontSize: 'clamp(1.2rem, 4.5vw, 5rem)' }}
+              >
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0s' }}>С</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.1s' }}>К</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.2s' }}>О</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.3s' }}>Р</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.4s' }}>О</span>
+                <span className="inline-block" style={{ margin: '0 0.4vw' }}>✨</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.5s' }}>О</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.6s' }}>Т</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.7s' }}>К</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.8s' }}>Р</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '0.9s' }}>Ы</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '1s' }}>Т</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '1.1s' }}>И</span>
+                <span className="inline-block animate-wiggle" style={{ animationDelay: '1.2s' }}>Е</span>
+              </h1>
             </div>
 
             {/* Bottom wave decoration */}
-            <div className="absolute bottom-0 left-0 right-0 h-6 sm:h-8">
+            <div className="absolute bottom-0 left-0 right-0" style={{ height: 'clamp(0.5rem, 1.5vw, 1.5rem)' }}>
               <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full">
                 <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="hsl(var(--background))"></path>
               </svg>
