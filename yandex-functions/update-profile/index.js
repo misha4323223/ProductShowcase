@@ -1,5 +1,19 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, GetCommand, UpdateCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+
+// Нормализация телефона для корректного сравнения
+function normalizePhone(phone) {
+  if (!phone) return null;
+  // Убираем все кроме цифр
+  let digits = phone.replace(/\D/g, '');
+  // Приводим к формату 7XXXXXXXXXX (11 цифр)
+  if (digits.length === 10) {
+    digits = '7' + digits;
+  } else if (digits.length === 11 && digits.startsWith('8')) {
+    digits = '7' + digits.slice(1);
+  }
+  return digits.length === 11 ? digits : null;
+}
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -154,9 +168,76 @@ exports.handler = async (event) => {
     }
 
     if (phone !== undefined) {
+      const trimmedPhone = phone.trim();
+      const normalizedInputPhone = normalizePhone(trimmedPhone);
+      
       updateExpressions.push("#phone = :phone");
       expressionAttributeNames["#phone"] = "phone";
-      expressionAttributeValues[":phone"] = phone.trim();
+      expressionAttributeValues[":phone"] = trimmedPhone;
+      
+      // Сохраняем нормализованный телефон
+      if (normalizedInputPhone) {
+        updateExpressions.push("#normalizedPhone = :normalizedPhone");
+        expressionAttributeNames["#normalizedPhone"] = "normalizedPhone";
+        expressionAttributeValues[":normalizedPhone"] = normalizedInputPhone;
+        
+        // Ищем Яндекс аккаунт с таким же телефоном для синхронизации
+        if (!existingUser.Item.yandexId) {
+          console.log('🔍 Поиск Яндекс аккаунта с телефоном:', normalizedInputPhone);
+          
+          const scanYandexUsers = new ScanCommand({
+            TableName: "users",
+            FilterExpression: "attribute_exists(yandexPhone) AND yandexPhone <> :empty",
+            ExpressionAttributeValues: { ":empty": "" },
+          });
+          
+          const yandexUsersResult = await docClient.send(scanYandexUsers);
+          
+          if (yandexUsersResult.Items && yandexUsersResult.Items.length > 0) {
+            const matchingYandexUser = yandexUsersResult.Items.find(user => {
+              const yandexNormalizedPhone = normalizePhone(user.yandexPhone);
+              return yandexNormalizedPhone && yandexNormalizedPhone === normalizedInputPhone && user.email !== trimmedEmail;
+            });
+            
+            if (matchingYandexUser) {
+              console.log('✅ Найден Яндекс аккаунт для привязки:', matchingYandexUser.email);
+              
+              // Копируем данные из Яндекс аккаунта
+              updateExpressions.push("#yandexId = :yandexId");
+              expressionAttributeNames["#yandexId"] = "yandexId";
+              expressionAttributeValues[":yandexId"] = matchingYandexUser.yandexId;
+              
+              if (matchingYandexUser.yandexEmail) {
+                updateExpressions.push("#yandexEmail = :yandexEmail");
+                expressionAttributeNames["#yandexEmail"] = "yandexEmail";
+                expressionAttributeValues[":yandexEmail"] = matchingYandexUser.yandexEmail;
+              }
+              
+              if (matchingYandexUser.yandexFirstName) {
+                updateExpressions.push("#yandexFirstName = :yandexFirstName");
+                expressionAttributeNames["#yandexFirstName"] = "yandexFirstName";
+                expressionAttributeValues[":yandexFirstName"] = matchingYandexUser.yandexFirstName;
+              }
+              
+              if (matchingYandexUser.yandexLastName) {
+                updateExpressions.push("#yandexLastName = :yandexLastName");
+                expressionAttributeNames["#yandexLastName"] = "yandexLastName";
+                expressionAttributeValues[":yandexLastName"] = matchingYandexUser.yandexLastName;
+              }
+              
+              if (matchingYandexUser.yandexPhone) {
+                updateExpressions.push("#yandexPhone = :yandexPhone");
+                expressionAttributeNames["#yandexPhone"] = "yandexPhone";
+                expressionAttributeValues[":yandexPhone"] = matchingYandexUser.yandexPhone;
+              }
+              
+              updateExpressions.push("#yandexLinkedAt = :yandexLinkedAt");
+              expressionAttributeNames["#yandexLinkedAt"] = "yandexLinkedAt";
+              expressionAttributeValues[":yandexLinkedAt"] = new Date().toISOString();
+            }
+          }
+        }
+      }
     }
 
     // Добавляем дату обновления
@@ -184,7 +265,7 @@ exports.handler = async (event) => {
 
     console.log(`✅ Profile updated for: ${trimmedEmail}`);
 
-    // Возвращаем обновленный профиль
+    // Возвращаем обновленный профиль с данными Яндекса
     const profile = {
       email: updatedUser.email,
       userId: updatedUser.userId,
@@ -193,7 +274,15 @@ exports.handler = async (event) => {
       patronymic: updatedUser.patronymic || "",
       birthDate: updatedUser.birthDate || "",
       phone: updatedUser.phone || "",
+      normalizedPhone: updatedUser.normalizedPhone || "",
       role: updatedUser.role || "user",
+      // Данные от Яндекс
+      yandexId: updatedUser.yandexId || null,
+      yandexEmail: updatedUser.yandexEmail || null,
+      yandexFirstName: updatedUser.yandexFirstName || null,
+      yandexLastName: updatedUser.yandexLastName || null,
+      yandexPhone: updatedUser.yandexPhone || null,
+      yandexLinkedAt: updatedUser.yandexLinkedAt || null,
     };
 
     return createResponse(200, {

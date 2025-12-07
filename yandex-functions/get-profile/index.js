@@ -65,7 +65,7 @@ exports.handler = async (event) => {
 
     const user = result.Item;
 
-    // Возвращаем только данные профиля (без пароля и других чувствительных данных)
+    // Возвращаем профиль с данными Яндекса (без пароля и других чувствительных данных)
     const profile = {
       email: user.email,
       userId: user.userId,
@@ -74,7 +74,15 @@ exports.handler = async (event) => {
       patronymic: user.patronymic || "",
       birthDate: user.birthDate || "",
       phone: user.phone || "",
+      normalizedPhone: user.normalizedPhone || "",
       role: user.role || "user",
+      // Данные от Яндекс
+      yandexId: user.yandexId || null,
+      yandexEmail: user.yandexEmail || null,
+      yandexFirstName: user.yandexFirstName || null,
+      yandexLastName: user.yandexLastName || null,
+      yandexPhone: user.yandexPhone || null,
+      yandexLinkedAt: user.yandexLinkedAt || null,
     };
 
     console.log(`✅ Profile retrieved for: ${trimmedEmail}`);

@@ -1,6 +1,20 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
+
+// Нормализация телефона для корректного сравнения
+function normalizePhone(phone) {
+  if (!phone) return null;
+  // Убираем все кроме цифр
+  let digits = phone.replace(/\D/g, '');
+  // Приводим к формату 7XXXXXXXXXX (11 цифр)
+  if (digits.length === 10) {
+    digits = '7' + digits;
+  } else if (digits.length === 11 && digits.startsWith('8')) {
+    digits = '7' + digits.slice(1);
+  }
+  return digits.length === 11 ? digits : null;
+}
 
 const client = new DynamoDBClient({
   region: "ru-central1",
@@ -144,9 +158,11 @@ exports.handler = async (event) => {
     const email = yandexUser.default_email || `yandex_${yandexId}@yandex.ru`;
     const firstName = yandexUser.first_name || '';
     const lastName = yandexUser.last_name || '';
-    const phone = yandexUser.default_phone?.number || null;
+    const rawPhone = yandexUser.default_phone?.number || null;
+    const normalizedYandexPhone = normalizePhone(rawPhone);
 
     console.log('🔍 Поиск существующего пользователя с yandexId:', yandexId);
+    console.log('📞 Телефон от Яндекса:', rawPhone, '→ нормализованный:', normalizedYandexPhone);
 
     const scanByYandexId = new ScanCommand({
       TableName: "users",
@@ -170,45 +186,55 @@ exports.handler = async (event) => {
       return createRedirectResponse(`${frontendUrl}/auth/callback?token=${token}&provider=yandex`);
     }
 
-    // Сначала ищем по номеру телефона
-    if (phone) {
-      console.log('🔍 Поиск пользователя по телефону:', phone);
-      const scanByPhone = new ScanCommand({
+    // Ищем по нормализованному номеру телефона (сравниваем yandexPhone с phone всех пользователей)
+    if (normalizedYandexPhone) {
+      console.log('🔍 Поиск пользователя по нормализованному телефону:', normalizedYandexPhone);
+      
+      // Сканируем всех пользователей с phone и сравниваем нормализованные версии
+      const scanAllWithPhone = new ScanCommand({
         TableName: "users",
-        FilterExpression: "phone = :phone",
-        ExpressionAttributeValues: { ":phone": phone },
+        FilterExpression: "attribute_exists(phone) AND phone <> :empty",
+        ExpressionAttributeValues: { ":empty": "" },
       });
 
-      result = await docClient.send(scanByPhone);
+      result = await docClient.send(scanAllWithPhone);
 
       if (result.Items && result.Items.length > 0) {
-        const user = result.Items[0];
-        console.log('✅ Найден пользователь по телефону, привязываем Yandex ID');
-        
-        const { UpdateCommand } = require("@aws-sdk/lib-dynamodb");
-        const updateCommand = new UpdateCommand({
-          TableName: "users",
-          Key: { email: user.email },
-          UpdateExpression: "SET yandexId = :yandexId, yandexFirstName = :firstName, yandexLastName = :lastName, yandexPhone = :phone, yandexLinkedAt = :linkedAt",
-          ExpressionAttributeValues: {
-            ":yandexId": yandexId,
-            ":firstName": firstName,
-            ":lastName": lastName,
-            ":phone": phone,
-            ":linkedAt": new Date().toISOString(),
-          },
-        });
-        
-        await docClient.send(updateCommand);
-        
-        const token = generateToken(user.userId, user.email, {
-          yandexId: yandexId,
-          emailVerified: true,
-          firstName: firstName,
-          lastName: lastName,
+        // Ищем пользователя с совпадающим нормализованным телефоном
+        const matchingUser = result.Items.find(user => {
+          const userNormalizedPhone = normalizePhone(user.phone);
+          return userNormalizedPhone && userNormalizedPhone === normalizedYandexPhone;
         });
 
-        return createRedirectResponse(`${frontendUrl}/auth/callback?token=${token}&provider=yandex`);
+        if (matchingUser) {
+          console.log('✅ Найден пользователь по телефону:', matchingUser.email, '- привязываем Yandex ID');
+          
+          const updateCommand = new UpdateCommand({
+            TableName: "users",
+            Key: { email: matchingUser.email },
+            UpdateExpression: "SET yandexId = :yandexId, yandexEmail = :yandexEmail, yandexFirstName = :firstName, yandexLastName = :lastName, yandexPhone = :phone, normalizedPhone = :normalizedPhone, yandexLinkedAt = :linkedAt",
+            ExpressionAttributeValues: {
+              ":yandexId": yandexId,
+              ":yandexEmail": email,
+              ":firstName": firstName,
+              ":lastName": lastName,
+              ":phone": rawPhone,
+              ":normalizedPhone": normalizedYandexPhone,
+              ":linkedAt": new Date().toISOString(),
+            },
+          });
+          
+          await docClient.send(updateCommand);
+          
+          const token = generateToken(matchingUser.userId, matchingUser.email, {
+            yandexId: yandexId,
+            emailVerified: true,
+            firstName: matchingUser.firstName || firstName,
+            lastName: matchingUser.lastName || lastName,
+          });
+
+          return createRedirectResponse(`${frontendUrl}/auth/callback?token=${token}&provider=yandex`);
+        }
       }
     }
 
@@ -225,16 +251,17 @@ exports.handler = async (event) => {
       const user = result.Items[0];
       console.log('✅ Найден пользователь по email, привязываем Yandex ID');
       
-      const { UpdateCommand } = require("@aws-sdk/lib-dynamodb");
       const updateCommand = new UpdateCommand({
         TableName: "users",
         Key: { email: user.email },
-        UpdateExpression: "SET yandexId = :yandexId, yandexFirstName = :firstName, yandexLastName = :lastName, yandexPhone = :phone, yandexLinkedAt = :linkedAt",
+        UpdateExpression: "SET yandexId = :yandexId, yandexEmail = :yandexEmail, yandexFirstName = :firstName, yandexLastName = :lastName, yandexPhone = :phone, normalizedPhone = :normalizedPhone, yandexLinkedAt = :linkedAt",
         ExpressionAttributeValues: {
           ":yandexId": yandexId,
+          ":yandexEmail": email,
           ":firstName": firstName,
           ":lastName": lastName,
-          ":phone": phone,
+          ":phone": rawPhone,
+          ":normalizedPhone": normalizedYandexPhone,
           ":linkedAt": new Date().toISOString(),
         },
       });
@@ -244,8 +271,8 @@ exports.handler = async (event) => {
       const token = generateToken(user.userId, user.email, {
         yandexId: yandexId,
         emailVerified: true,
-        firstName: firstName,
-        lastName: lastName,
+        firstName: user.firstName || firstName,
+        lastName: user.lastName || lastName,
       });
 
       return createRedirectResponse(`${frontendUrl}/auth/callback?token=${token}&provider=yandex`);
@@ -256,19 +283,20 @@ exports.handler = async (event) => {
     
     // Используем телефон как основной идентификатор, если он есть
     // Формат email-ключа: телефон@phone или yandex_id@yandex
-    const primaryKey = phone ? `${phone}@phone` : `yandex_${yandexId}@yandex`;
+    const primaryKey = normalizedYandexPhone ? `${normalizedYandexPhone}@phone` : `yandex_${yandexId}@yandex`;
 
     const putCommand = new PutCommand({
       TableName: "users",
       Item: {
         email: primaryKey,
         userId,
-        phone: phone || null,
+        phone: rawPhone || null,
+        normalizedPhone: normalizedYandexPhone,
         yandexEmail: email,
         yandexId,
         yandexFirstName: firstName,
         yandexLastName: lastName,
-        yandexPhone: phone,
+        yandexPhone: rawPhone,
         yandexLinkedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
         role: "user",
@@ -281,7 +309,7 @@ exports.handler = async (event) => {
 
     const token = generateToken(userId, primaryKey, {
       yandexId,
-      phone: phone,
+      phone: rawPhone,
       emailVerified: true,
       firstName,
       lastName,

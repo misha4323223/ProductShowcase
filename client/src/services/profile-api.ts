@@ -8,7 +8,15 @@ export interface UserProfile {
   patronymic: string;
   birthDate: string;
   phone: string;
+  normalizedPhone?: string;
   role: string;
+  // Данные от Яндекс
+  yandexId?: string | null;
+  yandexEmail?: string | null;
+  yandexFirstName?: string | null;
+  yandexLastName?: string | null;
+  yandexPhone?: string | null;
+  yandexLinkedAt?: string | null;
   [key: string]: any;
 }
 
