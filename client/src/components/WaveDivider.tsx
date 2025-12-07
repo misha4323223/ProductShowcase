@@ -9,7 +9,7 @@ export function WaveDivider() {
       case 'dark':
         return { id: 'darkWaveGradient', stops: [{ offset: '0%', color: '#ec4899' }, { offset: '100%', color: '#a855f7' }] }; // Розовый -> Фиолетовый для тёмной темы
       case 'new-year':
-        return { id: 'newyearWaveGradient', stops: [{ offset: '0%', color: '#FF0000' }, { offset: '100%', color: '#DC143C' }] };
+        return { id: 'newyearWaveGradient', stops: [{ offset: '0%', color: '#C41E3A' }] };
       case 'spring':
         return { id: 'springWaveGradient', stops: [{ offset: '0%', color: '#90EE90' }] };
       case 'autumn':
@@ -25,14 +25,7 @@ export function WaveDivider() {
   const gradientConfig = getWaveGradient();
 
   return (
-    <div 
-      className="w-full overflow-hidden -mt-0.5"
-      style={theme === 'new-year' ? {
-        backgroundColor: 'rgba(255, 0, 0, 0.15)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)'
-      } : undefined}
-    >
+    <div className="w-full overflow-hidden -mt-0.5">
       <svg
         viewBox="0 0 1200 80"
         preserveAspectRatio="none"
