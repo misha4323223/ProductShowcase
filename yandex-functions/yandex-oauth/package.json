@@ -1,0 +1,9 @@
+{
+  "name": "yandex-oauth",
+  "version": "1.0.0",
+  "description": "OAuth авторизация через Яндекс ID",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.478.0",
+    "@aws-sdk/lib-dynamodb": "^3.478.0"
+  }
+}

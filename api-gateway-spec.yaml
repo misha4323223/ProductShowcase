@@ -1887,6 +1887,51 @@ paths:
         '200':
           description: OK
 
+  # ========== YANDEX ID OAUTH ==========
+  /auth/yandex/callback:
+    get:
+      summary: Callback для OAuth авторизации через Яндекс ID
+      description: Принимает код авторизации от Яндекс OAuth, обменивает на токен и создаёт/авторизует пользователя
+      operationId: yandexOAuthCallback
+      parameters:
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Код авторизации от Яндекс OAuth
+        - name: error
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Ошибка OAuth (если пользователь отказался)
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: ЗАМЕНИ_НА_ID_ФУНКЦИИ
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '302':
+          description: Редирект на фронтенд с токеном
+        '400':
+          description: Ошибка параметров
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
   /api/users/attach-email:
     post:
       summary: Привязать Email и пароль к Telegram аккаунту
