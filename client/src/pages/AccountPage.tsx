@@ -26,7 +26,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { getUserOrders, hideOrderForUser } from "@/services/yandex-orders";
 import { getProfile, updateProfile, type UserProfile, isBirthdayToday, markBirthdayGiftSent } from "@/services/profile-api";
 import type { Order, WheelPrize } from "@/types/firebase-types";
-import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3, Cake, Mail, Check, Copy, CreditCard } from "lucide-react";
+import { Package, User, LogOut, Trash2, ArrowLeft, Sparkles, Gift, Trophy, Calendar, Clock, Percent, Coins, Truck, Star, Save, Loader2, Edit3, Cake, Mail, Check, Copy, CreditCard, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function WheelTab() {
@@ -340,7 +340,7 @@ function CertificatesTab({ userEmail }: { userEmail: string }) {
   const getStatusBadge = (cert: GiftCertificate) => {
     const now = new Date();
     const expiresAt = new Date(cert.expiresAt);
-    
+
     if (cert.status === 'pending') {
       return <Badge variant="secondary">Ожидает оплаты</Badge>;
     }
@@ -417,6 +417,17 @@ function CertificatesTab({ userEmail }: { userEmail: string }) {
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
+                        {cert.isGift && (
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-6 w-6"
+                            onClick={() => copyGiftLink(cert.code)}
+                            data-testid={`button-share-${cert.id}`}
+                          >
+                            <Share2 className="h-3 w-3" />
+                          </Button>
+                        )}
                       </div>
                       <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
                         {cert.status === 'active' && cert.balance < cert.amount && (
@@ -502,6 +513,17 @@ function CertificatesTab({ userEmail }: { userEmail: string }) {
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
+                        {cert.isGift && (
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-6 w-6"
+                            onClick={() => copyGiftLink(cert.code)}
+                            data-testid={`button-share-received-${cert.id}`}
+                          >
+                            <Share2 className="h-3 w-3" />
+                          </Button>
+                        )}
                       </div>
                       <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
                         {cert.status === 'active' && cert.balance < cert.amount && (
@@ -632,7 +654,7 @@ export default function AccountPage() {
 
   const loadProfile = async () => {
     if (!user) return;
-    
+
     setLoadingProfile(true);
     try {
       const userProfile = await getProfile(user.email);
@@ -644,10 +666,10 @@ export default function AccountPage() {
         birthDate: userProfile.birthDate || "",
         phone: userProfile.phone || "",
       });
-      
+
       const isBday = isBirthdayToday(userProfile.birthDate);
       setIsBirthday(isBday);
-      
+
       if (isBday) {
         try {
           await markBirthdayGiftSent(user.email);
@@ -664,7 +686,7 @@ export default function AccountPage() {
 
   const handleSaveProfile = async () => {
     if (!user) return;
-    
+
     setSavingProfile(true);
     try {
       const updatedProfile = await updateProfile({
@@ -691,7 +713,7 @@ export default function AccountPage() {
 
   const loadOrders = async () => {
     if (!user) return;
-    
+
     setLoadingOrders(true);
     try {
       const userOrders = await getUserOrders(user.userId);
@@ -750,7 +772,7 @@ export default function AccountPage() {
 
   const handleHideOrder = async () => {
     if (!orderToHide) return;
-    
+
     try {
       await hideOrderForUser(orderToHide);
       setOrders(orders.filter(order => order.id !== orderToHide));
@@ -893,14 +915,14 @@ export default function AccountPage() {
       try {
         const initDataStr = `user=${JSON.stringify(user)}&auth_date=${Math.floor(Date.now() / 1000)}&hash=attach_browser`;
         console.log('📦 initDataStr создана, отправляю attachTelegram()');
-        
+
         setIsAttachingTelegram(true);
         await attachTelegram(initDataStr);
         toast({
           title: "Успешно!",
           description: "Telegram успешно привязан к вашему аккаунту",
         });
-        
+
         setShowTelegramAttachModal(false);
         setTimeout(() => window.location.href = "/account", 600);
       } catch (error: any) {
@@ -917,10 +939,10 @@ export default function AccountPage() {
     // Функция загрузки Widget с retry логикой
     let attempts = 0;
     const maxAttempts = 50;
-    
+
     const loadWidget = () => {
       attempts++;
-      
+
       if (!telegramContainerRef.current) {
         if (attempts < maxAttempts) {
           console.log(`⏳ Попытка ${attempts}/${maxAttempts}: контейнер еще не в DOM...`);
@@ -932,10 +954,10 @@ export default function AccountPage() {
       }
 
       console.log(`✅ На попытке ${attempts}: контейнер найден, загружаю Widget скрипт`);
-      
+
       // Очищаем контейнер от старых скриптов
       telegramContainerRef.current.innerHTML = '';
-      
+
       // Удаляем старый глобальный скрипт если есть
       const oldScript = document.querySelector('script[src*="telegram-widget"]');
       if (oldScript) oldScript.remove();
@@ -948,10 +970,10 @@ export default function AccountPage() {
       script.setAttribute('data-size', 'large');
       script.setAttribute('data-onauth', 'onTelegramAttachModal(user)');
       script.setAttribute('data-request-access', 'write');
-      
+
       script.onload = () => console.log('✅ Telegram Widget скрипт загружен');
       script.onerror = () => console.error('❌ Ошибка загрузки скрипта');
-      
+
       telegramContainerRef.current.appendChild(script);
     };
 
@@ -965,14 +987,14 @@ export default function AccountPage() {
 
   const handleAttachTelegram = async () => {
     console.log('🔗 handleAttachTelegram called');
-    
+
     // Если в Mini App - использовать initData
     if ((window as any).Telegram?.WebApp) {
       setIsAttachingTelegram(true);
       try {
         const initData = (window as any).Telegram.WebApp.initData;
         console.log('📦 initData получена:', initData ? 'есть' : 'нет');
-        
+
         if (!initData) {
           toast({
             title: "Ошибка",
@@ -988,7 +1010,7 @@ export default function AccountPage() {
           title: "Успешно!",
           description: "Telegram успешно привязан к вашему аккаунту",
         });
-        
+
         setTimeout(() => setLocation("/account"), 600);
       } catch (error: any) {
         console.error('❌ Ошибка привязки:', error);
@@ -1014,7 +1036,7 @@ export default function AccountPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30">
       <Header cartCount={0} onCartClick={() => setCartOpen(true)} />
-      
+
       <main className="max-w-6xl mx-auto px-4 md:px-8 py-8">
         <button
           onClick={() => setLocation("/")}
@@ -1488,7 +1510,7 @@ export default function AccountPage() {
                     </p>
                   </div>
                 )}
-                
+
                 {/* Кнопка видна ВСЕГДА - и когда привязан и когда не привязан */}
                 <Button
                   onClick={handleAttachTelegram}
@@ -1519,13 +1541,13 @@ export default function AccountPage() {
                 <div className="flex justify-center py-6">
                   <div ref={telegramContainerRef} className="flex justify-center w-full" />
                 </div>
-                
+
                 <div className="p-3 rounded-md bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
                   <p className="text-xs text-blue-800 dark:text-blue-200">
                     <span className="font-semibold">💡 Совет:</span> Если видите старый аккаунт, удалите cookies браузера для <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">oauth.telegram.org</code> (F12 → Application → Cookies) или используйте Инкогнито режим.
                   </p>
                 </div>
-                
+
                 <Separator />
                 <div className="flex gap-2 justify-center">
                   <Button
@@ -1564,7 +1586,12 @@ export default function AccountPage() {
                       <CardDescription>Управление привязкой email</CardDescription>
                     </div>
                   </div>
-                  {user.email.includes('@telegram') && !showAttachEmailForm && (
+                  {user.email && !user.email.includes('@telegram') && !showAttachEmailForm && (
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                      Привязан
+                    </span>
+                  )}
+                   {user.email.includes('@telegram') && !showAttachEmailForm && (
                     <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full">
                       Требуется
                     </span>
