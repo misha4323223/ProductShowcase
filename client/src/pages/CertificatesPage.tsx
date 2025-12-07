@@ -21,14 +21,19 @@ import { Gift, Mail, Send, CalendarIcon, Check, Sparkles, CreditCard, Clock, Arr
 import { SiTelegram } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 
+import classicCardImage from "@assets/generated_images/classic_pink_gift_card_v1.png";
+import birthdayCardImage from "@assets/generated_images/birthday_purple_gift_card_v1.png";
+import celebrationCardImage from "@assets/generated_images/celebration_orange_gift_card_v1.png";
+import loveCardImage from "@assets/generated_images/love_red_gift_card_v1.png";
+
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 const CERTIFICATE_AMOUNTS = [500, 1000, 2000, 3000, 5000, 7000, 10000];
 
 const DESIGN_TEMPLATES = [
-  { id: "default", name: "Классика", color: "bg-gradient-to-br from-pink-400 to-pink-600" },
-  { id: "birthday", name: "День рождения", color: "bg-gradient-to-br from-purple-400 to-purple-600" },
-  { id: "celebration", name: "Праздник", color: "bg-gradient-to-br from-amber-400 to-orange-500" },
-  { id: "love", name: "С любовью", color: "bg-gradient-to-br from-red-400 to-rose-600" },
+  { id: "default", name: "Классика", color: "bg-gradient-to-br from-pink-400 to-pink-600", image: classicCardImage },
+  { id: "birthday", name: "День рождения", color: "bg-gradient-to-br from-purple-400 to-purple-600", image: birthdayCardImage },
+  { id: "celebration", name: "Праздник", color: "bg-gradient-to-br from-amber-400 to-orange-500", image: celebrationCardImage },
+  { id: "love", name: "С любовью", color: "bg-gradient-to-br from-red-400 to-rose-600", image: loveCardImage },
 ];
 
 export default function CertificatesPage() {
@@ -388,18 +393,24 @@ export default function CertificatesPage() {
                           key={design.id}
                           onClick={() => setSelectedDesign(design.id)}
                           className={cn(
-                            "p-4 rounded-lg border-2 text-white font-medium text-center transition-all",
-                            design.color,
+                            "relative h-20 rounded-lg border-2 text-white font-medium text-center transition-all overflow-hidden",
                             selectedDesign === design.id
                               ? "ring-2 ring-primary ring-offset-2 border-transparent"
                               : "border-transparent hover:opacity-90"
                           )}
                           data-testid={`button-design-${design.id}`}
                         >
-                          {design.name}
-                          {selectedDesign === design.id && (
-                            <Check className="h-4 w-4 mx-auto mt-1" />
-                          )}
+                          <img 
+                            src={design.image} 
+                            alt={design.name}
+                            className="absolute inset-0 w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center">
+                            <span className="text-white font-semibold drop-shadow-lg">{design.name}</span>
+                            {selectedDesign === design.id && (
+                              <Check className="h-4 w-4 mt-1 drop-shadow-lg" />
+                            )}
+                          </div>
                         </button>
                       ))}
                     </div>
@@ -415,32 +426,34 @@ export default function CertificatesPage() {
                   <CardDescription>Так будет выглядеть ваш сертификат</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div 
-                    className={cn(
-                      "rounded-xl p-6 text-white text-center",
-                      DESIGN_TEMPLATES.find(d => d.id === selectedDesign)?.color || "bg-gradient-to-br from-pink-400 to-pink-600"
-                    )}
-                  >
-                    <Gift className="h-12 w-12 mx-auto mb-4 opacity-90" />
-                    <p className="text-sm opacity-90 mb-2">Подарочный сертификат</p>
-                    <p className="text-4xl font-bold mb-4">{selectedAmount}₽</p>
-                    <div className="bg-white/20 rounded-lg py-2 px-4 inline-block">
-                      <p className="text-xs opacity-80">Код сертификата</p>
-                      <p className="font-mono font-bold tracking-wider">GC-XXXX-XXXX</p>
+                  <div className="relative rounded-xl overflow-hidden aspect-video">
+                    <img 
+                      src={DESIGN_TEMPLATES.find(d => d.id === selectedDesign)?.image || classicCardImage}
+                      alt="Certificate design"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 p-6 text-white text-center flex flex-col justify-center">
+                      <Gift className="h-10 w-10 mx-auto mb-3 drop-shadow-lg" />
+                      <p className="text-sm drop-shadow-lg mb-1">Подарочный сертификат</p>
+                      <p className="text-4xl font-bold mb-3 drop-shadow-lg">{selectedAmount}₽</p>
+                      <div className="bg-white/20 backdrop-blur-sm rounded-lg py-2 px-4 inline-block mx-auto">
+                        <p className="text-xs opacity-90">Код сертификата</p>
+                        <p className="font-mono font-bold tracking-wider">GC-XXXX-XXXX</p>
+                      </div>
+                      {isGift && recipientName && (
+                        <p className="mt-3 text-sm drop-shadow-lg">
+                          Для: <span className="font-semibold">{recipientName}</span>
+                        </p>
+                      )}
+                      {isGift && senderName && (
+                        <p className="text-sm opacity-90 drop-shadow-lg">
+                          От: {senderName}
+                        </p>
+                      )}
+                      {isGift && message && (
+                        <p className="mt-2 text-sm italic drop-shadow-lg">"{message}"</p>
+                      )}
                     </div>
-                    {isGift && recipientName && (
-                      <p className="mt-4 text-sm">
-                        Для: <span className="font-semibold">{recipientName}</span>
-                      </p>
-                    )}
-                    {isGift && senderName && (
-                      <p className="text-sm opacity-80">
-                        От: {senderName}
-                      </p>
-                    )}
-                    {isGift && message && (
-                      <p className="mt-3 text-sm italic opacity-90">"{message}"</p>
-                    )}
                   </div>
 
                   <div className="space-y-3 text-sm">
