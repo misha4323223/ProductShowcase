@@ -50,6 +50,7 @@ const TelegramAttachPopup = lazy(() => import("@/pages/TelegramAttachPopup"));
 const CertificatesPage = lazy(() => import("@/pages/CertificatesPage"));
 const GiftViewPage = lazy(() => import("@/pages/GiftViewPage"));
 const NotFound = lazy(() => import("@/pages/not-found"));
+const AuthCallbackPage = lazy(() => import("@/pages/AuthCallbackPage"));
 
 // Компонент загрузки для Suspense
 function PageLoader() {
@@ -79,6 +80,7 @@ function Router() {
           <Route path="/payment-success" component={PaymentSuccess} />
           <Route path="/search" component={SearchPage} />
           <Route path="/login" component={LoginPage} />
+          <Route path="/auth/callback" component={AuthCallbackPage} />
           <Route path="/account" component={AccountPage} />
           <Route path="/wishlist" component={WishlistPage} />
           <Route path="/shared-wishlist/:userId" component={SharedWishlistPage} />

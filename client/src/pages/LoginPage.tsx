@@ -472,6 +472,25 @@ export default function LoginPage() {
             {isLoading ? "..." : "Войти"}
           </Button>
 
+          {/* Yandex Login Button */}
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full bg-[#FC3F1D]/10 hover:bg-[#FC3F1D]/20 border-2 border-[#FC3F1D]/60 hover:border-[#FC3F1D] text-slate-900 font-semibold h-9 text-sm transition-all flex items-center justify-center gap-2"
+            onClick={() => {
+              const clientId = "15cf4c5367ea46d59d8505b36fc7e385";
+              const redirectUri = encodeURIComponent("https://d5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net/auth/yandex/callback");
+              window.location.href = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
+            }}
+            data-testid="button-yandex-login"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#FC3F1D"/>
+              <path d="M13.3634 7.2H12.2134C10.2134 7.2 9.16339 8.25 9.16339 9.75C9.16339 11.4 9.91339 12.225 11.4634 13.2L12.7384 14.025L9.08839 19.2H6.78839L10.0634 14.55C8.23839 13.35 7.18839 12.075 7.18839 9.9C7.18839 7.2 9.01339 5.4 12.2134 5.4H15.3634V19.2H13.3634V7.2Z" fill="white"/>
+            </svg>
+            Войти через Яндекс
+          </Button>
+
           {/* Telegram Login Widget */}
           <div id="telegram-login-container" className="flex justify-center my-2"></div>
 
