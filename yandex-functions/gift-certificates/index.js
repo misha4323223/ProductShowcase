@@ -693,7 +693,7 @@ async function handleDelete(data) {
   }
 
   const cert = await docClient.send(new GetCommand({
-    TableName: "gift_certificates",
+    TableName: "giftCertificates",
     Key: { id: certificateId }
   }));
 
@@ -709,7 +709,7 @@ async function handleDelete(data) {
   }
 
   await docClient.send(new DeleteCommand({
-    TableName: "gift_certificates",
+    TableName: "giftCertificates",
     Key: { id: certificateId }
   }));
 
