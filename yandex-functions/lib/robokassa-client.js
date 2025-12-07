@@ -121,6 +121,7 @@ class RobokassaClient {
    * @param {string} params.description - Описание платежа
    * @param {string} params.email - Email покупателя (опционально)
    * @param {string} params.culture - Язык интерфейса (ru, en) (опционально)
+   * @param {string} params.paymentMethod - Способ оплаты (sbp для СБП) (опционально)
    * @param {object} params.additionalParams - Дополнительные параметры Shp_* (опционально)
    * @returns {string} URL для переадресации пользователя
    */
@@ -131,6 +132,7 @@ class RobokassaClient {
       description,
       email,
       culture = 'ru',
+      paymentMethod,
       additionalParams = {}
     } = params;
 
@@ -160,6 +162,11 @@ class RobokassaClient {
     Object.entries(additionalParams).forEach(([key, value]) => {
       urlParams.append(key, value);
     });
+
+    // Добавляем способ оплаты СБП если указан
+    if (paymentMethod === 'sbp') {
+      urlParams.append('IncCurrLabel', 'SBP');
+    }
 
     return `${this.paymentUrl}?${urlParams.toString()}`;
   }
