@@ -39,6 +39,11 @@ html, body {
   .hero-slide-image {
     object-fit: cover !important;
   }
+  
+  /* Второй слайд (доставка) - смещаем влево чтобы видеть человечка с посылкой */
+  .hero-slide-2-mobile {
+    object-position: 25% center !important;
+  }
 }
 
 /* На десктопе */
