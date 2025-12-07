@@ -1,21 +1,23 @@
 /**
  * Cloud Function: init-payment-robokassa
  * 
- * Назначение: Генерация ссылки на оплату через Робокассу
+ * Назначение: Генерация данных для оплаты через Робокассу
+ * Поддерживает: обычный redirect И iFrame режим для СБП с QR-кодом
  * 
  * Входные данные (POST):
  * {
- *   "orderId": "abc123",          // ID заказа из базы данных
- *   "amount": 5000,               // Сумма платежа в рублях
- *   "email": "user@example.com",  // Email покупателя (опционально)
- *   "description": "Заказ #123",  // Описание платежа
- *   "paymentMethod": "sbp"        // Способ оплаты: "sbp" для СБП (опционально)
+ *   "orderId": "abc123",
+ *   "amount": 5000,
+ *   "email": "user@example.com",
+ *   "description": "Заказ #123",
+ *   "paymentMethod": "sbp" | "card"  // sbp для СБП с QR-кодом
  * }
  * 
  * Выходные данные:
  * {
  *   "success": true,
- *   "paymentUrl": "https://auth.robokassa.ru/Merchant/Index.aspx?...",
+ *   "paymentUrl": "https://...",           // URL для redirect (карта)
+ *   "iframeParams": {...},                  // Параметры для iFrame (СБП)
  *   "orderId": "abc123",
  *   "amount": 5000
  * }
@@ -40,6 +42,14 @@ class RobokassaClient {
 
   _normalizeAmount(amount) {
     return Number(amount).toFixed(2);
+  }
+
+  _hash(str) {
+    return crypto
+      .createHash(this.hashAlgorithm)
+      .update(str)
+      .digest('hex')
+      .toUpperCase();
   }
 
   generatePaymentSignature(outSum, invId, additionalParams = {}) {
@@ -101,12 +111,73 @@ class RobokassaClient {
       urlParams.append(key, value);
     });
 
-    // СБП - добавляем IncCurrLabel=SBP для отображения QR-кода
+    // Для СБП добавляем IncCurrLabel (работает частично, основной метод - iFrame)
     if (paymentMethod === 'sbp') {
       urlParams.append('IncCurrLabel', 'SBP');
     }
 
     return `${this.paymentUrl}?${urlParams.toString()}`;
+  }
+
+  // Генерация параметров для iFrame (для СБП с QR-кодом)
+  generateIframeParams(params) {
+    const {
+      outSum,
+      invId,
+      description,
+      email,
+      culture = 'ru',
+      paymentMethod,
+      additionalParams = {}
+    } = params;
+
+    const signature = this.generatePaymentSignature(outSum, invId, additionalParams);
+
+    const iframeParams = {
+      MerchantLogin: this.merchantLogin,
+      OutSum: this._normalizeAmount(outSum),
+      InvId: invId.toString(),
+      Description: description,
+      SignatureValue: signature,
+      Culture: culture,
+      Encoding: 'utf-8',
+    };
+
+    if (email) {
+      iframeParams.Email = email;
+    }
+
+    if (this.isTest) {
+      iframeParams.IsTest = 1;
+    }
+
+    // Добавляем Shp_ параметры
+    Object.entries(additionalParams).forEach(([key, value]) => {
+      iframeParams[key] = value;
+    });
+
+    // Настройки для iFrame: режим модального окна с выбором способов оплаты
+    if (paymentMethod === 'sbp') {
+      // Только СБП
+      iframeParams.Settings = JSON.stringify({
+        PaymentMethods: ['SBP'],
+        Mode: 'modal'
+      });
+    } else if (paymentMethod === 'card') {
+      // Только карта
+      iframeParams.Settings = JSON.stringify({
+        PaymentMethods: ['BankCard'],
+        Mode: 'modal'
+      });
+    } else {
+      // Оба способа
+      iframeParams.Settings = JSON.stringify({
+        PaymentMethods: ['BankCard', 'SBP'],
+        Mode: 'modal'
+      });
+    }
+
+    return iframeParams;
   }
 
   parseCallback(callbackData) {
@@ -138,14 +209,6 @@ class RobokassaClient {
         additionalParams
       )
     };
-  }
-
-  _hash(str) {
-    return crypto
-      .createHash(this.hashAlgorithm)
-      .update(str)
-      .digest('hex')
-      .toUpperCase();
   }
 
   generateResultResponse(invId) {
@@ -182,11 +245,9 @@ exports.handler = async (event) => {
   try {
     console.log('Init payment request:', event);
 
-    // Парсинг входных данных
     const body = JSON.parse(event.body || '{}');
     const { orderId, amount, email, description, paymentMethod } = body;
 
-    // Валидация обязательных полей
     if (!orderId || !amount) {
       return {
         statusCode: 400,
@@ -200,7 +261,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // Проверка, что сумма положительная
     if (amount <= 0) {
       return {
         statusCode: 400,
@@ -214,14 +274,12 @@ exports.handler = async (event) => {
       };
     }
 
-    // Получение настроек Робокассы из переменных окружения
     const merchantLogin = process.env.ROBOKASSA_MERCHANT_LOGIN;
     const password1 = process.env.ROBOKASSA_PASSWORD_1;
     const password2 = process.env.ROBOKASSA_PASSWORD_2;
     const hashAlgorithm = process.env.ROBOKASSA_HASH_ALGORITHM || 'sha256';
     const isTest = process.env.ROBOKASSA_TEST_MODE === 'true';
 
-    // Проверка наличия всех необходимых настроек
     if (!merchantLogin || !password1 || !password2) {
       console.error('Missing Robokassa credentials');
       return {
@@ -236,28 +294,21 @@ exports.handler = async (event) => {
       };
     }
 
-    // Инициализация клиента Робокассы
     const robokassa = new RobokassaClient(merchantLogin, password1, password2, {
       isTest,
       hashAlgorithm
     });
 
-    // Генерация InvId (уникальный номер счета)
-    // ВАЖНО: Robokassa требует строго числовой InvId (положительное целое число)
-    // Используем timestamp в миллисекундах + случайное число для уникальности
     const timestamp = Date.now();
     const randomSuffix = Math.floor(Math.random() * 1000);
     const numericInvId = Number(`${timestamp}${randomSuffix}`);
     
     console.log(`Generated numeric InvId: ${numericInvId} for order: ${orderId}`);
 
-    // Дополнительные параметры (передаются через Shp_*)
-    // Это позволит идентифицировать заказ при callback по реальному orderId
     const additionalParams = {
       Shp_OrderId: orderId
     };
 
-    // СНАЧАЛА получаем и валидируем заказ
     let order;
     let actualAmount;
     
@@ -281,11 +332,8 @@ exports.handler = async (event) => {
       }
 
       order = orderResult.Item;
-      
-      // Для безопасности ВСЕГДА используем сумму из заказа
       actualAmount = order.total;
       
-      // Проверяем, что запрошенная сумма совпадает
       if (amount !== actualAmount) {
         console.error(`Payment amount mismatch: order.total=${actualAmount}, requested=${amount}`);
         return {
@@ -316,26 +364,27 @@ exports.handler = async (event) => {
       };
     }
 
-    // Генерация URL для оплаты с ПРОВЕРЕННОЙ суммой из заказа
-    const paymentUrl = robokassa.generatePaymentUrl({
-      outSum: actualAmount,  // ВСЕГДА используем сумму из заказа
-      invId: numericInvId,    // Используем числовой InvId для Robokassa
+    const paymentParams = {
+      outSum: actualAmount,
+      invId: numericInvId,
       description: description || `Оплата заказа #${orderId.substring(0, 8)}`,
       email: email || undefined,
       culture: 'ru',
-      paymentMethod: paymentMethod,  // sbp для СБП
+      paymentMethod: paymentMethod,
       additionalParams
-    });
+    };
+
+    // Генерируем URL для redirect (работает для карты)
+    const paymentUrl = robokassa.generatePaymentUrl(paymentParams);
+    
+    // Генерируем параметры для iFrame (работает для СБП с QR-кодом)
+    const iframeParams = robokassa.generateIframeParams(paymentParams);
 
     console.log('Payment URL generated:', paymentUrl);
+    console.log('iFrame params generated for:', paymentMethod || 'all methods');
     console.log('Using numeric InvId:', numericInvId, 'with orderId in Shp_OrderId:', orderId);
-    console.log('Payment method:', paymentMethod || 'default (card)');
 
-    // Обновление информации о платеже в заказе
     try {
-
-      // Обновляем заказ с условием, что он еще не оплачен
-      // Используем ТОЛЬКО сумму из заказа для безопасности
       await docClient.send(new UpdateCommand({
         TableName: "orders",
         Key: { id: orderId },
@@ -344,16 +393,18 @@ exports.handler = async (event) => {
               paymentService = :paymentService,
               robokassaInvoiceId = :invoiceId,
               robokassaOutSum = :amount,
-              paymentInitiatedAt = :initiatedAt
+              paymentInitiatedAt = :initiatedAt,
+              paymentMethod = :paymentMethod
         `,
         ConditionExpression: "attribute_exists(id) AND (attribute_not_exists(paymentStatus) OR paymentStatus <> :alreadyPaid)",
         ExpressionAttributeValues: {
           ":paymentStatus": "pending",
           ":paymentService": "ROBOKASSA",
-          ":invoiceId": numericInvId,  // Сохраняем числовой InvId
-          ":amount": actualAmount,  // ВСЕГДА используем сумму из заказа
+          ":invoiceId": numericInvId,
+          ":amount": actualAmount,
           ":initiatedAt": new Date().toISOString(),
-          ":alreadyPaid": "paid"
+          ":alreadyPaid": "paid",
+          ":paymentMethod": paymentMethod || "card"
         }
       }));
 
@@ -361,7 +412,6 @@ exports.handler = async (event) => {
     } catch (dbError) {
       console.error('Error updating order in database:', dbError);
       
-      // Если заказ уже оплачен - возвращаем ошибку
       if (dbError.name === 'ConditionalCheckFailedException') {
         return {
           statusCode: 400,
@@ -375,12 +425,10 @@ exports.handler = async (event) => {
         };
       }
       
-      // Для других ошибок БД - не прерываем выполнение
-      // Платежная ссылка все равно будет создана
       console.warn('Payment URL will be returned despite database error');
     }
 
-    // Возврат успешного результата
+    // Возвращаем оба варианта: URL для redirect И параметры для iFrame
     return {
       statusCode: 200,
       headers: {
@@ -391,10 +439,13 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         success: true,
-        paymentUrl,
+        paymentUrl,           // URL для обычного redirect (карта)
+        iframeParams,         // Параметры для iFrame (СБП с QR-кодом)
+        iframeScriptUrl: 'https://auth.robokassa.ru/Merchant/bundle/robokassa_iframe.js',
         orderId,
-        invId: numericInvId,  // Возвращаем числовой InvId
-        amount: actualAmount,  // Возвращаем фактическую сумму из заказа
+        invId: numericInvId,
+        amount: actualAmount,
+        paymentMethod: paymentMethod || 'card',
         isTest
       }),
     };
