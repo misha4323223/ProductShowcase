@@ -326,10 +326,12 @@ export default function Home() {
           </div>
         )}
 
-        <HeroSlider slides={slides} />
-        
-        {/* Волнистый разделитель между слайдером и категориями */}
-        <WaveDivider />
+        <div className="md:max-w-7xl md:mx-auto">
+          <HeroSlider slides={slides} />
+          
+          {/* Волнистый разделитель между слайдером и категориями */}
+          <WaveDivider />
+        </div>
 
         <section className={`py-16 ${['new-year', 'dark', 'light'].includes(theme) ? 'bg-transparent' : 'candy-stripe'}`}>
           <div className="max-w-7xl mx-auto px-4 md:px-8">
