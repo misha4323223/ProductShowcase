@@ -2474,20 +2474,20 @@ html.autumn body {
      ======================================== */
   .hero-mobile-fix {
     /* Фиксированная высота в px для корректного масштабирования при зуме браузера */
-    height: 660px;
+    height: 740px;
   }
 
   @media (min-width: 768px) {
     .hero-mobile-fix {
       /* На десктопе большая высота */
-      height: 1060px;
+      height: 1140px;
     }
   }
 
   @media (max-width: 640px) {
     .hero-mobile-fix {
       /* Для очень узких экранов (iPhone SE, старые модели) */
-      height: 610px;
+      height: 690px;
     }
   }
 
