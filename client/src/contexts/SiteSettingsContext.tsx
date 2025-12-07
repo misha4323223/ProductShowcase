@@ -5,6 +5,8 @@ interface SiteSettingsContextType {
   siteName: string;
   logoUrl: string;
   accentColor: string;
+  shopNameRu: string;
+  shopNameEn: string;
   isLoading: boolean;
   updateBranding: (settings: Partial<BrandingSettings>) => Promise<void>;
   refreshBranding: () => Promise<void>;
@@ -14,6 +16,8 @@ const defaultContext: SiteSettingsContextType = {
   siteName: 'Sweet Delights',
   logoUrl: '',
   accentColor: '#f472b6',
+  shopNameRu: 'Сладкие Наслаждения',
+  shopNameEn: 'Sweet Delights',
   isLoading: true,
   updateBranding: async () => {},
   refreshBranding: async () => {},
@@ -26,6 +30,8 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
     siteName: 'Sweet Delights',
     logoUrl: '',
     accentColor: '#f472b6',
+    shopNameRu: 'Сладкие Наслаждения',
+    shopNameEn: 'Sweet Delights',
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -106,6 +112,8 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
         siteName: branding.siteName,
         logoUrl: branding.logoUrl,
         accentColor: branding.accentColor,
+        shopNameRu: branding.shopNameRu,
+        shopNameEn: branding.shopNameEn,
         isLoading,
         updateBranding,
         refreshBranding,

@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "@/services/api-client";
 import type { Category } from "@/types/firebase-types";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,6 +113,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
   const [, setLocation] = useLocation();
   const { user } = useAuth();
   const { theme, setTheme, preferredTheme } = useTheme();
+  const { shopNameRu, shopNameEn } = useSiteSettings();
 
   const themeNames: Record<string, string> = {
     'sakura': '🌸 Сакура',
@@ -182,12 +184,14 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
 
           <Link href="/" className="logo-container-flex font-serif text-base md:text-xl lg:text-2xl font-bold cursor-pointer" data-testid="link-logo">
             <span className="logo-switching text-white drop-shadow-lg text-center leading-tight header-text">
-              <span className="block md:inline">Сладкие</span>
-              <span className="block md:inline md:ml-1.5">Наслаждения</span>
+              {shopNameRu.split(' ').map((word, idx) => (
+                <span key={idx} className={idx === 0 ? "block md:inline" : "block md:inline md:ml-1.5"}>{word}</span>
+              ))}
             </span>
             <span className="logo-switching logo-alt text-white drop-shadow-lg text-center leading-tight header-text">
-              <span className="block md:inline">Sweet</span>
-              <span className="block md:inline md:ml-1.5">Delights</span>
+              {shopNameEn.split(' ').map((word, idx) => (
+                <span key={idx} className={idx === 0 ? "block md:inline" : "block md:inline md:ml-1.5"}>{word}</span>
+              ))}
             </span>
           </Link>
 

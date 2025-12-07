@@ -383,10 +383,12 @@ export default function AdminPage() {
   const [mobileBackgroundImagePreview, setMobileBackgroundImagePreview] = useState<string>("");
   const [isSavingBackground, setIsSavingBackground] = useState(false);
 
-  const { siteName, logoUrl, accentColor, refreshBranding } = useSiteSettings();
+  const { siteName, logoUrl, accentColor, shopNameRu, shopNameEn, refreshBranding } = useSiteSettings();
   const [editingSiteName, setEditingSiteName] = useState<string>("");
   const [editingLogoUrl, setEditingLogoUrl] = useState<string>("");
   const [editingAccentColor, setEditingAccentColor] = useState<string>("");
+  const [editingShopNameRu, setEditingShopNameRu] = useState<string>("");
+  const [editingShopNameEn, setEditingShopNameEn] = useState<string>("");
   const [logoImageFile, setLogoImageFile] = useState<File | null>(null);
   const [logoImagePreview, setLogoImagePreview] = useState<string>("");
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
@@ -599,7 +601,9 @@ export default function AdminPage() {
     setEditingLogoUrl(logoUrl);
     setEditingAccentColor(accentColor);
     setLogoImagePreview(logoUrl);
-  }, [siteName, logoUrl, accentColor]);
+    setEditingShopNameRu(shopNameRu);
+    setEditingShopNameEn(shopNameEn);
+  }, [siteName, logoUrl, accentColor, shopNameRu, shopNameEn]);
 
   useEffect(() => {
     async function loadPromoUsageCounts() {
@@ -2706,6 +2710,93 @@ export default function AdminPage() {
                     <p className="text-xs text-muted-foreground mt-1">
                       Отображается в заголовке сайта, SEO и письмах
                     </p>
+                  </div>
+
+                  <div className="border-t pt-4 mt-4">
+                    <Label className="text-base font-semibold mb-3 block">
+                      Названия в шапке сайта
+                    </Label>
+                    <p className="text-xs text-muted-foreground mb-4">
+                      Эти названия чередуются в шапке сайта
+                    </p>
+                    
+                    <div className="grid gap-4">
+                      <div>
+                        <Label htmlFor="shop-name-ru" className="text-sm font-medium mb-2 block">
+                          Название на русском
+                        </Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="shop-name-ru"
+                            type="text"
+                            value={editingShopNameRu}
+                            onChange={(e) => setEditingShopNameRu(e.target.value)}
+                            placeholder="Сладкие Наслаждения"
+                            data-testid="input-shop-name-ru"
+                          />
+                          <Button
+                            onClick={async () => {
+                              if (!editingShopNameRu.trim()) {
+                                toast({ title: "Ошибка", description: "Название не может быть пустым", variant: "destructive" });
+                                return;
+                              }
+                              setIsSavingBranding(true);
+                              try {
+                                await setBrandingSettings({ shopNameRu: editingShopNameRu.trim() });
+                                await refreshBranding();
+                                toast({ title: "Сохранено!", description: "Русское название обновлено" });
+                              } catch (error: any) {
+                                toast({ title: "Ошибка", description: error.message, variant: "destructive" });
+                              } finally {
+                                setIsSavingBranding(false);
+                              }
+                            }}
+                            disabled={isSavingBranding || editingShopNameRu === shopNameRu}
+                            data-testid="button-save-shop-name-ru"
+                          >
+                            <Check className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="shop-name-en" className="text-sm font-medium mb-2 block">
+                          Название на английском
+                        </Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="shop-name-en"
+                            type="text"
+                            value={editingShopNameEn}
+                            onChange={(e) => setEditingShopNameEn(e.target.value)}
+                            placeholder="Sweet Delights"
+                            data-testid="input-shop-name-en"
+                          />
+                          <Button
+                            onClick={async () => {
+                              if (!editingShopNameEn.trim()) {
+                                toast({ title: "Ошибка", description: "Название не может быть пустым", variant: "destructive" });
+                                return;
+                              }
+                              setIsSavingBranding(true);
+                              try {
+                                await setBrandingSettings({ shopNameEn: editingShopNameEn.trim() });
+                                await refreshBranding();
+                                toast({ title: "Сохранено!", description: "Английское название обновлено" });
+                              } catch (error: any) {
+                                toast({ title: "Ошибка", description: error.message, variant: "destructive" });
+                              } finally {
+                                setIsSavingBranding(false);
+                              }
+                            }}
+                            disabled={isSavingBranding || editingShopNameEn === shopNameEn}
+                            data-testid="button-save-shop-name-en"
+                          >
+                            <Check className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div>

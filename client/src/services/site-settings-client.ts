@@ -284,12 +284,16 @@ export interface BrandingSettings {
   siteName: string;
   logoUrl: string;
   accentColor: string;
+  shopNameRu: string;
+  shopNameEn: string;
 }
 
 const DEFAULT_BRANDING: BrandingSettings = {
   siteName: 'Sweet Delights',
   logoUrl: '',
   accentColor: '#f472b6', // pink-400 default
+  shopNameRu: 'Сладкие Наслаждения',
+  shopNameEn: 'Sweet Delights',
 };
 
 export async function getBrandingSettings(): Promise<BrandingSettings> {
