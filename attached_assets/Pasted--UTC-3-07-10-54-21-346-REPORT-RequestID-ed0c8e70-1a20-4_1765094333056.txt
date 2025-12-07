@@ -1,0 +1,341 @@
+Время (UTC +3)
+Сообщение
+
+07 дек. 10:54:21.346
+REPORT RequestID: ed0c8e70-1a20-4718-80b4-5eaef2a3092b Duration: 1932.904 ms Billed Duration: 2000 ms Memory Size: 128 MB Max Memory Used: 127 MB Queuing Duration: 0.062 ms Function Init Duration: 276.827 ms CPU Usage: 28.613 %
+
+07 дек. 10:54:21.346
+END RequestID: ed0c8e70-1a20-4718-80b4-5eaef2a3092b
+
+07 дек. 10:54:21.344
+✅ Telegram notification sent successfully for order cert-mivff8yppdbjq76nd7j
+
+07 дек. 10:54:21.344
+Telegram notification sent successfully
+
+07 дек. 10:54:21.159
+}
+
+07 дек. 10:54:21.159
+itemsCount: 1
+
+07 дек. 10:54:21.159
+deliveryType: undefined,
+
+07 дек. 10:54:21.159
+deliveryService: undefined,
+
+07 дек. 10:54:21.159
+total: 1000,
+
+07 дек. 10:54:21.159
+customerName: 'pimashin2015',
+
+07 дек. 10:54:21.159
+id: 'cert-mivff8yppdbjq76nd7j',
+
+07 дек. 10:54:21.159
+📋 Order data summary: {
+
+07 дек. 10:54:21.159
+📤 Attempting to send Telegram notification for order cert-mivff8yppdbjq76nd7j...
+
+07 дек. 10:54:21.159
+✅ Email confirmation sent to pimashin2015@gmail.com (status: 200)
+
+07 дек. 10:54:20.041
+⚠️ GIFT_CERTIFICATES_FUNCTION_URL not configured
+
+07 дек. 10:54:20.041
+🎁 Activating gift certificate mivff8yppdbjq76nd7j...
+
+07 дек. 10:54:20.041
+✅ Order cert-mivff8yppdbjq76nd7j marked as PAID
+
+07 дек. 10:54:19.703
+Processing payment: InvId=1765094050039212, OrderId=cert-mivff8yppdbjq76nd7j
+
+07 дек. 10:54:19.703
+✅ Signature verified successfully
+
+07 дек. 10:54:19.703
+}
+
+07 дек. 10:54:19.703
+match: true
+
+07 дек. 10:54:19.703
+receivedSignature: '70AC1B148E476B69DC0A09895E4C5651F72BDBABC9B815AE8CC23FBEC19583B4',
+
+07 дек. 10:54:19.703
+expectedSignature: '70AC1B148E476B69DC0A09895E4C5651F72BDBABC9B815AE8CC23FBEC19583B4',
+
+07 дек. 10:54:19.703
+checkString: '1000:1765094050039212:***PASSWORD***:Shp_OrderId=cert-mivff8yppdbjq76nd7j',
+
+07 дек. 10:54:19.703
+additionalParams: [ 'Shp_OrderId=cert-mivff8yppdbjq76nd7j' ],
+
+07 дек. 10:54:19.703
+password2: '***set***',
+
+07 дек. 10:54:19.703
+invId: '1765094050039212',
+
+07 дек. 10:54:19.703
+outSum: '1000',
+
+07 дек. 10:54:19.703
+Signature verification details: {
+
+07 дек. 10:54:19.701
+}
+
+07 дек. 10:54:19.701
+additionalParams: [ 'Shp_OrderId' ]
+
+07 дек. 10:54:19.701
+SignatureValue: '70AC1B148E476B69DC0A09895E4C5651F72BDBABC9B815AE8CC23FBEC19583B4',
+
+07 дек. 10:54:19.701
+InvId: '1765094050039212',
+
+07 дек. 10:54:19.701
+OutSum: '1000',
+
+07 дек. 10:54:19.701
+Verifying signature with: {
+
+07 дек. 10:54:19.700
+}
+
+07 дек. 10:54:19.700
+Shp_OrderId: 'cert-mivff8yppdbjq76nd7j'
+
+07 дек. 10:54:19.700
+Fee: '0.0',
+
+07 дек. 10:54:19.700
+EMail: '',
+
+07 дек. 10:54:19.700
+IsTest: '1',
+
+07 дек. 10:54:19.700
+IncCurrLabel: 'BankCardForeignPSR',
+
+07 дек. 10:54:19.700
+IncSum: '1000',
+
+07 дек. 10:54:19.700
+PaymentMethod: 'BankCard',
+
+07 дек. 10:54:19.700
+SignatureValue: '70AC1B148E476B69DC0A09895E4C5651F72BDBABC9B815AE8CC23FBEC19583B4',
+
+07 дек. 10:54:19.700
+crc: '70AC1B148E476B69DC0A09895E4C5651F72BDBABC9B815AE8CC23FBEC19583B4',
+
+07 дек. 10:54:19.700
+InvId: '1765094050039212',
+
+07 дек. 10:54:19.700
+inv_id: '1765094050039212',
+
+07 дек. 10:54:19.700
+OutSum: '1000',
+
+07 дек. 10:54:19.700
+out_summ: '1000',
+
+07 дек. 10:54:19.700
+Parsed callback data: {
+
+07 дек. 10:54:19.700
+Decoded body: out_summ=1000&OutSum=1000&inv_id=1765094050039212&InvId=1765094050039212&crc=70AC1B148E476B69DC0A09895E4C5651F72BDBABC9B815AE8CC23FBEC19583B4&SignatureValue=70AC1B148E476B69DC0A09895E4C5651F72BDBABC9B815AE8CC23FBEC19583B4&PaymentMethod=BankCard&IncSum=1000&IncCurrLabel=BankCardForeignPSR&IsTest=1&EMail=&Fee=0.0&Shp_OrderId=cert-mivff8yppdbjq76nd7j
+
+07 дек. 10:54:19.700
+Decoding base64 body...
+
+07 дек. 10:54:19.700
+}
+
+07 дек. 10:54:19.700
+path: '/api/payment/robokassa/callback'
+
+07 дек. 10:54:19.700
+isBase64Encoded: true,
+
+07 дек. 10:54:19.700
+body: 'b3V0X3N1bW09MTAwMCZPdXRTdW09MTAwMCZpbnZfaWQ9MTc2NTA5NDA1MDAzOTIxMiZJbnZJZD0xNzY1MDk0MDUwMDM5MjEyJmNyYz03MEFDMUIxNDhFNDc2QjY5REMwQTA5ODk1RTRDNTY1MUY3MkJEQkFCQzlCODE1QUU4Q0MyM0ZCRUMxOTU4M0I0JlNpZ25hdHVyZVZhbHVlPTcwQUMxQjE0OEU0NzZCNjlEQzBBMDk4OTVFNEM1NjUxRjcyQkRCQUJDOUI4MTVBRThDQzIzRkJFQzE5NTgzQjQmUGF5bWVudE1ldGhvZD1CYW5rQ2FyZCZJbmNTdW09MTAwMCZJbmNDdXJyTGFiZWw9QmFua0NhcmRGb3JlaWduUFNSJklzVGVzdD0xJkVNYWlsPSZGZWU9MC4wJlNocF9PcmRlcklkPWNlcnQtbWl2ZmY4eXBwZGJqcTc2bmQ3ag==',
+
+07 дек. 10:54:19.700
+},
+
+07 дек. 10:54:19.699
+requestTimeEpoch: 1765094058
+
+07 дек. 10:54:19.699
+requestTime: '7/Dec/2025:07:54:18 +0000',
+
+07 дек. 10:54:19.699
+requestId: 'fa61cf51-7b0a-4145-83b4-ce3f5db2e14a',
+
+07 дек. 10:54:19.699
+httpMethod: 'POST',
+
+07 дек. 10:54:19.699
+},
+
+07 дек. 10:54:19.699
+userAgent: '.NET Framework/v4.0.30319'
+
+07 дек. 10:54:19.699
+sourceIp: '185.59.216.65',
+
+07 дек. 10:54:19.699
+identity: {
+
+07 дек. 10:54:19.699
+requestContext: {
+
+07 дек. 10:54:19.699
+multiValueQueryStringParameters: {},
+
+07 дек. 10:54:19.699
+queryStringParameters: {},
+
+07 дек. 10:54:19.699
+},
+
+07 дек. 10:54:19.699
+'X-Trace-Id': [ '1d86f6f5-0788-4b0b-94a4-5c5de405b514' ]
+
+07 дек. 10:54:19.699
+'X-Serverless-Gateway-Id': [ 'd5dimdj7itkijbl4s0g4' ],
+
+07 дек. 10:54:19.699
+'X-Serverless-Certificate-Ids': [ '{}' ],
+
+07 дек. 10:54:19.699
+'X-Request-Id': [ 'fa61cf51-7b0a-4145-83b4-ce3f5db2e14a' ],
+
+07 дек. 10:54:19.699
+'X-Real-Remote-Address': [ '185.59.216.65:42209' ],
+
+07 дек. 10:54:19.699
+'X-Forwarded-Proto': [ 'https' ],
+
+07 дек. 10:54:19.699
+'X-Forwarded-For': [ '185.59.216.65' ],
+
+07 дек. 10:54:19.699
+'X-Envoy-Original-Path': [ '/api/payment/robokassa/callback' ],
+
+07 дек. 10:54:19.699
+'X-Envoy-External-Address': [ '185.59.216.65' ],
+
+07 дек. 10:54:19.699
+'X-Api-Gateway-Function-Id': [ 'd4eo70h7u5qevjl70hup' ],
+
+07 дек. 10:54:19.699
+'User-Agent': [ '.NET Framework/v4.0.30319' ],
+
+07 дек. 10:54:19.699
+'Uber-Trace-Id': [ 'c5e2b4dcb3db8e45:0e2e46a350fe4630:b13605940aa036f1:1' ],
+
+07 дек. 10:54:19.699
+Tracestate: [ '' ],
+
+07 дек. 10:54:19.699
+Traceparent: [ '00-0000000000000000c5e2b4dcb3db8e45-183a81175eda7a6b-01' ],
+
+07 дек. 10:54:19.699
+Host: [ 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net' ],
+
+07 дек. 10:54:19.699
+'Content-Type': [ 'application/x-www-form-urlencoded; charset=utf-8' ],
+
+07 дек. 10:54:19.699
+'Content-Length': [ '349' ],
+
+07 дек. 10:54:19.699
+multiValueHeaders: {
+
+07 дек. 10:54:19.699
+pathParams: {},
+
+07 дек. 10:54:19.699
+multiValueParams: {},
+
+07 дек. 10:54:19.699
+params: {},
+
+07 дек. 10:54:19.699
+url: '/api/payment/robokassa/callback?',
+
+07 дек. 10:54:19.699
+},
+
+07 дек. 10:54:19.699
+'X-Trace-Id': '1d86f6f5-0788-4b0b-94a4-5c5de405b514'
+
+07 дек. 10:54:19.699
+'X-Serverless-Gateway-Id': 'd5dimdj7itkijbl4s0g4',
+
+07 дек. 10:54:19.699
+'X-Serverless-Certificate-Ids': '{}',
+
+07 дек. 10:54:19.699
+'X-Request-Id': 'fa61cf51-7b0a-4145-83b4-ce3f5db2e14a',
+
+07 дек. 10:54:19.699
+'X-Real-Remote-Address': '185.59.216.65:42209',
+
+07 дек. 10:54:19.699
+'X-Forwarded-Proto': 'https',
+
+07 дек. 10:54:19.699
+'X-Forwarded-For': '185.59.216.65',
+
+07 дек. 10:54:19.699
+'X-Envoy-Original-Path': '/api/payment/robokassa/callback',
+
+07 дек. 10:54:19.699
+'X-Envoy-External-Address': '185.59.216.65',
+
+07 дек. 10:54:19.699
+'X-Api-Gateway-Function-Id': 'd4eo70h7u5qevjl70hup',
+
+07 дек. 10:54:19.699
+'User-Agent': '.NET Framework/v4.0.30319',
+
+07 дек. 10:54:19.699
+'Uber-Trace-Id': 'c5e2b4dcb3db8e45:0e2e46a350fe4630:b13605940aa036f1:1',
+
+07 дек. 10:54:19.699
+Tracestate: '',
+
+07 дек. 10:54:19.699
+Traceparent: '00-0000000000000000c5e2b4dcb3db8e45-183a81175eda7a6b-01',
+
+07 дек. 10:54:19.699
+Host: 'd5dimdj7itkijbl4s0g4.y5sm01em.apigw.yandexcloud.net',
+
+07 дек. 10:54:19.699
+'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+
+07 дек. 10:54:19.699
+'Content-Length': '349',
+
+07 дек. 10:54:19.699
+headers: {
+
+07 дек. 10:54:19.699
+httpMethod: 'POST',
+
+07 дек. 10:54:19.699
+Robokassa callback received: {
+
+07 дек. 10:54:19.103
+START RequestID: ed0c8e70-1a20-4718-80b4-5eaef2a3092b Version: d4ejvgnueah190en8l57
