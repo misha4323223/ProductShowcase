@@ -16,28 +16,31 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   }
 
   return (
-    <nav aria-label="breadcrumb" className="py-3 px-4 md:px-8">
-      <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
-        <li className="flex items-center gap-2">
+    <nav aria-label="breadcrumb" className="py-3">
+      <ol className="flex items-center gap-1 text-sm flex-wrap">
+        <li className="flex items-center">
           <Link 
             href="/" 
-            className="flex items-center gap-1 hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-sm text-primary font-semibold hover:bg-white dark:hover:bg-black/70 transition-all shadow-sm hover:shadow-md"
             data-testid="breadcrumb-home"
           >
             <Home className="w-4 h-4" />
             <span>Главная</span>
           </Link>
-          <ChevronRight className="w-4 h-4" />
+        </li>
+        
+        <li className="flex items-center">
+          <ChevronRight className="w-5 h-5 text-white drop-shadow-lg mx-1" />
         </li>
         
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           
           return (
-            <li key={item.url} className="flex items-center gap-2">
+            <li key={item.url} className="flex items-center">
               {isLast ? (
                 <span 
-                  className="text-foreground font-medium"
+                  className="px-3 py-1.5 rounded-full bg-primary/90 backdrop-blur-sm text-white font-semibold shadow-md"
                   data-testid={`breadcrumb-current`}
                   aria-current="page"
                 >
@@ -47,12 +50,12 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 <>
                   <Link 
                     href={item.url} 
-                    className="hover:text-foreground transition-colors"
+                    className="px-3 py-1.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-sm text-primary font-semibold hover:bg-white dark:hover:bg-black/70 transition-all shadow-sm hover:shadow-md"
                     data-testid={`breadcrumb-${item.name.toLowerCase()}`}
                   >
                     {item.name}
                   </Link>
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-5 h-5 text-white drop-shadow-lg mx-1" />
                 </>
               )}
             </li>
