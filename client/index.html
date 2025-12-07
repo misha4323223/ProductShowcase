@@ -52,9 +52,6 @@
     <!-- Telegram Login Widget -->
     <script async src="https://telegram.org/js/telegram-widget.js?22"></script>
 
-    <!-- Robokassa iFrame Widget for SBP QR payments -->
-    <script src="https://auth.robokassa.ru/Merchant/bundle/robokassa_iframe.js"></script>
-
     <!-- Schema.org разметка для Google и Яндекс -->
     <script type="application/ld+json">
     {
@@ -167,7 +164,8 @@
     </script>
   </head>
   <body>
-    <script src="https://auth.robokassa.ru/Merchant/bundle/robokassa_iframe.js"></script>
+    <!-- Robokassa iFrame SDK для СБП QR-кода -->
+    <script async src="https://auth.robokassa.ru/Merchant/bundle/robokassa_iframe.js"></script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

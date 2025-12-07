@@ -583,18 +583,48 @@ export default function CheckoutPage() {
           // СБП: открываем iFrame с QR-кодом
           if (data.payment === 'sbp' && paymentResult.iframeParams) {
             console.log('📱 Открываем СБП iFrame с QR-кодом');
-            const robokassa = (window as any).Robokassa;
-            if (robokassa && typeof robokassa.StartPayment === 'function') {
-              robokassa.StartPayment(paymentResult.iframeParams);
-              setIsSubmitting(false);
-            } else {
-              // Fallback на redirect если SDK не загружен
-              console.warn('⚠️ Robokassa iFrame SDK не загружен, fallback на redirect');
-              if (paymentResult.paymentUrl) {
-                window.location.href = paymentResult.paymentUrl;
-              } else {
-                throw new Error('Не удалось получить ссылку на оплату');
+            
+            // Функция для открытия iFrame
+            const openIframe = () => {
+              const robokassa = (window as any).Robokassa;
+              if (robokassa && typeof robokassa.StartPayment === 'function') {
+                console.log('✅ Robokassa SDK готов, открываем iFrame');
+                robokassa.StartPayment(paymentResult.iframeParams);
+                setIsSubmitting(false);
+                return true;
               }
+              return false;
+            };
+            
+            // Пробуем открыть сразу
+            if (!openIframe()) {
+              console.log('⏳ SDK не загружен, ожидаем...');
+              
+              // Ждём до 3 секунд загрузки SDK
+              let attempts = 0;
+              const maxAttempts = 30; // 30 * 100ms = 3 секунды
+              
+              const checkInterval = setInterval(() => {
+                attempts++;
+                
+                if (openIframe()) {
+                  clearInterval(checkInterval);
+                } else if (attempts >= maxAttempts) {
+                  clearInterval(checkInterval);
+                  console.warn('⚠️ Robokassa SDK не загрузился за 3 секунды, используем redirect');
+                  
+                  if (paymentResult.paymentUrl) {
+                    window.location.href = paymentResult.paymentUrl;
+                  } else {
+                    setIsSubmitting(false);
+                    toast({
+                      title: "Ошибка загрузки платёжного модуля",
+                      description: "Попробуйте еще раз или используйте оплату картой",
+                      variant: "destructive",
+                    });
+                  }
+                }
+              }, 100);
             }
           } else if (data.payment === 'sbp' && !paymentResult.iframeParams) {
             // СБП выбран, но iframeParams отсутствуют - пробуем redirect
