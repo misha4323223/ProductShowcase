@@ -584,12 +584,13 @@ export default function CheckoutPage() {
           if (data.payment === 'sbp' && paymentResult.iframeParams) {
             console.log('📱 Открываем СБП iFrame с QR-кодом');
             
-            // Функция для открытия iFrame
+            // Функция для открытия iFrame с QR-кодом
+            // Используем Robokassa.Render вместо StartPayment для корректной работы с Settings и PaymentMethods
             const openIframe = () => {
               const robokassa = (window as any).Robokassa;
-              if (robokassa && typeof robokassa.StartPayment === 'function') {
-                console.log('✅ Robokassa SDK готов, открываем iFrame');
-                robokassa.StartPayment(paymentResult.iframeParams);
+              if (robokassa && typeof robokassa.Render === 'function') {
+                console.log('✅ Robokassa SDK готов, открываем iFrame через Render');
+                robokassa.Render(paymentResult.iframeParams);
                 setIsSubmitting(false);
                 return true;
               }
