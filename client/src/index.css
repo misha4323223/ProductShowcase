@@ -773,6 +773,14 @@ html.new-year [data-testid^="accordion-order-"] [data-testid^="badge-status-"] {
   color: inherit !important;
 }
 
+/* NEW YEAR THEME - Category Page Empty State */
+html.new-year [data-testid="text-no-products"],
+html.new-year [data-testid="text-no-filtered-products"] {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.3) !important;
+  font-weight: 600 !important;
+}
+
 /* SPRING THEME - Fresh Blooming Aesthetic 🌱 */
 html.spring {
   --button-outline: rgba(76, 175, 80, .15);
