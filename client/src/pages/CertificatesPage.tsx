@@ -21,10 +21,10 @@ import { Gift, Mail, Send, CalendarIcon, Check, Sparkles, CreditCard, Clock, Arr
 import { SiTelegram } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 
-import classicCardImage from "@assets/generated_images/classic_pink_gift_card_v1.png";
-import birthdayCardImage from "@assets/generated_images/birthday_purple_gift_card_v1.png";
-import celebrationCardImage from "@assets/generated_images/celebration_orange_gift_card_v1.png";
-import loveCardImage from "@assets/generated_images/love_red_gift_card_v1.png";
+import classicCardImage from "@assets/generated_images/optimized/classic_pink_gift_card_v1.webp";
+import birthdayCardImage from "@assets/generated_images/optimized/birthday_purple_gift_card_v1.webp";
+import celebrationCardImage from "@assets/generated_images/optimized/celebration_orange_gift_card_v1.webp";
+import loveCardImage from "@assets/generated_images/optimized/love_red_gift_card_v1.webp";
 
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
 const CERTIFICATE_AMOUNTS = [500, 1000, 2000, 3000, 5000, 7000, 10000];
