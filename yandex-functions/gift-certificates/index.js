@@ -83,6 +83,47 @@ async function sendTelegramMessage(chatId, message) {
   });
 }
 
+async function sendTelegramPhoto(chatId, photoUrl, caption) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  if (!botToken || !chatId) return null;
+
+  const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+  const payload = JSON.stringify({
+    chat_id: chatId,
+    photo: photoUrl,
+    caption: caption,
+    parse_mode: 'HTML',
+  });
+
+  return new Promise((resolve, reject) => {
+    const req = https.request(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+      },
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(res.statusCode === 200 ? JSON.parse(data) : null));
+    });
+    req.on('error', () => resolve(null));
+    req.write(payload);
+    req.end();
+  });
+}
+
+function getCertificateImageUrl(designTemplate) {
+  const SITE_URL = 'https://sweetdelights.store';
+  const templates = {
+    default: `${SITE_URL}/assets/certificates/classic_pink_gift_card.png`,
+    birthday: `${SITE_URL}/assets/certificates/birthday_purple_gift_card.png`,
+    celebration: `${SITE_URL}/assets/certificates/celebration_orange_gift_card.png`,
+    love: `${SITE_URL}/assets/certificates/love_red_gift_card.png`,
+  };
+  return templates[designTemplate] || templates.default;
+}
+
 async function sendEmail(type, to, data) {
   const emailFunctionUrl = process.env.SEND_EMAIL_FUNCTION_URL;
   if (!emailFunctionUrl) {
@@ -471,9 +512,14 @@ async function sendCertificateToRecipient(cert) {
   console.log(`📨 Sending certificate ${cert.code} to recipient...`);
 
   const recipientMessage = formatCertificateMessage(cert, true);
+  const imageUrl = getCertificateImageUrl(cert.designTemplate);
 
   if (cert.recipientTelegramId) {
-    await sendTelegramMessage(cert.recipientTelegramId, recipientMessage);
+    const photoResult = await sendTelegramPhoto(cert.recipientTelegramId, imageUrl, recipientMessage);
+    if (!photoResult) {
+      console.log(`⚠️ Photo send failed, falling back to text message`);
+      await sendTelegramMessage(cert.recipientTelegramId, recipientMessage);
+    }
     console.log(`✅ Certificate sent to Telegram: ${cert.recipientTelegramId}`);
   }
 

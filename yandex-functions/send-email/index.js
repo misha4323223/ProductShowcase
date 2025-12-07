@@ -488,6 +488,29 @@ ${verificationCode}
 function buildGiftCertificateEmail(to, data) {
   const { senderName, recipientName, amount, code, message, expiresAt, designTemplate } = data;
   
+  const SITE_URL = 'https://sweetdelights.store';
+  
+  const DESIGN_TEMPLATES = {
+    default: {
+      image: `${SITE_URL}/assets/certificates/classic_pink_gift_card.png`,
+      name: 'Классика'
+    },
+    birthday: {
+      image: `${SITE_URL}/assets/certificates/birthday_purple_gift_card.png`,
+      name: 'День рождения'
+    },
+    celebration: {
+      image: `${SITE_URL}/assets/certificates/celebration_orange_gift_card.png`,
+      name: 'Праздник'
+    },
+    love: {
+      image: `${SITE_URL}/assets/certificates/love_red_gift_card.png`,
+      name: 'С любовью'
+    }
+  };
+  
+  const template = DESIGN_TEMPLATES[designTemplate] || DESIGN_TEMPLATES.default;
+  
   const expiresDate = new Date(expiresAt).toLocaleDateString('ru-RU');
   const greeting = recipientName ? `Здравствуйте, ${recipientName}!` : 'Здравствуйте!';
   const fromText = senderName ? `<p style="font-size: 16px; color: #666;">От: <strong>${senderName}</strong></p>` : '';
@@ -504,20 +527,31 @@ function buildGiftCertificateEmail(to, data) {
       <p style="font-size: 16px; line-height: 1.6;">${greeting}</p>
       ${fromText}
       ${personalMessage}
-      <div style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%); padding: 30px; border-radius: 12px; text-align: center; margin: 20px 0; color: white;">
-        <p style="font-size: 14px; margin: 0 0 10px 0; opacity: 0.9;">Номинал сертификата</p>
-        <p style="font-size: 36px; font-weight: bold; margin: 0 0 20px 0;">${amount}₽</p>
-        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
-          <p style="font-size: 12px; margin: 0 0 5px 0; opacity: 0.9;">Код сертификата</p>
-          <p style="font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 0;">${code}</p>
+      
+      <!-- Красивая карточка сертификата с фоновым изображением -->
+      <div style="position: relative; border-radius: 16px; overflow: hidden; margin: 20px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+        <img src="${template.image}" alt="Подарочный сертификат" style="width: 100%; height: auto; display: block; min-height: 280px; object-fit: cover;" />
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.35); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center;">
+          <p style="font-size: 14px; color: white; margin: 0 0 8px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Подарочный сертификат</p>
+          <p style="font-size: 42px; font-weight: bold; color: white; margin: 0 0 20px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.4);">${amount}₽</p>
+          <div style="background: rgba(255,255,255,0.25); backdrop-filter: blur(4px); padding: 15px 25px; border-radius: 10px;">
+            <p style="font-size: 11px; color: white; margin: 0 0 5px 0; opacity: 0.9;">Код сертификата</p>
+            <p style="font-size: 22px; font-weight: bold; letter-spacing: 3px; color: white; margin: 0; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">${code}</p>
+          </div>
+          ${recipientName ? `<p style="font-size: 14px; color: white; margin: 15px 0 0 0; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">Для: <strong>${recipientName}</strong></p>` : ''}
+          ${senderName ? `<p style="font-size: 13px; color: white; margin: 5px 0 0 0; opacity: 0.9; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">От: ${senderName}</p>` : ''}
         </div>
       </div>
+      
       <p style="font-size: 14px; color: #666; text-align: center;">
         Действителен до: <strong>${expiresDate}</strong>
       </p>
       <p style="font-size: 16px; line-height: 1.6; text-align: center;">
         Используйте код при оформлении заказа в Sweet Delights!
       </p>
+      <div style="text-align: center; margin: 25px 0;">
+        <a href="${SITE_URL}/login" style="display: inline-block; background: #EC4899; color: white; padding: 14px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">Перейти в магазин</a>
+      </div>
       <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;" />
       <p style="font-size: 14px; color: #666;">
         С наилучшими пожеланиями,<br/>
