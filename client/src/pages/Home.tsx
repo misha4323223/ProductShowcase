@@ -287,13 +287,13 @@ export default function Home() {
           </div>
         )}
 
-        {/* Coming Soon Banner - скрыт в новогодней теме */}
-        {theme !== 'new-year' && (
+        {/* Coming Soon Banner - показывается во всех темах */}
+        <div className="md:max-w-7xl md:mx-auto">
           <div 
-            className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 animate-gradient backdrop-blur-sm flex items-center justify-center"
+            className="relative overflow-hidden bg-gradient-to-br from-pink-300/90 via-purple-300/85 to-orange-200/90 dark:from-purple-900/90 dark:via-indigo-900/85 dark:to-pink-900/90 animate-gradient backdrop-blur-sm flex items-center justify-center"
             style={{ height: 'clamp(3rem, 8vw, 10rem)', paddingBottom: 'clamp(0.5rem, 1.5vw, 1.5rem)' }}
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/40 via-purple-200/35 to-yellow-100/40"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/40 via-purple-200/35 to-yellow-100/40 dark:from-purple-800/40 dark:via-indigo-800/35 dark:to-pink-800/40"></div>
             <div className="absolute inset-0 opacity-30">
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNCIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')] animate-pulse-slow"></div>
             </div>
@@ -327,7 +327,7 @@ export default function Home() {
               </svg>
             </div>
           </div>
-        )}
+        </div>
 
         <div className="md:max-w-7xl md:mx-auto">
           <HeroSlider slides={slides} />
