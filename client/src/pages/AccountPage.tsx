@@ -1319,13 +1319,19 @@ export default function AccountPage() {
                       <div>
                         <Label className="text-muted-foreground">Фамилия</Label>
                         <p className="text-lg" data-testid="text-profile-lastName">
-                          {profile?.lastName || <span className="text-muted-foreground italic">Не указано</span>}
+                          {profile?.lastName || profile?.yandexLastName || <span className="text-muted-foreground italic">Не указано</span>}
+                          {!profile?.lastName && profile?.yandexLastName && (
+                            <span className="text-xs text-muted-foreground ml-2">(от Яндекс)</span>
+                          )}
                         </p>
                       </div>
                       <div>
                         <Label className="text-muted-foreground">Имя</Label>
                         <p className="text-lg" data-testid="text-profile-firstName">
-                          {profile?.firstName || <span className="text-muted-foreground italic">Не указано</span>}
+                          {profile?.firstName || profile?.yandexFirstName || <span className="text-muted-foreground italic">Не указано</span>}
+                          {!profile?.firstName && profile?.yandexFirstName && (
+                            <span className="text-xs text-muted-foreground ml-2">(от Яндекс)</span>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -1346,7 +1352,10 @@ export default function AccountPage() {
                     <div>
                       <Label className="text-muted-foreground">Телефон</Label>
                       <p className="text-lg" data-testid="text-profile-phone">
-                        {profile?.phone || <span className="text-muted-foreground italic">Не указано</span>}
+                        {profile?.phone || profile?.yandexPhone || <span className="text-muted-foreground italic">Не указано</span>}
+                        {!profile?.phone && profile?.yandexPhone && (
+                          <span className="text-xs text-muted-foreground ml-2">(от Яндекс)</span>
+                        )}
                       </p>
                     </div>
                     <Separator />
