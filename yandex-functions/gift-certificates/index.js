@@ -127,7 +127,8 @@ function formatCertificateMessage(cert, isForRecipient = true) {
     message += `\n💳 <b>Номинал:</b> ${cert.amount}₽\n`;
     message += `🔑 <b>Код сертификата:</b>\n<code>${cert.code}</code>\n\n`;
     message += `📅 Действителен до: ${expiresDate}\n\n`;
-    message += `Используйте код при оформлении заказа в Sweet Delights! 🍰`;
+    message += `Используйте код при оформлении заказа в Sweet Delights!\n\n`;
+    message += `🔗 <a href="https://sweetdelights.store/login">Войти или зарегистрироваться</a>`;
     return message;
   } else {
     let message = `✅ <b>Сертификат успешно приобретён!</b>\n\n`;
