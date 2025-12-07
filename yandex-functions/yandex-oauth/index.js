@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand, GetCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
 
 // Нормализация телефона для корректного сравнения
@@ -243,6 +243,34 @@ exports.handler = async (event) => {
           });
           
           await docClient.send(updateCommand);
+
+          // 🔄 АВТОМАТИЧЕСКОЕ ОБЪЕДИНЕНИЕ: Проверяем, есть ли дубликат с тем же yandexId
+          const yandexDuplicates = await scanAllItems(docClient, {
+            TableName: "users",
+            FilterExpression: "yandexId = :yandexId AND email <> :currentEmail",
+            ExpressionAttributeValues: { 
+              ":yandexId": yandexId,
+              ":currentEmail": matchingUser.email
+            },
+          });
+
+          if (yandexDuplicates.length > 0) {
+            console.log(`🗑️ Найдено ${yandexDuplicates.length} дубликатов с yandexId=${yandexId}, удаляем...`);
+            
+            // Удаляем дубликаты
+            for (const duplicate of yandexDuplicates) {
+              try {
+                const { DeleteCommand } = require("@aws-sdk/lib-dynamodb");
+                await docClient.send(new DeleteCommand({
+                  TableName: "users",
+                  Key: { email: duplicate.email }
+                }));
+                console.log(`✅ Удален дубликат: ${duplicate.email}`);
+              } catch (error) {
+                console.error(`❌ Ошибка удаления дубликата ${duplicate.email}:`, error);
+              }
+            }
+          }
           
           const token = generateToken(matchingUser.userId, matchingUser.email, {
             yandexId: yandexId,
