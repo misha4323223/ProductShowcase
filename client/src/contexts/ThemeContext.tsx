@@ -31,11 +31,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         return preloaded as Theme;
       }
     }
-    return 'sakura';
+    return 'new-year';
   };
 
   const [theme, setThemeState] = useState<Theme>(getInitialTheme());
-  const [preferredThemeState, setPreferredThemeState] = useState<PreferredTheme>('sakura');
+  const [preferredThemeState, setPreferredThemeState] = useState<PreferredTheme>('new-year');
   const [isDarkMode, setIsDarkMode] = useState(false);
   // isLoading = false потому что тема и фон уже предзагружены в index.html
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +55,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         const serverPreferred = await getPreferredTheme();
         const validPreferred = ['sakura', 'new-year', 'spring', 'autumn'].includes(serverPreferred)
           ? serverPreferred as PreferredTheme
-          : 'sakura';
+          : 'new-year';
         
         setPreferredThemeState(prev => prev !== validPreferred ? validPreferred : prev);
 

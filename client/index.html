@@ -117,12 +117,12 @@
               headers: { 'Content-Type': 'application/json' },
             });
             const themeData = await themeRes.json();
-            const theme = themeData.settingValue || 'sakura';
+            const theme = themeData.settingValue || 'new-year';
             
             // Валидируем тему
             const validTheme = ['light', 'dark', 'sakura', 'new-year', 'spring', 'autumn'].includes(theme) 
               ? theme 
-              : 'sakura';
+              : 'new-year';
             
             // Сохраняем для React контекста
             window.__initialTheme = validTheme;
@@ -156,8 +156,8 @@
             }
           } catch (err) {
             console.error('Failed to load theme:', err);
-            document.documentElement.classList.add('sakura');
-            window.__initialTheme = 'sakura';
+            document.documentElement.classList.add('new-year');
+            window.__initialTheme = 'new-year';
           }
         })();
       })();
