@@ -217,7 +217,7 @@ export default function CategoryPage() {
               </div>
             ) : categoryProducts.length === 0 ? (
               <div className="text-center py-16">
-                <p className="text-muted-foreground text-lg" data-testid="text-no-products">
+                <p className="text-white text-lg font-medium drop-shadow-lg" data-testid="text-no-products">
                   В этой категории пока нет товаров
                 </p>
               </div>
