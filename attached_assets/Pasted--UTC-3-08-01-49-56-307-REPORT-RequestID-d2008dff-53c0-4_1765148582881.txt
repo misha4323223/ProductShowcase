@@ -1,0 +1,89 @@
+Время (UTC +3)
+Сообщение
+
+08 дек. 01:49:56.307
+REPORT RequestID: d2008dff-53c0-49e4-bd21-87230dad2604 Duration: 607.222 ms Billed Duration: 700 ms Memory Size: 128 MB Max Memory Used: 125 MB Queuing Duration: 0.042 ms Function Init Duration: 187.255 ms CPU Usage: 63.867 %
+
+08 дек. 01:49:56.307
+END RequestID: d2008dff-53c0-49e4-bd21-87230dad2604
+
+08 дек. 01:49:56.305
+✅ Найден существующий пользователь: pimashin.michael@yandex.ru
+
+08 дек. 01:49:56.039
+📞 Телефон от Яндекса: +79531814136 → нормализованный: 79531814136
+
+08 дек. 01:49:56.039
+🔍 Поиск существующего пользователя с yandexId: 1670282339
+
+08 дек. 01:49:56.039
+✅ Данные пользователя получены: 1670282339 pimashin.michael@yandex.ru
+
+08 дек. 01:49:56.014
+🔄 Получение данных пользователя Яндекс...
+
+08 дек. 01:49:56.014
+✅ Токен получен успешно
+
+08 дек. 01:49:55.890
+🔄 Обмен кода на токен...
+
+08 дек. 01:49:55.890
+📥 Query params: { cid: 'pk1mrkzvpr63vbn296dwx7yjbr', code: 'rkglfy42dor6mrbb' }
+
+08 дек. 01:49:55.889
+🚀 yandex-oauth handler started
+
+08 дек. 01:49:55.651
+START RequestID: d2008dff-53c0-49e4-bd21-87230dad2604 Version: d4et4qfjhtnsddua0kdq
+
+08 дек. 01:18:43.397
+REPORT RequestID: 4b0820cd-ab26-4c85-8468-caaa21aa7df4 Duration: 201.443 ms Billed Duration: 300 ms Memory Size: 128 MB Max Memory Used: 104 MB Queuing Duration: 0.048 ms Function Init Duration: 193.143 ms CPU Usage: 17.188 %
+
+08 дек. 01:18:43.397
+END RequestID: 4b0820cd-ab26-4c85-8468-caaa21aa7df4
+
+08 дек. 01:18:43.396
+❌ No authorization code
+
+08 дек. 01:18:43.396
+📥 Query params: {}
+
+08 дек. 01:18:43.395
+🚀 yandex-oauth handler started
+
+08 дек. 01:18:43.074
+START RequestID: 4b0820cd-ab26-4c85-8468-caaa21aa7df4 Version: d4eomkrsp44n3t58ikcl
+
+08 дек. 01:15:18.064
+REPORT RequestID: 1c11681b-c10b-4a77-97e3-89a39a59c9b4 Duration: 475.550 ms Billed Duration: 500 ms Memory Size: 128 MB Max Memory Used: 105 MB Queuing Duration: 0.083 ms Function Init Duration: 195.059 ms CPU Usage: 11.914 %
+
+08 дек. 01:15:18.064
+END RequestID: 1c11681b-c10b-4a77-97e3-89a39a59c9b4
+
+08 дек. 01:15:18.061
+✅ Найден существующий пользователь: pimashin.michael@yandex.ru
+
+08 дек. 01:15:17.933
+🔍 Поиск существующего пользователя с yandexId: 1670282339
+
+08 дек. 01:15:17.933
+✅ Данные пользователя получены: 1670282339 pimashin.michael@yandex.ru
+
+08 дек. 01:15:17.903
+🔄 Получение данных пользователя Яндекс...
+
+08 дек. 01:15:17.903
+✅ Токен получен успешно
+
+08 дек. 01:15:17.786
+🔄 Обмен кода на токен...
+
+08 дек. 01:15:17.785
+📥 Query params: { cid: 'pk1mrkzvpr63vbn296dwx7yjbr', code: '527h25pvx6vcpuaa' }
+
+08 дек. 01:15:17.785
+🚀 yandex-oauth handler started
+
+08 дек. 01:15:17.586
+START RequestID: 1c11681b-c10b-4a77-97e3-89a39a59c9b4 Version: d4eomkrsp44n3t58ikcl
