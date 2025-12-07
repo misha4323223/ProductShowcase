@@ -170,6 +170,48 @@ exports.handler = async (event) => {
       return createRedirectResponse(`${frontendUrl}/auth/callback?token=${token}&provider=yandex`);
     }
 
+    // Сначала ищем по номеру телефона
+    if (phone) {
+      console.log('🔍 Поиск пользователя по телефону:', phone);
+      const scanByPhone = new ScanCommand({
+        TableName: "users",
+        FilterExpression: "phone = :phone",
+        ExpressionAttributeValues: { ":phone": phone },
+      });
+
+      result = await docClient.send(scanByPhone);
+
+      if (result.Items && result.Items.length > 0) {
+        const user = result.Items[0];
+        console.log('✅ Найден пользователь по телефону, привязываем Yandex ID');
+        
+        const { UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+        const updateCommand = new UpdateCommand({
+          TableName: "users",
+          Key: { email: user.email },
+          UpdateExpression: "SET yandexId = :yandexId, yandexFirstName = :firstName, yandexLastName = :lastName, yandexPhone = :phone, yandexLinkedAt = :linkedAt",
+          ExpressionAttributeValues: {
+            ":yandexId": yandexId,
+            ":firstName": firstName,
+            ":lastName": lastName,
+            ":phone": phone,
+            ":linkedAt": new Date().toISOString(),
+          },
+        });
+        
+        await docClient.send(updateCommand);
+        
+        const token = generateToken(user.userId, user.email, {
+          yandexId: yandexId,
+          emailVerified: true,
+          firstName: firstName,
+          lastName: lastName,
+        });
+
+        return createRedirectResponse(`${frontendUrl}/auth/callback?token=${token}&provider=yandex`);
+      }
+    }
+
     console.log('🔍 Поиск пользователя по email:', email);
     const scanByEmail = new ScanCommand({
       TableName: "users",
