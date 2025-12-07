@@ -129,7 +129,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               decoding="async"
               fetchPriority={index === 0 ? "high" : "low"}
               className={`w-full h-full object-cover hero-slide-image ${
-                slide.id === 2 ? 'object-left' : slide.id === 3 ? 'object-bottom' : 'object-center'
+                slide.id === 1 ? 'object-top' : slide.id === 2 ? 'object-center' : slide.id === 3 ? 'object-bottom' : 'object-center'
               }`}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
