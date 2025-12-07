@@ -253,12 +253,18 @@ exports.handler = async (event) => {
 
     console.log('🆕 Создание нового пользователя');
     const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Используем телефон как основной идентификатор, если он есть
+    // Формат email-ключа: телефон@phone или yandex_id@yandex
+    const primaryKey = phone ? `${phone}@phone` : `yandex_${yandexId}@yandex`;
 
     const putCommand = new PutCommand({
       TableName: "users",
       Item: {
-        email,
+        email: primaryKey,
         userId,
+        phone: phone || null,
+        yandexEmail: email,
         yandexId,
         yandexFirstName: firstName,
         yandexLastName: lastName,
@@ -271,10 +277,11 @@ exports.handler = async (event) => {
     });
 
     await docClient.send(putCommand);
-    console.log('✅ Пользователь создан:', userId);
+    console.log('✅ Пользователь создан:', userId, 'ключ:', primaryKey);
 
-    const token = generateToken(userId, email, {
+    const token = generateToken(userId, primaryKey, {
       yandexId,
+      phone: phone,
       emailVerified: true,
       firstName,
       lastName,
