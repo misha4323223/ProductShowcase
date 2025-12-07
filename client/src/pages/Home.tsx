@@ -270,7 +270,7 @@ export default function Home() {
         onWheelClick={() => setWheelOpen(true)}
       />
 
-      <main className="flex-1 relative z-10 md:max-w-7xl md:mx-auto md:w-full">
+      <main className="flex-1 relative z-10">
         {/* Баннер поздравления на день рождения */}
         {isBirthday && (
           <div className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 py-4 px-4 text-center border-b-2 border-pink-300">

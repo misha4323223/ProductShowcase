@@ -113,8 +113,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   return (
     <>
-      <div className="md:max-w-7xl md:mx-auto md:px-8">
-        <div className="relative w-full h-[60vh] md:h-[70vh] max-h-[600px] md:max-h-[700px] overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 pt-4 md:pt-20 hero-mobile-fix md:rounded-2xl">
+      <div className="relative w-full h-[60vh] md:h-[70vh] max-h-[600px] md:max-h-[700px] overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 pt-4 md:pt-20 hero-mobile-fix">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -200,7 +199,6 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             />
           ))}
         </div>
-      </div>
       </div>
 
       {/* Dialog для подписки */}
