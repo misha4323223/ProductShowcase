@@ -1887,51 +1887,6 @@ paths:
         '200':
           description: OK
 
-  # ========== YANDEX ID OAUTH ==========
-  /auth/yandex/callback:
-    get:
-      summary: Callback для OAuth авторизации через Яндекс ID
-      description: Принимает код авторизации от Яндекс OAuth, обменивает на токен и создаёт/авторизует пользователя
-      operationId: yandexOAuthCallback
-      parameters:
-        - name: code
-          in: query
-          required: false
-          schema:
-            type: string
-          description: Код авторизации от Яндекс OAuth
-        - name: error
-          in: query
-          required: false
-          schema:
-            type: string
-          description: Ошибка OAuth (если пользователь отказался)
-      x-yc-apigateway-integration:
-        type: cloud_functions
-        function_id: d4ehgntokqsi7uk21466
-        service_account_id: aje47rf2630q59equess
-      responses:
-        '302':
-          description: Редирект на фронтенд с токеном
-        '400':
-          description: Ошибка параметров
-        '500':
-          description: Ошибка сервера
-    options:
-      summary: CORS preflight
-      x-yc-apigateway-integration:
-        type: dummy
-        http_code: 200
-        http_headers:
-          'Access-Control-Allow-Origin': '*'
-          'Access-Control-Allow-Methods': 'GET, OPTIONS'
-          'Access-Control-Allow-Headers': 'Content-Type'
-        content:
-          application/json: '{}'
-      responses:
-        '200':
-          description: OK
-
   /api/users/attach-email:
     post:
       summary: Привязать Email и пароль к Telegram аккаунту
@@ -2417,7 +2372,7 @@ paths:
           description: Email пользователя для получения его сертификатов
       x-yc-apigateway-integration:
         type: cloud_functions
-        function_id: ${GIFT_CERTIFICATES_FUNCTION_ID}
+        function_id: d4eir457javr65abar8e
         service_account_id: aje47rf2630q59equess
       responses:
         '200':
@@ -2437,7 +2392,108 @@ paths:
         - send: отправить получателю
       x-yc-apigateway-integration:
         type: cloud_functions
-        function_id: ${GIFT_CERTIFICATES_FUNCTION_ID}
+        function_id: d4eir457javr65abar8e
+        service_account_id: aje47rf2630q59equess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: [create, validate, apply, activate, send]
+                amount:
+                  type: integer
+                  description: Номинал (для create)
+                purchaserEmail:
+                  type: string
+                  description: Email покупателя
+                isGift:
+                  type: boolean
+                  description: Подарок или для себя
+                recipientEmail:
+                  type: string
+                  description: Email получателя
+                recipientTelegramId:
+                  type: string
+                  description: Telegram ID получателя
+                code:
+                  type: string
+                  description: Код сертификата (для validate/apply)
+                orderId:
+                  type: string
+                  description: ID заказа (для apply)
+                amountToUse:
+                  type: integer
+                  description: Сумма к списанию (для apply)
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                type: object
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+  /api/certificates:
+    get:
+      summary: Получить сертификаты пользователя
+      parameters:
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Код сертификата
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: ID сертификата
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Email пользователя для получения его сертификатов
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eir457javr65abar8e
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '200':
+          description: Сертификат(ы)
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      summary: Операции с сертификатами
+      description: |
+        Поддерживаемые actions:
+        - create: создать сертификат
+        - validate: проверить валидность
+        - apply: применить к заказу
+        - activate: активировать после оплаты
+        - send: отправить получателю
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4eir457javr65abar8e
         service_account_id: aje47rf2630q59equess
       requestBody:
         required: true
@@ -2535,7 +2591,7 @@ paths:
                   example: "🎁 Новинка"
       x-yc-apigateway-integration:
         type: cloud_functions
-        function_id: d4efkrvud5o73t4cskgk
+        function_id: d4eir457javr65abar8e
         service_account_id: aje47rf2630q59equess
       responses:
         '200':
@@ -2571,6 +2627,51 @@ paths:
           'Access-Control-Allow-Origin': '*'
           'Access-Control-Allow-Methods': 'POST, OPTIONS'
           'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        content:
+          application/json: '{}'
+      responses:
+        '200':
+          description: OK
+
+  # ========== YANDEX ID OAUTH ==========
+  /auth/yandex/callback:
+    get:
+      summary: Callback для OAuth авторизации через Яндекс ID
+      description: Принимает код авторизации от Яндекс OAuth, обменивает на токен и создаёт/авторизует пользователя
+      operationId: yandexOAuthCallback
+      parameters:
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Код авторизации от Яндекс OAuth
+        - name: error
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Ошибка OAuth (если пользователь отказался)
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ehgntokqsi7uk21466
+        service_account_id: aje47rf2630q59equess
+      responses:
+        '302':
+          description: Редирект на фронтенд с токеном
+        '400':
+          description: Ошибка параметров
+        '500':
+          description: Ошибка сервера
+    options:
+      summary: CORS preflight
+      x-yc-apigateway-integration:
+        type: dummy
+        http_code: 200
+        http_headers:
+          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Methods': 'GET, OPTIONS'
+          'Access-Control-Allow-Headers': 'Content-Type'
         content:
           application/json: '{}'
       responses:
