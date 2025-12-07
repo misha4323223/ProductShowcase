@@ -50,6 +50,23 @@ export default function CertificatesPage() {
   const [isScheduled, setIsScheduled] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const copyGiftLink = async (code: string) => {
+    const giftUrl = `${window.location.origin}/gift/${code}`;
+    try {
+      await navigator.clipboard.writeText(giftUrl);
+      toast({
+        title: "Ссылка скопирована!",
+        description: "Отправьте эту ссылку получателю подарка",
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось скопировать ссылку",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handlePurchase = async () => {
     if (!user) {
       toast({
@@ -410,8 +427,17 @@ export default function CertificatesPage() {
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Доставка:</span>
                           <span className="flex items-center gap-1">
-                            <Link2 className="h-3 w-3" />
-                            Ссылка{recipientEmail && " + Email"}
+                            {recipientEmail ? (
+                              <>
+                                <Mail className="h-3 w-3" />
+                                Email
+                              </>
+                            ) : (
+                              <>
+                                <Link2 className="h-3 w-3" />
+                                Ссылка
+                              </>
+                            )}
                           </span>
                         </div>
                         {isScheduled && scheduledDate && (
