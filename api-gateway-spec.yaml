@@ -1908,7 +1908,7 @@ paths:
           description: Ошибка OAuth (если пользователь отказался)
       x-yc-apigateway-integration:
         type: cloud_functions
-        function_id: ЗАМЕНИ_НА_ID_ФУНКЦИИ
+        function_id: d4ehgntokqsi7uk21466
         service_account_id: aje47rf2630q59equess
       responses:
         '302':
