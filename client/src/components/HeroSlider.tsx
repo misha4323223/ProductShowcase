@@ -36,6 +36,9 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const { theme: currentTheme } = useTheme();
   const { siteName } = useSiteSettings();
 
+  // Определяем, включена ли темная тема
+  const isDarkMode = currentTheme === 'dark' || currentTheme === 'new-year';
+
   useEffect(() => {
     // ОПТИМИЗАЦИЯ: Увеличен интервал с 5 до 10 секунд для снижения нагрузки
     const timer = setInterval(() => {
@@ -62,7 +65,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim()) {
       toast({
         title: "Введите email",
@@ -134,7 +137,10 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             <div className={`absolute inset-0 flex ${
-              slide.id === 1 ? 'items-start pt-2 md:pt-8' : slide.id === 2 ? 'items-start pt-2 md:pt-32' : slide.id === 3 ? 'items-start pt-8 md:pt-12' : 'items-center'
+              slide.id === 1 ? 'items-start pt-2 md:pt-8' : 
+              slide.id === 2 ? 'items-start pt-2 md:pt-32' : 
+              slide.id === 3 ? (isDarkMode ? 'items-start pt-28 md:pt-32' : 'items-start pt-8 md:pt-12') : 
+              'items-center'
             } ${slide.id === 2 ? 'justify-end' : slide.id === 3 ? 'justify-start' : 'justify-center'}`}>
               <div className={`${slide.id === 2 ? 'text-right pr-4 md:pr-16' : slide.id === 3 ? 'text-left pl-4 md:pl-16' : 'text-center px-4'} text-white max-w-3xl`}>
                 <h1 className="font-serif text-4xl md:text-6xl font-bold mb-4 drop-shadow-2xl text-candy" data-testid={`text-slide-title-${index}`}>
@@ -210,7 +216,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               Подпишитесь на уведомление об открытии и получите промокод на скидку 10%
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
             <div>
               <p className="text-sm font-medium mb-3">Подпишитесь на email:</p>
@@ -223,7 +229,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                   disabled={isSubscribing}
                   data-testid="input-subscribe-email"
                 />
-                
+
                 <div className="flex items-start gap-2">
                   <Checkbox
                     id="terms"
@@ -337,7 +343,7 @@ function PromoCodeDialog({ open, onOpenChange }: { open: boolean; onOpenChange: 
             Держите ваш приветственный промокод. Не потеряйте его — скидка 10% ждёт вас при первом заказе!
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-4 py-4">
           {/* Промокод */}
           <div className="bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-primary rounded-lg p-6 text-center">
