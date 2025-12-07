@@ -506,9 +506,9 @@ export default function CertificatesPage() {
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
                     <Send className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-1">2. Доставка</h3>
+                  <h3 className="font-semibold mb-1">2. Получение</h3>
                   <p className="text-sm text-muted-foreground">
-                    Сертификат будет отправлен на email или в Telegram
+                    Сертификат придёт на email (если указан) или найдёте его в личном кабинете со ссылкой для отправки
                   </p>
                 </div>
                 <div className="text-center">
