@@ -79,7 +79,7 @@ class RobokassaClient {
     });
 
     if (paymentMethod === 'sbp') {
-      urlParams.append('PaymentMethods', 'sbp');
+      urlParams.append('IncCurrLabel', 'SBPQR');
     }
 
     return `${this.paymentUrl}?${urlParams.toString()}`;
