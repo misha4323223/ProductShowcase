@@ -9,7 +9,7 @@ export function WaveDivider() {
       case 'dark':
         return { id: 'darkWaveGradient', stops: [{ offset: '0%', color: '#ec4899' }, { offset: '100%', color: '#a855f7' }] }; // Розовый -> Фиолетовый для тёмной темы
       case 'new-year':
-        return { id: 'newyearWaveGradient', stops: [{ offset: '0%', color: '#C41E3A' }] };
+        return { id: 'newyearWaveGradient', stops: [{ offset: '0%', color: '#FF0000' }, { offset: '100%', color: '#DC143C' }] };
       case 'spring':
         return { id: 'springWaveGradient', stops: [{ offset: '0%', color: '#90EE90' }] };
       case 'autumn':
@@ -32,8 +32,7 @@ export function WaveDivider() {
         className="w-full h-auto"
         style={{ 
           display: 'block', 
-          minHeight: '80px',
-          filter: theme === 'new-year' ? 'blur(3px)' : undefined
+          minHeight: '80px'
         }}
       >
         <defs>
@@ -47,7 +46,7 @@ export function WaveDivider() {
         <path
           d="M 0,0 L 1200,0 L 1200,35 Q 1050,55 900,40 T 600,40 T 300,40 T 0,35 L 0,0 Z"
           fill={`url(#${gradientConfig.id})`}
-          opacity={theme === 'new-year' ? '0.7' : '1'}
+          opacity="1"
         />
       </svg>
     </div>
