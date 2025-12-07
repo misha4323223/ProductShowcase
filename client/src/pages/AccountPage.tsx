@@ -243,6 +243,8 @@ interface GiftCertificate {
 function CertificatesTab({ userEmail }: { userEmail: string }) {
   const [certificates, setCertificates] = useState<GiftCertificate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingCertId, setDeletingCertId] = useState<string | null>(null);
+  const [certToDelete, setCertToDelete] = useState<GiftCertificate | null>(null);
   const { toast } = useToast();
 
   const API_BASE_URL = import.meta.env.VITE_API_GATEWAY_URL || '';
@@ -277,6 +279,44 @@ function CertificatesTab({ userEmail }: { userEmail: string }) {
         description: "Не удалось скопировать код",
         variant: "destructive",
       });
+    }
+  };
+
+  const deleteCertificate = async (cert: GiftCertificate) => {
+    setDeletingCertId(cert.id);
+    try {
+      const response = await fetch(`${API_BASE_URL}/certificates`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'delete',
+          certificateId: cert.id,
+          userEmail: userEmail
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCertificates(prev => prev.filter(c => c.id !== cert.id));
+        toast({
+          title: "Удалено",
+          description: "Сертификат удалён из списка",
+        });
+      } else {
+        toast({
+          title: "Ошибка",
+          description: data.error || "Не удалось удалить сертификат",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить сертификат",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingCertId(null);
+      setCertToDelete(null);
     }
   };
 
@@ -376,6 +416,20 @@ function CertificatesTab({ userEmail }: { userEmail: string }) {
                       </div>
                     </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="flex-shrink-0 text-muted-foreground hover:text-destructive"
+                    onClick={() => setCertToDelete(cert)}
+                    disabled={deletingCertId === cert.id}
+                    data-testid={`button-delete-${cert.id}`}
+                  >
+                    {deletingCertId === cert.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </Button>
                 </div>
               ))}
             </div>
@@ -443,12 +497,48 @@ function CertificatesTab({ userEmail }: { userEmail: string }) {
                       </div>
                     </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="flex-shrink-0 text-muted-foreground hover:text-destructive"
+                    onClick={() => setCertToDelete(cert)}
+                    disabled={deletingCertId === cert.id}
+                    data-testid={`button-delete-received-${cert.id}`}
+                  >
+                    {deletingCertId === cert.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </Button>
                 </div>
               ))}
             </div>
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!certToDelete} onOpenChange={(open) => !open && setCertToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Удалить сертификат?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Сертификат на сумму {certToDelete?.amount}₽ (код: {certToDelete?.code}) будет удалён из вашего списка. 
+              Это действие нельзя отменить.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-delete">Отмена</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => certToDelete && deleteCertificate(certToDelete)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              data-testid="button-confirm-delete"
+            >
+              Удалить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </TabsContent>
   );
 }

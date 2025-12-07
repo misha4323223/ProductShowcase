@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, ScanCommand, QueryCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, ScanCommand, QueryCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
 const https = require('https');
 
 const client = new DynamoDBClient({
@@ -638,6 +638,39 @@ async function handleInitPayment(body) {
   });
 }
 
+async function handleDelete(data) {
+  const { certificateId, userEmail } = data;
+
+  if (!certificateId || !userEmail) {
+    return createResponse(400, { success: false, error: "certificateId and userEmail are required" });
+  }
+
+  const cert = await docClient.send(new GetCommand({
+    TableName: "gift_certificates",
+    Key: { id: certificateId }
+  }));
+
+  if (!cert.Item) {
+    return createResponse(404, { success: false, error: "Сертификат не найден" });
+  }
+
+  const isOwner = cert.Item.purchaserEmail?.toLowerCase() === userEmail.toLowerCase() ||
+                  cert.Item.recipientEmail?.toLowerCase() === userEmail.toLowerCase();
+
+  if (!isOwner) {
+    return createResponse(403, { success: false, error: "Нет прав на удаление этого сертификата" });
+  }
+
+  await docClient.send(new DeleteCommand({
+    TableName: "gift_certificates",
+    Key: { id: certificateId }
+  }));
+
+  console.log(`Certificate ${certificateId} deleted by ${userEmail}`);
+
+  return createResponse(200, { success: true, message: "Сертификат удалён" });
+}
+
 exports.handler = async (event) => {
   try {
     console.log('Gift certificates request:', event);
@@ -668,6 +701,8 @@ exports.handler = async (event) => {
           return await handleSend(body);
         case 'initPayment':
           return await handleInitPayment(body);
+        case 'delete':
+          return await handleDelete(body);
         default:
           if (!action && body.amount) {
             return await handleCreate(body);
