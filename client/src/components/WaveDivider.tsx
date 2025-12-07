@@ -25,7 +25,14 @@ export function WaveDivider() {
   const gradientConfig = getWaveGradient();
 
   return (
-    <div className="w-full overflow-hidden -mt-0.5">
+    <div 
+      className="w-full overflow-hidden -mt-0.5"
+      style={theme === 'new-year' ? {
+        backgroundColor: 'rgba(255, 0, 0, 0.15)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)'
+      } : undefined}
+    >
       <svg
         viewBox="0 0 1200 80"
         preserveAspectRatio="none"
