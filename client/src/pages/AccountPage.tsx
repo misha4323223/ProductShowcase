@@ -1034,22 +1034,22 @@ export default function AccountPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="orders" data-testid="tab-orders">
-              <Package className="h-4 w-4 mr-2" />
-              Мои заказы
+          <TabsList className="mb-6 flex flex-wrap h-auto gap-1 w-full">
+            <TabsTrigger value="orders" className="flex-1 min-w-0 px-2 sm:px-4" data-testid="tab-orders">
+              <Package className="h-4 w-4 sm:mr-2 shrink-0" />
+              <span className="hidden sm:inline truncate">Мои заказы</span>
             </TabsTrigger>
-            <TabsTrigger value="wheel" data-testid="tab-wheel">
-              <Sparkles className="h-4 w-4 mr-2" />
-              Рулетка
+            <TabsTrigger value="wheel" className="flex-1 min-w-0 px-2 sm:px-4" data-testid="tab-wheel">
+              <Sparkles className="h-4 w-4 sm:mr-2 shrink-0" />
+              <span className="hidden sm:inline truncate">Рулетка</span>
             </TabsTrigger>
-            <TabsTrigger value="certificates" data-testid="tab-certificates">
-              <Gift className="h-4 w-4 mr-2" />
-              Сертификаты
+            <TabsTrigger value="certificates" className="flex-1 min-w-0 px-2 sm:px-4" data-testid="tab-certificates">
+              <Gift className="h-4 w-4 sm:mr-2 shrink-0" />
+              <span className="hidden sm:inline truncate">Сертификаты</span>
             </TabsTrigger>
-            <TabsTrigger value="profile" data-testid="tab-profile">
-              <User className="h-4 w-4 mr-2" />
-              Профиль
+            <TabsTrigger value="profile" className="flex-1 min-w-0 px-2 sm:px-4" data-testid="tab-profile">
+              <User className="h-4 w-4 sm:mr-2 shrink-0" />
+              <span className="hidden sm:inline truncate">Профиль</span>
             </TabsTrigger>
           </TabsList>
 
