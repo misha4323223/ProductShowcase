@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,8 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
-import { Gift, Mail, Send, CalendarIcon, Check, Sparkles, CreditCard, Clock, ArrowLeft } from "lucide-react";
-import { SiTelegram } from "react-icons/si";
+import { Gift, Mail, Send, CalendarIcon, Check, Sparkles, CreditCard, Clock, ArrowLeft, Link2, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 import classicCardImage from "@assets/generated_images/optimized/classic_pink_gift_card_v1.webp";
@@ -43,9 +41,7 @@ export default function CertificatesPage() {
 
   const [selectedAmount, setSelectedAmount] = useState<number>(1000);
   const [isGift, setIsGift] = useState(false);
-  const [deliveryMethod, setDeliveryMethod] = useState<"email" | "telegram">("email");
   const [recipientEmail, setRecipientEmail] = useState("");
-  const [recipientTelegramId, setRecipientTelegramId] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [senderName, setSenderName] = useState(user?.email?.split("@")[0] || "");
   const [message, setMessage] = useState("");
@@ -65,22 +61,6 @@ export default function CertificatesPage() {
       return;
     }
 
-    if (isGift) {
-      if (deliveryMethod === "email" && !recipientEmail) {
-        toast({
-          title: "Укажите email получателя",
-          variant: "destructive",
-        });
-        return;
-      }
-      if (deliveryMethod === "telegram" && !recipientTelegramId) {
-        toast({
-          title: "Укажите Telegram ID получателя",
-          variant: "destructive",
-        });
-        return;
-      }
-    }
 
     setIsSubmitting(true);
 
@@ -91,8 +71,7 @@ export default function CertificatesPage() {
         purchaserEmail: user.email,
         purchaserName: user.email?.split("@")[0],
         isGift,
-        recipientEmail: isGift && deliveryMethod === "email" ? recipientEmail : undefined,
-        recipientTelegramId: isGift && deliveryMethod === "telegram" ? recipientTelegramId : undefined,
+        recipientEmail: isGift && recipientEmail ? recipientEmail : undefined,
         recipientName: isGift ? recipientName : undefined,
         senderName: isGift ? senderName : undefined,
         message: isGift ? message : undefined,
@@ -235,58 +214,19 @@ export default function CertificatesPage() {
                   {isGift && (
                     <div className="space-y-4 pt-4 border-t">
                       <div>
-                        <Label className="text-base font-medium mb-3 block">
-                          Способ доставки
-                        </Label>
-                        <RadioGroup
-                          value={deliveryMethod}
-                          onValueChange={(v) => setDeliveryMethod(v as "email" | "telegram")}
-                          className="flex gap-4"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="email" id="delivery-email" data-testid="radio-email" />
-                            <Label htmlFor="delivery-email" className="flex items-center gap-2 cursor-pointer">
-                              <Mail className="h-4 w-4" />
-                              Email
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="telegram" id="delivery-telegram" data-testid="radio-telegram" />
-                            <Label htmlFor="delivery-telegram" className="flex items-center gap-2 cursor-pointer">
-                              <SiTelegram className="h-4 w-4" />
-                              Telegram
-                            </Label>
-                          </div>
-                        </RadioGroup>
+                        <Label htmlFor="recipient-email">Email получателя (необязательно)</Label>
+                        <Input
+                          id="recipient-email"
+                          type="email"
+                          placeholder="friend@example.com"
+                          value={recipientEmail}
+                          onChange={(e) => setRecipientEmail(e.target.value)}
+                          data-testid="input-recipient-email"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Если указать — отправим сертификат на этот email автоматически
+                        </p>
                       </div>
-
-                      {deliveryMethod === "email" ? (
-                        <div>
-                          <Label htmlFor="recipient-email">Email получателя</Label>
-                          <Input
-                            id="recipient-email"
-                            type="email"
-                            placeholder="friend@example.com"
-                            value={recipientEmail}
-                            onChange={(e) => setRecipientEmail(e.target.value)}
-                            data-testid="input-recipient-email"
-                          />
-                        </div>
-                      ) : (
-                        <div>
-                          <Label htmlFor="recipient-telegram">Telegram ID получателя</Label>
-                          <Input
-                            id="recipient-telegram"
-                            placeholder="123456789"
-                            value={recipientTelegramId}
-                            onChange={(e) => setRecipientTelegramId(e.target.value)}
-                            data-testid="input-recipient-telegram"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Получатель должен писать боту @SweetDelightsBot
-                          </p>
-                        </div>
-                      )}
 
                       <div>
                         <Label htmlFor="recipient-name">Имя получателя</Label>
@@ -469,7 +409,10 @@ export default function CertificatesPage() {
                       <>
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">Доставка:</span>
-                          <span>{deliveryMethod === "email" ? "Email" : "Telegram"}</span>
+                          <span className="flex items-center gap-1">
+                            <Link2 className="h-3 w-3" />
+                            Ссылка{recipientEmail && " + Email"}
+                          </span>
                         </div>
                         {isScheduled && scheduledDate && (
                           <div className="flex justify-between">
@@ -511,7 +454,7 @@ export default function CertificatesPage() {
                   </Button>
 
                   <p className="text-xs text-center text-muted-foreground">
-                    После оплаты сертификат будет {isGift ? "отправлен получателю" : "доступен в вашем аккаунте"}
+                    После оплаты {isGift ? "вы получите ссылку для отправки получателю" : "сертификат будет доступен в вашем аккаунте"}
                   </p>
                 </CardContent>
               </Card>

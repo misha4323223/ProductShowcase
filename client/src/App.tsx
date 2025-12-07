@@ -48,6 +48,7 @@ const FaqPage = lazy(() => import("@/pages/FaqPage"));
 const TelegramPage = lazy(() => import("@/pages/TelegramPage"));
 const TelegramAttachPopup = lazy(() => import("@/pages/TelegramAttachPopup"));
 const CertificatesPage = lazy(() => import("@/pages/CertificatesPage"));
+const GiftViewPage = lazy(() => import("@/pages/GiftViewPage"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Компонент загрузки для Suspense
@@ -85,6 +86,7 @@ function Router() {
           <Route path="/terms" component={TermsPage} />
           <Route path="/faq" component={FaqPage} />
           <Route path="/certificates" component={CertificatesPage} />
+          <Route path="/gift/:code" component={GiftViewPage} />
           <Route path="/admin">
             <AdminProtectedRoute>
               <AdminPage />

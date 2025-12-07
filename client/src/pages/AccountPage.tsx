@@ -282,6 +282,23 @@ function CertificatesTab({ userEmail }: { userEmail: string }) {
     }
   };
 
+  const copyGiftLink = async (code: string) => {
+    const giftUrl = `${window.location.origin}/gift/${code}`;
+    try {
+      await navigator.clipboard.writeText(giftUrl);
+      toast({
+        title: "Ссылка скопирована!",
+        description: "Отправьте эту ссылку получателю подарка",
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось скопировать ссылку",
+        variant: "destructive",
+      });
+    }
+  };
+
   const deleteCertificate = async (cert: GiftCertificate) => {
     setDeletingCertId(cert.id);
     try {
