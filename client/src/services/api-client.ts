@@ -345,7 +345,19 @@ export async function getActivePrizes(userId: string): Promise<WheelPrize[]> {
   return response.json();
 }
 
-export async function initRobokassaPayment(orderId: string, amount: number, email?: string, description?: string, paymentMethod: string = 'card'): Promise<{ success: boolean; paymentUrl: string; orderId: string; amount: number }> {
+export interface RobokassaPaymentResult {
+  success: boolean;
+  paymentUrl: string;
+  iframeParams?: Record<string, any>;
+  iframeScriptUrl?: string;
+  orderId: string;
+  invId: number;
+  amount: number;
+  paymentMethod: string;
+  isTest: boolean;
+}
+
+export async function initRobokassaPayment(orderId: string, amount: number, email?: string, description?: string, paymentMethod: string = 'card'): Promise<RobokassaPaymentResult> {
   const url = `${API_BASE_URL}/api/payment/robokassa/init`;
   console.log('🔍 Инициализация платежа Робокасса:', { url, orderId, amount, email, paymentMethod });
   

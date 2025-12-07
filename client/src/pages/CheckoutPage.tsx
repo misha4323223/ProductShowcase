@@ -569,7 +569,7 @@ export default function CheckoutPage() {
           data.payment
         );
         
-        if (paymentResult.success && paymentResult.paymentUrl) {
+        if (paymentResult.success) {
           localStorage.setItem('pendingPaymentOrderId', orderId);
           
           // Обновляем статус рулетки (баллы будут пересчитаны на сервере)
@@ -577,12 +577,43 @@ export default function CheckoutPage() {
           
           toast({
             title: "Заказ успешно оформлен!",
-            description: `Номер заказа: ${orderId.substring(0, 8).toUpperCase()}. Переадресация на оплату...`,
+            description: `Номер заказа: ${orderId.substring(0, 8).toUpperCase()}. ${data.payment === 'sbp' ? 'Открываем QR-код для оплаты...' : 'Переадресация на оплату...'}`,
           });
           
-          window.location.href = paymentResult.paymentUrl;
+          // СБП: открываем iFrame с QR-кодом
+          if (data.payment === 'sbp' && paymentResult.iframeParams) {
+            console.log('📱 Открываем СБП iFrame с QR-кодом');
+            const robokassa = (window as any).Robokassa;
+            if (robokassa && typeof robokassa.StartPayment === 'function') {
+              robokassa.StartPayment(paymentResult.iframeParams);
+              setIsSubmitting(false);
+            } else {
+              // Fallback на redirect если SDK не загружен
+              console.warn('⚠️ Robokassa iFrame SDK не загружен, fallback на redirect');
+              if (paymentResult.paymentUrl) {
+                window.location.href = paymentResult.paymentUrl;
+              } else {
+                throw new Error('Не удалось получить ссылку на оплату');
+              }
+            }
+          } else if (data.payment === 'sbp' && !paymentResult.iframeParams) {
+            // СБП выбран, но iframeParams отсутствуют - пробуем redirect
+            console.warn('⚠️ iframeParams отсутствуют для СБП, пробуем redirect');
+            if (paymentResult.paymentUrl) {
+              window.location.href = paymentResult.paymentUrl;
+            } else {
+              throw new Error('Не удалось получить данные для оплаты СБП');
+            }
+          } else {
+            // Карта: обычный redirect
+            if (paymentResult.paymentUrl) {
+              window.location.href = paymentResult.paymentUrl;
+            } else {
+              throw new Error('Не удалось получить ссылку на оплату');
+            }
+          }
         } else {
-          throw new Error('Не удалось получить ссылку на оплату');
+          throw new Error('Не удалось получить данные для оплаты');
         }
       } catch (paymentError: any) {
         console.error('Ошибка инициализации платежа:', paymentError);
