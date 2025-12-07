@@ -227,6 +227,42 @@ exports.handler = async (event) => {
         if (matchingUser) {
           console.log('✅ Найден пользователь по телефону:', matchingUser.email, '- привязываем Yandex ID');
           
+          // 🔄 АВТОМАТИЧЕСКОЕ ОБЪЕДИНЕНИЕ: Ищем дубликат ДО обновления
+          // Проверяем по yandexId ИЛИ по email-формату yandex_XXXXX@yandex
+          console.log(`🔍 Поиск дубликатов для yandexId=${yandexId}...`);
+          const allUsers = await scanAllItems(docClient, {
+            TableName: "users",
+            FilterExpression: "email <> :currentEmail",
+            ExpressionAttributeValues: { 
+              ":currentEmail": matchingUser.email
+            },
+          });
+
+          const yandexDuplicates = allUsers.filter(user => {
+            // Дубликат — это аккаунт с таким же yandexId ИЛИ с email вида yandex_XXXXX@yandex
+            const hasSameYandexId = user.yandexId && user.yandexId === yandexId;
+            const isYandexEmailDuplicate = user.email === email || user.email === `yandex_${yandexId}@yandex.ru`;
+            return hasSameYandexId || isYandexEmailDuplicate;
+          });
+
+          if (yandexDuplicates.length > 0) {
+            console.log(`🗑️ Найдено ${yandexDuplicates.length} дубликатов, удаляем ПЕРЕД привязкой...`);
+            
+            // Удаляем дубликаты ПЕРЕД обновлением основного аккаунта
+            for (const duplicate of yandexDuplicates) {
+              try {
+                await docClient.send(new DeleteCommand({
+                  TableName: "users",
+                  Key: { email: duplicate.email }
+                }));
+                console.log(`✅ Удален дубликат: ${duplicate.email}`);
+              } catch (error) {
+                console.error(`❌ Ошибка удаления дубликата ${duplicate.email}:`, error);
+              }
+            }
+          }
+
+          // Теперь обновляем основной аккаунт
           const updateCommand = new UpdateCommand({
             TableName: "users",
             Key: { email: matchingUser.email },
@@ -243,34 +279,6 @@ exports.handler = async (event) => {
           });
           
           await docClient.send(updateCommand);
-
-          // 🔄 АВТОМАТИЧЕСКОЕ ОБЪЕДИНЕНИЕ: Проверяем, есть ли дубликат с тем же yandexId
-          const yandexDuplicates = await scanAllItems(docClient, {
-            TableName: "users",
-            FilterExpression: "yandexId = :yandexId AND email <> :currentEmail",
-            ExpressionAttributeValues: { 
-              ":yandexId": yandexId,
-              ":currentEmail": matchingUser.email
-            },
-          });
-
-          if (yandexDuplicates.length > 0) {
-            console.log(`🗑️ Найдено ${yandexDuplicates.length} дубликатов с yandexId=${yandexId}, удаляем...`);
-            
-            // Удаляем дубликаты
-            for (const duplicate of yandexDuplicates) {
-              try {
-                const { DeleteCommand } = require("@aws-sdk/lib-dynamodb");
-                await docClient.send(new DeleteCommand({
-                  TableName: "users",
-                  Key: { email: duplicate.email }
-                }));
-                console.log(`✅ Удален дубликат: ${duplicate.email}`);
-              } catch (error) {
-                console.error(`❌ Ошибка удаления дубликата ${duplicate.email}:`, error);
-              }
-            }
-          }
           
           const token = generateToken(matchingUser.userId, matchingUser.email, {
             yandexId: yandexId,
