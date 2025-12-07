@@ -15,6 +15,27 @@ function normalizePhone(phone) {
   return digits.length === 11 ? digits : null;
 }
 
+// Полное сканирование таблицы с пагинацией (DynamoDB возвращает max 1MB за раз)
+async function scanAllItems(docClient, params) {
+  const allItems = [];
+  let lastEvaluatedKey = null;
+  
+  do {
+    const scanParams = { ...params };
+    if (lastEvaluatedKey) {
+      scanParams.ExclusiveStartKey = lastEvaluatedKey;
+    }
+    
+    const result = await docClient.send(new ScanCommand(scanParams));
+    if (result.Items) {
+      allItems.push(...result.Items);
+    }
+    lastEvaluatedKey = result.LastEvaluatedKey;
+  } while (lastEvaluatedKey);
+  
+  return allItems;
+}
+
 const client = new DynamoDBClient({
   region: "ru-central1",
   endpoint: process.env.YDB_ENDPOINT,
@@ -185,16 +206,15 @@ exports.handler = async (event) => {
         if (!existingUser.Item.yandexId) {
           console.log('🔍 Поиск Яндекс аккаунта с телефоном:', normalizedInputPhone);
           
-          const scanYandexUsers = new ScanCommand({
+          // Сканируем с пагинацией для полного покрытия
+          const yandexUsers = await scanAllItems(docClient, {
             TableName: "users",
             FilterExpression: "attribute_exists(yandexPhone) AND yandexPhone <> :empty",
             ExpressionAttributeValues: { ":empty": "" },
           });
           
-          const yandexUsersResult = await docClient.send(scanYandexUsers);
-          
-          if (yandexUsersResult.Items && yandexUsersResult.Items.length > 0) {
-            const matchingYandexUser = yandexUsersResult.Items.find(user => {
+          if (yandexUsers.length > 0) {
+            const matchingYandexUser = yandexUsers.find(user => {
               const yandexNormalizedPhone = normalizePhone(user.yandexPhone);
               return yandexNormalizedPhone && yandexNormalizedPhone === normalizedInputPhone && user.email !== trimmedEmail;
             });

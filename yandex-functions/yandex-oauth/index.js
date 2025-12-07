@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, ScanCommand, UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require('crypto');
 
 // Нормализация телефона для корректного сравнения
@@ -14,6 +14,27 @@ function normalizePhone(phone) {
     digits = '7' + digits.slice(1);
   }
   return digits.length === 11 ? digits : null;
+}
+
+// Полное сканирование таблицы с пагинацией (DynamoDB возвращает max 1MB за раз)
+async function scanAllItems(docClient, params) {
+  const allItems = [];
+  let lastEvaluatedKey = null;
+  
+  do {
+    const scanParams = { ...params };
+    if (lastEvaluatedKey) {
+      scanParams.ExclusiveStartKey = lastEvaluatedKey;
+    }
+    
+    const result = await docClient.send(new ScanCommand(scanParams));
+    if (result.Items) {
+      allItems.push(...result.Items);
+    }
+    lastEvaluatedKey = result.LastEvaluatedKey;
+  } while (lastEvaluatedKey);
+  
+  return allItems;
 }
 
 const client = new DynamoDBClient({
@@ -164,16 +185,15 @@ exports.handler = async (event) => {
     console.log('🔍 Поиск существующего пользователя с yandexId:', yandexId);
     console.log('📞 Телефон от Яндекса:', rawPhone, '→ нормализованный:', normalizedYandexPhone);
 
-    const scanByYandexId = new ScanCommand({
+    // Поиск по yandexId с пагинацией
+    const yandexIdUsers = await scanAllItems(docClient, {
       TableName: "users",
       FilterExpression: "yandexId = :yandexId",
       ExpressionAttributeValues: { ":yandexId": yandexId },
     });
-
-    let result = await docClient.send(scanByYandexId);
     
-    if (result.Items && result.Items.length > 0) {
-      const user = result.Items[0];
+    if (yandexIdUsers.length > 0) {
+      const user = yandexIdUsers[0];
       console.log('✅ Найден существующий пользователь:', user.email);
       
       const token = generateToken(user.userId, user.email, {
@@ -190,18 +210,16 @@ exports.handler = async (event) => {
     if (normalizedYandexPhone) {
       console.log('🔍 Поиск пользователя по нормализованному телефону:', normalizedYandexPhone);
       
-      // Сканируем всех пользователей с phone и сравниваем нормализованные версии
-      const scanAllWithPhone = new ScanCommand({
+      // Сканируем всех пользователей с phone с пагинацией
+      const usersWithPhone = await scanAllItems(docClient, {
         TableName: "users",
         FilterExpression: "attribute_exists(phone) AND phone <> :empty",
         ExpressionAttributeValues: { ":empty": "" },
       });
 
-      result = await docClient.send(scanAllWithPhone);
-
-      if (result.Items && result.Items.length > 0) {
+      if (usersWithPhone.length > 0) {
         // Ищем пользователя с совпадающим нормализованным телефоном
-        const matchingUser = result.Items.find(user => {
+        const matchingUser = usersWithPhone.find(user => {
           const userNormalizedPhone = normalizePhone(user.phone);
           return userNormalizedPhone && userNormalizedPhone === normalizedYandexPhone;
         });
@@ -238,17 +256,17 @@ exports.handler = async (event) => {
       }
     }
 
+    // Поиск по email используя GetCommand (email - первичный ключ)
     console.log('🔍 Поиск пользователя по email:', email);
-    const scanByEmail = new ScanCommand({
+    const getByEmail = new GetCommand({
       TableName: "users",
-      FilterExpression: "email = :email",
-      ExpressionAttributeValues: { ":email": email },
+      Key: { email: email },
     });
 
-    result = await docClient.send(scanByEmail);
+    const emailResult = await docClient.send(getByEmail);
 
-    if (result.Items && result.Items.length > 0) {
-      const user = result.Items[0];
+    if (emailResult.Item) {
+      const user = emailResult.Item;
       console.log('✅ Найден пользователь по email, привязываем Yandex ID');
       
       const updateCommand = new UpdateCommand({
