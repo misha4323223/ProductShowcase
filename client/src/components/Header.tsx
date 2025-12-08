@@ -386,7 +386,9 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
         </div>
 
         {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 border-t caramel-drip max-h-[70vh] overflow-y-auto">
+          <nav 
+            className="lg:hidden py-4 border-t caramel-drip max-h-[80vh] overflow-y-auto pb-8 overscroll-contain"
+          >
             <div className="flex flex-col gap-3">
               <Link href="/" onClick={() => setMobileMenuOpen(false)}>
                 <button 
