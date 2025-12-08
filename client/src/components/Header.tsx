@@ -470,6 +470,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 </>
               )}
               
+              {/* Кнопка установки PWA доступна ВСЕМ пользователям */}
               <button 
                 onClick={() => {
                   const event = new CustomEvent('pwa-install-trigger');
