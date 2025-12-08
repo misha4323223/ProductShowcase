@@ -1,4 +1,4 @@
-import { Package, Search, Menu, X, User, Heart, Sparkles, Gift, MoreHorizontal, Moon } from "lucide-react";
+import { Package, Search, Menu, X, User, Heart, Sparkles, Gift, MoreHorizontal, Moon, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
@@ -469,6 +469,23 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                   </Link>
                 </>
               )}
+              
+              <button 
+                onClick={() => {
+                  const event = new CustomEvent('pwa-install-trigger');
+                  window.dispatchEvent(event);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 active:scale-95 transition-all shadow-lg jelly-wobble text-left flex items-center gap-2"
+                style={{
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                  boxShadow: '0 4px 0 rgba(37, 99, 235, 0.4), 0 6px 12px rgba(59, 130, 246, 0.3), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.5)'
+                }}
+                data-testid="button-mobile-install-app"
+              >
+                <Download className="h-4 w-4" />
+                Скачать приложение
+              </button>
             </div>
           </nav>
         )}

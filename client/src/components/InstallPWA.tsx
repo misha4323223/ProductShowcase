@@ -38,7 +38,20 @@ export function InstallPWA() {
       setShowBanner(true);
     };
 
+    const externalTrigger = () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(({ outcome }) => {
+          if (outcome === 'accepted') {
+            setShowBanner(false);
+          }
+          setDeferredPrompt(null);
+        });
+      }
+    };
+
     window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('pwa-install-trigger', externalTrigger);
 
     window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
@@ -48,8 +61,9 @@ export function InstallPWA() {
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('pwa-install-trigger', externalTrigger);
     };
-  }, []);
+  }, [deferredPrompt]);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
