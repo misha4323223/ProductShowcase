@@ -10,6 +10,7 @@ interface BeforeInstallPromptEvent extends Event {
 declare global {
   interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent;
+    'pwa-install-trigger': CustomEvent;
   }
 }
 
