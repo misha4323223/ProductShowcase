@@ -243,7 +243,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 <Search className="h-4 w-4 text-white drop-shadow-lg" />
               </button>
             )}
-            
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -262,7 +262,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>Функции</DropdownMenuLabel>
-                
+
                 {user && onWheelClick && (
                   <DropdownMenuItem onClick={onWheelClick} className="cursor-pointer" data-testid="menu-item-wheel">
                     <div className="flex items-center gap-2 w-full">
@@ -276,7 +276,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                     </div>
                   </DropdownMenuItem>
                 )}
-                
+
                 <DropdownMenuItem asChild>
                   <Link href="/certificates" className="cursor-pointer" data-testid="menu-item-certificates">
                     <div className="flex items-center gap-2 w-full">
@@ -285,7 +285,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                
+
                 <DropdownMenuItem asChild>
                   <Link href="/wishlist" className="cursor-pointer" data-testid="menu-item-wishlist">
                     <div className="flex items-center gap-2 w-full">
@@ -299,9 +299,9 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                     </div>
                   </Link>
                 </DropdownMenuItem>
-                
+
                 <DropdownMenuSeparator />
-                
+
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="cursor-pointer">
                     <div className="flex items-center gap-2 w-full">
@@ -342,9 +342,9 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                     </DropdownMenuItem>
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
-                
+
                 <DropdownMenuSeparator />
-                
+
                 {user ? (
                   <DropdownMenuItem asChild>
                     <Link href="/account" className="cursor-pointer" data-testid="menu-item-account">
@@ -366,7 +366,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-            
+
             <button
               className="relative w-10 h-10 rounded-full hover:scale-110 transition-all jelly-wobble cursor-pointer bg-gradient-to-br from-orange-400 via-amber-500 to-orange-600 shadow-lg flex items-center justify-center"
               onClick={onCartClick}
@@ -400,7 +400,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                   🍬 Каталог
                 </button>
               </Link>
-              
+
               {categories.map((category) => {
                 const style = getCategoryStyle(category.slug);
                 const isSale = category.slug === 'sale';
@@ -419,7 +419,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                   </Link>
                 );
               })}
-              
+
               {user && (
                 <>
                   <Link href="/wishlist" onClick={() => setMobileMenuOpen(false)}>
@@ -440,7 +440,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                       )}
                     </button>
                   </Link>
-                  
+
                   <Link href="/certificates" onClick={() => setMobileMenuOpen(false)}>
                     <button 
                       className="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-rose-400 via-pink-500 to-rose-600 active:scale-95 transition-all shadow-lg jelly-wobble text-left flex items-center gap-2"
@@ -454,7 +454,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                       Сертификаты
                     </button>
                   </Link>
-                  
+
                   <Link href="/account" onClick={() => setMobileMenuOpen(false)}>
                     <button 
                       className="w-full px-4 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-br from-indigo-400 via-violet-500 to-indigo-600 active:scale-95 transition-all shadow-lg jelly-wobble text-left"
@@ -469,8 +469,8 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                   </Link>
                 </>
               )}
-              
-              {/* Кнопка установки PWA - доступна ВСЕМ пользователям (вне условия user) */}
+
+              {/* Кнопка установки PWA - доступна ВСЕМ (и авторизованным, и неавторизованным) */}
               <button 
                 onClick={() => {
                   const event = new CustomEvent('pwa-install-trigger');
