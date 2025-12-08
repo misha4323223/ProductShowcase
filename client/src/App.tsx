@@ -15,6 +15,7 @@ import { LegalDialogProvider } from "@/contexts/LegalDialogContext";
 import { ChatbotProvider } from "@/contexts/ChatbotContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import CookieBanner from "@/components/CookieBanner";
+import { InstallPWA } from "@/components/InstallPWA";
 import LegalDialog from "@/components/LegalDialog";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { useLegalDialog } from "@/contexts/LegalDialogContext";
@@ -202,6 +203,7 @@ function App() {
                           <SunflareParticles />
                           <Toaster />
                           <CookieBanner />
+                          <InstallPWA />
                           <Router />
                           <LegalDialogContainer />
                           <ChatbotContainer />

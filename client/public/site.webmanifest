@@ -1,20 +1,45 @@
 {
-  "name": "Sweet Delights",
+  "name": "Sweet Delights - Сладости с доставкой",
   "short_name": "Sweet Delights",
-  "description": "Купить сладости онлайн - необычные подарки и сладкие наслаждения",
-  "icons": [
-    {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
+  "description": "Купить сладости онлайн - необычные подарки и сладкие наслаждения с доставкой по России",
+  "start_url": "./index.html",
+  "id": "sweet-delights-pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
   "theme_color": "#ff69b4",
   "background_color": "#ffffff",
-  "display": "standalone"
+  "categories": ["shopping", "food"],
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "./android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Sweet Delights - Главная страница"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

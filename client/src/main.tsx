@@ -2,7 +2,6 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-// Типизация для window
 declare global {
   interface Window {
     __themeReady?: Promise<void>;
@@ -10,10 +9,22 @@ declare global {
   }
 }
 
-// Ожидаем загрузки темы перед монтированием React
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('[PWA] Service Worker registered:', registration.scope);
+        })
+        .catch((error) => {
+          console.log('[PWA] Service Worker registration failed:', error);
+        });
+    });
+  }
+}
+
 async function mountApp() {
   try {
-    // Ждем пока Promise из index.html разрешится (максимум 3 секунды)
     if (window.__themeReady) {
       await Promise.race([
         window.__themeReady,
@@ -24,7 +35,8 @@ async function mountApp() {
     console.error('Error waiting for theme:', err);
   }
   
-  // Монтируем React
+  registerServiceWorker();
+  
   createRoot(document.getElementById("root")!).render(<App />);
 }
 
