@@ -386,7 +386,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
         </div>
 
         {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 border-t animate-in slide-in-from-top-2 caramel-drip">
+          <nav className="lg:hidden py-4 border-t caramel-drip">
             <div className="flex flex-col gap-3">
               <Link href="/" onClick={() => setMobileMenuOpen(false)}>
                 <button 
@@ -470,8 +470,8 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
                 </>
               )}
 
-              {/* Кнопка установки PWA - доступна ВСЕМ (и авторизованным, и неавторизованным) */}
-              <button 
+              {/* Кнопка установки PWA - ВСЕГДА видна всем пользователям */}
+              <button
                 onClick={() => {
                   const event = new CustomEvent('pwa-install-trigger');
                   window.dispatchEvent(event);
