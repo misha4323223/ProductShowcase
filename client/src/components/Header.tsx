@@ -475,6 +475,7 @@ export default function Header({ cartCount, wishlistCount = 0, wheelSpins = 0, o
               {/* Кнопка установки PWA - ВСЕГДА видна всем пользователям */}
               <button
                 onClick={() => {
+                  // Для iOS показываем инструкции, для Android - стандартный prompt
                   const event = new CustomEvent('pwa-install-trigger');
                   window.dispatchEvent(event);
                   setMobileMenuOpen(false);
